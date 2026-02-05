@@ -1,0 +1,77 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="forumForm">
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label" for="articleName">{{"FORUM.ADD.LABELS.TITLE" | translate}}</label>
+          <input formControlName="title" class="form-control" id="articleName">
+          <div *ngIf="forumForm.get('title').touched && forumForm.get('title')?.errors">
+            <div class="text-danger" *ngIf="forumForm.get('title').errors?.['required']">
+              {{'BLOG.ADD.ERROR.TITLE' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label" for="articleCategory">{{"FORUM.ADD.LABELS.CATEGORY" | translate}}</label>
+          <ng-select formControlName="category" [multiple]="false" id="articleCategory">
+            <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ng-option>
+          </ng-select>
+          <div *ngIf="forumForm.get('category').touched && forumForm.get('category')?.errors">
+            <div class="text-danger" *ngIf="forumForm.get('category').errors?.['required']">
+              {{'BLOG.ADD.ERROR.CATEGORY' | translate}}
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-md-6">
+          <label class="form-label" for="articleCategory">Sub category</label>
+          <ng-select formControlName="subCategory" [multiple]="false" id="articleCategory">
+            <ng-option *ngFor="let category of []" [value]="category.id">{{category.name}}</ng-option>
+          </ng-select>
+          <div *ngIf="forumForm.get('subCategory').touched && forumForm.get('subCategory')?.errors">
+            <div class="text-danger" *ngIf="forumForm.get('subCategory').errors?.['required']">
+              Sub category is required
+            </div>
+          </div>
+        </div> -->
+        <div class="col-md-12">
+          <label class="form-label" for="forumTags">{{"FORUM.ADD.LABELS.TAGS" | translate}}</label>
+          <ng-select formControlName="tags" [multiple]="true" [addTag]="true" id="forumTags">
+          </ng-select>
+          <div *ngIf="forumForm.get('tags').touched && forumForm.get('tags')?.errors">
+            <div class="text-danger" *ngIf="forumForm.get('tags').errors?.['required']">
+              {{'BLOG.ADD.ERROR.TAGS' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12" style="min-height: 50px; height: fit-content;">
+          <label class="form-label" for="articleBody">{{"FORUM.ADD.LABELS.CONTENT" | translate}}</label>
+          <quill-editor formControlName="content" id="articleBody"></quill-editor>
+          <div *ngIf="forumForm.get('content').touched && forumForm.get('body')?.errors">
+            <div class="text-danger" *ngIf="forumForm.get('content').errors?.['required']">
+              {{'BLOG.ADD.ERROR.CONTENT' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label class="form-label" for="articlePrivacy">{{"FORUM.ADD.LABELS.PRIVATE" | translate}}</label>
+          <switch formControlName="private" style="margin-left: 5px;" id="articlePrivacy" [inline]="true">
+          </switch>
+        </div>
+        <!-- <div *ngIf="forumForm.get('private').value" class="col-md-12">
+          <label class="form-label" for="articleUsers">Users</label>
+          <ng-select formControlName="users" [multiple]="true" id="articleUsers">
+            <ng-option *ngFor="let user of []" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
+          </ng-select>
+        </div> -->
+      </div>
+      <div class="mt-2">
+        <button (click)="forumSave()" style="margin-right: 10px;" type="submit"
+          class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{"FORUM.ADD.BUTTONS.SAVE" | translate}}</button>
+        <button type="button" class="btn btn-danger btn-sm" routerLink="/apps/forums"> <i
+            class="fas fa-times-circle"></i>{{"FORUM.ADD.BUTTONS.CANCEL" | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>

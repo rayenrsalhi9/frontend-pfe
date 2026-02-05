@@ -1,0 +1,55 @@
+import { Injectable } from '@angular/core';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+  CanActivateChild,
+  CanLoad,
+  Route
+} from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
+import { SecurityService } from './security.service';
+
+@Injectable({ providedIn: 'root' })
+export class GuestGuard implements CanActivate, CanActivateChild, CanLoad {
+  constructor(
+    private securityService: SecurityService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
+
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    if (this.securityService.isGuestUser()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  canActivateChild(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    // Get property name on security object to check
+    // let claimType: string = next.data['claimType'];
+    if (this.securityService.isGuestUser()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  canLoad(route: Route): boolean {
+    if (this.securityService.isGuestUser()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}

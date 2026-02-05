@@ -1,0 +1,56 @@
+<div class="card mb-0">
+  <div class="card-body">
+    <div class="row mb-3 justify-content-end">
+      <div class="col-auto">
+        <button (click)="manageCategory(null)" class="btn btn-primary mb-3">
+          <i class="feather icon-plus"></i>
+          <span>{{"CATEGORY.LIST.BUTTONS.ADD" | translate}}</span>
+        </button>
+      </div>
+    </div>
+    <div class="row align-items-center">
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox"
+          (activate)="onActivate($event)" (select)="onSelect($event)">
+          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+            [resizeable]="false">
+            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+              let-selectFn="selectFn">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
+                  (change)="selectFn(!allRowsSelected)" />
+              </div>
+            </ng-template>
+            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+              let-onCheckboxChangeFn="onCheckboxChangeFn">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" [checked]="isSelected"
+                  (change)="onCheckboxChangeFn($event)" />
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.NAME' | translate"  prop="name"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.DESCRIPTION' | translate" prop="description"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.CREATED' | translate" prop="createdDate">
+            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value | utcToLocalTime:'shortDate' }}</ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.ACTIONS' | translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              <div class="btn-group" dropdown [insideClick]="true">
+                <button dropdownToggle type="button" class="btn">  <i class="feather icon-more-horizontal"></i>  </button>
+                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="manageCategory(row)">{{"CATEGORY.LIST.BUTTONS.EDIT" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="deleteCategory(row.id)">{{"CATEGORY.LIST.BUTTONS.DELETE" | translate}}</a>
+                  </li>
+                </ul>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>

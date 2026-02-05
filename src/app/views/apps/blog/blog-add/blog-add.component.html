@@ -1,0 +1,144 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="blogForm">
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label class="mb-2" for="">{{'BLOG.ADD.LABELS.PICTURE' | translate}}</label>
+          <div class="picture-placeholder rounded overflow-hidden">
+            <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file" name="Profile Photo"
+              fxFlex="30">
+            <img *ngIf="picture && !newPicture" style="width: 100%;" class="full-width company-logo" [src]="picture" />
+            <img *ngIf="!picture || picture && newPicture" style="width: 100%;" class="full-width company-logo"
+              [src]="newPicture?newPicture:'/assets/images/others/bg-4.jpg'" />
+            <div *ngIf="blogForm.get('picture').touched && blogForm.get('picture')?.errors">
+              <div class="text-danger" *ngIf="blogForm.get('picture').errors?.['required']">
+                {{'BLOG.ADD.ERROR.PICTURE' | translate}}
+              </div>
+            </div>
+            <div class="mt-2">
+              <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
+                <i class="far fa-image"></i> {{'BLOG.ADD.BUTTONS.CHANGE' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-12">
+              <label class="form-label" for="blogTitle">{{'BLOG.ADD.LABELS.TITLE' | translate}}</label>
+              <input formControlName="title" class="form-control" id="blogTitle">
+              <div *ngIf="blogForm.get('title').touched && blogForm.get('title')?.errors">
+                <div class="text-danger" *ngIf="blogForm.get('title').errors?.['required']">
+                  {{'BLOG.ADD.ERROR.TITLE' | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="blogSubtitle">{{'BLOG.ADD.LABELS.SUBTITLE' | translate}}</label>
+              <textarea formControlName="subtitle" type="text" cols="1" rows="1" class="form-control"
+                id="blogSubtitle"></textarea>
+              <div *ngIf="blogForm.get('subtitle').touched && blogForm.get('subtitle')?.errors">
+                <div class="text-danger" *ngIf="blogForm.get('subtitle').errors?.['required']">
+                  {{'BLOG.ADD.ERROR.SUBTITLE' | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="blogCategory">{{'BLOG.ADD.LABELS.CATEGORY' | translate}}</label>
+              <ng-select formControlName="category" [multiple]="false" id="blogCategory">
+                <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ng-option>
+              </ng-select>
+              <div *ngIf="blogForm.get('category').touched && blogForm.get('category')?.errors">
+                <div class="text-danger" *ngIf="blogForm.get('category').errors?.['required']">
+                  {{'BLOG.ADD.ERROR.CATEGORY' | translate}}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+
+            <div class="col-md-12">
+              <label class="form-label" for="blogTags">{{'BLOG.ADD.LABELS.TAGS' | translate}}</label>
+              <ng-select [addTag]="true" formControlName="tags" [multiple]="true" id="blogTags"></ng-select>
+              <div *ngIf="blogForm.get('tags').touched && blogForm.get('tags')?.errors">
+                <div class="text-danger" *ngIf="blogForm.get('tags').errors?.['required']">
+                  {{'BLOG.ADD.ERROR.TAGS' | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="blogUsers">{{'BLOG.ADD.LABELS.AUDIENCE' | translate}}</label>
+              <ng-select formControlName="users" [multiple]="true" id="blogUsers">
+                <ng-option *ngFor="let user of []" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
+              </ng-select>
+              <div *ngIf="blogForm.get('users').touched && blogForm.get('users')?.errors">
+                <div class="text-danger" *ngIf="blogForm.get('users').errors?.['required']">
+                  {{'BLOG.ADD.ERROR.AUDIENCE' | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="row mt-2">
+                <div class="col-md-12">
+                  <label class="form-label" for="blogExpiration">{{'BLOG.ADD.LABELS.EXPIRATION' | translate}}</label>
+                  <switch formControlName="expiration" style="margin-left: 5px;" id="blogExpiration" [inline]="true">
+                  </switch>
+                </div>
+              </div>
+              <div *ngIf="blogForm.get('expiration').value" class="row">
+                <div class="col-md-6">
+                  <label class="form-label" for="blogStartDate">{{'BLOG.ADD.LABELS.STARTDATE' | translate}}</label>
+                  <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [min]="minDate" formControlName="startDate"  [placeholder]="'BLOG.ADD.LABELS.STARTDATE' | translate">
+                  <div *ngIf="blogForm.get('startDate').touched && blogForm.get('startDate')?.errors">
+                    <div class="text-danger" *ngIf="blogForm.get('startDate').errors?.['required']">
+                      {{'BLOG.ADD.ERROR.STARTDATE' | translate}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="blogEndDate">{{'BLOG.ADD.LABELS.ENDDATE' | translate}}</label>
+                  <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [min]="minDate" formControlName="endDate"  [placeholder]="'BLOG.ADD.LABELS.ENDDATE' | translate">
+                  <div *ngIf="blogForm.get('endDate').touched && blogForm.get('endDate')?.errors">
+                    <div class="text-danger" *ngIf="blogForm.get('endDate').errors?.['required']">
+                      {{'BLOG.ADD.ERROR.ENDDATE' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12" style="min-height: 50px; height: fit-content;">
+          <label class="form-label" for="articleBody">{{'BLOG.ADD.LABELS.BODY' | translate}}</label>
+          <quill-editor formControlName="body" id="articleBody"></quill-editor>
+          <!-- <ckeditor formControlName="body"></ckeditor> -->
+          <!-- <jodit-editor></jodit-editor> -->
+
+          <div *ngIf="blogForm.get('body').touched && blogForm.get('body')?.errors">
+            <div class="text-danger" *ngIf="blogForm.get('body').errors?.['required']">
+              {{'BLOG.ADD.ERROR.BODY' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <label class="form-label" for="blogBanner">{{'BLOG.ADD.LABELS.BANNER' | translate}}</label>
+          <switch formControlName="banner" style="margin-left: 5px;" id="blogBanner" [inline]="true">
+          </switch>
+        </div>
+      </div>
+      <div class="mt-2">
+        <button (click)="blogSave()" style="margin-right: 10px;" type="submit"
+          class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{'BLOG.ADD.BUTTONS.SAVE' | translate}}</button>
+        <button type="button" class="btn btn-danger btn-sm" routerLink="/apps/blogs"> <i
+            class="fas fa-times-circle"></i>{{'BLOG.ADD.BUTTONS.CANCEL' | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="userForm">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="mb-2" for="">{{'PROFILE_SETTING.LABEL.PROFILE_PICTURE' | translate}}</label>
+          <div class="rounded overflow-hidden">
+            <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file"
+              name="Profile Photo" fxFlex="30">
+            <img *ngIf="avatar && !newPicture" style="width: 100%;" class="full-width company-logo" [src]="avatar" />
+            <img *ngIf="!avatar || avatar && newPicture" style="width: 100%;" class="full-width company-logo" [src]="newPicture?newPicture:'/assets/images/avatars/thumb-16.jpg'" />
+            <div class="mt-2">
+              <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
+                <i class="far fa-image"></i> {{'PROFILE_SETTING.LABEL.CHANGE_LOGO' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'PROFILE_SETTING.LABEL.FIRST_NAME' | translate }}</label>
+                <input formControlName="firstName" class="form-control" type="text">
+                <div *ngIf="userForm.get('firstName').touched && userForm.get('firstName').errors">
+                  <div class="text-danger" *ngIf="userForm.get('firstName').errors?.['required']">
+                    {{'PROFILE_SETTING.ERROR.FIRST_NAME_IS_REQUIRED' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'PROFILE_SETTING.LABEL.LAST_NAME'| translate }}</label>
+                <input formControlName="lastName" class="form-control" type="text">
+                <div *ngIf="userForm.get('lastName').touched && userForm.get('lastName').errors">
+                  <div class="text-danger" *ngIf="userForm.get('lastName').errors?.['required']">
+                    {{'PROFILE_SETTING.ERROR.LAST_NAME_IS_REQUIRED'| translate }}
+                  </div> 
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'PROFILE_SETTING.LABEL.MOBILE_NUMBER' | translate }}</label>
+                <input formControlName="phoneNumber" class="form-control" type="text">
+                <div *ngIf="userForm.get('phoneNumber').touched && userForm.get('phoneNumber').errors">
+                  <div class="text-danger" *ngIf="userForm.get('phoneNumber').errors?.['required']">
+                    {{'PROFILE_SETTING.ERROR.MOBILE_IS_REQUIRED' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>{{'PROFILE_SETTING.LABEL.EMAIL' | translate }}</label>
+                <input formControlName="email" class="form-control" type="email">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="m-t-10 col-md-12 mt-2">
+          <button class="btn btn-success btn-sm m-r-10" (click)="updateProfile()" cdkFocusInitial><i
+              class="fas fa-save"></i> {{'PROFILE_SETTING.LABEL.SAVE' | translate }}</button>
+          <button style="margin-left: 5px;" routerLink="/dashboard" type="button" class="btn btn-danger btn-sm"><i
+              class="fas fa-times-circle"></i>
+              {{'PROFILE_SETTING.LABEL.CANCEL' | translate }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

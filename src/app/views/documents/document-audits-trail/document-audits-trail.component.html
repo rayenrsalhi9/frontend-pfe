@@ -1,0 +1,45 @@
+<div class="card mb-0">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <div class="input-affix">
+          <i class="prefix-icon feather icon-search"></i>
+          <input type="text" class="form-control" (keyup)="onNameChange($event)" [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <ng-select [multiple]="false" [placeholder]="'AUDIT.LIST.LABELS.CATEGORY' | translate" (change)="onCategoryChange($event)">
+          <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-md-4">
+        <ng-select [multiple]="false" [placeholder]="'AUDIT.LIST.LABELS.USER' | translate" (change)="onUserChange($event)">
+          <ng-option *ngFor="let user of users" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="5">
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.ACTION' | translate" prop="createdDate">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              {{value | utcToLocalTime:'shortDate'}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.NAME' | translate" prop="documentName" [width]="300"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.CATEGORY' | translate" prop="categoryName"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.OPERATION' | translate" prop="operationName">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              <span *ngIf="value == 'Download'">{{'AUDIT.LIST.OPERATION.DOWNLOAD' | translate}}</span>
+              <span *ngIf="value == 'Read'">{{'AUDIT.LIST.OPERATION.READ' | translate}}</span>
+              <span *ngIf="value == 'Created'">{{'AUDIT.LIST.OPERATION.CREATED' | translate}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.BY' | translate" prop="createdBy"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.TO' | translate" prop="permissionUser"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'AUDIT.LIST.TABLE.ROLE' | translate" prop="permissionRole"></ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,327 @@
+.top-section {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+
+  .section-wrapper {
+    .slider {
+      .slider-wrapper {
+        .slider-list {
+          max-height: calc(95vh - 80px);
+
+          .slider-items {
+            position: relative;
+            max-height: calc(95vh - 100px);
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            &:hover {
+              .item-img{
+                transform: scale(1.2);
+              }
+            }
+            .item-img {
+              transition: all .2s ease-in-out;
+              position: relative;
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+            }
+
+            .item-caption {
+              position: absolute;
+              left: 50px;
+              bottom: 100px;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              max-width: 45%;
+
+              .caption-poster {
+                color: white;
+                font-weight: 500;
+                font-size: 14px;
+              }
+
+              span {
+                color: #11a1fd;
+
+
+              }
+
+              .caption-datetime {
+                color: white;
+                font-size: 13px;
+
+                i {
+                  color: #fff;
+                }
+              }
+
+              .caption-category {
+                font-size: 16px;
+                color: #11a1fd;
+                font-weight: 600;
+                background: white;
+                padding: 2px 5px;
+                width: fit-content;
+                border-radius: 5px;
+              }
+
+              .caption-title {
+                font-size: 40px;
+                color: white;
+                margin: 0;
+                text-overflow: ellipsis;
+                max-height: 100px;
+                overflow: hidden;
+              }
+
+              .caption-description {
+                margin: 0;
+                color: white;
+                font-size: 20px;
+                max-height: 90px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+              }
+
+              .caption-btn {
+                background: transparent;
+                border: 1px solid #fff;
+                color: #fff;
+                width: 150px;
+                border-radius: 10px;
+                padding: 5px 0;
+                margin: 0;
+                font-size: 15px;
+                font-weight: 600;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.featured-section {
+  padding: 1.5rem;
+  background: white;
+
+  .featured-wrapper {
+    .featured-header {
+      .header-title {}
+    }
+
+    .featured-body {
+      .post-card {
+        position: relative;
+        border-radius: 5px;
+        overflow: hidden;
+        cursor: pointer;
+
+        .post-header {
+          overflow: hidden;
+
+          img {
+            transition: all .2s ease-in-out;
+
+            &:hover {
+              transform: scale(1.2);
+            }
+
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+          }
+        }
+
+        .post-body {
+          position: absolute;
+          bottom: 20px;
+          left: 10px;
+          display: flex;
+          gap: 5px;
+          flex-direction: column;
+
+          .post-category {
+            color: #11a1fd;
+            font-size: 14px;
+            font-weight: 600;
+          }
+
+          .post-title {
+            font-size: 16px;
+            color: white;
+            margin: 0;
+            max-height: 20px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+
+          .post-description {
+            font-size: 12px;
+            margin: 0;
+            color: #fff;
+            max-height: 40px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+}
+
+.post-section {
+  padding: 1.5rem;
+  background: white;
+
+  .post-wrapper {
+    .slider-list {
+      .slider-items {
+        .post-heading {
+          margin-bottom: 10px;
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        .post-card {
+          border-radius: 5px;
+          width: 100%;
+          cursor: pointer;
+
+          .post-img {
+            transition: all .2s ease-in-out;
+
+            &:hover {
+              transform: scale(1.2);
+            }
+
+            height: 175px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+          }
+
+          .post-body {
+            display: flex;
+            flex-direction: column;
+            color: #000;
+
+            .post-category {
+              font-size: 13px;
+              color: #11a1fd;
+              font-weight: 600;
+            }
+
+            .post-title {
+              font-size: 15px;
+              font-weight: 600;
+            }
+
+            .post-datetime {
+              font-size: 12px;
+              color: #6a6a6a;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.contents-section {
+  padding: 1.5rem;
+
+  .forum-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+
+    .forum-wrapper {
+      .forum-header {
+        .header-title {}
+      }
+
+      .forum-body {
+        .card {
+          .card-body {
+            cursor: pointer;
+
+            .forum-category {
+              font-size: 13px;
+              color: #11a1fd;
+              font-weight: 600;
+            }
+
+            .forum-title {
+              font-size: 15px;
+              font-weight: 600;
+              color: black !important;
+            }
+
+            .forum-info {
+              display: flex;
+              justify-content: space-between;
+              font-size: 12px;
+              color: #6a6a6a;
+
+              .forum-datetime {}
+
+              .forum-creator {}
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .survey-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+
+    .survey-wrapper {
+      .survey-header {
+        padding: 0 1.5rem;
+
+        .header-title {}
+      }
+
+      .survey-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .surver-title {}
+
+        .survery-actions {
+          display: flex;
+          gap: 10px;
+
+          .buttons {
+            border: none;
+            width: 100%;
+            padding: 0 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            color: white;
+
+            &.yes {
+              background: green;
+            }
+
+            &.no {
+              background: red;
+            }
+
+            &.neutral {
+              background: orange;
+            }
+          }
+        }
+      }
+    }
+  }
+}

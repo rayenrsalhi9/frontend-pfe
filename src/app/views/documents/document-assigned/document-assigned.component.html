@@ -1,0 +1,98 @@
+<div class="card mb-0">
+  <div class="card-body">
+    <div *hasClaim="'ASSIGNED_DOCUMENTS_CREATE_DOCUMENT'" class="row mb-3 justify-content-end">
+      <div class="col-auto">
+        <button class="btn btn-primary mb-3" (click)="addDocument()">
+          <i class="feather icon-plus"></i>
+          <span>{{"DOCUMENTS.ASSIGNED.BUTTONS.ADD" | translate}}</span>
+        </button>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-md-3">
+        <div class="input-affix">
+          <i class="prefix-icon feather icon-search"></i>
+          <input type="text" class="form-control" (keyup)="onNameChange($event)" [placeholder]="'DOCUMENTS.ASSIGNED.LABELS.SEARCH' | translate">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="input-affix">
+          <i class="prefix-icon feather icon-search"></i>
+          <input type="text" class="form-control" (keyup)="onTagChange($event)" [placeholder]="'DOCUMENTS.ASSIGNED.LABELS.TAGS' | translate">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <ng-select [multiple]="false" [placeholder]="'DOCUMENTS.ASSIGNED.LABELS.CATEGORY' | translate" (change)="onCategoryChange($event)">
+          <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-md-3">
+        <div class="input-affix">
+          <i class="prefix-icon feather icon-search"></i>
+          <input type="text" class="form-control" bsDatepicker [placeholder]="'DOCUMENTS.ASSIGNED.LABELS.DATE' | translate" [bsConfig]="{dateInputFormat: 'DD-MM-YYYY'}"  (bsValueChange)="onDateChange($event)">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
+          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox"
+          (activate)="onActivate($event)" (select)="onSelect($event)">
+          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+            [resizeable]="false">
+            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+              let-selectFn="selectFn">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
+                  (change)="selectFn(!allRowsSelected)" />
+              </div>
+            </ng-template>
+            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+              let-onCheckboxChangeFn="onCheckboxChangeFn">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" [checked]="isSelected"
+                  (change)="onCheckboxChangeFn($event)" />
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.NAME' | translate" prop="name" width="300">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              <a class="doc-link" style="cursor: pointer; color: cadetblue;" (click)="onDocumentView(row)">{{value}}</a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.CATEGORY' | translate" prop="categoryName" ></ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.CREATED' | translate" prop="createdDate">
+            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value | utcToLocalTime:'shortDate' }}</ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.EXPIRE' | translate" prop="maxRolePermissionEndDate">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              <!-- {{ getExpiryDate(document.maxRolePermissionEndDate , document.maxUserPermissionEndDate) | utcToLocalTime:'shortDate'}} -->
+              {{value | utcToLocalTime:'shortDate'}}
+            </ng-template>
+
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.CREATOR' | translate" prop="createdByName"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'DOCUMENTS.ASSIGNED.TABLE.ACTIONS' | translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
+            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
+              <div class="btn-group" dropdown [insideClick]="true">
+                <button dropdownToggle type="button" class="btn"> <i class="feather icon-more-horizontal"></i> </button>
+                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="onDocumentView(row)"><i class="feather icon-eye"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.VIEW" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ASSIGNED_DOCUMENTS_EDIT_DOCUMENT'" (click)="editDocument(row)"><i class="feather icon-edit-2"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.EDIT" | translate}}</a></li>
+                  <!-- <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ASSIGNED_DOCUMENTS_SHARE_DOCUMENT'" (click)="onSharedSelectDocument(row)"><i class="feather icon-share-2"></i> Share</a></li> -->
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ALL_DOCUMENTS_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(row)"><i class="feather icon-download-cloud"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.DOWNLOAD" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ASSIGNED_DOCUMENTS_UPLOAD_NEW_VERSION'" (click)="uploadNewVersion(row)"><i class="feather icon-upload-cloud"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.UPLOAD" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="onVersionHistoryClick(row)"><i class="feather icon-watch"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.HISTORY" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="addComment(row)"><i class="feather icon-message-square"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.COMMENT" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" (click)="addReminder(row)"><i class="feather icon-bell"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.REMINDER" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ASSIGNED_DOCUMENTS_SEND_EMAIL'" (click)="sendEmail(row)"><i class="feather icon-mail"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.EMAIL" | translate}}</a></li>
+                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ASSIGNED_DOCUMENTS_DELETE_DOCUMENT'" (click)="deleteDocument(row)"><i class="feather icon-trash-2"></i> {{"DOCUMENTS.ASSIGNED.BUTTONS.DELETE" | translate}}</a></li>
+                </ul>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>

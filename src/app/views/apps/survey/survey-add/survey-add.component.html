@@ -1,0 +1,71 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="surveyForm">
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label" for="surveyTitle">{{"SURVEY.ADD.LABELS.TITLE" | translate}}</label>
+          <input formControlName="title" class="form-control" id="surveyTitle">
+          <div *ngIf="surveyForm.get('title').touched && surveyForm.get('title')?.errors">
+            <div class="text-danger" *ngIf="surveyForm.get('title').errors?.['required']">
+              {{"SURVEY.ADD.ERROR.TITLE" | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label" for="surveyType">{{"SURVEY.ADD.LABELS.TYPE" | translate}}</label>
+          <ng-select formControlName="type" [multiple]="false" id="surveyType">
+            <ng-option *ngFor="let type of surveyType" [value]="type">{{"SURVEY.OPTION."+type | translate}}</ng-option>
+          </ng-select>
+          <div *ngIf="surveyForm.get('type').touched && surveyForm.get('type')?.errors">
+            <div class="text-danger" *ngIf="surveyForm.get('type').errors?.['required']">
+              {{"SURVEY.ADD.ERROR.TYPE" | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <label class="form-label" for="surveyPrivacy">{{"FORUM.ADD.LABELS.PRIVATE" | translate}}</label>
+              <switch formControlName="private" style="margin-left: 5px;" id="surveyPrivacy" [inline]="true">
+              </switch>
+            </div>
+            <!-- <div *ngIf="surveyForm.get('private').value" class="col-md-12">
+              <label class="form-label" for="articleUsers">Users</label>
+              <ng-select formControlName="users" [multiple]="true" id="articleUsers">
+                <ng-option *ngFor="let user of []" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
+              </ng-select>
+            </div> -->
+          </div>
+        </div>
+        <!-- <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <label class="form-label" for="surveyBlog">Show in blog</label>
+              <switch formControlName="blog" style="margin-left: 5px;" id="surveyBlog" [inline]="true">
+              </switch>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <label class="form-label" for="surveyForum">Show in forum</label>
+              <switch formControlName="forum" style="margin-left: 5px;" id="surveyForum" [inline]="true">
+              </switch>
+            </div>
+          </div>
+        </div> -->
+      </div>
+      <div class="mt-2">
+        <button (click)="saveSurvey()" style="margin-right: 10px;" type="submit" class="btn btn-success btn-sm m-r-10"><i
+            class="fas fa-save"></i> {{"SURVEY.ADD.BUTTONS.SAVE" | translate}}</button>
+        <button type="button" class="btn btn-danger btn-sm" routerLink="/apps/surveys"> <i
+            class="fas fa-times-circle"></i>{{"SURVEY.ADD.BUTTONS.CANCEL" | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>

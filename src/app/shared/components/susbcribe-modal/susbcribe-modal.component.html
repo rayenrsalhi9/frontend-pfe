@@ -1,0 +1,48 @@
+<div class="card">
+  <div class="card-header">
+    <h5>{{ 'SIGN.SUBSCRIBE.TITLE' | translate }}</h5>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="subscribeForm">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label" for="userFirstName">{{ 'SIGN.SUBSCRIBE.FIRST_NAME' | translate }}</label>
+          <input formControlName="firstName" class="form-control" id="userFirstName">
+          <div *ngIf="subscribeForm.get('firstName').touched && subscribeForm.get('firstName')?.errors">
+            <div class="text-danger" *ngIf="subscribeForm.get('firstName').errors?.['required']">
+              {{ 'SIGN.SUBSCRIBE.ERRORS.FIRST_NAME_REQUIRED' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="userLastName">{{ 'SIGN.SUBSCRIBE.LAST_NAME' | translate }}</label>
+          <input formControlName="lastName" class="form-control" id="userLastName">
+          <div *ngIf="subscribeForm.get('lastName').touched && subscribeForm.get('lastName')?.errors">
+            <div class="text-danger" *ngIf="subscribeForm.get('lastName').errors?.['required']">
+              {{ 'SIGN.SUBSCRIBE.ERRORS.LAST_NAME_REQUIRED' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label" for="userEmail">{{ 'SIGN.SUBSCRIBE.EMAIL' | translate }}</label>
+          <input formControlName="email" class="form-control" id="userEmail">
+          <div *ngIf="subscribeForm.get('email').touched && subscribeForm.get('email')?.errors">
+            <div class="text-danger" *ngIf="subscribeForm.get('email').errors?.['required']">
+              {{ 'SIGN.SUBSCRIBE.ERRORS.EMAIL_REQUIRED' | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <button (click)="subscribe()" style="margin-right: 10px;" type="submit"
+          class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i>{{ 'SIGN.SUBSCRIBE.BTN_SUBSCRIBE' | translate }}</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="cancel()" ><i
+            class="fas fa-times-circle"></i>{{ 'SIGN.SUBSCRIBE.BTN_CANCEL' | translate }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,0 +1,187 @@
+<section class="card">
+  <div class="card-body">
+    <div class="block-header">
+      <div class="breadcrumb-main">
+        <div class="row">
+          <div class="col-6">
+            <div class="breadcrumb-title">
+              <!-- <h2>{{'ADD_DOCUMENT' | translate}}</h2> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form [formGroup]="documentForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <label class="form-label">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_UPLOAD' | translate}}</label>
+                  <input class="form-control" #file (change)="upload(file.files)" type="file">
+                  <div *ngIf="documentForm.get('url').touched && documentForm.get('url')?.errors">
+                    <div class="text-danger" *ngIf="documentForm.get('url').errors?.['required']">
+                      {{'DOCUMENTS.ADD.ERROR.DOCUMENT_IS_REQUIRED' | translate}}
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="documentForm.get('extension').touched && !documentForm.get('url')?.errors && documentForm.get('extension').errors">
+                    <div class="text-danger" *ngIf="documentForm.get('extension').errors?.['required']">
+                      {{'DOCUMENTS.ADD.ERROR.DOCUMENT_TYPE_IS_NOT_ALLOW' | translate}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_NAME' | translate}}</label>
+                  <input formControlName="name" class="form-control" type="text">
+                  <div class="text-danger"
+                    *ngIf="documentForm.get('name').touched && documentForm.get('name')?.hasError('required')">
+                    {{'DOCUMENTS.ADD.ERROR.NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_CATEGORY' | translate}}</label>
+                  <ng-select [multiple]="false" formControlName="categoryId">
+                    <ng-option *ngFor="let category of allCategories" [value]="category.id">
+                      <div class="country-item" [ngStyle]="{'margin-left.px': category.deafLevel* 20}">
+                        <div *ngIf="!category.parentId">
+                          {{category.name}}
+                        </div>
+                        <div *ngIf="category.parentId">
+                          {{category.name}}
+                        </div>
+                      </div>
+                    </ng-option>
+                  </ng-select>
+                  <div class="text-danger" *ngIf="documentForm.get('categoryId').touched && documentForm.get('categoryId').hasError('required')">
+                    {{'DOCUMENTS.ADD.ERROR.CATEGORY_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <label class="form-label">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_DESCRIPTION' | translate}}</label>
+                  <textarea formControlName="description" class="form-control">
+                  </textarea>
+                </div>
+                <div class="col-md-6 mt-3">
+                  <ng-container formArrayName="documentMetaTags"
+                    *ngFor="let documentmetatag of documentMetaTagsArray.controls; let i=index">
+                    <ng-container [formGroupName]="i">
+                      <div class="row">
+                        <div class="col">
+                          <label class="form-label" *ngIf="i===0"> {{'DOCUMENTS.ADD.LABEL.DOCUMENT_TAGS' | translate}}</label>
+                          <div class="input-group m-b-10">
+                            <input (change)="onMetatagChange($event,i)" formControlName="metatag" class="form-control"
+                              type="text">
+                            <button *ngIf="i===0" (click)="onAddAnotherMetaTag()" class="btn btn-outline-success"
+                              type="button"><i class="feather icon-plus-square"></i></button>
+                            <button *ngIf="i!==0" (click)="onDeleteMetaTag(i)" class="btn btn-outline-danger"
+                              type="button"><i class="feather icon-trash-2"></i></button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <div class="col-md-6 mt-3" *hasClaim="'ALL_DOCUMENTS_SHARE_DOCUMENT'">
+                  <h6 class="vew-mail-header">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_ROLE_ASSIGN' | translate}}</h6>
+                  <ng-select [multiple]="true" (change)="selectRole($event)" >
+                    <ng-option *ngFor="let role of roles" [value]="role">
+                      {{role.name}}
+                    </ng-option>
+                  </ng-select>
+                  <ng-container *ngIf="selectedRoles.length > 0" formGroupName="rolePermissionForm">
+                    <div class="row mt-2">
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input type="checkbox" (change)="roleTimeBoundChange($event)" class="form-check-input" id="isTimeBound" formControlName="isTimeBound">
+                          <label style="margin-left: 5px;" class="form-check-label" for="isTimeBound">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE' | translate}}</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="rolePermissionFormGroup.get('isTimeBound').value">
+                      <div class="col-md-6">
+                        <input class="form-control" bsDatepicker [min]="minDate" formControlName="startDate"  placeholder="{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE_SD' | translate}}">
+                        <mat-error *ngIf="rolePermissionFormGroup.get('startDate').touched && rolePermissionFormGroup.get('startDate').hasError('required')">
+                          {{'DOCUMENTS.ADD.ERROR.START_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                      <div class="col-md-6">
+                        <input [min]="rolePermissionFormGroup.get('startDate').value" class="form-control" placeholder="{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE_ED' | translate}}" formControlName="endDate" bsDatepicker>
+                        <mat-error
+                          *ngIf="rolePermissionFormGroup.get('startDate').touched && rolePermissionFormGroup.get('endDate').hasError('required')">
+                          {{'DOCUMENTS.ADD.ERROR.END_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" color="primary" id="isAllowDownload" formControlName="isAllowDownload">
+                          <label style="margin-left: 5px;" for="isAllowDownload">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_DOWNLOAD' | translate}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="col-md-6 mt-3" *hasClaim="'ALL_DOCUMENTS_SHARE_DOCUMENT'">
+                  <h6 class="vew-mail-header">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_USER_ASSIGN' | translate}}</h6>
+                  <ng-select [multiple]="true" (change)="selectUser($event)">
+                    <ng-option [value]="'all'">Tous le monde</ng-option>
+                    <ng-option *ngFor="let user of users" [value]="user">{{user.firstName}} {{user.lastName}}</ng-option>
+                    <!-- <ng-template ng-header-tmp>
+                      <div>
+                        <span class="btn btn-link" (click)="onSelectAll()">tout le monde</span>
+                      </div>
+                    </ng-template> -->
+                  </ng-select>
+
+                  <ng-container *ngIf="selectedUsers.length > 0" formGroupName="userPermissionForm">
+                    <div class="row mt-2">
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input type="checkbox" (change)="userTimeBoundChange($event)" class="form-check-input" id="isTimeBounduser" formControlName="isTimeBound">
+                          <label style="margin-left: 5px;" class="form-check-label" for="isTimeBounduser">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE' | translate}}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="userPermissionFormGroup.get('isTimeBound').value">
+                      <div class="col-md-6">
+                        <input [min]="minDate" bsDatepicker class="form-control" placeholder="{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE_SD' | translate}}" formControlName="startDate">
+                        <mat-error
+                          *ngIf="userPermissionFormGroup.get('startDate').touched && userPermissionFormGroup.get('startDate').hasError('required')">
+                          {{'DOCUMENTS.ADD.ERROR.START_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                      <div class="col-md-6">
+                        <input [min]="userPermissionFormGroup.get('startDate').value" bsDatepicker class="form-control" placeholder="{{'DOCUMENTS.ADD.LABEL.DOCUMENT_PERIODE_ED' | translate}}" formControlName="endDate">
+                        <mat-error
+                          *ngIf="userPermissionFormGroup.get('startDate').touched && userPermissionFormGroup.get('endDate').hasError('required')">
+                          {{'DOCUMENTS.ADD.ERROR.END_DATE_IS_REQURED' | translate}}
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-md-6">
+                        <div class="form-check">
+                          <input type="checkbox" class="form-check-input" color="primary" id="isAllowDownloaduser" formControlName="isAllowDownload">
+                          <label style="margin-left: 5px;" for="isAllowDownloaduser">{{'DOCUMENTS.ADD.LABEL.DOCUMENT_DOWNLOAD' | translate}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <!-- <button *hasClaim="'ALL_DOCUMENTS_CREATE_DOCUMENT'" class="btn btn-success" style="margin-right: 10px;" (click)="SaveDocument()" cdkFocusInitial><i class="feather icon-plus-circle"></i> {{'SAVE' | translate}}</button> -->
+                  <button *hasClaim="'ASSIGNED_DOCUMENTS_CREATE_DOCUMENT'" class="btn btn-success" style="margin-right: 10px;" (click)="addDocument()" cdkFocusInitial><i class="feather icon-plus-circle"></i> {{'DOCUMENTS.ADD.LABEL.DOCUMENT_SAVE' | translate}}</button>
+                  <button type="button" class="btn btn-danger" [routerLink]="['/document/list']"><i class="feather icon-x-circle"></i> {{'DOCUMENTS.ADD.LABEL.DOCUMENT_CANCEL' | translate}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

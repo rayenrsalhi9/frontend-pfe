@@ -1,0 +1,33 @@
+<dropdown *ngIf="user" dropdownClass="header-nav-item-select nav-profile" (click)="navProfile.toggle($event)">
+    <div class="toggle-wrapper d-flex align-items-center">
+        <avatar [size]="35" [src]="userImg?userImg:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+        <span class="fw-bold mx-1">{{user.firstName}} {{user.lastName}}</span>
+        <i class="feather icon-chevron-down"></i>
+    </div>
+    <dropdown-menu #navProfile alignment="right">
+        <div class="nav-profile-header">
+            <div class="d-flex align-items-center">
+                <avatar [src]="userImg?userImg:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+                <div class="d-flex flex-column ms-1">
+                    <span class="fw-bold text-dark">{{user.firstName}} {{user.lastName}}</span>
+                    <span class="font-size-sm">{{user.email}}</span>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngFor="let menuItem of profileMenuList">
+          <a  (click)="menuItem.click()" *hasClaim="menuItem.claims" [routerLink]="menuItem.path" dropdownItem >
+              <div class="d-flex align-items-center">
+                  <i style="margin-right: 5px;" class="font-size-lg ms-2" [ngClass]="menuItem.icon"></i>
+                  <span>{{menuItem.item | translate}}</span>
+              </div>
+          </a>
+        </ng-container>
+        <a class="cursor-pointer" (click)="logout()" dropdownItem >
+          <div class="d-flex align-items-center">
+              <i style="margin-right: 5px;" class="font-size-lg ms-2" [ngClass]="'feather icon-power'"></i>
+              <span>{{'DROPDOWN_PROFILE.LOGOUT' | translate}}</span>
+          </div>
+      </a>
+
+    </dropdown-menu>
+</dropdown>

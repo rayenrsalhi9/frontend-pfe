@@ -1,0 +1,93 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <form [formGroup]="companyProfileForm" (ngSubmit)="saveCompanyProfile()">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <div class="col-md-8">
+                      <label for="">{{'COMPANY.PROFILE.LABELS.LOGO' | translate}}</label>
+                      <div class="cus-mat-card">
+                        <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file"
+                          name="Profile Photo" fxFlex="30">
+                        <img *ngIf="imgSrc" style="width: 100%;" class="full-width company-logo" [src]="imgSrc" />
+                        <img *ngIf="!imgSrc" style="width: 100%;" class="full-width company-logo" src="/assets/images/logo/logo.png" />
+                        <div class="mt-2">
+                          <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
+                            <i class="far fa-image"></i> {{'COMPANY.PROFILE.LABELS.CHANGE_LOGO' | translate}}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label">{{'COMPANY.PROFILE.LABELS.TITLE' | translate}}</label>
+                    <input formControlName="title" class="form-control w-100" type="text">
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label">{{'COMPANY.PROFILE.LABELS.EMAIL' | translate}}</label>
+                    <input formControlName="email" class="form-control w-100" type="text">
+                  </div>
+                  <div class="col-md-12">
+                    <label class="form-label">{{'COMPANY.PROFILE.LABELS.PHONE' | translate}}</label>
+                    <input formControlName="phoneNumber" class="form-control w-100" type="text">
+                  </div>
+
+                </div>
+                <div class="col-md-6">
+                  <label for="">{{'COMPANY.PROFILE.LABELS.BANNER_IMAGE' | translate}}</label>
+                  <div class="cus-mat-card">
+                    <input hidden (change)="onBannerChange($event)" #fileInput1 name="logo" type="file" name="Profile Photo" fxFlex="30">
+                    <img *ngIf="bannerSrc" style="width: 100%;" class="full-width company-logo" [src]="bannerSrc" />
+                    <img *ngIf="!bannerSrc" style="width: 100%;" class="full-width company-logo" src="/assets/images/others/bg-1.jpg" />
+                    <div class="mt-2">
+                      <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput1.click()">
+                        <i class="far fa-image"></i> {{'COMPANY.PROFILE.LABELS.CHANGE_BANNER' |
+                        translate}}</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">{{'COMPANY.PROFILE.LABELS.DESCRIPTION' | translate}}</label>
+                  <textarea formControlName="description" class="form-control w-100" cols="30" rows="5"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">{{'COMPANY.PROFILE.LABELS.ADDRESS' | translate}}</label>
+                  <input formControlName="address" class="form-control w-100" type="text">
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">{{'COMPANY.PROFILE.LABELS.FACEBOOK' | translate}}</label>
+                  <input formControlName="facebook" class="form-control w-100" type="text">
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">{{'COMPANY.PROFILE.LABELS.TWITTER' | translate}}</label>
+                  <input formControlName="twitter" class="form-control w-100" type="text">
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">{{'COMPANY.PROFILE.LABELS.LINKEDIN' | translate}}</label>
+                  <input formControlName="linkedin" class="form-control w-100" type="text">
+                </div>
+
+                <div class="m-t-10 col-md-12 mt-2">
+                  <button type="submit" class="btn btn-success btn-sm m-r-10" cdkFocusInitial><i
+                      class="fas fa-save"></i>
+                    {{'COMPANY.PROFILE.LABELS.SAVE' | translate}}</button>
+                  <button style="margin-left: 5px;" type="button" class="btn btn-danger btn-sm" [routerLink]="['/']"><i
+                      class="fas fa-times-circle"></i> {{'COMPANY.PROFILE.LABELS.CANCEL' | translate}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

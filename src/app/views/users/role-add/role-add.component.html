@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row margin-2">
+      <div class="col-md-6">
+        <label class="form-label">{{'ROLES.ADD.LABELS.NAME' | translate}}</label>
+        <input [(ngModel)]="role.name"  type="text" class="form-control">
+      </div>
+    </div>
+    <div class="row margin-2 mt-3">
+      <div class="col-sm-12">
+        <h4 class="widget-title">{{'ROLES.ADD.LABELS.PERMISSIONS' | translate}}</h4>
+        <checkbox color="primary" (onChange)="selecetAll($event)">
+          {{'ROLES.ADD.LABELS.SELECTALL' | translate}}
+        </checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div *ngFor='let page of pages; let i=index'>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [name]="page.name" [id]="i+'pi'" (change)="onPageSelect($event,page)">
+            <label style="margin-left: 5px;" [for]="i+'pi'">{{page.name}}</label>
+          </div>
+          <div class="row p-3">
+              <div class="col-md-3" *ngFor='let action of page.pageActions'>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [name]="action.name" [id]="i+'pai'" (change)="onPermissionChange($event,page,action)" [checked]="checkPermission(action.id)">
+                  <label style="margin-left: 5px;" [for]="i+'pai'">{{action.name}}</label>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 mt-2">
+        <button class="btn btn-success btn-sm m-r-10" (click)="saveRole()" cdkFocusInitial>
+          <i class="fas fa-save"></i> {{role && role.id ? ('ROLES.ADD.BUTTONS.UPDATE' | translate):('ROLES.ADD.BUTTONS.ADD' | translate)}}
+        </button>
+        <button style="margin-left: 10px;" class="btn btn-danger btn-sm" [routerLink]="['/user/role']">
+          <i class="fas fa-times-circle"></i> {{'ROLES.ADD.BUTTONS.CANCEL' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

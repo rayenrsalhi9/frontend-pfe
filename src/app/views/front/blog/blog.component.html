@@ -1,0 +1,31 @@
+<div class="blog-page">
+  <div class="blog-wrapper">
+
+    <div class="blog-body mt-2">
+      <div class="card" style="background: none; box-shadow: none;" >
+        <div class="card-body" style="background: none; box-shadow: none;" >
+
+          <div class="row">
+            <ng-container *ngFor="let blog of blogs; let i = index">
+              <div class="col-md-4 mb-4">
+                <div class="post-card"  [routerLink]="'/blog/'+blog.id">
+                  <div class="post-header" >
+                    <img [src]="getHost()+blog.picture" alt="" class="header-img">
+                  </div>
+                  <div class="post-body" style="padding: 5px;">
+                    <div class="post-category">{{blog.category.name}}</div>
+                    <h4 class="post-title">{{blog.title}}</h4>
+                    <p class="post-description">{{blog.subtitle}}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

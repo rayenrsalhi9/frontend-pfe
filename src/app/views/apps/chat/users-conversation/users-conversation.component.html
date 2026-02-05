@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Membres</h4>
+  </div>
+  <div class="card-body">
+    <div class="users-list" style="display: flex; flex-direction: column; gap: 20px;">
+      <div *ngFor="let user of conversation.users" class="list-item">
+        <div class="item-user" style="display: flex; gap: 10px; align-items: center;">
+          <avatar [src]="user.avatar?getHost()+user.avatar:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+          <div style="display: flex; flex-direction: column;">
+            <p style="margin: 0;">{{user.firstName}} {{user.lastName}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

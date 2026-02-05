@@ -1,0 +1,74 @@
+<div class="forum-preview">
+  <div class="preview-wrapper">
+    <div class="card">
+      <div class="card-header">
+        <h4>{{forum.title}}</h4>
+      </div>
+      <div class="card-body">
+        <div class="content" [innerHTML]="forum.content | safeHtml"></div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-actions">
+          <ul class="actions-list">
+            <li class="action-item" (click)="addReaction('up')">
+              <i class="feather icon-arrow-up"></i>
+              <span>{{forum.reactionsUp.length}}</span>
+            </li>
+            <li class="action-item" (click)="addReaction('down')">
+              <i class="feather icon-arrow-down"></i>
+              <span>{{forum.reactionsDown.length}}</span>
+            </li>
+            <li class="action-item" (click)="addReaction('heart')">
+              <i class="feather icon-heart"></i>
+              <span>{{forum.reactionsHeart.length}}</span>
+            </li>
+            <li class="action-item">
+              <i class="feather icon-message-square"></i>
+              <span>{{forum.comments.length}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-comment mt-2">
+
+          <div class="row"  *ngIf="!forum?.closed">
+            <div class="col-md-12">
+              <label class="form-label" for="blogComment">{{'FORUM.COMMENT.TITLE_COMMENT'| translate}}</label>
+              <textarea class="form-control" [(ngModel)]="comment" id="blogComment" cols="30" rows="2"
+                [placeholder]="'FORUM.COMMENT.ADD_COMMENT'| translate"></textarea>
+            </div>
+          </div>
+
+          <div class="row mt-3 justify-content-end"  *ngIf="!forum?.closed">
+            <div class="col-auto">
+              <button (click)="addComment()" style="margin-right: 10px;" type="submit"
+                class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i>{{'FORUM.COMMENT.ADD_COMMENT'| translate}}</button>
+            </div>
+          </div>
+
+          <div class="comments">
+            <ng-container *ngFor="let comment of forum.comments">
+              <div class="media" style="position: relative;">
+                <div class="media-left">
+                  <img class="media-object" src="/assets/images/avatars/thumb-16.jpg" alt="">
+                </div>
+                <div class="media-body">
+                  <div class="media-heading">
+                    <h5>{{comment.user.firstName}} {{comment.user.lastName}}</h5>
+                    <span class="time">{{comment.createdAt | utcToLocalTime:'shortDate' }}</span>
+                  </div>
+                  <div class="comment">
+                    <div *ngIf="user && comment.user.email == user.email" class="delete-comment" (click)="deleteComment(comment.id)" style="position: absolute; right: 2px; top: 2ox; color: red; cursor: pointer;">
+                      <i class="feather icon-trash"></i>
+                    </div>
+                    <p>{{comment.comment}}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

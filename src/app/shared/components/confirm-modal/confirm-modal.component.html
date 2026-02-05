@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="text-center">{{title}}</h4>
+        <p class="text-center">{{message}}</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6 d-flex gap-2">
+        <button class="btn btn-success" (click)="confirm()">{{button.confirm}}</button>
+        <button class="btn btn-danger" (click)="close()">{{button.cancel}}</button>
+      </div>
+
+    </div>
+  </div>
+</div>

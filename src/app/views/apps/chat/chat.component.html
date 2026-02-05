@@ -1,0 +1,97 @@
+<div class="chat card mb-0">
+  <div class="d-flex content-min-height content-max-height">
+    <column-panel borderRight="true" [panelWidth]="350" class="p-0" [isMobileActive]="mobilePanelOpen">
+      <div class="chat-panel">
+        <div class="chat-panel-header">
+          <div class="input-affix">
+            <i class="prefix-icon feather icon-search"></i>
+            <input type="text" class="form-control" [placeholder]="'CHAT.LABELS.SEARCH'|translate" (keyup)="serach($event)">
+          </div>
+        </div>
+        <div *hasClaim="'CHAT_ADD_GROUP_CHAT'" (click)="createGroup()"
+          style="background: #11a1fd; color: white; margin: 10px; border-radius: 5px; padding: 10px 5px; text-align: center; cursor: pointer;">
+          <i class="feather icon-user-plus"></i> {{"CHAT.BUTTONS.GROUP" | translate}}
+        </div>
+        <perfect-scrollbar class="chat-panel-body">
+          <div class="chat-list-row"
+            [style]="conversation.lastMessage.isRead == null && conversation.lastMessage.sender.id != user.id?'background:#dee1e3':''"
+            [ngClass]="{'active': conversation.id === selectedId}"
+            *ngFor="let conversation of conversations" (click)="selectChat(conversation)">
+
+            <div class="chat-list-row-avatar">
+
+              <div *ngIf="conversation.users.length == 2">
+                <ng-container *ngFor="let c_user of conversation.users; let  i = index">
+                  <avatar class="avatar" [size]="35" *ngIf="user.id != c_user.id"
+                    [src]="c_user.avatar?getHost()+c_user.avatar:'/assets/images/avatars/thumb-16.jpg'"
+                    style="min-width: 35px;"></avatar>
+                </ng-container>
+              </div>
+
+              <div *ngIf="conversation.users.length > 2">
+                <div class="collage">
+                  <div class="avatar-collage">
+                    <ng-container *ngFor="let usr of conversation.users; let  i = index">
+                      <avatar [tooltip]="usr.firstName+' '+usr.lastName" *ngIf="i <= 3" [ngClass]="'collage-img'" class="avatar" [size]="35" [src]="usr.avatar?getHost()+usr.avatar:'/assets/images/avatars/thumb-16.jpg'" style="min-width: 35px;"></avatar>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="conversation.users.length > 4" class="collage-rest">+{{conversation.users.length - 4}}</div>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="ms-2 col-8 chat-list-row-msg">
+              <ng-container *ngIf="!conversation.title; let  i = index">
+                <div *ngIf="conversation.users.length == 2">
+                  <ng-container *ngFor="let c_user of conversation.users">
+                    <h6 *ngIf="user.id != c_user.id" class="mb-0">{{c_user.firstName}} {{c_user.lastName}}</h6>
+                  </ng-container>
+                </div>
+                <div *ngIf="conversation.users.length > 2">
+                  <h6 class="mb-0">Group {{conversation.users.length}} users </h6>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="conversation.title">
+                <h6>{{conversation.title}}</h6>
+              </ng-container>
+              <p
+                [class]="'mb-0 '+(conversation.lastMessage.isRead == null && conversation.lastMessage.sender.id != user.id?'fw-bold':'text-muted')">
+                {{conversation.lastMessage.type != "msg"?'Fichier transmis':conversation.lastMessage.content}} </p>
+            </div>
+
+            <div class="chat-list-row-detail">
+              <span class="text-muted font-size-sm">{{conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo:true}}</span>
+            </div>
+
+            <div class="chat-list-row-action"  *hasClaim="'CHAT_DELETE_CHAT'" (click)="deleteConversation($event,conversation)">
+              <i class="feather icon-trash-2"></i>
+            </div>
+
+          </div>
+
+          <ng-container *ngIf="conversations.length == 0">
+            <ng-container *ngFor="let usr of users">
+              <div class="chat-list-row" *ngIf="user.id != usr.id" (click)="newConversation(usr)">
+                <div style="position: relative;">
+                  <avatar style="position: relative;" [size]="35" [src]="usr.avatar?getHost()+usr.avatar:'/assets/images/avatars/thumb-16.jpg'" style="min-width: 35px">
+                  </avatar>
+                  <div *ngIf="usr.isConnected" style="position: absolute; right: 0; top: 0; width: 10px; height: 10px; background: green; border-radius: 10px;"></div>
+                  <div *ngIf="!usr.isConnected" style="position: absolute; right: 0; top: 0; width: 10px; height: 10px; background: red; border-radius: 10px;"></div>
+                </div>
+                <div class="ms-2 col-8">
+                  <h6>{{usr.firstName}} {{usr.lastName}}</h6>
+                </div>
+              </div>
+            </ng-container>
+
+          </ng-container>
+
+        </perfect-scrollbar>
+      </div>
+    </column-panel>
+    <conversation [chatId]="selectedId" [user]="user" (updateChat)="updateChat($event)"
+      (updateConversation)="updateConversation($event)" (openMobilePanel)="onMobilePanelToggleOpen()"></conversation>
+  </div>
+</div>

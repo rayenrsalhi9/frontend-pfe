@@ -1,0 +1,53 @@
+.collage {
+  position: relative;
+
+  .avatar-collage {
+    display: grid;
+    grid: auto / 1fr 1fr;
+    overflow: hidden;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+
+    .collage-img {
+      width: 20px !important;
+      height: 20px !important;
+      line-height: unset !important;
+      min-width: unset !important;
+    }
+
+  }
+
+  .collage-rest {
+    background: red;
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 10px;
+    padding: 0 2px;
+    color: white;
+    height: 15px;
+    display: flex;
+    font-size: 10px;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+  }
+
+  .collage-menu{
+    cursor: pointer;
+    position: absolute;
+    right: -10px;
+    top: -5px;
+    background: #11a1fd;
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+}

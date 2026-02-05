@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header">
+    <h4>
+      {{'DOCUMENTS.LIST.BUTTONS.HISTORY' | translate}}
+    </h4>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <tbody>
+        <tr *ngFor="let version of data.documentVersions">
+          <td>{{version.modifiedDate | utcToLocalTime:'short'}}</td>
+          <td>
+            <span class="text-primary">{{'DOCUMENTS.HISTORY.LABEL.DOCUMENT_ADDED_BY' | translate}} :</span> <b>{{version.createdByUser}}</b>
+          </td>
+          <td>
+            <span *ngIf="version.isCurrentVersion" class="badge bg-success"
+              style="margin-bottom: 10px"> {{'DOCUMENTS.HISTORY.LABEL.DOCUMENT_CURRENT_VERSION' | translate}}</span>
+            <div *ngIf="!version.isCurrentVersion">
+              <span (click)="onDocumentView(version)" class="material-icons-outlined m-r-5 text-primary" matTooltip="view"
+                role="button">
+                <mat-icon> {{'DOCUMENTS.HISTORY.LABEL.DOCUMENT_VISIBILITY' | translate}}</mat-icon>
+              </span>
+              <span (click)="downloadDocument(version)"
+                *hasClaim="['ALL_DOCUMENTS_VIEW_DOCUMENTS','ASSIGNED_DOCUMENTS_UPLOAD_NEW_VERSION']" role="button"
+                class="m-r-5 text-primary" matTooltip="Download">
+                <mat-icon> {{'DOCUMENTS.HISTORY.LABEL.DOCUMENT_DOWNLOAD' | translate}}</mat-icon>
+              </span>
+              <span (click)="restoreDocumentVersion(version)" role="button"
+                *hasClaim="['ALL_DOCUMENTS_VIEW_DOCUMENTS','ASSIGNED_DOCUMENTS_UPLOAD_NEW_VERSION']"
+                matTooltip="Restore to Current Version" class="material-icons-outlined text-primary">
+                <mat-icon> {{'DOCUMENTS.HISTORY.LABEL.DOCUMENT_RESTORE' | translate}}</mat-icon>
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

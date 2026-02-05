@@ -1,0 +1,62 @@
+<div class="forum-page">
+  <div class="forum-wrapper">
+    <!-- <div class="forum-header">
+      <div class="header-actions">
+        <div class="row">
+          <div class="col-md-3">
+            <ng-select [multiple]="false" [placeholder]="'Search by category'" (change)="onCategoryChange($event)">
+              <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <ng-select [multiple]="false" [placeholder]="'Search by tags'" (change)="onCategoryChange($event)">
+              <ng-option *ngFor="let tag of tags" [value]="category.id">{{category.name}} </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <ng-select [multiple]="false" [placeholder]="'Search by status'" (change)="onCategoryChange($event)">
+              <ng-option *ngFor="let tag of status" [value]="category.id">{{category.name}} </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <ng-select [multiple]="false" [placeholder]="'Sort by'" (change)="onCategoryChange($event)">
+              <ng-option *ngFor="let tag of sort" [value]="category.id">{{category.name}} </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="forum-body mt-2">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-content">
+            <div class="table-wrapper">
+              <table class="table">
+                <thead class="table-header">
+                  <tr>
+                    <th>{{'FORUM.TABLE.TOPIC' | translate}}</th>
+                    <th>{{'FORUM.TABLE.CATEGORY' | translate}}</th>
+                    <th>{{'FORUM.TABLE.REPLIES' | translate}}</th>
+                    <th>{{'FORUM.TABLE.REACTIONS' | translate}}</th>
+                    <th>{{'FORUM.TABLE.ACTIVITY' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <ng-container *ngFor="let row of rows; let i = index">
+                    <tr [routerLink]="'/forum/'+row.id" [class]="'table-row '+((i%2 == 0)?'odd':'even')">
+                      <td>{{row.title}}</td>
+                      <td>{{row.category.name}}</td>
+                      <td>{{row.comments.length}}</td>
+                      <td>{{row.reactions.length}}</td>
+                      <td>{{row.createdAt | utcToLocalTime:'shortDate' }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

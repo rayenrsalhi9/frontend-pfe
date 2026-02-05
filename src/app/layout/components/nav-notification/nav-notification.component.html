@@ -1,0 +1,67 @@
+<dropdown dropdownClass="header-nav-item-select nav-notification" (click)="navNotification.toggle($event)">
+    <div class="toggle-wrapper">
+      <div style="position: relative;">
+        <div *ngIf="newNotificationCount > 0" style="width: 10px; height: 10px; border-radius: 10px; background: red; position: absolute; right: -2px; top: -2px;"></div>
+          <i class="header-nav-item-select nav-icon feather icon-bell"></i>
+      </div>
+    </div>
+    <dropdown-menu #navNotification alignment="right">
+        <div class="nav-notification-header">
+            <h5 class="mb-0"> {{'NOTIFICATION.LABELS.TITLE' | translate}}</h5>
+            <a href="javascript:void(0)" (click)="markAllAsReadNotification()" class="font-size-sm">{{'NOTIFICATION.BUTTONS.READ' | translate}}</a>
+        </div>
+        <perfect-scrollbar class="nav-notification-body">
+            <div class="nav-notification-item" *ngFor="let notification of notifications">
+                <!-- <div>
+                    <ng-container
+                        [ngTemplateOutlet]="item.notificationType === 0 ? avatarTpl : iconTpl"
+                        [ngTemplateOutletContext]="{img: item.avatar, icon: item.notificationType}">
+                    </ng-container>
+                </div> -->
+                <div class="ms-2">
+                    <span>
+                      <span style="margin-right: 5px;" *ngIf="!notification.isRead" class="badge bg-success">{{'NOTIFICATION.LABELS.NEW' | translate}}</span>
+                      <ng-container *ngIf="!notification.message">
+                        <b> {{notification.documentName}}</b> : {{'NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED' | translate}}
+                      </ng-container>
+
+                      <a href="/apps/chat">
+                        <ng-container *ngIf="notification.message">
+                          <ng-container *ngIf="notification.type != 'message'"><b>{{'NOTIFICATION.LABELS.REMINDER' | translate}}</b> :: </ng-container>
+                          <ng-container *ngIf="notification.type == 'message'"><b>{{'NOTIFICATION.LABELS.CHAT' | translate}}</b> :: </ng-container>
+                          <ng-container *ngIf="notification.documentId">
+                            <b> {{'NOTIFICATION.LABELS.DOCUMENT_NAME' | translate}}</b> : {{notification.documentName}} ::
+                          </ng-container>
+                          {{notification.user.firstName}} {{notification.user.lastName}} {{'NOTIFICATION.LABELS.SEND_MESSAGE' | translate}} <br/> {{notification.message | translate}}
+                        </ng-container>
+                      </a>
+
+                    </span>
+                    <div class="font-size-sm fw-bold mt-1">
+                        <i class="feather icon-clock"></i>
+                        <span class="ms-1">{{notification.createdDate | amLocale: momentLang | amTimeAgo:true}}</span>
+                    </div>
+                </div>
+            </div>
+        </perfect-scrollbar>
+        <!-- <div class="nav-notification-footer">
+            <a href="#" class="font-size-sm">View All</a>
+        </div> -->
+    </dropdown-menu>
+</dropdown>
+
+<ng-template #avatarTpl let-avatar="img">
+    <avatar [size]="40" [src]="'/assets/images/avatars/' + avatar + '.jpg'"></avatar>
+</ng-template>
+
+<ng-template #iconTpl let-icon="icon">
+    <avatar [size]="40" [class]="'font-size-lg'+ ' ' + notificationIconMap[icon] + ' ' + notificationColorMap[icon] "></avatar>
+</ng-template>
+
+<!-- <ng-template #odd_tpl let-number='number'>
+    <li>Odd: {{number}}</li>
+  </ng-template>
+
+  <ng-template #even_tpl let-number='number'>
+    <li>Even: {{number}}</li>
+  </ng-template> -->

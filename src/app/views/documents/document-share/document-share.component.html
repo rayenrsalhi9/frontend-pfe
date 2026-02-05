@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-header">
+    <h4>{{'DOCUMENTS.SHARE.LABEL.DOCUMENT_SHARE' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 row pl-0" *ngIf="document">
+        <div class="col-md-4">
+          <p><b>{{'DOCUMENTS.SHARE.LABEL.DOCUMENT_NAME' | translate}}:</b> {{document.name}}</p>
+        </div>
+        <div *ngIf="document.description" class="col-md-8">
+          <p><b>{{'DOCUMENTS.SHARE.LABEL.DESCRIPTION' | translate}}:</b> {{document.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

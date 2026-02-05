@@ -1,0 +1,195 @@
+<div class="conversation-header">
+  <div class="d-flex align-items-center justify-content-between container-fluid">
+    <div class="d-block d-lg-none cursor-pointer me-2 font-size-lg" (click)="onMobilePanelOpen()">
+      <i class="feather icon-menu"></i>
+    </div>
+    <ng-container *ngIf="chatId">
+      <!-- <div (click)="handleUpdateChat()" class="d-flex align-items-center gap-2">
+        <avatar [src]="avatar?getHost()+avatar:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+        <div style="display: flex; flex-direction: column;">
+          <h5 style="margin: 0;">{{title}}</h5>
+        </div>
+      </div> -->
+      <div class="d-flex align-items-center gap-2">
+        <div *ngIf="conversation && conversation.users.length > 2; else cSimple">
+          <div class="collage" dropdown>
+            <div class="avatar-collage">
+              <ng-container *ngFor="let usr of conversation.users; let  i = index">
+                <avatar [tooltip]="usr.firstName+' '+usr.lastName" *ngIf="i <= 3" [ngClass]="'collage-img'" class="avatar" [size]="35" [src]="usr.avatar?getHost()+usr.avatar:'/assets/images/avatars/thumb-16.jpg'" style="min-width: 35px;"></avatar>
+              </ng-container>
+            </div>
+            <div *ngIf="conversation.users.length > 4" class="collage-rest">+{{conversation.users.length - 4}}</div>
+              <div class="collage-menu" dropdownToggle ><i class="feather icon-menu"></i></div>
+              <ul id="dropdown-animated" style="min-height: unset; height: unset;" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+                <li style="font-size: 12px;" role="menuitem"><span class="dropdown-item" style="padding: 5px;" (click)="handleShowUsers()">Voir liste des membres</span></li>
+                <li style="font-size: 12px;" role="menuitem"><span class="dropdown-item" style="padding: 5px;" (click)="handleUpdateChat()">Modifier chat</span></li>
+              </ul>
+          </div>
+
+        </div>
+        <ng-template #cSimple>
+          <div (click)="handleUpdateChat()" class="d-flex align-items-center gap-2">
+            <avatar [src]="avatar?getHost()+avatar:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+          </div>
+        </ng-template>
+
+        <!-- <div style="display: flex; flex-direction: column;">
+          <h5 style="margin: 0;">{{title}}</h5>
+        </div> -->
+        <ng-container *ngIf="!conversation?.title; else titled">
+          <div *ngIf="conversation?.users?.length == 2">
+            <ng-container *ngFor="let c_user of conversation?.users">
+              <h6 *ngIf="user.id != c_user.id" class="mb-0">{{c_user.firstName}} {{c_user.lastName}}</h6>
+            </ng-container>
+          </div>
+          <div *ngIf="conversation?.users?.length > 2">
+            <h6 class="mb-0">Group {{conversation.users.length}} users </h6>
+          </div>
+        </ng-container>
+
+        <ng-template #titled>
+          <h6 style="margin: 0;">{{title}}</h6>
+        </ng-template>
+
+      </div>
+      <div class="actions">
+        <button [tooltip]="'CHAT.BUTTONS.USER' | translate"
+          style="width: 34px; border-radius: 34px; display: flex; align-items: center; justify-content: center;"
+          *ngIf="chatId" (click)="addUser()" class="btn btn-success">
+          <i class="feather icon-user-plus"></i>
+        </button>
+
+        <!-- <button (click)="createGroup()" style="margin-left: 5px;" class="btn btn-primary">
+          Create new group <i class="feather icon-user-plus"></i>
+        </button> -->
+      </div>
+    </ng-container>
+  </div>
+</div>
+<perfect-scrollbar class="conversation-body" #chatPS>
+  <div class="p-4" *ngIf="conversation">
+    <div class="msg" *ngFor="let msg of conversation.messages"
+      [ngClass]="{'msg-recipient':msg.sender.id != user.id, 'msg-sent': msg.sender.id == user.id}">
+      <div class="ms-2">
+        <avatar *ngIf="msg.sender.id != user.id" [icon]="'feather icon-user'"
+          [src]="msg.sender.avatar?getHost()+msg.sender.avatar:'/assets/images/avatars/thumb-16.jpg'"></avatar>
+      </div>
+      <div style="position: relative;" class="bubble" [ngClass]="{'no-avatar': msg.sender.id == user.id}">
+        <div style="margin-bottom: 0;" class="bubble-wrapper" [ngClass]="{'p-3': msg.type == 'image'}">
+          <div
+            style="width: 25px; height: 25px; display: flex; justify-content: center; align-items: center; border-radius: 25px; cursor: pointer; position: absolute;"
+            [style.background]="msg.sender.id == user.id?'#f6f7fb':'#11a1fd'"
+            [style.color]="msg.sender.id == user.id?'#11a1fd':'#f6f7fb'"
+            [style.right]="msg.sender.id != user.id?'-40px':'unset'"
+            [style.left]="msg.sender.id == user.id?'-40px':'unset'" [style.box-shadow]="'1px 1px 5px -1px black'"
+            [style.bottom]="'5px'">
+            <i (click)="handlerRactionToggle(msg)" class="feather icon-more-horizontal"></i>
+            <div style="position: relative">
+              <div *ngIf="reactionToggle == msg.id" [style.right]="msg.sender.id == user.id?'30px':'unset'"
+                [style.left]="msg.sender.id != user.id?'15px':'unset'" style="
+              color: #11a1fd;
+              position: absolute;
+              display: flex;
+              flex-direction: row;
+              background: white;
+              border-radius: 5px;
+              padding: 5px;
+              justify-content: space-around;
+              top: -15px;
+              width: 100px;
+              z-index: 1;
+              box-shadow: 0px 1px 5px -2px black">
+                <i style="font-size: 18px;" (click)="onMessageReact('heart', msg)" class="feather icon-heart"></i>
+                <i style="font-size: 18px;" (click)="onMessageReact('like', msg)" class="feather icon-thumbs-up"></i>
+                <i style="font-size: 18px;" (click)="onMessageReact('dislike', msg)"
+                  class="feather icon-thumbs-down"></i>
+              </div>
+            </div>
+          </div>
+          <div style="word-wrap: break-word" *ngIf="msg.type == 'msg'">{{msg.content}}</div>
+          <div class="d-flex flex-column" *ngIf="msg.type == 'image'">
+            <img (click)="showLightbox(msg.content)" [src]="getHost()+msg.content" style="max-height: 150px; object-fit: contain; cursor: pointer;" [alt]="msg.content">
+            <div>{{msg.content}}</div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="msg.type == 'text'">
+            <a [href]="getHost()+msg.content" download target="_blank">{{getHost()+msg.content}}</a>
+          </div>
+          <div style="color: white;" *ngIf="msg.type == 'application'">
+            <a [href]="getHost()+msg.content" download target="_blank">{{getHost()+msg.content}}</a>
+          </div>
+          <div style="color: white;" *ngIf="msg.type == 'audio'">
+            <!-- <a [href]="getHost()+msg.content">{{getHost()+msg.content}}</a> -->
+            <audio controls>
+              <source [src]="getHost()+msg.content" type="audio/ogg">
+              <source [src]="getHost()+msg.content" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+          <div style="color: white;" *ngIf="msg.type == 'video'">
+            <video width="320" height="240" controls>
+              <source [src]="getHost()+msg.content" type="video/mp4">
+              <source [src]="getHost()+msg.content" type="video/ogg">
+              Your browser does not support the video tag.
+            </video>
+            <!-- <a [href]="getHost()+msg.content">{{getHost()+msg.content}}</a> -->
+          </div>
+          <ng-image-fullscreen-view [images]="selectedImage" [imageIndex]="0" [show]="showFlag"
+          (close)="closeEventHandler()"></ng-image-fullscreen-view>
+        </div>
+        <div *ngIf="msg.reactions && msg.reactions.length > 0" class="reactions" style="
+          position: absolute;
+          display: flex;
+          gap: 5px;
+          background: red;
+          padding: 5px;
+          border-radius: 50px;
+          color: white;
+          right: 0px;
+          bottom: -15px;">
+          <ng-container *ngFor="let reaction of msg.reactions">
+            <i *ngIf="reaction.type =='heart'" style="font-size: 12px;" class="feather icon-heart"></i>
+            <i *ngIf="reaction.type =='like'" style="font-size: 12px;" class="feather icon-thumbs-up"></i>
+            <i *ngIf="reaction.type =='dislike'" style="font-size: 12px;" class="feather icon-thumbs-down"></i>
+          </ng-container>
+
+        </div>
+        <span [style.bottom]="msg.reactions.length >0?'-32px':'-17px'" *ngIf="msg.isRead && msg.sender.id == user.id"
+          style="font-size: 10px; width: max-content; position: absolute; right: 0;">Seen <span>{{msg.isRead |
+            utcToLocalTime:'short'}}</span></span>
+      </div>
+
+    </div>
+  </div>
+  <ng-container *ngIf="chatId == null">
+    <div class="text-message d-flex flex-column align-items-center">
+       <img src="/assets/images/others/Messages-2.png" class="mt-5 mx-auto">
+      <h6  class="text-center text-muted" style="font-weight: bold; text-transform: uppercase; color: #dbdbdb ;"><b>{{'CHAT.LABELS.WELCOME'|translate}}</b></h6>
+    </div>
+  </ng-container>
+</perfect-scrollbar>
+<div *ngIf="chatId" class="conversation-footer">
+  <input type="text" class="form-control ms-2" (focus)="onInputMessageFocus()" [placeholder]="'CHAT.LABELS.PLACEHOLDER'|translate"
+    [(ngModel)]="message" (keydown.enter)="sendMessage();$event.preventDefault()">
+  <div class="conversation-footer-icon d-flex">
+
+
+    <input hidden (change)="onFileSelect($event)" #fileInput type="file">
+
+    <a class="mx-2" (click)="fileInput.click()" href="javascript:void(0)">
+      <i class="las la-paperclip"></i>
+    </a>
+
+    <div style="position: relative;">
+      <a (click)="handleEmojiBar()" class="mx-2" href="javascript:void(0)">
+        <i class="las la-smile"></i>
+      </a>
+      <emoji-mart *ngIf="isOpen" class="emoji-mart" (emojiClick)="handleSelection($event)" [emojiTooltip]="false"
+        [enableSearch]="false" [darkMode]="false" style="position: absolute; right: 0; bottom: 50px;" t
+        title="Pick your emoji…" emoji="point_up"></emoji-mart>
+    </div>
+  </div>
+  <button class="btn btn-primary ms-2" (click)="sendMessage()">
+    <span>{{'CHAT.BUTTONS.SEND'|translate}}</span>
+    <i class="feather icon-send"></i>
+  </button>
+</div>

@@ -1,0 +1,22 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-body">
+      <h4 class="mb-3">{{"SURVEY.BUTTONS.VIEW" | translate}}</h4>
+      <div *ngIf="overviewChartOptions.series.length > 0" id="dash-line">
+          <apx-chart
+          [series]="overviewChartOptions?.series"
+          [chart]="overviewChartOptions?.chart"
+          [dataLabels]="overviewChartOptions?.dataLabels"
+          [plotOptions]="overviewChartOptions?.plotOptions"
+          [yaxis]="overviewChartOptions?.yaxis"
+          [legend]="overviewChartOptions?.legend"
+          [fill]="overviewChartOptions?.fill"
+          [stroke]="overviewChartOptions?.stroke"
+          [tooltip]="overviewChartOptions?.tooltip"
+          [xaxis]="overviewChartOptions?.xaxis"
+          ></apx-chart>
+      </div>
+  </div>
+
+  </div>
+</div>

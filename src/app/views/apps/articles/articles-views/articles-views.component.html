@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="card-header">
+    <h4>{{data.title}}</h4>
+  </div>
+  <div class="card-body">
+    <img style="width: 100%; border-radius: 10px;" [src]="getHost()+data.picture" alt="">
+    <div class="mt-2 content-article" style="width: 100%" [innerHTML]="data.longText | safeHtml"></div>
+  </div>
+  <div class="card-footer">
+    {{data.creator.firstName}} {{data.creator.lastName}}
+  </div>
+</div>

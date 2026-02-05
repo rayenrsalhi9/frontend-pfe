@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Update conversation</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" [(ngModel)]="conversation.title" name="title" placeholder="title">
+       <!--  <textarea [(ngModel)]="message" class="form-control" name="title" placeholder="Title..." id="" cols="30" rows="4"></textarea> -->
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Receiver</label>
+        <ng-select [multiple]="true" [(ngModel)]="selectedUsers">
+          <ng-container *ngFor="let user of users">
+            <ng-option  [value]="user.id">{{user.firstName}}
+              {{user.lastName}}</ng-option>
+          </ng-container>
+
+        </ng-select>
+      </div>
+      <div class="col-md-12 mt-3">
+        <button (click)="updateConversation()" type="button" class="btn btn-success" ><i class="feather icon-plus-circle"></i> Update</button>
+        <button (click)="closeConver()" style="margin-left: 5px;" type="button" class="btn btn-danger"><i class="feather icon-x-circle"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="card-body">
+    <h4 class="mb-3">{{"DASHBOARD.TRANSMISSION" | translate}}</h4>
+    <div id="dash-line">
+        <apx-chart
+        [series]="overviewChartOptions.series"
+        [chart]="overviewChartOptions.chart"
+        [dataLabels]="overviewChartOptions.dataLabels"
+        [plotOptions]="overviewChartOptions.plotOptions"
+        [yaxis]="overviewChartOptions.yaxis"
+        [legend]="overviewChartOptions.legend"
+        [fill]="overviewChartOptions.fill"
+        [stroke]="overviewChartOptions.stroke"
+        [tooltip]="overviewChartOptions.tooltip"
+        [xaxis]="overviewChartOptions.xaxis"
+        ></apx-chart>
+    </div>
+</div>

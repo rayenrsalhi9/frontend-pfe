@@ -1,0 +1,33 @@
+<div class="card mb-0">
+  <div class="card-body">
+    <form [formGroup]="categoryManage">
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label" for="categoryTile">{{'CATEGORY.LIST.TABLE.NAME' | translate}}</label>
+          <input formControlName="name" class="form-control" id="categoryTile">
+          <div *ngIf="categoryManage.get('name').touched && categoryManage.get('name')?.errors">
+            <div class="text-danger" *ngIf="categoryManage.get('name').errors?.['required']">
+              {{'CATEGORY.ADD.ERROR.CATEGORY_NAME_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="form-label" for="categoryDescription">{{'CATEGORY.LIST.TABLE.DESCRIPTION' | translate}}</label>
+          <textarea formControlName="description" class="form-control" id="categoryDescription"></textarea>
+          <div *ngIf="categoryManage.get('description').touched && categoryManage.get('description')?.errors">
+            <div class="text-danger" *ngIf="categoryManage.get('description').errors?.['required']">
+              {{'CATEGORY.ADD.ERROR.CATEGORY_NAME_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2">
+        <button *ngIf="!isEdit" (click)="saveCategory()" style="margin-right: 10px;" type="submit"  class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{"CATEGORY.ADD.BUTTONS.CATEGORY_SAVE" | translate}}</button>
+        <button *ngIf="isEdit" (click)="saveCategory()" style="margin-right: 10px;" type="submit"  class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{"CATEGORY.ADD.BUTTONS.CATEGORY_SAVE" | translate}}</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="cancel()"> <i class="fas fa-times-circle"></i>{{"CATEGORY.ADD.BUTTONS.CATEGORY_CANCEL" | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="blog-preview">
+  <div class="preview-wrapper">
+    <div class="card">
+      <div class="card-header">
+        <h4>{{blog.title}}</h4>
+      </div>
+      <div class="card-body">
+        <img class="img" [src]="getHost()+blog.picture" alt="first slide">
+        <div class="content" [innerHTML]="blog.body | safeHtml"></div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-actions">
+          <ul class="actions-list">
+            <li class="action-item" (click)="addReaction('up')">
+              <i class="feather icon-thumbs-up"></i>
+              <span>{{blog.reactionsUp.length}}</span>
+            </li>
+            <li class="action-item" (click)="addReaction('down')">
+              <i class="feather icon-thumbs-down"></i>
+              <span>{{blog.reactionsDown.length}}</span>
+            </li>
+            <li class="action-item">
+              <i class="feather icon-message-square"></i>
+              <span>{{blog.comments.length}}</span>
+            </li>
+            <!-- <li class="action-item">
+              <i class="feather icon-share-2"></i>
+              <span>300</span>
+            </li> -->
+          </ul>
+        </div>
+        <div class="footer-comment mt-2">
+
+          <div class="row">
+            <div class="col-md-12">
+              <label class="form-label" for="blogComment">{{'FORUM.COMMENT.TITLE_COMMENT'| translate}}</label>
+              <textarea class="form-control" [(ngModel)]="comment" id="blogComment" cols="30" rows="2"
+                [placeholder]="'FORUM.COMMENT.ADD_COMMENT'| translate"></textarea>
+            </div>
+          </div>
+
+          <div class="row mt-3 justify-content-end">
+            <div class="col-auto">
+              <button (click)="addComment()" style="margin-right: 10px;" type="submit"
+                class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i>{{'FORUM.COMMENT.ADD_COMMENT'| translate}}</button>
+            </div>
+          </div>
+
+          <div class="comments">
+            <ng-container *ngFor="let comment of blog.comments">
+              <div class="media">
+                <div class="media-left">
+                  <img class="media-object" src="/assets/images/avatars/thumb-16.jpg" alt="">
+                </div>
+                <div class="media-body">
+                  <div class="media-heading">
+                    <h5>{{comment.user.firstName}} {{comment.user.lastName}}</h5>
+                    <span class="time">{{comment.createdAt | utcToLocalTime:'shortDate' }}</span>
+                  </div>
+                  <p>{{comment.comment}}</p>
+                  <!-- <a href="#" class="reply">Reply</a> -->
+
+                  <!-- <div class="media media-author">
+                    <div class="media-left">
+                      <img class="media-object" src="./img/avatar-1.jpg" alt="">
+                    </div>
+                    <div class="media-body">
+                      <div class="media-heading">
+                        <h4>John Doe</h4>
+                        <span class="time">5 min ago</span>
+                      </div>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                      <a href="#" class="reply">Reply</a>
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

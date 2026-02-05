@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+    <h4>{{'DOCUMENTS.UPLOAD.LABEL.DOCUMENT_NEW_VERSION' | translate}}</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="documentForm">
+      <div class="col-md-12">
+        <label>{{'DOCUMENTS.UPLOAD.LABEL.DOCUMENT_UPLOAD' | translate}}</label>
+        <input class="form-control" #file (change)="upload(file.files)" type="file">
+        <div class="text-danger"
+          *ngIf="documentForm.get('extension').touched  && documentForm.get('extension').hasError('required')">
+          {{'DOCUMENTS.UPLOAD.ERROR.DOCUMENT_TYPE_IS_NOT_ALLOW' | translate}}
+        </div>
+      </div>
+      <div class="col-md-12">
+        <mat-progress-bar *ngIf="showProgress" mode="determinate" [value]="progress"></mat-progress-bar>
+      </div>
+      <div class="m-t-10 col-md-12 m-b-2 mt-2">
+        <button style="margin-right: 10px;" [disabled]="!isFileUpload" class="btn btn-success btn-sm m-r-10" (click)="SaveDocument()"><i class="fas fa-times-circle"></i> {{'DOCUMENTS.UPLOAD.LABEL.DOCUMENT_SAVE' | translate}}</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="closeDialog()"><i class="fas fa-times-circle"></i>{{'DOCUMENTS.UPLOAD.LABEL.DOCUMENT_CANCEL' | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>

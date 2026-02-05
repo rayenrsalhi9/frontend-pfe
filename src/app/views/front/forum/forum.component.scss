@@ -1,0 +1,29 @@
+.forum-page {
+  padding: 0 1.5rem;
+  .forum-wrapper {
+    .forum-header {}
+    .forum-body {
+      .table-content{
+        .table-wrapper{
+         .table {
+          .table-header{
+
+          }
+          .table-body {
+            .table-row {
+              cursor: pointer;
+              border-radius: 5px;
+              &.odd {
+                background: #fff;
+              }
+              &.even {
+                background: #f3f3f3;
+              }
+            }
+          }
+         }
+        }
+      }
+    }
+  }
+}

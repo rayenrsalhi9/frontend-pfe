@@ -1,0 +1,25 @@
+<div class="card-body">
+    <h4>{{'DASHBOARD.EXTENSIONS' | translate}}</h4>
+    <div class="mt-3" *ngIf="data && data.documents">
+        <div class="progress">
+            <div
+                *ngFor="let item of data.documents; let i = index"
+                [tooltip]="item.extension+' total: '+item.total"
+                class="progress-bar cursor-pointer"
+                [ngClass]="'bg-' + progressType[i]"
+                [ngStyle]="{width: ((item.total/data.totalDocuments)*100) + '%'}" >
+            </div>
+        </div>
+        <div class="mt-3">
+          <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}"  [rows]="data.documents" [columnMode]="ColumnMode.force" rowHeight="auto" [limit]="3" [headerHeight]="50" [footerHeight]="50">
+            <ngx-datatable-column [name]="'TABLE_MESSAGE.EXTENSION' | translate" prop="extension"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'TABLE_MESSAGE.TOTAL' | translate" prop="total">
+              <ng-template ngx-datatable-cell-template let-value="value">
+                <i class="feather icon-file"></i>
+                <span class="ms-1">{{value}}</span>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+    </div>
+</div>
