@@ -2,24 +2,29 @@
   <div class="header-wrapper">
     <div class="header-left">
       <nav-toggle *ngIf="isMobile" [isMobile]="isMobile"></nav-toggle>
-      <span routerLink="/" style="cursor: pointer;">
+      <span routerLink="/" style="cursor: pointer">
         <logo></logo>
       </span>
     </div>
     <div class="header-right">
       <ul class="header-menu">
-        <li class="menu-item" routerLink="/">{{'NAV.HOME' | translate}}</li>
-        <li class="menu-item" routerLink="/forum">{{'NAV.FORUM' | translate}}</li>
-        <li class="menu-item" routerLink="/blog">{{'NAV.BLOG' | translate}}</li>
-        <!-- <li class="menu-item" routerLink="/article">Article</li> -->
-        <!-- <li class="menu-item" routerLink="/dashboard">{{'NAV.CONNEXION' | translate}}</li> -->
+        <li class="menu-item" routerLink="/">{{ "NAV.HOME" | translate }}</li>
+        <li class="menu-item" routerLink="/forum">
+          {{ "NAV.FORUM" | translate }}
+        </li>
+        <li class="menu-item" routerLink="/blog">
+          {{ "NAV.BLOG" | translate }}
+        </li>
         <ng-container *ngIf="checkConnection(); else notConnected">
-          <nav-profile></nav-profile>
+          <li class="menu-item" routerLink="/dashboard">
+            {{ "NAV.DASHBOARD" | translate }}
+          </li>
         </ng-container>
         <ng-template #notConnected>
-          <li class="menu-item" routerLink="/dashboard">{{'NAV.CONNEXION' | translate}}</li>
+          <li class="menu-item menu-item-login" routerLink="/login">
+            {{ "NAV.CONNEXION" | translate }}
+          </li>
         </ng-template>
-
 
         <nav-i18n></nav-i18n>
       </ul>
@@ -31,32 +36,38 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-  <!-- Site footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 col-md-6">
-          <h6>{{"FOOTER.ABOUT" | translate}}</h6>
-          <span routerLink="/" style="cursor: pointer;">
-            <logo></logo>
-          </span>
-          <p>
-            <b>{{companyProfile?.title}}</b>
-          </p>
-          <p class="text-justify">
-            {{companyProfile?.description}}
-          </p>
-        </div>
+<!-- Site footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <h6>{{ "FOOTER.ABOUT" | translate }}</h6>
+        <span routerLink="/" style="cursor: pointer">
+          <logo></logo>
+        </span>
+        <p>
+          <b>{{ companyProfile?.title }}</b>
+        </p>
+        <p class="text-justify">
+          {{ companyProfile?.description }}
+        </p>
+      </div>
 
-        <div class="col-xs-6 col-md-3">
-          <h6>{{"FOOTER.SITEMAP" | translate}}</h6>
-          <ul class="footer-links">
-            <li><a routerLink="/dashboard">{{"NAV.DASHBOARD" | translate}}</a></li>
-            <li><a routerLink="/forum">{{"NAV.APPS_FORUM" | translate}}</a></li>
-            <li><a routerLink="#">{{"NAV.APPS_SURVEY" | translate}}</a></li>
-          </ul>
-        </div>
-        <!-- <div class="col-xs-6 col-md-3">
+      <div class="col-xs-6 col-md-3">
+        <h6>{{ "FOOTER.SITEMAP" | translate }}</h6>
+        <ul class="footer-links">
+          <li>
+            <a routerLink="/dashboard">{{ "NAV.DASHBOARD" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/forum">{{ "NAV.APPS_FORUM" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="#">{{ "NAV.APPS_SURVEY" | translate }}</a>
+          </li>
+        </ul>
+      </div>
+      <!-- <div class="col-xs-6 col-md-3">
           <h6>{{"FOOTER.SITEMAP" | translate}}</h6>
           <ul class="footer-links">
             <li><a routerLink="/dashboard">{{"NAV.DASHBOARD" | translate}}</a></li>
@@ -64,30 +75,59 @@
             <li><a routerLink="#">{{"NAV.APPS_SURVEY" | translate}}</a></li>
           </ul>
         </div> -->
-        <div class="col-xs-6 col-md-3">
-          <h6>{{"FOOTER.CONTACT" | translate}}</h6>
-          <ul class="footer-links">
-            <li><i class="feather icon-map px-2"></i> <a href="#">{{companyProfile?.address}}</a></li>
-            <li><i class="feather icon-phone px-2"></i> <a href="#">{{companyProfile?.phoneNumber}}</a></li>
-            <li><i class="feather icon-mail px-2"></i> <a href="#">{{companyProfile?.email}}</a></li>
-          </ul>
-        </div>
+      <div class="col-xs-6 col-md-3">
+        <h6>{{ "FOOTER.CONTACT" | translate }}</h6>
+        <ul class="footer-links">
+          <li>
+            <i class="feather icon-map px-2"></i>
+            <a href="#">{{ companyProfile?.address }}</a>
+          </li>
+          <li>
+            <i class="feather icon-phone px-2"></i>
+            <a href="#">{{ companyProfile?.phoneNumber }}</a>
+          </li>
+          <li>
+            <i class="feather icon-mail px-2"></i>
+            <a href="#">{{ companyProfile?.email }}</a>
+          </li>
+        </ul>
       </div>
-      <hr>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-sm-6 col-xs-12">
-          <p class="copyright-text">© 2024 ged, inc. Gestion documents éléctronique.</p>
-        </div>
+    <hr />
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-sm-6 col-xs-12">
+        <p class="copyright-text">
+          © 2024 ged, inc. Gestion documents éléctronique.
+        </p>
+      </div>
 
-        <div class="col-md-4 col-sm-6 col-xs-12">
-          <ul class="social-icons">
-            <li><a class="facebook" [href]="companyProfile?.facebook?companyProfile?.facebook:'#'"><i class="feather icon-facebook"></i></a></li>
-            <li><a class="twitter" [href]="companyProfile?.twitter?companyProfile?.twitter:'#'"><i class="feather icon-twitter"></i></a></li>
-            <li><a class="linkedin" [href]="companyProfile?.linkedin?companyProfile?.linkedin:'#'"><i class="feather icon-linkedin"></i></a></li>
-          </ul>
-        </div>
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <ul class="social-icons">
+          <li>
+            <a
+              class="facebook"
+              [href]="companyProfile?.facebook ? companyProfile?.facebook : '#'"
+              ><i class="feather icon-facebook"></i
+            ></a>
+          </li>
+          <li>
+            <a
+              class="twitter"
+              [href]="companyProfile?.twitter ? companyProfile?.twitter : '#'"
+              ><i class="feather icon-twitter"></i
+            ></a>
+          </li>
+          <li>
+            <a
+              class="linkedin"
+              [href]="companyProfile?.linkedin ? companyProfile?.linkedin : '#'"
+              ><i class="feather icon-linkedin"></i
+            ></a>
+          </li>
+        </ul>
       </div>
     </div>
+  </div>
 </footer>

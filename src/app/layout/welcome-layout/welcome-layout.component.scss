@@ -10,9 +10,6 @@
     min-height: 70px;
     height: 100%;
     padding: 0 2vw;
-    .header-left {
-
-    }
     .header-right {
       .header-menu {
         display: flex;
@@ -31,6 +28,17 @@
           {
             color:#11a1fd;
             text-decoration:none;
+          }
+          &.menu-item-login {
+            background-color: #11a1fd;
+            color: white !important;
+            border-radius: 12px;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+            &:hover {
+              background-color: darken(#11a1fd, 10%);
+              color: white !important;
+            }
           }
         }
       }
