@@ -19,14 +19,13 @@
           <li class="menu-item" routerLink="/dashboard">
             {{ "NAV.DASHBOARD" | translate }}
           </li>
+          <nav-profile></nav-profile>
         </ng-container>
         <ng-template #notConnected>
           <li class="menu-item menu-item-login" routerLink="/login">
             {{ "NAV.CONNEXION" | translate }}
           </li>
         </ng-template>
-
-        <!-- <nav-i18n></nav-i18n> -->
       </ul>
     </div>
   </div>

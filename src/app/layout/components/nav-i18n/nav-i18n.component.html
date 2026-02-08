@@ -7,7 +7,7 @@
     <!-- <avatar [size]="22" [src]="'/assets/images/thumbs/' + currentLang + '.png'"></avatar> -->
     <i class="feather icon-globe"></i>
     <span style="cursor: pointer; font-weight: 600">{{
-      currentLang.split("_")[1]
+      currentLang?.split("_")[1] || currentLang
     }}</span>
   </div>
   <dropdown-menu #navI18n alignment="right">

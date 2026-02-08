@@ -1,43 +1,44 @@
 <div class="main-wrapper">
   <div class="content-container">
-    <!-- Latest News Section -->
+    <!-- Latest Blogs Section -->
     <section class="news-section">
       <div class="section-header">
-        <h3 class="section-title">{{ "DASHBOARD.NEWS" | translate }}</h3>
+        <h3 class="section-title">Latest Blogs</h3>
+        <p>Check out what others are talking about.</p>
       </div>
 
       <div
-        *ngIf="articles && articles.length > 0; else noNews"
+        *ngIf="latestBlogs?.length > 0; else noBlogs"
         class="news-grid"
       >
         <div
-          *ngFor="let article of articles"
+          *ngFor="let blog of latestBlogs"
           class="news-card"
-          (click)="viewArticle(article)"
+          (click)="viewBlog(blog)"
         >
           <div class="news-card-image">
             <img
               [src]="
-                article.picture
-                  ? getHost() + article.picture
+                blog?.picture
+                  ? getHost() + blog.picture
                   : '/assets/images/others/bg-4.jpg'
               "
-              alt=""
+              [alt]="blog?.title"
             />
-            <span class="news-badge">{{ article.category.name }}</span>
+            <span class="news-badge">{{ blog?.category?.name }}</span>
           </div>
           <div class="news-card-content">
             <div class="news-meta">
-              {{ article.createdAt | utcToLocalTime: "shortDate" }}
+              {{ blog?.createdAt | utcToLocalTime: "shortDate" }}
             </div>
-            <h4 class="news-title">{{ article.title }}</h4>
-            <p class="news-preview">{{ article.shortText }}</p>
+            <h4 class="news-title">{{ blog?.title }}</h4>
+            <p class="news-preview">{{ blog?.shortText }}</p>
           </div>
         </div>
       </div>
-      <ng-template #noNews>
+      <ng-template #noBlogs>
         <div class="muted-placeholder">
-          <p>No news available at the moment.</p>
+          <p>No blogs available at the moment.</p>
         </div>
       </ng-template>
     </section>
@@ -46,33 +47,32 @@
     <div class="main-grid">
       <!-- Left: Latest Forum -->
       <div class="forum-column">
-        <div
-          class="section-header d-flex justify-content-between align-items-center"
-        >
+        <div class="section-header">
           <h3 class="section-title">
             {{ "WELCOME.LATEST_FORUM" | translate }}
           </h3>
+          <p>See what others are talking about.</p>
         </div>
 
         <div
-          *ngIf="latestForums && latestForums.length > 0; else noForums"
+          *ngIf="latestForums?.length > 0; else noForums"
           class="forum-list"
         >
           <div
             *ngFor="let forum of latestForums"
             class="forum-card"
-            [routerLink]="'/forum/' + forum.id"
+            [routerLink]="'/forum/' + forum?.id"
           >
             <div class="forum-card-body">
-              <span class="category-badge">{{ forum.category.name }}</span>
-              <h4 class="forum-item-title">{{ forum.title }}</h4>
+              <span class="category-badge">{{ forum?.category?.name }}</span>
+              <h4 class="forum-item-title">{{ forum?.title }}</h4>
               <div class="forum-item-meta">
                 <span
-                  >By {{ forum.creator.firstName }}
-                  {{ forum.creator.lastName }}</span
+                  >By {{ forum?.creator?.firstName }}
+                  {{ forum?.creator?.lastName }}</span
                 >
                 <span class="meta-dot"></span>
-                <span>{{ forum.createdAt | utcToLocalTime: "shortDate" }}</span>
+                <span>{{ forum?.createdAt | utcToLocalTime: "shortDate" }}</span>
               </div>
             </div>
           </div>
@@ -96,10 +96,10 @@
             <h3 class="section-title">{{ "WELCOME.SURVEY" | translate }}</h3>
           </div>
           <div class="survey-body">
-            <p class="survey-question">{{ survey.title }}</p>
+            <p class="survey-question">{{ survey?.title }}</p>
 
             <div class="survey-actions">
-              <ng-container *ngIf="survey.type == 'simple'">
+              <ng-container *ngIf="survey?.type == 'simple'">
                 <button (click)="surveyAnswer(1)" class="btn-survey btn-yes">
                   {{ "BUTONS.YES" | translate }}
                 </button>
@@ -108,17 +108,17 @@
                 </button>
               </ng-container>
 
-              <ng-container *ngIf="survey.type == 'rating'">
+              <ng-container *ngIf="survey?.type == 'rating'">
                 <div class="rating-wrapper">
                   <rating
-                    (click)="surveyAnswer($event.target.getAttribute('title'))"
+                    (onHover)="surveyAnswer($event)"
                     [max]="5"
                     [readonly]="isReadonly"
                   ></rating>
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="survey.type == 'satisfaction'">
+              <ng-container *ngIf="survey?.type == 'satisfaction'">
                 <button (click)="surveyAnswer(0)" class="btn-survey btn-yes">
                   {{ "BUTONS.SATISFIED" | translate }}
                 </button>
