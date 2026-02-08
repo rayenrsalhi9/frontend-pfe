@@ -74,6 +74,15 @@ const routes: Routes = [
       hidePageHeader: false
     },
     canLoad: [AuthGuard],
+  },
+  {
+    path: 'responses-audits',
+    loadChildren: () => import('./responses-audit/responses-audit.module').then(m => m.ResponsesAuditModule),
+    data: {
+      title: 'NAV.APPS_RESPONSES_AUDITS',
+      hidePageHeader: false
+    },
+    canLoad: [AuthGuard],
   }
 ];
 

@@ -14,6 +14,7 @@ export const nav = {
     'APPS_CHAT': 'Chat',
     'APPS_CALENDAR': 'Calendar',
     'APPS_LOGINS': 'Login audits',
+    'APPS_RESPONSES_AUDITS': 'Responses audits',
     'APPS_ARTICLE': 'News',
     'APPS_ARTICLE_LIST': 'News list',
     'APPS_ARTICLE_CATEGORY': 'News categories',
