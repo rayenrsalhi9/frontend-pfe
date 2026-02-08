@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { AppConfig } from '@app/shared/types/app-config.interface';
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
     }
 })
 export class NavI18NComponent implements OnInit {
+    @Input() dropDirection: 'dropdown' | 'dropup' | 'dropright' = 'dropdown';
     @Select((state: { app: AppConfig; }) => state.app) app$: Observable<AppConfig>;
     currentLang: string;
     languageList = []

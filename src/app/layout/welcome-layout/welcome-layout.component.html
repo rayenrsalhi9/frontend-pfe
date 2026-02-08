@@ -26,7 +26,7 @@
           </li>
         </ng-template>
 
-        <nav-i18n></nav-i18n>
+        <!-- <nav-i18n></nav-i18n> -->
       </ul>
     </div>
   </div>
@@ -35,6 +35,9 @@
   <div class="content-wrapper">
     <router-outlet></router-outlet>
   </div>
+</div>
+<div class="floating-i18n-widget">
+  <nav-i18n dropDirection="dropup"></nav-i18n>
 </div>
 <!-- Site footer -->
 <footer class="site-footer">
@@ -132,23 +135,17 @@
       <div class="col-md-4 col-sm-6 col-xs-12">
         <ul class="social-icons">
           <li>
-            <a
-              class="facebook"
-              [href]="'https://www.facebook.com/ged'"
+            <a class="facebook" [href]="'https://www.facebook.com/ged'"
               ><i class="feather icon-facebook"></i
             ></a>
           </li>
           <li>
-            <a
-              class="twitter"
-              [href]="'https://twitter.com/ged'"
+            <a class="twitter" [href]="'https://twitter.com/ged'"
               ><i class="feather icon-twitter"></i
             ></a>
           </li>
           <li>
-            <a
-              class="linkedin"
-              [href]="'https://www.linkedin.com/company/ged'"
+            <a class="linkedin" [href]="'https://www.linkedin.com/company/ged'"
               ><i class="feather icon-linkedin"></i
             ></a>
           </li>
