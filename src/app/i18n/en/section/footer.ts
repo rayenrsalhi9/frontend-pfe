@@ -3,5 +3,7 @@ export const footer = {
     "ABOUT":"About",
     "SITEMAP":"Sitemap",
     "CONTACT":"Contact",
+    "EXPLORE":"Explore",
+    "PORTAL":"Portal",
   }
 }

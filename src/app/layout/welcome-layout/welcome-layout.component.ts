@@ -33,4 +33,8 @@ export class WelcomeLayoutComponent implements OnInit {
   checkConnection() {
     return this.securityService.isUserAuthenticate()
   }
+
+  get currentYear(): number {
+    return new Date().getFullYear()
+  }
 }
