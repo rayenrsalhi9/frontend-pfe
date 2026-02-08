@@ -24,7 +24,7 @@ export class PusherService {
 
   initializePusher(): void {
     Pusher.logToConsole = true
-    this.pusher = new Pusher("app-key", {
+    this.pusher = new Pusher(environment.wsKey, {
       cluster: "mt1",
       auth:{
         headers:{

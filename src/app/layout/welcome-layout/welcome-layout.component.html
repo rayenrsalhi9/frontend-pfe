@@ -2,24 +2,29 @@
   <div class="header-wrapper">
     <div class="header-left">
       <nav-toggle *ngIf="isMobile" [isMobile]="isMobile"></nav-toggle>
-      <span routerLink="/" style="cursor: pointer;">
+      <span routerLink="/" style="cursor: pointer">
         <logo></logo>
       </span>
     </div>
     <div class="header-right">
       <ul class="header-menu">
-        <li class="menu-item" routerLink="/">{{'NAV.HOME' | translate}}</li>
-        <li class="menu-item" routerLink="/forum">{{'NAV.FORUM' | translate}}</li>
-        <li class="menu-item" routerLink="/blog">{{'NAV.BLOG' | translate}}</li>
-        <!-- <li class="menu-item" routerLink="/article">Article</li> -->
-        <!-- <li class="menu-item" routerLink="/dashboard">{{'NAV.CONNEXION' | translate}}</li> -->
+        <li class="menu-item" routerLink="/">{{ "NAV.HOME" | translate }}</li>
+        <li class="menu-item" routerLink="/forum">
+          {{ "NAV.FORUM" | translate }}
+        </li>
+        <li class="menu-item" routerLink="/blog">
+          {{ "NAV.BLOG" | translate }}
+        </li>
         <ng-container *ngIf="checkConnection(); else notConnected">
-          <nav-profile></nav-profile>
+          <li class="menu-item" routerLink="/dashboard">
+            {{ "NAV.DASHBOARD" | translate }}
+          </li>
         </ng-container>
         <ng-template #notConnected>
-          <li class="menu-item" routerLink="/dashboard">{{'NAV.CONNEXION' | translate}}</li>
+          <li class="menu-item menu-item-login" routerLink="/login">
+            {{ "NAV.CONNEXION" | translate }}
+          </li>
         </ng-template>
-
 
         <nav-i18n></nav-i18n>
       </ul>
@@ -31,63 +36,124 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-  <!-- Site footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 col-md-6">
-          <h6>{{"FOOTER.ABOUT" | translate}}</h6>
-          <span routerLink="/" style="cursor: pointer;">
-            <logo></logo>
-          </span>
-          <p>
-            <b>{{companyProfile?.title}}</b>
-          </p>
-          <p class="text-justify">
-            {{companyProfile?.description}}
-          </p>
-        </div>
-
-        <div class="col-xs-6 col-md-3">
-          <h6>{{"FOOTER.SITEMAP" | translate}}</h6>
-          <ul class="footer-links">
-            <li><a routerLink="/dashboard">{{"NAV.DASHBOARD" | translate}}</a></li>
-            <li><a routerLink="/forum">{{"NAV.APPS_FORUM" | translate}}</a></li>
-            <li><a routerLink="#">{{"NAV.APPS_SURVEY" | translate}}</a></li>
-          </ul>
-        </div>
-        <!-- <div class="col-xs-6 col-md-3">
-          <h6>{{"FOOTER.SITEMAP" | translate}}</h6>
-          <ul class="footer-links">
-            <li><a routerLink="/dashboard">{{"NAV.DASHBOARD" | translate}}</a></li>
-            <li><a routerLink="/article">{{"NAV.APPS_ARTICLE" | translate}}</a></li>
-            <li><a routerLink="#">{{"NAV.APPS_SURVEY" | translate}}</a></li>
-          </ul>
-        </div> -->
-        <div class="col-xs-6 col-md-3">
-          <h6>{{"FOOTER.CONTACT" | translate}}</h6>
-          <ul class="footer-links">
-            <li><i class="feather icon-map px-2"></i> <a href="#">{{companyProfile?.address}}</a></li>
-            <li><i class="feather icon-phone px-2"></i> <a href="#">{{companyProfile?.phoneNumber}}</a></li>
-            <li><i class="feather icon-mail px-2"></i> <a href="#">{{companyProfile?.email}}</a></li>
-          </ul>
-        </div>
+<!-- Site footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row">
+      <!-- Column 1: About -->
+      <div class="col-sm-12 col-md-4">
+        <h6>{{ "FOOTER.ABOUT" | translate }}</h6>
+        <span routerLink="/" style="cursor: pointer">
+          <logo></logo>
+        </span>
+        <p class="mt-3">
+          <b>{{ companyProfile?.title }}</b>
+        </p>
+        <p class="text-justify pt-2">
+          {{ companyProfile?.description }}
+        </p>
       </div>
-      <hr>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-sm-6 col-xs-12">
-          <p class="copyright-text">© 2024 ged, inc. Gestion documents éléctronique.</p>
-        </div>
 
-        <div class="col-md-4 col-sm-6 col-xs-12">
-          <ul class="social-icons">
-            <li><a class="facebook" [href]="companyProfile?.facebook?companyProfile?.facebook:'#'"><i class="feather icon-facebook"></i></a></li>
-            <li><a class="twitter" [href]="companyProfile?.twitter?companyProfile?.twitter:'#'"><i class="feather icon-twitter"></i></a></li>
-            <li><a class="linkedin" [href]="companyProfile?.linkedin?companyProfile?.linkedin:'#'"><i class="feather icon-linkedin"></i></a></li>
-          </ul>
-        </div>
+      <!-- Column 2: Explore -->
+      <div class="col-xs-6 col-md-2">
+        <h6>{{ "FOOTER.EXPLORE" | translate }}</h6>
+        <ul class="footer-links">
+          <li>
+            <a routerLink="/">{{ "NAV.HOME" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/apps/forum">{{ "NAV.APPS_FORUM" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/apps/blogs">{{ "NAV.APPS_BLOG" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/apps/news">{{ "NAV.APPS_ARTICLE" | translate }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Portal -->
+      <div class="col-xs-6 col-md-3">
+        <h6>{{ "FOOTER.PORTAL" | translate }}</h6>
+        <ul class="footer-links">
+          <ng-container *ngIf="checkConnection(); else notConnectedPortal">
+            <li>
+              <a routerLink="/dashboard">{{ "NAV.DASHBOARD" | translate }}</a>
+            </li>
+            <li>
+              <a routerLink="/pages/profile">{{
+                "NAV.PAGES_UTILITY_PROFILE" | translate
+              }}</a>
+            </li>
+          </ng-container>
+          <ng-template #notConnectedPortal>
+            <li>
+              <a routerLink="/login">{{ "NAV.CONNEXION" | translate }}</a>
+            </li>
+            <li>
+              <a routerLink="/register">{{
+                "NAV.PAGES_AUTH_REGISTER" | translate
+              }}</a>
+            </li>
+          </ng-template>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact -->
+      <div class="col-xs-6 col-md-3">
+        <h6>{{ "FOOTER.CONTACT" | translate }}</h6>
+        <ul class="footer-links contact-info">
+          <li>
+            <i class="feather icon-map px-2"></i>
+            72 rue de la République, 92000 Nanterre
+          </li>
+          <li>
+            <i class="feather icon-phone px-2"></i>
+            01 70 51 51 51
+          </li>
+          <li>
+            <i class="feather icon-mail px-2"></i>
+            contact@ged.com
+          </li>
+        </ul>
       </div>
     </div>
+    <hr />
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-sm-6 col-xs-12">
+        <p class="copyright-text">
+          &copy; {{ currentYear }} ged, inc. Gestion documents éléctronique.
+        </p>
+      </div>
+
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <ul class="social-icons">
+          <li>
+            <a
+              class="facebook"
+              [href]="'https://www.facebook.com/ged'"
+              ><i class="feather icon-facebook"></i
+            ></a>
+          </li>
+          <li>
+            <a
+              class="twitter"
+              [href]="'https://twitter.com/ged'"
+              ><i class="feather icon-twitter"></i
+            ></a>
+          </li>
+          <li>
+            <a
+              class="linkedin"
+              [href]="'https://www.linkedin.com/company/ged'"
+              ><i class="feather icon-linkedin"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </footer>

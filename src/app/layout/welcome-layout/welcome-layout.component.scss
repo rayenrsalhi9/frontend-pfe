@@ -10,9 +10,6 @@
     min-height: 70px;
     height: 100%;
     padding: 0 2vw;
-    .header-left {
-
-    }
     .header-right {
       .header-menu {
         display: flex;
@@ -31,6 +28,17 @@
           {
             color:#11a1fd;
             text-decoration:none;
+          }
+          &.menu-item-login {
+            background-color: #11a1fd;
+            color: white !important;
+            border-radius: 12px;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+            &:hover {
+              background-color: darken(#11a1fd, 10%);
+              color: white !important;
+            }
           }
         }
       }
@@ -105,20 +113,35 @@
 .footer-links
 {
   padding-left:0;
-  list-style:none
-}
-.footer-links li
-{
-  display:block
-}
-.footer-links a
-{
-  color:#737373
-}
-.footer-links a:active,.footer-links a:focus,.footer-links a:hover
-{
-  color:#11a1fd;
-  text-decoration:none;
+  list-style:none;
+  li {
+    margin-bottom: 10px;
+    a {
+      color:#737373;
+      transition: all 0.3s ease;
+      &:active,&:focus,&:hover {
+        color:#11a1fd;
+        text-decoration:none;
+        padding-left: 5px;
+      }
+    }
+  }
+  &.contact-info {
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      i {
+        color: #11a1fd;
+        font-size: 1.1rem;
+        margin-top: 2px;
+        padding: 0;
+      }
+      span {
+        flex: 1;
+      }
+    }
+  }
 }
 .footer-links.inline li
 {
