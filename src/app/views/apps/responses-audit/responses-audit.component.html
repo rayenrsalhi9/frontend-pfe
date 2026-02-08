@@ -4,14 +4,14 @@
       <div class="col-md-4">
         <div class="input-affix">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" [placeholder]="'Search'" />
+          <input type="text" class="form-control" [placeholder]="'Search'" (input)="onSearch($event.target.value)" />
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <ngx-datatable
-          [rows]="rows"
+          [rows]="filteredRows"
           [columnMode]="ColumnMode.force"
           [headerHeight]="50"
           [footerHeight]="50"

@@ -9,6 +9,7 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 export class ResponsesAuditComponent implements OnInit {
 
   rows: any[] = [];
+  filteredRows: any[] = [];
   selected = [];
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -19,7 +20,7 @@ export class ResponsesAuditComponent implements OnInit {
     this.loadMockData();
   }
 
-  loadMockData() {
+  loadMockData(): void {
     this.rows = [
       {
         createdAt: '2026-02-08 14:30:00',
@@ -78,6 +79,25 @@ export class ResponsesAuditComponent implements OnInit {
         ipAddress: '192.168.1.45'
       },
     ];
+    this.filteredRows = [...this.rows];
+    this.cdr.detectChanges();
+  }
+
+  onSearch(term: string): void {
+    if (!term || term.trim() === '') {
+      this.filteredRows = [...this.rows];
+    } else {
+      const searchTerm = term.toLowerCase();
+      this.filteredRows = this.rows.filter(row => {
+        return (
+          row.userName?.toLowerCase().includes(searchTerm) ||
+          row.topicTitle?.toLowerCase().includes(searchTerm) ||
+          row.responseContent?.toLowerCase().includes(searchTerm) ||
+          row.operation?.toLowerCase().includes(searchTerm) ||
+          row.ipAddress?.toLowerCase().includes(searchTerm)
+        );
+      });
+    }
     this.cdr.detectChanges();
   }
 

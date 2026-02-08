@@ -672,7 +672,7 @@ const apps: NavMenu[] = [
         iconType: 'feather',
         icon: 'icon-message-square',
         key: 'apps.responses-audits',
-        claims: ['show'],
+        claims: ['RESPONSE_AUDIT_VIEW_RESPONSE_AUDIT_LOGS'],
         submenu: []
       },
       {
