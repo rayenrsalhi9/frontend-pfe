@@ -1,283 +1,141 @@
-<section *ngIf="banners.length > 0" class="top-section">
-  <div class="section-wrapper">
-    <div class="row slider">
-      <div class="col-md-12 slider-wrapper">
-        <carousel [isAnimated]="true" class="slider-list">
-          <slide *ngFor="let banner of banners" class="slider-items">
-            <div class="item-link" [routerLink]="'/blog/'+banner.id">
-              <img class="item-img" [src]="getHost()+banner.picture" alt="first slide">
-              <div class="item-caption">
-                <div class="caption-poster">
-                  {{'WELCOME.POSTED_ON' | translate}} {{'WELCOME.BY' | translate}} <span>{{banner.creator.firstName}}
-                    {{banner.creator.lastName}}</span>
-                </div>
-                <div class="caption-category">{{banner.category.name}}</div>
-                <h3 class="caption-title">{{banner.title}}</h3>
-                <div class="caption-datetime"><i class="feather icon-clock"></i> {{banner.createdAt |
-                  utcToLocalTime:'shortDate' }}</div>
-                <p class="caption-description">{{banner.subtitle}}</p>
-                <!-- <button class="caption-btn">Read more...</button> -->
-              </div>
-            </div>
-          </slide>
-
-        </carousel>
+<div class="main-wrapper">
+  <div class="content-container">
+    <!-- Latest Blogs Section -->
+    <section class="news-section">
+      <div class="section-header">
+        <h3 class="section-title">Latest Blogs</h3>
+        <p>Check out what others are talking about.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-<section *ngIf="latestBlogs.length > 1" class="featured-section">
-  <div class="featured-wrapper">
-    <div class="featured-header">
-      <h3 class="header-title">{{'WELCOME.LATEST_BLOG' | translate}}</h3>
-    </div>
-    <div class="featured-body">
-      <div class="row">
-        <ng-container *ngFor="let blog of latestBlogs; let i = index">
-          <div *ngIf="i == 0" class="col-md-6">
-            <div class="post-card" [routerLink]="'/blog/'+blog.id">
-              <div class="post-header">
-                <img [src]="getHost()+blog.picture" alt="" class="header-img">
-              </div>
-              <div class="post-body">
-                <div class="post-category">{{blog.category.name}}</div>
-                <h4 class="post-title">{{blog.title}}</h4>
-                <p class="post-description">{{blog.subtitle}}</p>
-              </div>
+      <div
+        *ngIf="latestBlogs?.length > 0; else noBlogs"
+        class="news-grid"
+      >
+        <div
+          *ngFor="let blog of latestBlogs"
+          class="news-card"
+          (click)="viewBlog(blog)"
+        >
+          <div class="news-card-image">
+            <img
+              [src]="
+                blog?.picture
+                  ? getHost() + blog.picture
+                  : '/assets/images/others/bg-4.jpg'
+              "
+              [alt]="blog?.title"
+            />
+            <span class="news-badge">{{ blog?.category?.name }}</span>
+          </div>
+          <div class="news-card-content">
+            <div class="news-meta">
+              {{ blog?.createdAt | utcToLocalTime: "shortDate" }}
             </div>
-          </div>
-          <div *ngIf="i == 1" [class]="latestBlogs.length > 2?'col-md-3':'col-md-6'">
-            <div class="post-card" [routerLink]="'/blog/'+blog.id">
-              <div class="post-header">
-                <img [src]="getHost()+blog.picture" alt="" class="header-img">
-              </div>
-              <div class="post-body">
-                <div class="post-category">{{blog.category.name}}</div>
-                <h4 class="post-title">{{blog.title}}</h4>
-                <p class="post-description">{{blog.subtitle}}</p>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="i == 2" class="col-md-3">
-            <div class="post-card" [routerLink]="'/blog/'+blog.id">
-              <div class="post-header">
-                <img [src]="getHost()+blog.picture" alt="" class="header-img">
-              </div>
-              <div class="post-body">
-                <div class="post-category">{{blog.category.name}}</div>
-                <h4 class="post-title">{{blog.title}}</h4>
-                <p class="post-description">{{blog.subtitle}}</p>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<section *ngIf="false" class="post-section">
-  <div class="post-wrapper">
-    <div class="post-body">
-      <carousel [isAnimated]="true" class="slider-list">
-        <slide class="slider-items">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row">
-                <h3 class="post-heading">#Tech</h3>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/1.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Tech</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/2.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Tech</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/3.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Tech</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/4.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Tech</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </slide>
-        <slide class="slider-items">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row">
-                <h3 class="post-heading">#Innovation</h3>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/1.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Innovation</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/2.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Innovation</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/3.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Innovation</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="post-card">
-                    <img class="post-img" src="assets/images/nature/4.jpg" alt="first slide">
-                    <div class="post-body">
-                      <div class="post-category">Innovation</div>
-                      <div class="post-title">Latest Bitcoin Crash Shows Buy the Dip Mentality</div>
-                      <div class="post-datetime"><i class="feather icon-clock"></i> July 11, 2023</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </slide>
-      </carousel>
-    </div>
-  </div>
-</section>
-<div class="card">
-  <div class="card-header d-flex g-2 gap-2">
-    <h4>{{ 'DASHBOARD.NEWS' | translate }}</h4>
-  </div>
-  <div class="card-body">
-    <div class="row" style="gap:0px">
-      <div *ngFor="let article of articles" class="col-md-3 cursor-pointer">
-        <div (click)="viewArticle(article)" class="article-card" style="position: relative;">
-          <div 
-            style="position: absolute; left:5px; top:5px; background: #001b57; color: white; padding: 0 5px; border-radius: 5px;">
-            {{ article.category.name }}
-          </div>
-          <img 
-            style="width: 100%; height: 220px; object-fit: cover; border-radius: 10px;" 
-            [src]="article.picture ? getHost() + article.picture : '/assets/images/others/bg-4.jpg'" 
-            alt="">
-          <div>
-            <h5 style="height: 40px; overflow: hidden;">{{ article.title }}</h5>
-            <p style="height: 65px; overflow: hidden;">{{ article.shortText }}</p>
-          </div>
-          <div style="font-size: 10px; display: flex; justify-content: space-between;">
-            <span>{{ 'DASHBOARD.CREATEDBY' | translate }} : {{ article.creator.firstName }} {{ article.creator.lastName }}</span>
-            <span>{{ 'DASHBOARD.CREATEDAT' | translate }} : {{ article.createdAt | utcToLocalTime:'shortDate' }}</span>
+            <h4 class="news-title">{{ blog?.title }}</h4>
+            <p class="news-preview">{{ blog?.shortText }}</p>
           </div>
         </div>
       </div>
-    </div>
+      <ng-template #noBlogs>
+        <div class="muted-placeholder">
+          <p>No blogs available at the moment.</p>
+        </div>
+      </ng-template>
+    </section>
 
-    <div *ngIf="errorMessage" style="color: red;">
-      {{ errorMessage }} <!-- Affiche un message d'erreur si nécessaire -->
+    <!-- Main Content Grid (Forum & Survey) -->
+    <div class="main-grid">
+      <!-- Left: Latest Forum -->
+      <div class="forum-column">
+        <div class="section-header">
+          <h3 class="section-title">
+            {{ "WELCOME.LATEST_FORUM" | translate }}
+          </h3>
+          <p>See what others are talking about.</p>
+        </div>
+
+        <div
+          *ngIf="latestForums?.length > 0; else noForums"
+          class="forum-list"
+        >
+          <div
+            *ngFor="let forum of latestForums"
+            class="forum-card"
+            [routerLink]="'/forum/' + forum?.id"
+          >
+            <div class="forum-card-body">
+              <span class="category-badge">{{ forum?.category?.name }}</span>
+              <h4 class="forum-item-title">{{ forum?.title }}</h4>
+              <div class="forum-item-meta">
+                <span
+                  >By {{ forum?.creator?.firstName }}
+                  {{ forum?.creator?.lastName }}</span
+                >
+                <span class="meta-dot"></span>
+                <span>{{ forum?.createdAt | utcToLocalTime: "shortDate" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="view-all-wrapper">
+            <a routerLink="/forum" class="view-all-link"
+              >View all discussions →</a
+            >
+          </div>
+        </div>
+        <ng-template #noForums>
+          <div class="muted-placeholder">
+            <p>No forum discussions yet.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Right: Survey -->
+      <div class="survey-column">
+        <div *ngIf="survey" class="survey-card">
+          <div class="survey-header">
+            <h3 class="section-title">{{ "WELCOME.SURVEY" | translate }}</h3>
+          </div>
+          <div class="survey-body">
+            <p class="survey-question">{{ survey?.title }}</p>
+
+            <div class="survey-actions">
+              <ng-container *ngIf="survey?.type == 'simple'">
+                <button (click)="surveyAnswer(1)" class="btn-survey btn-yes">
+                  {{ "BUTONS.YES" | translate }}
+                </button>
+                <button (click)="surveyAnswer(0)" class="btn-survey btn-no">
+                  {{ "BUTONS.NO" | translate }}
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="survey?.type == 'rating'">
+                <div class="rating-wrapper">
+                  <rating
+                    (onHover)="surveyAnswer($event)"
+                    [max]="5"
+                    [readonly]="isReadonly"
+                  ></rating>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="survey?.type == 'satisfaction'">
+                <button (click)="surveyAnswer(0)" class="btn-survey btn-yes">
+                  {{ "BUTONS.SATISFIED" | translate }}
+                </button>
+                <button
+                  (click)="surveyAnswer(1)"
+                  class="btn-survey btn-neutral"
+                >
+                  {{ "BUTONS.NEUTRAL" | translate }}
+                </button>
+                <button (click)="surveyAnswer(2)" class="btn-survey btn-no">
+                  {{ "BUTONS.NOT_SATISFIED" | translate }}
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-<section class="contents-section">
-  <div [class]="latestForums.length == 0?'row justify-content-end':'row'">
-    <div *ngIf="latestForums.length > 0" [class]="survey != null?'col-md-9':'col-md-12'">
-      <div class="forum-container">
-        <div class="forum-wrapper">
-          <div class="forum-header">
-            <h3 class="header-title">{{'WELCOME.LATEST_FORUM' | translate}}</h3>
-          </div>
-          <div class="forum-body">
-            <div class="row">
-              <ng-container *ngFor="let forum of latestForums">
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-body" [routerLink]="'/forum/'+forum.id">
-                      <div class="forum-category">{{forum.category.name}}</div>
-                      <h5 class="forum-title">{{forum.title}}</h5>
-                      <div class="forum-info">
-                        <div class="forum-datetime"><i class="feather icon-clock"></i> {{forum.createdAt | utcToLocalTime:'shortDate' }}</div>
-                        <div class="forum-creator"> <i class="feather icon-user"></i> {{forum.creator.firstName}} {{forum.creator.lastName}} </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="survey" class="col-md-3">
-      <div class="survey-container">
-        <div class="survey-wrapper">
-          <div class="survey-header">
-            <h3 class="header-title">{{'WELCOME.SURVEY' | translate}}</h3>
-          </div>
-          <div class="survey-body">
-            <div class="surver-title">
-              {{survey.title}}
-            </div>
-            <div class="survery-actions">
-              <ng-container *ngIf="survey.type == 'simple'">
-                <button (click)="surveyAnswer(1)" class="buttons yes">{{'BUTONS.YES' | translate}}</button>
-                <button (click)="surveyAnswer(0)" class="buttons no">{{'BUTONS.NO' | translate}}</button>
-              </ng-container>
-              <ng-container *ngIf="survey.type == 'rating'">
-                <rating style="font-size: 25px;" (click)="surveyAnswer($event.target.getAttribute('title'))" [max]="5" [readonly]="isReadonly"></rating>
-              </ng-container>
-              <ng-container *ngIf="survey.type == 'satisfaction'">
-                <button (click)="surveyAnswer(0)" class="buttons yes">{{'BUTONS.SATISFIED' | translate}}</button>
-                <button (click)="surveyAnswer(1)" class="buttons neutral">{{'BUTONS.NEUTRAL' | translate}}</button>
-                <button (click)="surveyAnswer(2)" class="buttons no">{{'BUTONS.NOT_SATISFIED' | translate}}</button>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
