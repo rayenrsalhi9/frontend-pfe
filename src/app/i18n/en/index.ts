@@ -8,6 +8,7 @@ import { audit } from './section/audit'
 import { chat } from './section/chat'
 import { calendar } from './section/calendar'
 import { logins } from './section/logins'
+import { responses } from './section/responses'
 import { users } from './section/users'
 import { userRole } from './section/userRole'
 import { roles } from './section/roles'
@@ -38,6 +39,7 @@ export const en_US = {
   ...chat,
   ...calendar,
   ...logins,
+  ...responses,
   ...users,
   ...userRole,
   ...roles,

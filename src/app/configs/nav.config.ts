@@ -655,13 +655,24 @@ const apps: NavMenu[] = [
       },
       {
         path: '/apps/logins',
-        title: 'Calendar',
+        title: 'Login audits',
         translateKey: 'NAV.APPS_LOGINS',
         type: 'item',
         iconType: 'feather',
         icon: 'icon-log-in',
         key: 'apps.login',
         claims: ['LOGIN_AUDIT_VIEW_LOGIN_AUDIT_LOGS'],
+        submenu: []
+      },
+      {
+        path: '/apps/responses-audits',
+        title: 'Responses audits',
+        translateKey: 'NAV.APPS_RESPONSES_AUDITS',
+        type: 'item',
+        iconType: 'feather',
+        icon: 'icon-message-square',
+        key: 'apps.responses-audits',
+        claims: ['show'],
         submenu: []
       },
       {
