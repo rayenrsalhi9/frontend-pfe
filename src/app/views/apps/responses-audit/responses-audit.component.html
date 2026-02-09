@@ -4,7 +4,12 @@
       <div class="col-md-4">
         <div class="input-affix">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" [placeholder]="'Search'" (input)="onSearch($event.target.value)" />
+          <input
+            type="text"
+            class="form-control"
+            [placeholder]="'Search'"
+            (input)="onSearch($event.target.value)"
+          />
         </div>
       </div>
     </div>
@@ -29,15 +34,33 @@
               {{ value | utcToLocalTime: "shortDate" }}
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column
-            name="Topic Title"
-            prop="forumTitle"
-            [width]="250"
-          ></ngx-datatable-column>
+          <ngx-datatable-column name="Forum" prop="forumId" [width]="120">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <a
+                *ngIf="row.forumId; else noForum"
+                [routerLink]="['/forum', value]"
+                class="text-primary"
+              >
+                <i class="feather icon-external-link mr-1"></i>
+                {{ row.forumTitle || "See forum" }}
+              </a>
+              <ng-template #noForum>
+                <span class="text-muted">
+                  <i class="feather icon-minus-circle mr-1"></i>
+                  {{ row.forumTitle || "No forum" }}
+                </span>
+              </ng-template>
+            </ng-template>
+          </ngx-datatable-column>
           <ngx-datatable-column
             name="Response Content"
             prop="responseContent"
-            [width]="350"
+            [width]="250"
           >
             <ng-template
               let-row="row"
@@ -47,9 +70,27 @@
             >
               <span
                 class="text-truncate d-inline-block"
-                style="max-width: 300px"
+                style="max-width: 220px"
                 >{{ value }}</span
               >
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Type" prop="responseType">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <span
+                [class.text-primary]="value === 'comment'"
+                [class.text-warning]="value === 'reaction'"
+                class="badge badge-pill"
+                [class.badge-primary]="value === 'comment'"
+                [class.badge-warning]="value === 'reaction'"
+              >
+                {{ value }}
+              </span>
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Operation" prop="operationName">
@@ -68,14 +109,72 @@
               </span>
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column
-            name="By"
-            prop="createdByName"
-          ></ngx-datatable-column>
-          <ngx-datatable-column
-            name="IP"
-            prop="ipAddress"
-          ></ngx-datatable-column>
+          <ngx-datatable-column name="User" prop="user" [width]="150">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <div *ngIf="value" class="d-flex align-items-center">
+                <div class="avatar avatar-sm mr-2" *ngIf="false">
+                  <img
+                    [src]="value.avatar"
+                    [alt]="value.firstName"
+                    class="avatar-img rounded-circle"
+                  />
+                </div>
+                <div>
+                  <div class="font-weight-bold">
+                    {{ value.firstName }} {{ value.lastName }}
+                  </div>
+                  <small class="text-muted">@{{ value.userName }}</small>
+                </div>
+              </div>
+              <div *ngIf="!value" class="text-muted">
+                {{ row.createdByName }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- <ngx-datatable-column name="IP" prop="ipAddress" [width]="120">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <small class="text-muted">{{ value }}</small>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="User Agent" prop="userAgent" [width]="200">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <span
+                class="text-truncate d-inline-block"
+                style="max-width: 180px"
+                [title]="value"
+              >
+                {{ extractUserAgentInfo(value) }}
+              </span>
+            </ng-template>
+          </ngx-datatable-column> -->
+          <ngx-datatable-column name="Last Modified" prop="modifiedDate">
+            <ng-template
+              let-row="row"
+              ngx-datatable-cell-template
+              let-value="value"
+              aria-hidden="false"
+            >
+              <span *ngIf="value" class="text-muted">
+                {{ value | utcToLocalTime: "shortDate" }}
+              </span>
+              <span *ngIf="!value" class="text-muted">-</span>
+            </ng-template>
+          </ngx-datatable-column>
         </ngx-datatable>
       </div>
     </div>

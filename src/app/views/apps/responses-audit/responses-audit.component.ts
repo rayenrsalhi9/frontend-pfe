@@ -77,6 +77,24 @@ export class ResponsesAuditComponent implements OnInit {
     });
   }
 
+  extractUserAgentInfo(userAgent: string): string {
+    if (!userAgent) return '-';
+    
+    // Extract browser name and OS info from user agent
+    const browserMatch = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/[\d.]+/);
+    const osMatch = userAgent.match(/\(([^)]+)\)/);
+    
+    if (browserMatch && osMatch) {
+      return `${browserMatch[0]} (${osMatch[1].split(';')[0]})`;
+    } else if (browserMatch) {
+      return browserMatch[0];
+    } else if (osMatch) {
+      return osMatch[1].split(';')[0];
+    }
+    
+    return userAgent.substring(0, 50) + (userAgent.length > 50 ? '...' : '');
+  }
+
   onSearch(term: string): void {
     if (!term || term.trim() === '') {
       this.filteredRows = [...this.rows];
@@ -88,7 +106,17 @@ export class ResponsesAuditComponent implements OnInit {
           row.forumTitle?.toLowerCase().includes(searchTerm) ||
           row.responseContent?.toLowerCase().includes(searchTerm) ||
           row.operationName?.toLowerCase().includes(searchTerm) ||
-          row.ipAddress?.toLowerCase().includes(searchTerm)
+          row.ipAddress?.toLowerCase().includes(searchTerm) ||
+          row.responseType?.toLowerCase().includes(searchTerm) ||
+          row.userAgent?.toLowerCase().includes(searchTerm) ||
+          row.previousContent?.toLowerCase().includes(searchTerm) ||
+          // Search by user details
+          (row.user?.firstName?.toLowerCase().includes(searchTerm)) ||
+          (row.user?.lastName?.toLowerCase().includes(searchTerm)) ||
+          (row.user?.userName?.toLowerCase().includes(searchTerm)) ||
+          (row.user?.email?.toLowerCase().includes(searchTerm)) ||
+          // Search by forum ID
+          (row.forumId?.toLowerCase().includes(searchTerm))
         );
       });
     }
