@@ -17,8 +17,9 @@
           [footerHeight]="50"
           rowHeight="auto"
           [limit]="5"
+          [loadingIndicator]="loading"
         >
-          <ngx-datatable-column name="Created At" prop="createdAt">
+          <ngx-datatable-column name="Created At" prop="createdDate">
             <ng-template
               let-row="row"
               ngx-datatable-cell-template
@@ -30,7 +31,7 @@
           </ngx-datatable-column>
           <ngx-datatable-column
             name="Topic Title"
-            prop="topicTitle"
+            prop="forumTitle"
             [width]="250"
           ></ngx-datatable-column>
           <ngx-datatable-column
@@ -51,7 +52,7 @@
               >
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Operation" prop="operation">
+          <ngx-datatable-column name="Operation" prop="operationName">
             <ng-template
               let-row="row"
               ngx-datatable-cell-template
@@ -69,7 +70,7 @@
           </ngx-datatable-column>
           <ngx-datatable-column
             name="By"
-            prop="userName"
+            prop="createdByName"
           ></ngx-datatable-column>
           <ngx-datatable-column
             name="IP"

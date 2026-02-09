@@ -1,5 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+import { ResponseAuditTrailService } from '@app/shared/services/response-audit-trail.service';
+import { ResponseAuditResource } from '@app/shared/enums/response-audit-resource';
+import { ResponseAuditTrail } from '@app/shared/enums/response-audit-trail';
+import { CommonError } from '@app/shared/enums/common-error';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-responses-audit',
@@ -8,80 +13,64 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 })
 export class ResponsesAuditComponent implements OnInit {
 
-  rows: any[] = [];
-  filteredRows: any[] = [];
+  rows: ResponseAuditTrail[] = [];
+  filteredRows: ResponseAuditTrail[] = [];
   selected = [];
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
+  loading: boolean = false;
+  totalCount: number = 0;
+  pageSize: number = 50;
+  skip: number = 0;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private responseAuditTrailService: ResponseAuditTrailService
+  ) { }
 
   ngOnInit(): void {
-    this.loadMockData();
+    this.loadResponseAuditTrails();
   }
 
-  // TODO: add service ResponsesAuditService to load real data
-  loadMockData(): void {
-    this.rows = [
-      {
-        createdAt: '2026-02-08 14:30:00',
-        userName: 'Jean Dupont',
-        topicTitle: 'How to use Angular benchmarks?',
-        responseContent: 'You should check the official documentation for detailed guides.',
-        operation: 'Created',
-        ipAddress: '192.168.1.1'
+  loadResponseAuditTrails(): void {
+    this.loading = true;
+    
+    const resource: ResponseAuditResource = {
+      fields: 'id,forumId,forumTitle,responseId,responseType,operationName,responseContent,previousContent,ipAddress,userAgent,createdBy,createdByName,createdDate,modifiedBy,modifiedDate',
+      orderBy: 'createdDate desc',
+      pageSize: this.pageSize,
+      skip: this.skip,
+      searchQuery: '',
+      forumId: '',
+      userId: '',
+      operation: '',
+      responseType: 'all',
+      dateFrom: '',
+      dateTo: '',
+      name: '',
+      descripton: '',
+      totalCount: 0,
+      metaTags: ''
+    };
+
+    this.responseAuditTrailService.getResponseAuditTrails(resource).subscribe({
+      next: (response: HttpResponse<ResponseAuditTrail[]> | CommonError) => {
+        if (response instanceof HttpResponse) {
+          this.rows = response.body || [];
+          this.filteredRows = [...this.rows];
+          this.totalCount = parseInt(response.headers.get('totalCount') || '0');
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
       },
-      {
-        createdAt: '2026-02-08 14:35:00',
-        userName: 'Marie Curie',
-        topicTitle: 'SCSS best practices',
-        responseContent: 'I recommend using BEM naming convention for better maintainability.',
-        operation: 'Updated',
-        ipAddress: '192.168.1.45'
-      },
-      {
-        createdAt: '2026-02-08 14:40:00',
-        userName: 'Albert Einstein',
-        topicTitle: 'Quantum Computing logic',
-        responseContent: 'The superposition principle is key to understanding qubits.',
-        operation: 'Created',
-        ipAddress: '10.0.0.5'
-      },
-      {
-        createdAt: '2026-02-08 14:45:00',
-        userName: 'Isaac Newton',
-        topicTitle: 'Gravity in web design',
-        responseContent: 'Why does my footer keep floating up?',
-        operation: 'Deleted',
-        ipAddress: '172.16.0.100'
-      },
-      {
-        createdAt: '2026-02-08 14:50:00',
-        userName: 'Ada Lovelace',
-        topicTitle: 'First algorithm',
-        responseContent: 'This is the first known algorithm for the Analytical Engine.',
-        operation: 'Created',
-        ipAddress: '192.168.0.10'
-      },
-      {
-        createdAt: '2026-02-08 14:55:00',
-        userName: 'Grace Hopper',
-        topicTitle: 'First compiler',
-        responseContent: 'COBOL was the first compiled high-level programming language.',
-        operation: 'Created',
-        ipAddress: '192.168.0.20'
-      },
-      {
-        createdAt: '2026-02-08 15:00:00',
-        userName: 'Marie Curie',
-        topicTitle: 'SCSS best practices',
-        responseContent: 'I recommend using BEM naming convention for better maintainability.',
-        operation: 'Updated',
-        ipAddress: '192.168.1.45'
-      },
-    ];
-    this.filteredRows = [...this.rows];
-    this.cdr.detectChanges();
+      error: (error) => {
+        console.error('Error loading response audit trails:', error);
+        this.loading = false;
+        this.rows = [];
+        this.filteredRows = [];
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onSearch(term: string): void {
@@ -91,10 +80,10 @@ export class ResponsesAuditComponent implements OnInit {
       const searchTerm = term.toLowerCase();
       this.filteredRows = this.rows.filter(row => {
         return (
-          row.userName?.toLowerCase().includes(searchTerm) ||
-          row.topicTitle?.toLowerCase().includes(searchTerm) ||
+          row.createdByName?.toLowerCase().includes(searchTerm) ||
+          row.forumTitle?.toLowerCase().includes(searchTerm) ||
           row.responseContent?.toLowerCase().includes(searchTerm) ||
-          row.operation?.toLowerCase().includes(searchTerm) ||
+          row.operationName?.toLowerCase().includes(searchTerm) ||
           row.ipAddress?.toLowerCase().includes(searchTerm)
         );
       });
