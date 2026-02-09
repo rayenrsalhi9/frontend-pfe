@@ -11,8 +11,8 @@ export interface ResponseAuditTrail {
   userAgent?: string;
   createdBy?: string;
   createdByName?: string;
-  createdDate?: Date;
+  createdDate?: string;
   modifiedBy?: string;
-  modifiedDate?: Date;
+  modifiedDate?: string;
   isDeleted?: boolean;
 }

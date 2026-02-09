@@ -5,7 +5,7 @@ export abstract class ResourceParameter {
   pageSize = 30;
   skip = 0;
   name = '';
-  descripton = '';
+  description = '';
   totalCount = 0;
   metaTags = '';
 }

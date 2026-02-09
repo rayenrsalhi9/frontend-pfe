@@ -26,6 +26,7 @@ export class ResponseAuditTrailService {
       .set('searchQuery', resource.searchQuery)
       .set('forumId', resource.forumId || '')
       .set('userId', resource.userId || '')
+      .set('responseId', resource.responseId || '')
       .set('operation', resource.operation || '')
       .set('responseType', resource.responseType || 'all')
       .set('dateFrom', resource.dateFrom || '')

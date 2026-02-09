@@ -48,7 +48,7 @@ export class ResponsesAuditComponent implements OnInit {
       dateFrom: '',
       dateTo: '',
       name: '',
-      descripton: '',
+      description: '',
       totalCount: 0,
       metaTags: ''
     };
