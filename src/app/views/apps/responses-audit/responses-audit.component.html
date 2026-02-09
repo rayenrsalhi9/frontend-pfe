@@ -4,7 +4,12 @@
       <div class="col-md-4">
         <div class="input-affix">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" [placeholder]="'Search'" (input)="onSearch($event.target.value)" />
+          <input
+            type="text"
+            class="form-control"
+            [placeholder]="'Search'"
+            (input)="onSearch($event.target.value)"
+          />
         </div>
       </div>
     </div>
@@ -36,10 +41,20 @@
               let-value="value"
               aria-hidden="false"
             >
-              <a [routerLink]="['/forum', value]" class="text-primary">
+              <a
+                *ngIf="row.forumId; else noForum"
+                [routerLink]="['/forum', value]"
+                class="text-primary"
+              >
                 <i class="feather icon-external-link mr-1"></i>
-                {{ row.forumTitle }}
+                {{ row.forumTitle || "See forum" }}
               </a>
+              <ng-template #noForum>
+                <span class="text-muted">
+                  <i class="feather icon-minus-circle mr-1"></i>
+                  {{ row.forumTitle || "No forum" }}
+                </span>
+              </ng-template>
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column
@@ -103,10 +118,16 @@
             >
               <div *ngIf="value" class="d-flex align-items-center">
                 <div class="avatar avatar-sm mr-2" *ngIf="false">
-                  <img [src]="value.avatar" [alt]="value.firstName" class="avatar-img rounded-circle">
+                  <img
+                    [src]="value.avatar"
+                    [alt]="value.firstName"
+                    class="avatar-img rounded-circle"
+                  />
                 </div>
                 <div>
-                  <div class="font-weight-bold">{{ value.firstName }} {{ value.lastName }}</div>
+                  <div class="font-weight-bold">
+                    {{ value.firstName }} {{ value.lastName }}
+                  </div>
                   <small class="text-muted">@{{ value.userName }}</small>
                 </div>
               </div>
@@ -141,7 +162,7 @@
               </span>
             </ng-template>
           </ngx-datatable-column> -->
-          <ngx-datatable-column name="Modified" prop="modifiedDate">
+          <ngx-datatable-column name="Last Modified" prop="modifiedDate">
             <ng-template
               let-row="row"
               ngx-datatable-cell-template
