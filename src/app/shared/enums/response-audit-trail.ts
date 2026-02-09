@@ -15,4 +15,11 @@ export interface ResponseAuditTrail {
   modifiedBy?: string;
   modifiedDate?: string;
   isDeleted?: boolean;
+  user?: {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    userName?: string;
+    email?: string;
+  };
 }
