@@ -58,7 +58,11 @@ export class ResponsesAuditComponent implements OnInit {
         if (response instanceof HttpResponse) {
           this.rows = response.body || [];
           this.filteredRows = [...this.rows];
-          this.totalCount = parseInt(response.headers.get('totalCount') || '0');
+          this.totalCount = parseInt(response.headers.get('totalCount') || '0', 10);
+        } else {
+          console.error('Error loading response audit trails:', response);
+          this.rows = [];
+          this.filteredRows = [];
         }
         this.loading = false;
         this.cdr.detectChanges();
