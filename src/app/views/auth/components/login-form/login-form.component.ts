@@ -17,6 +17,7 @@ export class LoginFormComponent implements OnInit {
     showResult = false
     showPassword = false
     submitted = false
+    isLoading = false
 
     @Input() thirPartyLogin = false
 
@@ -50,6 +51,8 @@ export class LoginFormComponent implements OnInit {
             return;
         }
 
+        this.isLoading = true;
+
         const userObject = {
           email: this.formGroup.value.username,
           password: this.formGroup.value.password,
@@ -57,6 +60,7 @@ export class LoginFormComponent implements OnInit {
 
         this.securityService.login(userObject).subscribe(
           (c: UserAuth) => {
+            this.isLoading = false;
             this.toastr.success('User login successfully.');
             if (this.securityService.hasClaim('dashboard_view_dashboard')) {
               this.router.navigate(['/dashboard']);
@@ -65,6 +69,7 @@ export class LoginFormComponent implements OnInit {
             }
           },
           (err: CommonError) => {
+            this.isLoading = false;
             this.toastr.error(err.error['message']);
           }
         );

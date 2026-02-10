@@ -34,7 +34,12 @@
     </div>
   </div>
   
-  <button class="btn modern-submit-btn w-100" type="submit">{{'SIGN.IN.BUTTON' | translate}}</button>
+  <button class="btn modern-submit-btn w-100" type="submit" [disabled]="isLoading">
+    <span *ngIf="!isLoading">{{'SIGN.IN.BUTTON' | translate}}</span>
+    <span *ngIf="isLoading">
+      <i class="feather icon-loader spin"></i> {{'SIGN.IN.BUTTON' | translate}}
+    </span>
+  </button>
 </form>
 <!-- Signup prompt -->
 <div class="text-center mt-3">

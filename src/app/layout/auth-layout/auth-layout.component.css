@@ -1,0 +1,50 @@
+.floating-i18n-widget {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1050;
+  background: white;
+  border-radius: 2em;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.floating-i18n-widget:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset/Adjust internal nav-i18n styles */
+::ng-deep nav-i18n.header-nav-item {
+  padding: 0 !important;
+  display: block !important;
+}
+
+::ng-deep nav-i18n.header-nav-item .header-nav-item-select {
+  height: auto !important;
+}
+
+::ng-deep .toggle-wrapper {
+  padding: 1em !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+::ng-deep .toggle-wrapper i {
+  color: #11a1fd;
+  font-size: 1.5rem;
+}
+
+::ng-deep .dropdown {
+  display: block !important;
+}
+
+::ng-deep .dropdown-menu {
+  bottom: 110% !important;
+  top: auto !important;
+  right: 0;
+  left: auto;
+}
