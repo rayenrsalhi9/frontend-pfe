@@ -12,7 +12,12 @@ export const sign = {
       "NO_ACCOUNT":"Don't have an account?",
       "SIGN_UP":"Sign Up",
       "WELCOME_BACK":"Welcome back",
-      "LOGIN_TO_ACCOUNT":"Login to your account"
+      "LOGIN_TO_ACCOUNT":"Login to your account",
+      "SHOW_PASSWORD":"Show password",
+      "HIDE_PASSWORD":"Hide password"
+    },
+    "TOAST":{
+      "SUCCESS":""
     },
     "SUBSCRIBE":{
       "TITLE":"Subscribe as guest",

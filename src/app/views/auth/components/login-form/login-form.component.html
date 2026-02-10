@@ -24,7 +24,7 @@
       <button type="button" 
               class="password-toggle-btn" 
               (click)="onShowPasswordClick()"
-              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              [attr.aria-label]="(showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD') | translate">
         <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
       </button>
     </div>

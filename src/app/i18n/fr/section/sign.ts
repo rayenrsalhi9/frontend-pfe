@@ -12,7 +12,9 @@ export const sign = {
       "NO_ACCOUNT":"Vous n'avez pas de compte?",
       "SIGN_UP":"S'inscrire",
       "WELCOME_BACK":"Bon retour",
-      "LOGIN_TO_ACCOUNT":"Connectez-vous à votre compte"
+      "LOGIN_TO_ACCOUNT":"Connectez-vous à votre compte",
+      "SHOW_PASSWORD":"Afficher le mot de passe",
+      "HIDE_PASSWORD":"Cacher le mot de passe"
     },
     "TOAST":{
       "SUCCESS":""
