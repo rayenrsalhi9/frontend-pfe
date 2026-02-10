@@ -23,7 +23,9 @@ export const users = {
         "EMAIL": "Email",
         "PASSWORD":"Password",
         "CONFPASSWORD":"Confirm password",
-        "ROLES":"Roles"
+        "ROLES":"Roles",
+        "MATRICULE":"Matricule",
+        "DIRECTION":"Direction"
       },
       "BUTTONS":{
         "ADD":"Save",
@@ -38,7 +40,9 @@ export const users = {
         "PASSWORD_IS_REQUIRED": "Password is required",
         "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "You have to enter at least one digit",
         "CONFIRM_PASSWORD_IS_REQUIRED": "Confirm password is required",
-        "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"
+        "PASSWORDS_DO_NOT_MATCH": "Passwords do not match",
+        "DIRECTION_IS_REQUIRED": "Direction is required",
+        "MATRICULE_IS_REQUIRED": "Matricule is required"
       },
       "TOAST": {
        "ADDED_SUCCESS":"User added successfully",

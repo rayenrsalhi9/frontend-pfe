@@ -23,7 +23,9 @@ export const users = {
         "EMAIL": "بريد إلكتروني",
         "PASSWORD":"كلمة المرور",
         "CONFPASSWORD":"تأكيد كلمة المرور",
-        "ROLES":"الأدوار"
+        "ROLES":"الأدوار",
+        "MATRICULE":"الرقم التعريفي",
+        "DIRECTION":"الاتجاه"
       },
       "BUTTONS":{
         "ADD":"أضف",
@@ -38,7 +40,9 @@ export const users = {
         "PASSWORD_IS_REQUIRED": "كلمة المرور مطلوبة",
         "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "يجب إدخال رقم واحد على الأقل",
         "CONFIRM_PASSWORD_IS_REQUIRED": "تأكيد كلمة المرور مطلوب",
-        "PASSWORDS_DO_NOT_MATCH": "كلمات المرور غير متطابقة"
+        "PASSWORDS_DO_NOT_MATCH": "كلمات المرور غير متطابقة",
+        "DIRECTION_IS_REQUIRED": "الاتجاه مطلوب",
+        "MATRICULE_IS_REQUIRED": "الرقم التعريفي مطلوب"
       },
       "TOAST": {
         "ADDED_SUCCESS": "تمت إضافة المستخدم بنجاح",

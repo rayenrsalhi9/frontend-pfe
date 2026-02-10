@@ -7,18 +7,18 @@
             <form [formGroup]="userForm">
               <div class="row">
                 <div class="col-md-6 mt-2">
-                  <label class="form-label">Matricule</label>
+                  <label class="form-label">{{'USERS.ADD.LABELS.MATRICULE' | translate}}</label>
                   <ng-select [multiple]="false" [items]="employeList"  (change)="selectEmploye($event)"  [searchable]="true"    [clearable]="true" bindLabel="matricule"  >
                     
                     <ng-option *ngFor="let employe of employeList" [value]="employe">{{employe.matricule}}</ng-option>
                   </ng-select>
                 </div>
                 <div class="col-md-6 mt-2">
-                  <label class="form-label">Direction</label>
+                  <label class="form-label">{{'USERS.ADD.LABELS.DIRECTION' | translate}}</label>
                   <input formControlName="direction" class="form-control" type="text">
                   <div class="text-danger" *ngIf="userForm.get('direction')?.touched &&
                 userForm.get('direction')?.hasError('required')">
-                    {{Direction }}
+                    {{'USERS.ADD.ERRORS.DIRECTION_IS_REQUIRED' | translate}}
                   </div>
                 </div>
                 <div class="col-md-6">
