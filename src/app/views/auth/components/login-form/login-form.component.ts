@@ -5,6 +5,7 @@ import { CommonError } from '@app/core/error-handler/common-error';
 import { SecurityService } from '@app/core/security/security.service';
 import { UserAuth } from '@app/shared/enums/user-auth';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'login-form',
@@ -25,6 +26,7 @@ export class LoginFormComponent implements OnInit {
       private router: Router,
       private securityService: SecurityService,
       private toastr:ToastrService,
+      private translate: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -60,7 +62,9 @@ export class LoginFormComponent implements OnInit {
         this.securityService.login(userObject).subscribe(
           (c: UserAuth) => {
             this.isLoading = false;
-            this.toastr.success('User login successfully.');
+            this.translate.get('LOGIN_SUCCESSFULLY').subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
             if (this.securityService.hasClaim('dashboard_view_dashboard')) {
               this.router.navigate(['/dashboard']);
             } else {
