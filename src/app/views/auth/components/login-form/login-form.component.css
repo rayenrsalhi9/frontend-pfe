@@ -107,7 +107,6 @@
   transition: background-color 0.2s ease;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   min-height: 2.5rem;
   display: flex;
   align-items: center;

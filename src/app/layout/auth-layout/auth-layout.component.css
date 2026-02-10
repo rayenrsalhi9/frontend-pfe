@@ -17,32 +17,32 @@
 }
 
 /* Reset/Adjust internal nav-i18n styles */
-::ng-deep nav-i18n.header-nav-item {
+.floating-i18n-widget ::ng-deep nav-i18n.header-nav-item {
   padding: 0 !important;
   display: block !important;
 }
 
-::ng-deep nav-i18n.header-nav-item .header-nav-item-select {
+.floating-i18n-widget ::ng-deep nav-i18n.header-nav-item .header-nav-item-select {
   height: auto !important;
 }
 
-::ng-deep .toggle-wrapper {
+.floating-i18n-widget ::ng-deep .toggle-wrapper {
   padding: 1em !important;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-::ng-deep .toggle-wrapper i {
+.floating-i18n-widget ::ng-deep .toggle-wrapper i {
   color: #11a1fd;
   font-size: 1.5rem;
 }
 
-::ng-deep .dropdown {
+.floating-i18n-widget ::ng-deep .dropdown {
   display: block !important;
 }
 
-::ng-deep .dropdown-menu {
+.floating-i18n-widget ::ng-deep .dropdown-menu {
   bottom: 110% !important;
   top: auto !important;
   right: 0;
