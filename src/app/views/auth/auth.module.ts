@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { LogoModule } from '@app/shared/components/logo/logo.module';
-import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
 
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
@@ -39,7 +38,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
         SharedModule,
         LogoModule,
         LogoModule,
-        NgBootstrapFormValidationModule.forRoot(),
         ToastrModule.forRoot(),
     ],
     providers:[

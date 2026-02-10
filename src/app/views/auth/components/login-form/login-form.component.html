@@ -1,8 +1,11 @@
 <div class="alert alert-danger" *ngIf="showResult"></div>
-<form [formGroup]="formGroup" (validSubmit)="login()">
+<form [formGroup]="formGroup" (ngSubmit)="login()" novalidate>
   <div class="form-group mb-3">
     <label class="form-label">{{'SIGN.IN.USERNAME' | translate}}</label>
-    <input type="text" class="form-control no-validation-icon no-success-validation" formControlName="username">
+    <input type="text" class="form-control no-validation-icon no-success-validation" formControlName="username" [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback">
+      <div *ngIf="formGroup.get('username')?.errors?.['required']">{{'SIGN.IN.USERNAME_ERROR' | translate}}</div>
+    </div>
   </div>
   <div class="mb-3">
     <label class="form-label d-flex justify-content-between">
@@ -11,7 +14,10 @@
     <div class="form-group input-affix flex-column">
       <label class="d-none">Password</label>
       <input [type]="showPassword ? 'text' : 'password'" class="form-control no-validation-icon no-success-validation"
-        formControlName="password">
+        formControlName="password" [ngClass]="{'is-invalid': submitted && formGroup.get('password')?.invalid}">
+      <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback">
+        <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.IN.PASSWORD_ERROR' | translate}}</div>
+      </div>
       <i class="suffix-icon feather cursor-pointer text-dark" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"
         (click)="onShowPasswordClick()">
       </i>

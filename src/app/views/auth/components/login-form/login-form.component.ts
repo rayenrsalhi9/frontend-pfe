@@ -15,6 +15,7 @@ export class LoginFormComponent implements OnInit {
     formGroup: FormGroup;
     showResult = false
     showPassword = false
+    submitted = false
 
     @Input() thirPartyLogin = false
 
@@ -37,6 +38,17 @@ export class LoginFormComponent implements OnInit {
     }
 
     login() {
+        this.submitted = true;
+        
+        // Mark all fields as touched to trigger validation only on submit
+        Object.keys(this.formGroup.controls).forEach(key => {
+            this.formGroup.get(key)?.markAsTouched();
+        });
+
+        if (this.formGroup.invalid) {
+            return;
+        }
+
         const userObject = {
           email: this.formGroup.value.username,
           password: this.formGroup.value.password,
