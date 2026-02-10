@@ -8,7 +8,11 @@ export const sign = {
       "PASSWORD":"كلمة المرور",
       "PASSWORD_ERROR":"كلمة المرور مطلوبة",
       "FORGET":"هل نسيت كلمة المرور؟",
-      "BUTTON":"تسجيل الدخول"
+      "BUTTON":"تسجيل الدخول",
+      "NO_ACCOUNT":"ليس لديك حساب؟",
+      "SIGN_UP":"التسجيل",
+      "WELCOME_BACK":"مرحباً بعودتك",
+      "LOGIN_TO_ACCOUNT":"سجل الدخول إلى حسابك"
     },
     "SUBSCRIBE":{
       "TITLE": "الاشتراك كضيف",

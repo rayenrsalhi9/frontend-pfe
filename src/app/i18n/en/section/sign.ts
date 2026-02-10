@@ -8,7 +8,11 @@ export const sign = {
       "PASSWORD":"Password",
       "PASSWORD_ERROR":"Password is required",
       "FORGET":"Forget Password?",
-      "BUTTON":"Log In"
+      "BUTTON":"Log In",
+      "NO_ACCOUNT":"Don't have an account?",
+      "SIGN_UP":"Sign Up",
+      "WELCOME_BACK":"Welcome back",
+      "LOGIN_TO_ACCOUNT":"Login to your account"
     },
     "SUBSCRIBE":{
       "TITLE":"Subscribe as guest",
