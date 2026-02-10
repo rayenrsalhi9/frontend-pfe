@@ -8,7 +8,13 @@ export const sign = {
       "PASSWORD":"Mot de passe",
       "PASSWORD_ERROR":"Le mot de passe est requis",
       "FORGET":"Mot de passe oublié?",
-      "BUTTON":"Connexion"
+      "BUTTON":"Connexion",
+      "NO_ACCOUNT":"Vous n'avez pas de compte?",
+      "SIGN_UP":"S'inscrire",
+      "WELCOME_BACK":"Bon retour",
+      "LOGIN_TO_ACCOUNT":"Connectez-vous à votre compte",
+      "SHOW_PASSWORD":"Afficher le mot de passe",
+      "HIDE_PASSWORD":"Cacher le mot de passe"
     },
     "TOAST":{
       "SUCCESS":""

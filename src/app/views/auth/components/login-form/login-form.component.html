@@ -1,50 +1,47 @@
-<div class="alert alert-danger" *ngIf="showResult"></div>
-<form [formGroup]="formGroup" (ngSubmit)="login()" novalidate>
-  <div class="form-group mb-3">
-    <label class="form-label">{{'SIGN.IN.USERNAME' | translate}}</label>
-    <input type="text" class="form-control no-validation-icon no-success-validation" formControlName="username" [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
-    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback">
+<form [formGroup]="formGroup" (ngSubmit)="login()" novalidate class="modern-login-form">
+  <div class="form-group mb-4">
+    <label class="form-label modern-label">{{'SIGN.IN.USERNAME' | translate}}</label>
+    <input type="text" 
+           class="form-control modern-input" 
+           formControlName="username" 
+           placeholder="m@example.com"
+           [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback modern-error">
       <div *ngIf="formGroup.get('username')?.errors?.['required']">{{'SIGN.IN.USERNAME_ERROR' | translate}}</div>
     </div>
   </div>
-  <div class="mb-3">
-    <label class="form-label d-flex justify-content-between">
-      <span>{{'SIGN.IN.PASSWORD' | translate}}</span>
-    </label>
-    <div class="form-group input-affix flex-column">
-      <label class="d-none">Password</label>
-      <input [type]="showPassword ? 'text' : 'password'" class="form-control no-validation-icon no-success-validation"
-        formControlName="password" [ngClass]="{'is-invalid': submitted && formGroup.get('password')?.invalid}">
-      <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback">
-        <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.IN.PASSWORD_ERROR' | translate}}</div>
-      </div>
-      <i class="suffix-icon feather cursor-pointer text-dark" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"
-        (click)="onShowPasswordClick()">
-      </i>
+  
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <label class="form-label modern-label">{{'SIGN.IN.PASSWORD' | translate}}</label>
+      <a class="forgot-password-link" [routerLink]="['/forgot']">{{'SIGN.IN.FORGET' | translate}}</a>
     </div>
-    <a class="text-primary font" [routerLink]="['/forgot']">{{'SIGN.IN.FORGET' | translate}}</a>
+    <div class="password-input-wrapper">
+      <input [type]="showPassword ? 'text' : 'password'" 
+             class="form-control modern-input"
+             formControlName="password" 
+             [ngClass]="{'is-invalid': submitted && formGroup.get('password')?.invalid}">
+      <button type="button" 
+              class="password-toggle-btn" 
+              (click)="onShowPasswordClick()"
+              [attr.aria-label]="(showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD') | translate">
+        <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+      </button>
+    </div>
+    <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.IN.PASSWORD_ERROR' | translate}}</div>
+    </div>
   </div>
-  <button class="btn btn-primary w-100" type="submit">{{'SIGN.IN.BUTTON' | translate}}</button>
+  
+  <button class="btn modern-submit-btn w-100" type="submit" [disabled]="isLoading">
+    <span *ngIf="!isLoading">{{'SIGN.IN.BUTTON' | translate}}</span>
+    <span *ngIf="isLoading">
+      <i class="feather icon-loader spin"></i> {{'SIGN.IN.BUTTON' | translate}}
+    </span>
+  </button>
 </form>
-<div *ngIf="thirPartyLogin">
-  <div class="divider">
-    <span class="divider-text text-muted">or login with</span>
-  </div>
-  <div class="row">
-    <div class="col px-1">
-      <button class="btn btn-outline-secondary w-100">
-        <img src="/assets/images/thumbs/thumb-1.png" alt="" style="max-width: 20px;">
-      </button>
-    </div>
-    <div class="col px-1">
-      <button class="btn btn-outline-secondary w-100">
-        <img src="/assets/images/thumbs/thumb-2.png" alt="" style="max-width: 20px;">
-      </button>
-    </div>
-    <div class="col px-1">
-      <button class="btn btn-outline-secondary w-100">
-        <img src="/assets/images/thumbs/thumb-3.png" alt="" style="max-width: 20px;">
-      </button>
-    </div>
-  </div>
+<!-- Signup prompt -->
+<div class="text-center mt-3">
+  <span class="text-muted">{{'SIGN.IN.NO_ACCOUNT' | translate}}</span>
+  <a class="signup-link ms-1" [routerLink]="['/register']">{{'SIGN.IN.SIGN_UP' | translate}}</a>
 </div>

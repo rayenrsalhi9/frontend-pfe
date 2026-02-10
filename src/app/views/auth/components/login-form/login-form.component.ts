@@ -5,17 +5,19 @@ import { CommonError } from '@app/core/error-handler/common-error';
 import { SecurityService } from '@app/core/security/security.service';
 import { UserAuth } from '@app/shared/enums/user-auth';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'login-form',
-    templateUrl: './login-form.component.html'
+    templateUrl: './login-form.component.html',
+    styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent implements OnInit {
 
     formGroup: FormGroup;
-    showResult = false
     showPassword = false
     submitted = false
+    isLoading = false
 
     @Input() thirPartyLogin = false
 
@@ -24,6 +26,7 @@ export class LoginFormComponent implements OnInit {
       private router: Router,
       private securityService: SecurityService,
       private toastr:ToastrService,
+      private translate: TranslateService,
     ) {}
 
     ngOnInit() {
@@ -49,6 +52,8 @@ export class LoginFormComponent implements OnInit {
             return;
         }
 
+        this.isLoading = true;
+
         const userObject = {
           email: this.formGroup.value.username,
           password: this.formGroup.value.password,
@@ -56,7 +61,10 @@ export class LoginFormComponent implements OnInit {
 
         this.securityService.login(userObject).subscribe(
           (c: UserAuth) => {
-            this.toastr.success('User login successfully.');
+            this.isLoading = false;
+            this.translate.get('LOGIN_SUCCESSFULLY').subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
             if (this.securityService.hasClaim('dashboard_view_dashboard')) {
               this.router.navigate(['/dashboard']);
             } else {
@@ -64,6 +72,7 @@ export class LoginFormComponent implements OnInit {
             }
           },
           (err: CommonError) => {
+            this.isLoading = false;
             this.toastr.error(err.error['message']);
           }
         );
