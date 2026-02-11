@@ -16,6 +16,24 @@ export const sign = {
       "SHOW_PASSWORD":"Show password",
       "HIDE_PASSWORD":"Hide password"
     },
+    "UP":{
+      "LABEL":"Sign Up",
+      "DESCRIPTION":"Create your account to get started",
+      "USERNAME":"Username",
+      "USERNAME_ERROR":"Username is required",
+      "EMAIL":"Email",
+      "EMAIL_ERROR":"Email is required",
+      "EMAIL_INVALID":"Please enter a valid email address",
+      "PASSWORD":"Password",
+      "PASSWORD_ERROR":"Password is required",
+      "CONFIRM_PASSWORD":"Confirm Password",
+      "PASSWORD_MISMATCH":"Passwords do not match",
+      "BUTTON":"Sign Up",
+      "HAVE_ACCOUNT":"Already have an account?",
+      "SIGN_IN":"Sign In",
+      "WELCOME":"Welcome",
+      "CREATE_ACCOUNT":"Create your account"
+    },
     "TOAST":{
       "SUCCESS":""
     },

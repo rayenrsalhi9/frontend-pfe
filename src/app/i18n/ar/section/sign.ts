@@ -16,6 +16,24 @@ export const sign = {
       "SHOW_PASSWORD":"إظهار كلمة المرور",
       "HIDE_PASSWORD":"إخفاء كلمة المرور"
     },
+    "UP":{
+      "LABEL":"التسجيل",
+      "DESCRIPTION":"أنشئ حسابك للبدء",
+      "USERNAME":"اسم المستخدم",
+      "USERNAME_ERROR":"اسم المستخدم مطلوب",
+      "EMAIL":"البريد الإلكتروني",
+      "EMAIL_ERROR":"البريد الإلكتروني مطلوب",
+      "EMAIL_INVALID":"يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "PASSWORD":"كلمة المرور",
+      "PASSWORD_ERROR":"كلمة المرور مطلوبة",
+      "CONFIRM_PASSWORD":"تأكيد كلمة المرور",
+      "PASSWORD_MISMATCH":"كلمات المرور غير متطابقة",
+      "BUTTON":"التسجيل",
+      "HAVE_ACCOUNT":"هل لديك حساب بالفعل؟",
+      "SIGN_IN":"تسجيل الدخول",
+      "WELCOME":"مرحباً",
+      "CREATE_ACCOUNT":"أنشئ حسابك"
+    },
     "SUBSCRIBE":{
       "TITLE": "الاشتراك كضيف",
       "FIRST_NAME": "الاسم الأول",

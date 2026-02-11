@@ -1,38 +1,78 @@
-<form [formGroup]="formGroup" (validSubmit)="register()">
-    <div class="form-group mb-3">
-        <label class="form-label">Username</label>
-        <input 
-            type="text" 
-            class="form-control no-validation-icon no-success-validation" 
-            formControlName="username"
-        >
+<!-- (ngSubmit)="register()" -->
+<form [formGroup]="formGroup" novalidate class="modern-login-form">
+  <div class="form-group mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.USERNAME' | translate}}</label>
+    <input type="text" 
+           class="form-control modern-input" 
+           formControlName="username" 
+           placeholder="johndoe"
+           [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('username')?.errors?.['required']">{{'SIGN.UP.USERNAME_ERROR' | translate}}</div>
     </div>
-    <div class="form-group mb-3">
-        <label class="form-label">Email</label>
-        <input 
-            type="email" 
-            class="form-control no-validation-icon no-success-validation" 
-            formControlName="email"
-        >
+  </div>
+  
+  <div class="form-group mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.EMAIL' | translate}}</label>
+    <input type="email" 
+           class="form-control modern-input" 
+           formControlName="email" 
+           placeholder="john@example.com"
+           [ngClass]="{'is-invalid': submitted && formGroup.get('email')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('email')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('email')?.errors?.['required']">{{'SIGN.UP.EMAIL_ERROR' | translate}}</div>
+      <div *ngIf="formGroup.get('email')?.errors?.['email']">{{'SIGN.UP.EMAIL_INVALID' | translate}}</div>
     </div>
-    <div class="form-group mb-3">
-        <label class="form-label">Password</label>
-        <input 
-            type="password" 
-            class="form-control no-validation-icon no-success-validation" 
-            formControlName="password"
-        >
+  </div>
+  
+  <div class="mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.PASSWORD' | translate}}</label>
+    <div class="password-input-wrapper">
+      <input [type]="showPassword ? 'text' : 'password'" 
+             class="form-control modern-input"
+             formControlName="password" 
+             [ngClass]="{'is-invalid': submitted && formGroup.get('password')?.invalid}">
+      <button type="button" 
+              class="password-toggle-btn" 
+              (click)="onShowPasswordClick()"
+              [attr.aria-label]="(showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD') | translate">
+        <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+      </button>
     </div>
-    <div class="form-group mb-3">
-        <label class="form-label">Confirm Password</label>
-        <input 
-            type="password" 
-            class="form-control no-validation-icon no-success-validation" 
-            formControlName="confirmPassword"
-        >
-        <ng-container *ngIf="formGroup.get('confirmPassword').hasError('confirm')">
-            <span class="invalid-feedback">Password not match</span>
-        </ng-container>
+    <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.UP.PASSWORD_ERROR' | translate}}</div>
     </div>
-    <button class="btn btn-primary d-block w-100" type="submit">Sign Up</button>
+  </div>
+  
+  <div class="mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.CONFIRM_PASSWORD' | translate}}</label>
+    <div class="password-input-wrapper">
+      <input [type]="showConfirmPassword ? 'text' : 'password'" 
+             class="form-control modern-input"
+             formControlName="confirmPassword" 
+             [ngClass]="{'is-invalid': submitted && (formGroup.get('confirmPassword')?.invalid || formGroup.hasError('mismatch'))}">
+      <button type="button" 
+              class="password-toggle-btn" 
+              (click)="onShowConfirmPasswordClick()"
+              [attr.aria-label]="(showConfirmPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD') | translate">
+        <i class="feather" [ngClass]="showConfirmPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+      </button>
+    </div>
+    <div *ngIf="submitted && formGroup.hasError('mismatch')" class="invalid-feedback modern-error">
+      <div>{{'SIGN.UP.PASSWORD_MISMATCH' | translate}}</div>
+    </div>
+  </div>
+  
+  <button class="btn modern-submit-btn w-100" type="submit" [disabled]="isLoading">
+    <span *ngIf="!isLoading">{{'SIGN.UP.BUTTON' | translate}}</span>
+    <span *ngIf="isLoading">
+      <i class="feather icon-loader spin"></i> {{'SIGN.UP.BUTTON' | translate}}
+    </span>
+  </button>
 </form>
+
+<!-- Login prompt -->
+<div class="text-center mt-3">
+  <span class="text-muted">{{'SIGN.UP.HAVE_ACCOUNT' | translate}}</span>
+  <a class="signup-link ms-1" [routerLink]="['/login']">{{'SIGN.UP.SIGN_IN' | translate}}</a>
+</div>
