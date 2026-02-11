@@ -40,6 +40,18 @@
               color: white !important;
             }
           }
+          &.menu-item-register {
+            margin-left: -20px;
+            background-color: transparent;
+            color: #11a1fd !important;
+            border: 2px solid #11a1fd;
+            border-radius: 12px;
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+            &:hover {
+              background-color: darken(#fafafa, 5%);
+            }
+          }
         }
       }
     }

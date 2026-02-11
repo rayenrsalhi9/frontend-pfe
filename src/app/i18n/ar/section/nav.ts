@@ -5,6 +5,7 @@ export const nav = {
     'FORUM':'المنتدى',
     'BLOG':'المدونات',
     'CONNEXION':'تسجيل الدخول',
+    'INSCRIPTION':'إنشاء حساب',
 
     'DASHBOARD': 'لوحة القيادة',
     'DASHBOARD_DEFAULT': 'Défaut',
