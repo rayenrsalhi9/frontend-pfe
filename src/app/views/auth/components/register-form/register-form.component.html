@@ -67,7 +67,7 @@
     </div>
     <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback modern-error">
       <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.UP.PASSWORD_ERROR' | translate}}</div>
-      <div *ngIf="formGroup.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+      <div *ngIf="formGroup.get('password')?.errors?.['minlength']">{{'SIGN.UP.PASSWORD_MIN_LENGTH' | translate}}</div>
     </div>
   </div>
   
@@ -85,10 +85,10 @@
         <i class="feather" [ngClass]="showConfirmPassword ? 'icon-eye-off' : 'icon-eye'"></i>
       </button>
     </div>
-    <div *ngIf="submitted && formGroup.hasError('mismatch')" class="invalid-feedback modern-error">
+    <div *ngIf="submitted && (formGroup.get('confirmPassword')?.invalid || formGroup.hasError('mismatch'))" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('confirmPassword')?.errors?.['required']">{{'SIGN.UP.CONFIRM_PASSWORD_ERROR' | translate}}</div>
       <div>{{'SIGN.UP.PASSWORD_MISMATCH' | translate}}</div>
-    </div>
-  </div>
+    </div>  </div>
   
   <button class="btn modern-submit-btn w-100" type="submit" [disabled]="isLoading">
     <span *ngIf="!isLoading">{{'SIGN.UP.BUTTON' | translate}}</span>

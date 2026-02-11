@@ -32,6 +32,7 @@ export const sign = {
       "PASSWORD_ERROR":"Password is required",
       "CONFIRM_PASSWORD":"Confirm Password",
       "PASSWORD_MISMATCH":"Passwords do not match",
+      "PASSWORD_MIN_LENGTH":"Password must be at least 8 characters",
       "BUTTON":"Sign Up",
       "HAVE_ACCOUNT":"Already have an account?",
       "SIGN_IN":"Sign In",
