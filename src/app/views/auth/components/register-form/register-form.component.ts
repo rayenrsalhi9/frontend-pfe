@@ -23,9 +23,11 @@ export class RegisterFormComponent implements OnInit {
 
     ngOnInit() {
         this.formGroup = this.formBuilder.group({
+            firstName: [null, [Validators.required]],
+            lastName: [null, [Validators.required]],
             username: [null, [Validators.required]],
             email: [null, [Validators.required, Validators.email]],
-            password: [null, [Validators.required]],
+            password: [null, [Validators.required, Validators.minLength(6)]],
             confirmPassword: [null, [Validators.required]]
         }, { validators: this.passwordMatchValidator });
     }
@@ -40,26 +42,44 @@ export class RegisterFormComponent implements OnInit {
         return null;
     };
 
-    // register() {
-    //     this.submitted = true;
+    register() {
+        this.submitted = true;
         
-    //     if (this.formGroup.invalid) {
-    //         return;
-    //     }
+        if (this.formGroup.invalid) {
+            return;
+        }
 
-    //     this.isLoading = true;
+        this.isLoading = true;
         
-    //     const { confirmPassword, ...registerData } = this.formGroup.value;
+        const { confirmPassword, ...registerData } = this.formGroup.value;
         
-    //     this.securityService.register(registerData).subscribe({
-    //         next: () => {
-    //             this.router.navigate(['/login']);
-    //         },
-    //         error: () => {
-    //             this.isLoading = false;
-    //         }
-    //     });
-    // }
+        this.securityService.register(registerData).subscribe({
+            next: (response) => {
+                this.isLoading = false;
+                // Navigate to dashboard on successful registration
+                this.router.navigate(['/dashboard']);
+            },
+            error: (error) => {
+                this.isLoading = false;
+                // Handle specific error cases
+                if (error.status === 422) {
+                    // Validation errors from backend
+                    const errors = error.error?.message || {};
+                    
+                    // Map backend errors to form fields
+                    if (errors.email) {
+                        this.formGroup.get('email')?.setErrors({ backend: errors.email[0] });
+                    }
+                    if (errors.username) {
+                        this.formGroup.get('username')?.setErrors({ backend: errors.username[0] });
+                    }
+                } else if (error.status === 409) {
+                    // Conflict - user already exists
+                    this.formGroup.get('email')?.setErrors({ conflict: 'User already exists with this email' });
+                }
+            }
+        });
+    }
 
     onShowPasswordClick() {
         this.showPassword = !this.showPassword;

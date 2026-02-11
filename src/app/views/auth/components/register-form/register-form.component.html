@@ -1,5 +1,28 @@
-<!-- (ngSubmit)="register()" -->
-<form [formGroup]="formGroup" novalidate class="modern-login-form">
+<form [formGroup]="formGroup" (ngSubmit)="register()" novalidate class="modern-login-form">
+  <div class="form-group mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.FIRST_NAME' | translate}}</label>
+    <input type="text" 
+           class="form-control modern-input" 
+           formControlName="firstName" 
+           placeholder="John"
+           [ngClass]="{'is-invalid': submitted && formGroup.get('firstName')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('firstName')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('firstName')?.errors?.['required']">{{'SIGN.UP.FIRST_NAME_ERROR' | translate}}</div>
+    </div>
+  </div>
+  
+  <div class="form-group mb-4">
+    <label class="form-label modern-label">{{'SIGN.UP.LAST_NAME' | translate}}</label>
+    <input type="text" 
+           class="form-control modern-input" 
+           formControlName="lastName" 
+           placeholder="Doe"
+           [ngClass]="{'is-invalid': submitted && formGroup.get('lastName')?.invalid}">
+    <div *ngIf="submitted && formGroup.get('lastName')?.invalid" class="invalid-feedback modern-error">
+      <div *ngIf="formGroup.get('lastName')?.errors?.['required']">{{'SIGN.UP.LAST_NAME_ERROR' | translate}}</div>
+    </div>
+  </div>
+  
   <div class="form-group mb-4">
     <label class="form-label modern-label">{{'SIGN.UP.USERNAME' | translate}}</label>
     <input type="text" 
@@ -9,6 +32,7 @@
            [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
     <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback modern-error">
       <div *ngIf="formGroup.get('username')?.errors?.['required']">{{'SIGN.UP.USERNAME_ERROR' | translate}}</div>
+      <div *ngIf="formGroup.get('username')?.errors?.['backend']">{{formGroup.get('username')?.errors?.['backend']}}</div>
     </div>
   </div>
   
@@ -22,6 +46,8 @@
     <div *ngIf="submitted && formGroup.get('email')?.invalid" class="invalid-feedback modern-error">
       <div *ngIf="formGroup.get('email')?.errors?.['required']">{{'SIGN.UP.EMAIL_ERROR' | translate}}</div>
       <div *ngIf="formGroup.get('email')?.errors?.['email']">{{'SIGN.UP.EMAIL_INVALID' | translate}}</div>
+      <div *ngIf="formGroup.get('email')?.errors?.['backend']">{{formGroup.get('email')?.errors?.['backend']}}</div>
+      <div *ngIf="formGroup.get('email')?.errors?.['conflict']">{{formGroup.get('email')?.errors?.['conflict']}}</div>
     </div>
   </div>
   
@@ -41,6 +67,7 @@
     </div>
     <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback modern-error">
       <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.UP.PASSWORD_ERROR' | translate}}</div>
+      <div *ngIf="formGroup.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
     </div>
   </div>
   

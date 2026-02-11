@@ -19,6 +19,10 @@ export const sign = {
     "UP":{
       "LABEL":"S'inscrire",
       "DESCRIPTION":"Créez votre compte pour commencer",
+      "FIRST_NAME":"Prénom",
+      "FIRST_NAME_ERROR":"Le prénom est requis",
+      "LAST_NAME":"Nom",
+      "LAST_NAME_ERROR":"Le nom est requis",
       "USERNAME":"Nom d'utilisateur",
       "USERNAME_ERROR":"Le nom d'utilisateur est requis",
       "EMAIL":"Email",

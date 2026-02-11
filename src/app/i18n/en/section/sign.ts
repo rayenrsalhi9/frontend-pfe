@@ -19,6 +19,10 @@ export const sign = {
     "UP":{
       "LABEL":"Sign Up",
       "DESCRIPTION":"Create your account to get started",
+      "FIRST_NAME":"First Name",
+      "FIRST_NAME_ERROR":"First name is required",
+      "LAST_NAME":"Last Name",
+      "LAST_NAME_ERROR":"Last name is required",
       "USERNAME":"Username",
       "USERNAME_ERROR":"Username is required",
       "EMAIL":"Email",

@@ -345,4 +345,31 @@ export class SecurityService {
     localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
     this.securityObject$.next(user)
   }
+
+  register(entity: any): Observable<UserAuth | CommonError> {
+    return this.http
+      .post<UserAuth>('auth/register', entity)
+      .pipe(
+        tap((resp) => {
+          this.tokenTime = new Date();
+
+          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
+          this.securityObject.tokenTime = new Date();
+          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
+          localStorage.setItem(
+            'bearerToken',
+            this.securityObject.authorisation.token
+          );
+          this.securityObject$.next(resp);
+          this.pusherService.connect()
+          this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
+            if (data.type == 'message') {
+              this.notificationSystem.sendNotification(data.data.message)
+            }
+          })
+          this.refreshToken();
+        })
+      )
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
 }
