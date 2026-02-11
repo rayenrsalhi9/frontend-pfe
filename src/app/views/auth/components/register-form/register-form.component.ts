@@ -36,7 +36,8 @@ export class RegisterFormComponent implements OnInit {
         if (password && confirmPassword && password.value !== confirmPassword.value) {
             return { mismatch: true };
         }
-        return {};
+        // Angular validators must return null to indicate "no errors." Returning {} (a truthy, non-null object) causes Angular to treat the form group as always invalid, even when the passwords match. This will block form submission.
+        return null;
     };
 
     // register() {
