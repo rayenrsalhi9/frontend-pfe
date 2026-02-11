@@ -1,22 +1,21 @@
-<div class="auth-full-height d-flex flex-row align-items-center">
-    <div class="container">
-       <div class="row justify-content-center">
-           <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="m-2">
-                            <div class="d-flex justify-content-center mt-3">
-                                <logo class="text-center" logoType="fold"></logo>
-                            </div>
-                            <div class="text-center mt-3">
-                                <h3 class="fw-bolder">Sign Up</h3>
-                                <p class="text-muted">Sign up account to get free reward!</p>
-                            </div>
-                            <register-form></register-form>
-                        </div>
-                    </div>
-                </div>
-           </div>
-       </div> 
+<div class="login-container">
+  <div class="login-wrapper">
+    <div class="login-card">
+      <!-- Left Column - Signup Form -->
+      <div class="login-form-column">
+        <div class="login-header">
+          <h1 class="login-title">{{'SIGN.UP.WELCOME' | translate}}</h1>
+          <p class="login-subtitle">{{'SIGN.UP.CREATE_ACCOUNT' | translate}}</p>
+        </div>
+        
+        <!-- Register Form Component -->
+        <register-form></register-form>
+      </div>
+      
+      <!-- Right Column - Background Image -->
+      <div class="login-image-column">
+        <img src="/assets/images/auth/auth-bg.webp" alt="Authentication background" class="login-bg-image">
+      </div>
     </div>
+  </div>
 </div>

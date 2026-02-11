@@ -16,6 +16,28 @@ export const sign = {
       "SHOW_PASSWORD":"Afficher le mot de passe",
       "HIDE_PASSWORD":"Cacher le mot de passe"
     },
+    "UP":{
+      "LABEL":"S'inscrire",
+      "DESCRIPTION":"Créez votre compte pour commencer",
+      "FIRST_NAME":"Prénom",
+      "FIRST_NAME_ERROR":"Le prénom est requis",
+      "LAST_NAME":"Nom",
+      "LAST_NAME_ERROR":"Le nom est requis",
+      "USERNAME":"Nom d'utilisateur",
+      "USERNAME_ERROR":"Le nom d'utilisateur est requis",
+      "EMAIL":"Email",
+      "EMAIL_ERROR":"L'email est requis",
+      "EMAIL_INVALID":"Veuillez entrer une adresse email valide",
+      "PASSWORD":"Mot de passe",
+      "PASSWORD_ERROR":"Le mot de passe est requis",
+      "CONFIRM_PASSWORD":"Confirmer le mot de passe",
+      "PASSWORD_MISMATCH":"Les mots de passe ne correspondent pas",
+      "BUTTON":"S'inscrire",
+      "HAVE_ACCOUNT":"Vous avez déjà un compte?",
+      "SIGN_IN":"Se connecter",
+      "WELCOME":"Bienvenue",
+      "CREATE_ACCOUNT":"Créez votre compte"
+    },
     "TOAST":{
       "SUCCESS":""
     },
