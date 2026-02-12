@@ -57,8 +57,18 @@
                     <span class="time">{{comment.createdAt | utcToLocalTime:'shortDate' }}</span>
                   </div>
                   <div class="comment">
-                    <div *ngIf="user && comment.user.email == user.email" class="delete-comment" (click)="deleteComment(comment.id)" style="position: absolute; right: 2px; top: 2ox; color: red; cursor: pointer;">
-                      <i class="feather icon-trash"></i>
+                    <!-- Three-dot menu for comment actions -->
+                    <div class="comment-actions" *ngIf="canDeleteComment(comment)" dropdown [insideClick]="true">
+                      <button dropdownToggle type="button" class="btn btn-sm btn-link comment-menu-btn">
+                        <i class="feather icon-more-horizontal"></i>
+                      </button>
+                      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                        <li>
+                          <a class="dropdown-item text-danger" (click)="deleteComment(comment.id)">
+                            <i class="feather icon-trash"></i> Delete Comment
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                     <p>{{comment.comment}}</p>
                   </div>

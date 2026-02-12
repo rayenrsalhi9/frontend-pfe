@@ -61,10 +61,10 @@ export class ForumService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteComment(id:any) {
+  deleteComment(id:string): Observable<any[] | CommonError> {
     const url = `forums/comments/delete/${id}`;
     return this.httpClient
-      .delete<any[]>(url)
+      .delete<any>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
