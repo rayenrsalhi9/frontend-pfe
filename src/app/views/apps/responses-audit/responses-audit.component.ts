@@ -5,6 +5,8 @@ import { ResponseAuditResource } from '@app/shared/enums/response-audit-resource
 import { ResponseAuditTrail } from '@app/shared/enums/response-audit-trail';
 import { CommonError } from '@app/shared/enums/common-error';
 import { HttpResponse } from '@angular/common/http';
+import { SecurityService } from '@app/core/security/security.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-responses-audit',
@@ -25,7 +27,9 @@ export class ResponsesAuditComponent implements OnInit {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private responseAuditTrailService: ResponseAuditTrailService
+    private responseAuditTrailService: ResponseAuditTrailService,
+    private securityService: SecurityService,
+    private toastrService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -34,6 +38,15 @@ export class ResponsesAuditComponent implements OnInit {
 
   loadResponseAuditTrails(): void {
     this.loading = true;
+    
+    // Check if user has permission to view response audit trails
+    if (!this.securityService.hasClaim('RESPONSE_AUDIT_TRAIL_VIEW_RESPONSE_AUDIT_TRAIL')) {
+      this.toastrService.error('You do not have permission to view response audit trails');
+      this.loading = false;
+      this.rows = [];
+      this.filteredRows = [];
+      return;
+    }
     
     const resource: ResponseAuditResource = {
       fields: 'id,forumId,forumTitle,responseId,responseType,operationName,responseContent,previousContent,ipAddress,userAgent,createdBy,createdByName,createdDate,modifiedBy,modifiedDate',
@@ -61,6 +74,7 @@ export class ResponsesAuditComponent implements OnInit {
           this.totalCount = parseInt(response.headers.get('totalCount') || '0', 10);
         } else {
           console.error('Error loading response audit trails:', response);
+          this.toastrService.error('Failed to load response audit trails');
           this.rows = [];
           this.filteredRows = [];
         }
@@ -69,6 +83,7 @@ export class ResponsesAuditComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading response audit trails:', error);
+        this.toastrService.error('Failed to load response audit trails. Please try again later.');
         this.loading = false;
         this.rows = [];
         this.filteredRows = [];
