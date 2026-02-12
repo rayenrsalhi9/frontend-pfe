@@ -4,6 +4,8 @@ import { SecurityService } from '@app/core/security/security.service';
 import { SusbcribeModalComponent } from '@app/shared/components/susbcribe-modal/susbcribe-modal.component';
 import { ForumService } from '@app/views/apps/forum/forum.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
+import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
 
 @Component({
   selector: 'app-forum-preview',
@@ -23,6 +25,7 @@ export class ForumPreviewComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private securityService: SecurityService,
     private modalService: BsModalService,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -93,22 +96,48 @@ export class ForumPreviewComponent implements OnInit {
     }
   }
 
-  deleteComment(id:any) {
+  deleteComment(id:string) {
     if (this.securityService.isGuestUser() || this.securityService.isUserAuthenticate()) {
-      this.forumService.deleteComment(id).subscribe(
-        (data:any) => {
-          console.log(data);
-          location.reload()
-          this.cdr.markForCheck()
-        },
-        (error:any) => {
-          console.log(error);
-        }
-      )
+      // Show confirmation dialog
+      if (confirm('Are you sure you want to delete this comment?')) {
+        this.forumService.deleteComment(id).subscribe(
+          (response: any) => {
+            if (response.success) {
+              // Remove comment from local array
+              this.forum.comments = this.forum.comments.filter(
+                (comment: any) => comment.id !== id
+              );
+              this.cdr.markForCheck();
+              
+              // Show success message
+              this.toastr.success('Comment deleted successfully');
+            } else {
+              this.toastr.error(response.message || 'Failed to delete comment');
+            }
+          },
+          (error: any) => {
+            console.error('Delete comment error:', error);
+            this.toastr.error('An error occurred while deleting the comment');
+          }
+        );
+      }
     } else {
       console.log(false);
       this.modalService.show(SusbcribeModalComponent)
     }
+  }
+
+  // Check if user can delete a comment
+  canDeleteComment(comment: any): boolean {
+    if (!this.user) return false;
+    
+    // User can delete their own comments
+    if (comment.user.email === this.user.email) {
+      return true;
+    }
+    
+    // Check if user has admin permission
+    return this.securityService.hasClaim('FORUM_DELETE_COMMENT');
   }
 
 }
