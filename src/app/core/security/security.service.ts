@@ -238,15 +238,17 @@ export class SecurityService {
   }
 
   logout(): void {
-
+    // Always reset security object regardless of backend response
+    this.resetSecurityObject();
+    
     this.http.post('auth/logout', {user:this.securityObject.user.id})
     .subscribe(
       data=>{
-        this.pusherService.unsubscribeFromChannel(`user.${this.securityObject.user.id}`)
-        this.resetSecurityObject();
+        // Success - user already redirected by resetSecurityObject()
       },
       err => {
-
+        // Even if backend fails, we've already cleaned up frontend state
+        console.error('Backend logout failed:', err);
       }
     )
   }
@@ -284,7 +286,7 @@ export class SecurityService {
      localStorage.removeItem('currentUser');
      localStorage.removeItem('bearerToken');
      localStorage.removeItem('guestUser');
-    //localStorage.removeItem('guestToken');
+     localStorage.removeItem('guestToken');
     this.pusherService.disconnect()
     this.securityObject$.next(null);
     this.router.navigate(['/']);
