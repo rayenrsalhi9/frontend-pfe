@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SecurityService } from '@app/core/security/security.service';
 import { UserNotification } from '@app/shared/enums/notification';
 import { NotificationSystem } from '@app/shared/services/notification-system.service';
 import { NotificationService } from '@app/shared/services/notification.service';
 import { PusherService } from '@app/shared/services/pusher.service';
-import { TimeSince } from '@app/shared/utils/TimeSince'
 import { TranslateService } from '@ngx-translate/core';
-import moment from 'moment';
 
 @Component({
   selector: 'nav-notification',
@@ -19,11 +19,15 @@ import moment from 'moment';
     NotificationService
   ],
 })
-export class NavNotificationComponent implements OnInit {
+export class NavNotificationComponent implements OnInit, OnDestroy {
+
+  private destroy$ = new Subject<void>();
+  private currentUserId: string | null = null;
+  private refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   newNotificationCount = 0;
   notifications: UserNotification[] = [];
-  refereshReminderTimeInMinute = 10;
+  refreshReminderTimeInMinute = 10;
   isUnReadNotification = false;
   momentLang:any
 
@@ -40,40 +44,30 @@ export class NavNotificationComponent implements OnInit {
   }
 
   loadData() {
-    /* this.notificationSvc.getNotificationList().subscribe(data => {
-        this.notificationList = [...data]
-    }); */
+    // Method intentionally left empty - can be implemented later if needed
   }
 
   getTimeDistance(time: any) {
-    //return TimeSince(time)
-    //return time
-
-    /* console.log(time);
-
-    let date = moment(time,'YYYY/MM/DD[T]HH:mm:ss').format('YYYY-MM-DD[T]HH:mm:ss');
-
-    console.log(date);
-
-
-    return date; */
-
+    // Method intentionally left empty - can be implemented later if needed
+    return time;
   }
 
   ngOnInit(): void {
-    this.securityService.SecurityObject.subscribe(user=>{
-
-      this.getNotification()
-      this.pusherService.unsubscribeFromChannel(`user.${user.user.id}`)
-      this.pusherService.subscribeToChannel(`user.${user.user.id}`, 'notification', (data) => {
-        if (data.type == 'message') {
-          this.getNotification()
-          this.notificationSystem.sendNotification(data.data.message)
-        }
-      })
+    this.securityService.SecurityObject.pipe(takeUntil(this.destroy$)).subscribe(user=>{
+      // Check if user exists and has user property before accessing
+      if (user && user.user && user.user.id) {
+        this.getNotification()
+        this.currentUserId = user.user.id;
+        this.pusherService.unsubscribeFromChannel(`user.${user.user.id}`)
+        this.pusherService.subscribeToChannel(`user.${user.user.id}`, 'notification', (data) => {
+          if (data.type == 'message') {
+            this.getNotification()
+            this.notificationSystem.sendNotification(data.data.message)
+          }
+        })
+      }
     })
-    this.momentLang = this.translateService.currentLang.split('_')[0]
-  }
+    this.momentLang = this.translateService.currentLang?.split('_')[0] ?? 'en';  }
 
   getNotification() {
     if (!this.securityService.isUserAuthenticate()) {
@@ -91,9 +85,9 @@ export class NavNotificationComponent implements OnInit {
         this.isUnReadNotification = this.notifications.some((n) => !n.isRead);
         this.cd.detectChanges();
 
-        setTimeout(() => {
+        this.refreshTimeoutId = setTimeout(() => {
           this.getNotification();
-        }, this.refereshReminderTimeInMinute * 60 * 1000);
+        }, this.refreshReminderTimeInMinute * 60 * 1000);
       });
   }
 
@@ -101,5 +95,16 @@ export class NavNotificationComponent implements OnInit {
     this.notificationService.markAllAsRead().subscribe(() => {
       this.getNotification();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshTimeoutId) {
+      clearTimeout(this.refreshTimeoutId);
+    }
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.currentUserId) {
+      this.pusherService.unsubscribeFromChannel(`user.${this.currentUserId}`);
+    }
   }
 }

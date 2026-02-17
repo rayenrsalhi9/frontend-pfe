@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError, delay } from 'rxjs/operators';
 import { CommonHttpErrorService } from '../error-handler/common-http-error.service';
@@ -60,13 +60,7 @@ export class SecurityService {
     const user = localStorage.getItem('guestUser')
     const token = localStorage.getItem('guestToken')
 
-    console.log(user);
-
-    if(user != null) return true
-    if(token != null) return true
-    if(token || user) return true
-
-    return false
+    return user != null || token != null;
   }
 
   login(entity: any): Observable<UserAuth | CommonError> {
@@ -76,25 +70,9 @@ export class SecurityService {
       .post<UserAuth>('auth/login', entity)
       .pipe(
         tap((resp) => {
-          this.tokenTime = new Date();
-
-          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
-          this.securityObject.tokenTime = new Date();
-          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-          localStorage.setItem(
-            'bearerToken',
-            this.securityObject.authorisation.token
-          );
+          this.setupPostAuthentication(resp);
           localStorage.removeItem('guestUser');
           localStorage.removeItem('guestToken');
-          this.securityObject$.next(resp);
-          this.pusherService.connect()
-          this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
-            if (data.type == 'message') {
-              this.notificationSystem.sendNotification(data.data.message)
-            }
-          })
-          this.refreshToken();
         })
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -171,7 +149,7 @@ export class SecurityService {
       currentDate.getMinutes() - environment.tokenExpiredTimeInMin
     );
     let diffTime;
-    if (!this.clearTimeOutData) {
+    if (this.clearTimeOutData) {
       clearTimeout(this.clearTimeOutData);
     }
     if (!this.tokenTime) {
@@ -186,16 +164,7 @@ export class SecurityService {
       this.refresh()
         .pipe(delay(1000))
         .subscribe((userAuth: UserAuth) => {
-          this.tokenTime = new Date();
-          this.securityObject =
-            this.clonerService.deepClone<UserAuth>(userAuth);
-          this.securityObject.tokenTime = new Date();
-          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-          localStorage.setItem(
-            'bearerToken',
-            this.securityObject.authorisation.token
-          );
-          this.securityObject$.next(userAuth);
+          this.updateSecurityData(userAuth);
           this.refreshToken();
         });
     }, diffTime);
@@ -206,14 +175,7 @@ export class SecurityService {
       .post<UserAuth>('auth/refresh', {})
       .pipe(
         tap((resp) => {
-          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
-          this.securityObject.tokenTime = new Date();
-          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-          localStorage.setItem(
-            'bearerToken',
-            this.securityObject.authorisation.token
-          );
-          this.securityObject$.next(resp);
+          this.updateSecurityData(resp);
         })
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -237,20 +199,53 @@ export class SecurityService {
     return false;
   }
 
+  private setupPostAuthentication(resp: UserAuth): void {
+    this.tokenTime = new Date();
+    this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
+    this.securityObject.tokenTime = new Date();
+    localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
+    localStorage.setItem(
+      'bearerToken',
+      this.securityObject.authorisation.token
+    );
+    this.securityObject$.next(resp);
+    this.pusherService.connect()
+    this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
+      if (data.type == 'message') {
+        this.notificationSystem.sendNotification(data.data.message)
+      }
+    })
+    this.refreshToken();
+  }
+
+  private updateSecurityData(userAuth: UserAuth): void {
+    this.tokenTime = new Date();
+    this.securityObject = this.clonerService.deepClone<UserAuth>(userAuth);
+    this.securityObject.tokenTime = new Date();
+    localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
+    localStorage.setItem(
+      'bearerToken',
+      this.securityObject.authorisation.token
+    );
+    this.securityObject$.next(userAuth);
+  }
+
   logout(): void {
+    // Get user ID before resetting security object
+    const userId = this.securityObject?.user?.id;
+    
     // Always reset security object regardless of backend response
     this.resetSecurityObject();
     
-    this.http.post('auth/logout', {user:this.securityObject.user.id})
-    .subscribe(
-      data=>{
-        // Success - user already redirected by resetSecurityObject()
-      },
-      err => {
-        // Even if backend fails, we've already cleaned up frontend state
-        console.error('Backend logout failed:', err);
-      }
-    )
+    // Only call logout API if we have a valid user ID
+    if (userId) {
+      this.http.post('auth/logout', {user: userId}).pipe(
+        catchError(err => {
+          console.error('Backend logout failed:', err);
+          return of(null);
+        })
+      ).subscribe();
+    }
   }
 
   updateProfile(companyProfile: CompanyProfile) {
@@ -339,7 +334,15 @@ export class SecurityService {
 
   getUserDetail(): UserAuth {
     const userJson = localStorage.getItem('currentUser');
-    return JSON.parse(userJson);
+    if (!userJson) {
+      return null;
+    }
+    try {
+      return JSON.parse(userJson);
+    } catch (error) {
+      console.error('Error parsing user JSON:', error);
+      return null;
+    }
   }
 
   setUserDetail(user: UserAuth) {
@@ -353,23 +356,7 @@ export class SecurityService {
       .post<UserAuth>('auth/register', entity)
       .pipe(
         tap((resp) => {
-          this.tokenTime = new Date();
-
-          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
-          this.securityObject.tokenTime = new Date();
-          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-          localStorage.setItem(
-            'bearerToken',
-            this.securityObject.authorisation.token
-          );
-          this.securityObject$.next(resp);
-          this.pusherService.connect()
-          this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
-            if (data.type == 'message') {
-              this.notificationSystem.sendNotification(data.data.message)
-            }
-          })
-          this.refreshToken();
+          this.setupPostAuthentication(resp);
         })
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
