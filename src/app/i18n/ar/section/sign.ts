@@ -40,6 +40,7 @@ export const sign = {
     },
     "TOAST":{
       "SUCCESS":"",
+      "LOGIN_SUCCESS":"تم تسجيل الدخول بنجاح",
       "LOGOUT_SUCCESS":"تم تسجيل الخروج بنجاح"
     },
     "SUBSCRIBE":{

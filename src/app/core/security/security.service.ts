@@ -78,24 +78,27 @@ export class SecurityService {
           this.setupPostAuthentication(resp);
           localStorage.removeItem("guestUser");
           localStorage.removeItem("guestToken");
+
+          this.translate
+            .get("SIGN.TOAST.LOGIN_SUCCESS")
+            .subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
         }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   forgot(entity: any): Observable<any | CommonError> {
-    return this.http
-      .post<UserAuth>("auth/forgot", entity);
+    return this.http.post<UserAuth>("auth/forgot", entity);
   }
 
   verify(entity: any): Observable<any | CommonError> {
-    return this.http
-      .post<UserAuth>("auth/verify", entity);
+    return this.http.post<UserAuth>("auth/verify", entity);
   }
 
   reset(entity: any): Observable<any | CommonError> {
-    return this.http
-      .post<UserAuth>("auth/reset-password", entity);
+    return this.http.post<UserAuth>("auth/reset-password", entity);
   }
 
   subscribeGuest(entity: any): Observable<any | CommonError> {
