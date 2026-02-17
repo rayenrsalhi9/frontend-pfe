@@ -208,7 +208,7 @@ export class SecurityService {
       'bearerToken',
       this.securityObject.authorisation.token
     );
-    this.securityObject$.next(resp);
+    this.securityObject$.next(this.securityObject);
     this.pusherService.connect()
     this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
       if (data.type == 'message') {
@@ -227,9 +227,8 @@ export class SecurityService {
       'bearerToken',
       this.securityObject.authorisation.token
     );
-    this.securityObject$.next(userAuth);
+    this.securityObject$.next(this.securityObject);
   }
-
   logout(): void {
     // Get user ID before resetting security object
     const userId = this.securityObject?.user?.id;
@@ -334,9 +333,7 @@ export class SecurityService {
 
   getUserDetail(): UserAuth {
     const userJson = localStorage.getItem('currentUser');
-    if (!userJson) {
-      return null;
-    }
+    if (!userJson) return null;
     try {
       return JSON.parse(userJson);
     } catch (error) {
