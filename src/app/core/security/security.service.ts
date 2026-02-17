@@ -12,6 +12,8 @@ import { ClonerService } from "@app/shared/services/clone.service";
 import { PusherService } from "@app/shared/services/pusher.service";
 import { NotificationSystem } from "@app/shared/services/notification-system.service";
 import { NotificationService } from "@app/shared/services/notification.service";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({ providedIn: "root" })
 export class SecurityService {
@@ -36,6 +38,8 @@ export class SecurityService {
     private notificationSystem: NotificationSystem,
     private notificationService: NotificationService,
     private router: Router,
+    private toastr: ToastrService,
+    private translate: TranslateService,
   ) {}
 
   isUserAuthenticate(): boolean {
@@ -234,6 +238,11 @@ export class SecurityService {
 
     // Always reset security object regardless of backend response
     this.resetSecurityObject();
+
+    // Show logout success toast notification
+    this.translate.get('SIGN.TOAST.LOGOUT_SUCCESS').subscribe((translatedMessage: string) => {
+      this.toastr.success(translatedMessage);
+    });
 
     // Only call logout API if we have a valid user ID
     if (userId) {
