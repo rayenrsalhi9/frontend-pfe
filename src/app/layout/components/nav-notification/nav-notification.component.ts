@@ -32,7 +32,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
   notifications: UserNotification[] = [];
   refreshReminderTimeInMinute = 10;
   isUnReadNotification = false;
-  momentLang: any;
+  momentLang: string = "en";
 
   constructor(
     private notificationService: NotificationService,
@@ -67,7 +67,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
           `user.${user.user.id}`,
           "notification",
           (data) => {
-            if (data.type == "message") {
+            if (data.type === "message") {
               this.getNotification();
               this.notificationSystem.sendNotification(data.data.message);
             }
@@ -85,6 +85,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
 
     this.notificationService
       .getNotification()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((notifications: UserNotification[]) => {
         this.newNotificationCount = notifications.filter(
           (c) => !c.isRead,

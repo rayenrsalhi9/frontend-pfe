@@ -1,25 +1,27 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { tap, catchError, delay } from 'rxjs/operators';
-import { CommonHttpErrorService } from '../error-handler/common-http-error.service';
-import { CommonError } from '../error-handler/common-error';
-import { Router } from '@angular/router';
-import { CompanyProfile } from '@app/shared/enums/company-profile';
-import { environment } from 'src/environments/environment';
-import { UserAuth } from '@app/shared/enums/user-auth';
-import { ClonerService } from '@app/shared/services/clone.service';
-import { PusherService } from '@app/shared/services/pusher.service';
-import { NotificationSystem } from '@app/shared/services/notification-system.service';
-import { NotificationService } from '@app/shared/services/notification.service';
+import { Injectable } from "@angular/core";
+import { Observable, BehaviorSubject, of } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { tap, catchError, delay } from "rxjs/operators";
+import { CommonHttpErrorService } from "../error-handler/common-http-error.service";
+import { CommonError } from "../error-handler/common-error";
+import { Router } from "@angular/router";
+import { CompanyProfile } from "@app/shared/enums/company-profile";
+import { environment } from "src/environments/environment";
+import { UserAuth } from "@app/shared/enums/user-auth";
+import { ClonerService } from "@app/shared/services/clone.service";
+import { PusherService } from "@app/shared/services/pusher.service";
+import { NotificationSystem } from "@app/shared/services/notification-system.service";
+import { NotificationService } from "@app/shared/services/notification.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class SecurityService {
   securityObject: UserAuth = new UserAuth();
   tokenTime: Date;
   clearTimeOutData: any;
-  private securityObject$: BehaviorSubject<UserAuth> = new BehaviorSubject<UserAuth>(null);
-  private _companyProfile$: BehaviorSubject<CompanyProfile> = new BehaviorSubject<CompanyProfile>(null);
+  private securityObject$: BehaviorSubject<UserAuth> =
+    new BehaviorSubject<UserAuth>(null);
+  private _companyProfile$: BehaviorSubject<CompanyProfile> =
+    new BehaviorSubject<CompanyProfile>(null);
   public get SecurityObject(): Observable<UserAuth> {
     return this.securityObject$.asObservable();
   }
@@ -33,17 +35,16 @@ export class SecurityService {
     private pusherService: PusherService,
     private notificationSystem: NotificationSystem,
     private notificationService: NotificationService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   isUserAuthenticate(): boolean {
     if (
       this.securityObject?.user?.userName &&
       this.securityObject?.authorisation?.token
     ) {
-
       if (!this.pusherService.getSocketId()) {
-        this.pusherService.connect()
+        this.pusherService.connect();
       }
 
       setTimeout(() => {
@@ -57,8 +58,8 @@ export class SecurityService {
   }
 
   isGuestUser(): boolean {
-    const user = localStorage.getItem('guestUser')
-    const token = localStorage.getItem('guestToken')
+    const user = localStorage.getItem("guestUser");
+    const token = localStorage.getItem("guestToken");
 
     return user != null || token != null;
   }
@@ -67,60 +68,48 @@ export class SecurityService {
     // Initialize security object
     // this.resetSecurityObject();
     return this.http
-      .post<UserAuth>('auth/login', entity)
+      .post<UserAuth>("auth/login", entity)
       .pipe(
         tap((resp) => {
           this.setupPostAuthentication(resp);
-          localStorage.removeItem('guestUser');
-          localStorage.removeItem('guestToken');
-        })
+          localStorage.removeItem("guestUser");
+          localStorage.removeItem("guestToken");
+        }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   forgot(entity: any): Observable<any | CommonError> {
-
     return this.http
-      .post<UserAuth>('auth/forgot', entity)
-      .pipe(
-        tap((resp) => {
-
-        }))
+      .post<UserAuth>("auth/forgot", entity)
+      .pipe(tap((resp) => {}));
   }
 
   verifiy(entity: any): Observable<any | CommonError> {
-
     return this.http
-      .post<UserAuth>('auth/verify', entity)
-      .pipe(
-        tap((resp) => {
-
-        }))
+      .post<UserAuth>("auth/verify", entity)
+      .pipe(tap((resp) => {}));
   }
 
   reset(entity: any): Observable<any | CommonError> {
     return this.http
-    .post<UserAuth>('auth/reset-password', entity)
-    .pipe(
-      tap((resp) => {
-
-      }))
+      .post<UserAuth>("auth/reset-password", entity)
+      .pipe(tap((resp) => {}));
   }
-
 
   subscribeGuest(entity: any): Observable<any | CommonError> {
     // Initialize security object
     // this.resetSecurityObject();
     return this.http
-      .post<UserAuth>('auth/subscribe', entity)
+      .post<UserAuth>("auth/subscribe", entity)
       .pipe(
         tap((resp) => {
           console.log(resp);
 
-          localStorage.setItem('guestUser', JSON.stringify(resp.user));
-          localStorage.setItem('guestToken', resp.authorisation.token);
+          localStorage.setItem("guestUser", JSON.stringify(resp.user));
+          localStorage.setItem("guestToken", resp.authorisation.token);
 
-          window.location.reload()
+          window.location.reload();
           /* this.tokenTime = new Date();
 
           this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
@@ -138,7 +127,7 @@ export class SecurityService {
             }
           })
           this.refreshToken(); */
-        })
+        }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
@@ -146,7 +135,7 @@ export class SecurityService {
   refreshToken() {
     const currentDate: Date = new Date();
     currentDate.setMinutes(
-      currentDate.getMinutes() - environment.tokenExpiredTimeInMin
+      currentDate.getMinutes() - environment.tokenExpiredTimeInMin,
     );
     let diffTime;
     if (this.clearTimeOutData) {
@@ -172,49 +161,59 @@ export class SecurityService {
 
   refresh(): Observable<UserAuth | CommonError> {
     return this.http
-      .post<UserAuth>('auth/refresh', {})
+      .post<UserAuth>("auth/refresh", {})
       .pipe(
         tap((resp) => {
           this.updateSecurityData(resp);
-        })
+        }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   private parseSecurityObj(): boolean {
-    const securityObjectString = localStorage.getItem('currentUser');
+    const securityObjectString = localStorage.getItem("currentUser");
     if (!securityObjectString) {
       return false;
     }
-    const secuObj = JSON.parse(securityObjectString);
-    this.tokenTime = new Date(secuObj.tokenTime);
-    this.securityObject = this.clonerService.deepClone<UserAuth>(secuObj);
-    if (
-      this.securityObject.user.userName &&
-      this.securityObject.authorisation.token
-    ) {
-      this.securityObject$.next(this.securityObject);
-      return true;
+    try {
+      const secuObj = JSON.parse(securityObjectString);
+      this.tokenTime = new Date(secuObj.tokenTime);
+      this.securityObject = this.clonerService.deepClone<UserAuth>(secuObj);
+      if (
+        this.securityObject.user.userName &&
+        this.securityObject.authorisation.token
+      ) {
+        this.securityObject$.next(this.securityObject);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error parsing user JSON:", error);
+      localStorage.removeItem("currentUser");
+      return false;
     }
-    return false;
   }
 
   private setupPostAuthentication(resp: UserAuth): void {
     this.tokenTime = new Date();
     this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
     this.securityObject.tokenTime = new Date();
-    localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
+    localStorage.setItem("currentUser", JSON.stringify(this.securityObject));
     localStorage.setItem(
-      'bearerToken',
-      this.securityObject.authorisation.token
+      "bearerToken",
+      this.securityObject.authorisation.token,
     );
     this.securityObject$.next(this.securityObject);
-    this.pusherService.connect()
-    this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`, 'notification', (data) => {
-      if (data.type == 'message') {
-        this.notificationSystem.sendNotification(data.data.message)
-      }
-    })
+    this.pusherService.connect();
+    this.pusherService.subscribeToChannel(
+      `user.${this.securityObject.user.id}`,
+      "notification",
+      (data) => {
+        if (data.type == "message") {
+          this.notificationSystem.sendNotification(data.data.message);
+        }
+      },
+    );
     this.refreshToken();
   }
 
@@ -222,28 +221,31 @@ export class SecurityService {
     this.tokenTime = new Date();
     this.securityObject = this.clonerService.deepClone<UserAuth>(userAuth);
     this.securityObject.tokenTime = new Date();
-    localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
+    localStorage.setItem("currentUser", JSON.stringify(this.securityObject));
     localStorage.setItem(
-      'bearerToken',
-      this.securityObject.authorisation.token
+      "bearerToken",
+      this.securityObject.authorisation.token,
     );
     this.securityObject$.next(this.securityObject);
   }
   logout(): void {
     // Get user ID before resetting security object
     const userId = this.securityObject?.user?.id;
-    
+
     // Always reset security object regardless of backend response
     this.resetSecurityObject();
-    
+
     // Only call logout API if we have a valid user ID
     if (userId) {
-      this.http.post('auth/logout', {user: userId}).pipe(
-        catchError(err => {
-          console.error('Backend logout failed:', err);
-          return of(null);
-        })
-      ).subscribe();
+      this.http
+        .post("auth/logout", { user: userId })
+        .pipe(
+          catchError((err) => {
+            console.error("Backend logout failed:", err);
+            return of(null);
+          }),
+        )
+        .subscribe();
     }
   }
 
@@ -262,34 +264,34 @@ export class SecurityService {
       isAuthenticated: false,
       claims: [],
       user: {
-        id: '',
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        userName: '',
-        email: '',
+        id: "",
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        userName: "",
+        email: "",
       },
-      status: '',
+      status: "",
       authorisation: {
-        token: '',
-        type: '',
+        token: "",
+        type: "",
       },
       tokenTime: new Date(),
     };
 
-     localStorage.removeItem('currentUser');
-     localStorage.removeItem('bearerToken');
-     localStorage.removeItem('guestUser');
-     localStorage.removeItem('guestToken');
-    this.pusherService.disconnect()
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("bearerToken");
+    localStorage.removeItem("guestUser");
+    localStorage.removeItem("guestToken");
+    this.pusherService.disconnect();
     this.securityObject$.next(null);
-    this.router.navigate(['/']);
+    this.router.navigate(["/"]);
   }
 
   hasClaim(claimType: any, claimValue?: any): boolean {
     let ret = false;
     // See if an array of values was passed in.
-    if (typeof claimType === 'string') {
+    if (typeof claimType === "string") {
       ret = this.isClaimValid(claimType, claimValue);
     } else {
       const claims: string[] = claimType;
@@ -316,14 +318,14 @@ export class SecurityService {
     if (auth) {
       // See if the claim type has a value
       // *hasClaim="'claimType:value'"
-      if (claimType.indexOf(':') >= 0) {
-        const words: string[] = claimType.split(':');
+      if (claimType.indexOf(":") >= 0) {
+        const words: string[] = claimType.split(":");
         claimType = words[0].toLowerCase();
         claimValue = words[1];
       } else {
         claimType = claimType.toLowerCase();
         // Either get the claim value, or assume 'true'
-        claimValue = claimValue ? claimValue : 'true';
+        claimValue = claimValue ? claimValue : "true";
       }
       // Attempt to find the claim
       ret = auth.claims.find((c) => c.toLowerCase() == claimType) != null;
@@ -332,29 +334,29 @@ export class SecurityService {
   }
 
   getUserDetail(): UserAuth {
-    const userJson = localStorage.getItem('currentUser');
+    const userJson = localStorage.getItem("currentUser");
     if (!userJson) return null;
     try {
       return JSON.parse(userJson);
     } catch (error) {
-      console.error('Error parsing user JSON:', error);
+      console.error("Error parsing user JSON:", error);
       return null;
     }
   }
 
   setUserDetail(user: UserAuth) {
     this.securityObject = this.clonerService.deepClone<UserAuth>(user);
-    localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-    this.securityObject$.next(user)
+    localStorage.setItem("currentUser", JSON.stringify(this.securityObject));
+    this.securityObject$.next(user);
   }
 
   register(entity: any): Observable<UserAuth | CommonError> {
     return this.http
-      .post<UserAuth>('auth/register', entity)
+      .post<UserAuth>("auth/register", entity)
       .pipe(
         tap((resp) => {
           this.setupPostAuthentication(resp);
-        })
+        }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
