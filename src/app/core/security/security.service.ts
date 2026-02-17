@@ -233,16 +233,9 @@ export class SecurityService {
     this.securityObject$.next(this.securityObject);
   }
   logout(): void {
-    // Get user ID before resetting security object
+    // Capture user ID and bearer token before mutating state
     const userId = this.securityObject?.user?.id;
-
-    // Always reset security object regardless of backend response
-    this.resetSecurityObject();
-
-    // Show logout success toast notification
-    this.translate.get('SIGN.TOAST.LOGOUT_SUCCESS').subscribe((translatedMessage: string) => {
-      this.toastr.success(translatedMessage);
-    });
+    const bearerToken = this.securityObject?.authorisation?.token;
 
     // Only call logout API if we have a valid user ID
     if (userId) {
@@ -254,7 +247,31 @@ export class SecurityService {
             return of(null);
           }),
         )
-        .subscribe();
+        .subscribe({
+          next: () => {
+            // API call succeeded
+          },
+          error: () => {
+            // Error already handled in catchError
+          },
+          complete: () => {
+            // Only reset security object and show toast after API call completes
+            this.resetSecurityObject();
+            
+            // Show logout success toast notification
+            this.translate.get('SIGN.TOAST.LOGOUT_SUCCESS').subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
+          }
+        });
+    } else {
+      // If no user ID, just reset security object and show toast immediately
+      this.resetSecurityObject();
+      
+      // Show logout success toast notification
+      this.translate.get('SIGN.TOAST.LOGOUT_SUCCESS').subscribe((translatedMessage: string) => {
+        this.toastr.success(translatedMessage);
+      });
     }
   }
 
