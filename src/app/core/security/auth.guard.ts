@@ -32,14 +32,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     if (this.securityService.isUserAuthenticate()) {
-
-      const user = localStorage.getItem('guestUser')
-      const token = localStorage.getItem('guestToken')
-
-      if (user != null) this.router.navigate(['login']);
-      if (token != null) this.router.navigate(['login']);
-      if (token || user) this.router.navigate(['login']);
-
       const claimType: string = next.data["claimType"];
       if (claimType) {
         if (!this.securityService.hasClaim(claimType)) {
@@ -68,14 +60,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     if (this.securityService.isUserAuthenticate()) {
-
-      const user = localStorage.getItem('guestUser')
-      const token = localStorage.getItem('guestToken')
-
-      if (user != null) this.router.navigate(['login']);
-      if (token != null) this.router.navigate(['login']);
-      if (token || user) this.router.navigate(['login']);
-
       const claimType: string = next.data["claimType"];
       if (claimType) {
         if (!this.securityService.hasClaim(claimType)) {
@@ -95,14 +79,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   canLoad(route: Route): boolean {
 
     if (this.securityService.isUserAuthenticate() && !this.securityService.isGuestUser()) {
-
-      const user = localStorage.getItem('guestUser')
-      const token = localStorage.getItem('guestToken')
-
-      if (user != null) this.router.navigate(['login']);
-      if (token != null) this.router.navigate(['login']);
-      if (token || user) this.router.navigate(['login']);
-
       return true;
     } else {
       this.router.navigate(['login']);
