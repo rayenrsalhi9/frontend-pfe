@@ -28,7 +28,7 @@ export class SecurityService {
     return this.securityObject$.asObservable();
   }
   public get companyProfile(): Observable<CompanyProfile> {
-    return this._companyProfile$;
+    return this._companyProfile$.asObservable();
   }
   constructor(
     private http: HttpClient,
@@ -85,20 +85,17 @@ export class SecurityService {
 
   forgot(entity: any): Observable<any | CommonError> {
     return this.http
-      .post<UserAuth>("auth/forgot", entity)
-      .pipe(tap((resp) => {}));
+      .post<UserAuth>("auth/forgot", entity);
   }
 
-  verifiy(entity: any): Observable<any | CommonError> {
+  verify(entity: any): Observable<any | CommonError> {
     return this.http
-      .post<UserAuth>("auth/verify", entity)
-      .pipe(tap((resp) => {}));
+      .post<UserAuth>("auth/verify", entity);
   }
 
   reset(entity: any): Observable<any | CommonError> {
     return this.http
-      .post<UserAuth>("auth/reset-password", entity)
-      .pipe(tap((resp) => {}));
+      .post<UserAuth>("auth/reset-password", entity);
   }
 
   subscribeGuest(entity: any): Observable<any | CommonError> {
@@ -166,11 +163,6 @@ export class SecurityService {
   refresh(): Observable<UserAuth | CommonError> {
     return this.http
       .post<UserAuth>("auth/refresh", {})
-      .pipe(
-        tap((resp) => {
-          this.updateSecurityData(resp);
-        }),
-      )
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
@@ -205,7 +197,7 @@ export class SecurityService {
       `user.${this.securityObject.user.id}`,
       "notification",
       (data) => {
-        if (data.type == "message") {
+        if (data.type === "message") {
           this.notificationSystem.sendNotification(data.data.message);
         }
       },
@@ -264,6 +256,10 @@ export class SecurityService {
   }
 
   resetSecurityObject(): void {
+    if (this.clearTimeOutData) {
+      clearTimeout(this.clearTimeOutData);
+      this.clearTimeOutData = null;
+    }
     this.securityObject = {
       isAuthenticated: false,
       claims: [],

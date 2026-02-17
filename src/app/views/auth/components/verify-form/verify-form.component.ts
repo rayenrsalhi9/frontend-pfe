@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonError } from '@app/core/error-handler/common-error';
 import { SecurityService } from '@app/core/security/security.service';
-import { UserAuth } from '@app/shared/enums/user-auth';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -50,7 +49,7 @@ export class VerifyFormComponent implements OnInit {
     console.log(userObject);
 
 
-    this.securityService.verifiy(userObject).subscribe(
+    this.securityService.verify(userObject).subscribe(
       (data: any) => {
         this.toastr.success('Token valid');
         console.log(data);
