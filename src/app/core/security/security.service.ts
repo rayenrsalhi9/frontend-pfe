@@ -79,11 +79,9 @@ export class SecurityService {
           localStorage.removeItem("guestUser");
           localStorage.removeItem("guestToken");
 
-          this.translate
-            .get("SIGN.TOAST.LOGIN_SUCCESS")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage);
-            });
+          this.toastr.success(
+            this.translate.instant("SIGN.TOAST.LOGIN_SUCCESS"),
+          );
         }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
