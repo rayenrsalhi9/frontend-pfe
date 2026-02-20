@@ -49,6 +49,7 @@ export class SecurityService {
     ) {
       if (!this.pusherService.getSocketId()) {
         this.pusherService.connect();
+        this.subscribeToUserNotifications();
       }
 
       setTimeout(() => {
@@ -191,18 +192,24 @@ export class SecurityService {
     }
   }
 
+  private subscribeToUserNotifications(): void {
+    if (this.securityObject?.user?.id) {
+      this.pusherService.subscribeToChannel(
+        `user.${this.securityObject.user.id}`,
+        "notification",
+        (data) => {
+          if (data.type === "message") {
+            this.notificationSystem.sendNotification(data.data.message);
+          }
+        },
+      );
+    }
+  }
+
   private setupPostAuthentication(resp: UserAuth): void {
     this.updateSecurityData(resp);
     this.pusherService.connect();
-    this.pusherService.subscribeToChannel(
-      `user.${this.securityObject.user.id}`,
-      "notification",
-      (data) => {
-        if (data.type === "message") {
-          this.notificationSystem.sendNotification(data.data.message);
-        }
-      },
-    );
+    this.subscribeToUserNotifications();
     this.refreshToken();
   }
 
