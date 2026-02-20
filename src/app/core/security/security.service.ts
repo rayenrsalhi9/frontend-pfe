@@ -364,6 +364,8 @@ export class SecurityService {
       .pipe(
         tap((resp) => {
           this.setupPostAuthentication(resp);
+          localStorage.removeItem("guestUser");
+          localStorage.removeItem("guestToken");
         }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
