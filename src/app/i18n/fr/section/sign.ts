@@ -39,7 +39,9 @@ export const sign = {
       "CREATE_ACCOUNT":"Créez votre compte"
     },
     "TOAST":{
-      "SUCCESS":""
+      "SUCCESS":"",
+      "LOGIN_SUCCESS":"Vous vous êtes connecté avec succès",
+      "LOGOUT_SUCCESS":"Vous avez été déconnecté avec succès"
     },
     "SUBSCRIBE":{
       "TITLE": "S'abonner en tant qu'invité",

@@ -38,6 +38,11 @@ export const sign = {
       "WELCOME":"مرحباً",
       "CREATE_ACCOUNT":"أنشئ حسابك"
     },
+    "TOAST":{
+      "SUCCESS":"",
+      "LOGIN_SUCCESS":"تم تسجيل الدخول بنجاح",
+      "LOGOUT_SUCCESS":"تم تسجيل الخروج بنجاح"
+    },
     "SUBSCRIBE":{
       "TITLE": "الاشتراك كضيف",
       "FIRST_NAME": "الاسم الأول",
