@@ -58,7 +58,18 @@ export class SecurityService {
 
       return true;
     } else {
-      return this.parseSecurityObj();
+      const parseSuccess = this.parseSecurityObj();
+      if (parseSuccess) {
+        if (!this.pusherService.getSocketId()) {
+          this.pusherService.connect();
+          this.subscribeToUserNotifications();
+        }
+
+        setTimeout(() => {
+          this.refreshToken();
+        }, 1000);
+      }
+      return parseSuccess;
     }
   }
 
@@ -230,11 +241,9 @@ export class SecurityService {
 
     const finalize = () => {
       this.resetSecurityObject();
-      this.translate
-        .get("SIGN.TOAST.LOGOUT_SUCCESS")
-        .subscribe((translatedMessage: string) => {
-          this.toastr.success(translatedMessage);
-        });
+      this.toastr.success(
+        this.translate.instant("SIGN.TOAST.LOGOUT_SUCCESS"),
+      );
     };
 
     // Only call logout API if we have a valid user ID
