@@ -12,6 +12,14 @@ export const userRole = {
     OF: "sur",
     CANCEL: "Annuler",
     SAVE_CHANGES: "Enregistrer les modifications",
-    LOADING: "Chargement...",
+    TOAST: {
+      NO_CHANGES: "Aucune modification de rôle effectuée",
+      UPDATED_SUCCESS:
+        "Rôles mis à jour avec succès pour {{firstName}} {{lastName}}",
+      PARTIAL_SUCCESS:
+        "Certains rôles ont été mis à jour, mais {{errorCount}} ont échoué. Veuillez réessayer.",
+      UPDATE_ERROR:
+        "Erreur lors de la mise à jour des rôles. Veuillez réessayer.",
+    },
   },
 };

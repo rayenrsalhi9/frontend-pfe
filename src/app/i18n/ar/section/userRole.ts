@@ -12,6 +12,12 @@ export const userRole = {
     OF: "من",
     CANCEL: "إلغاء",
     SAVE_CHANGES: "حفظ التغييرات",
-    LOADING: "جاري التحميل",
+    TOAST: {
+      NO_CHANGES: "لم يتم إجراء أي تغييرات على الأدوار",
+      UPDATED_SUCCESS: "تم تحديث الأدوار بنجاح لـ {{firstName}} {{lastName}}",
+      PARTIAL_SUCCESS:
+        "تم تحديث بعض الأدوار، ولكن فشل {{errorCount}}. يرجى المحاولة مرة أخرى.",
+      UPDATE_ERROR: "خطأ في تحديث الأدوار. يرجى المحاولة مرة أخرى.",
+    },
   },
 };

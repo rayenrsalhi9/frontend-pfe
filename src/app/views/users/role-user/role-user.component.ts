@@ -1,17 +1,26 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
 import { Role } from "@app/shared/enums/role";
 import { User } from "@app/shared/enums/user-auth";
 import { UserRoles } from "@app/shared/enums/user-roles";
 import { CommonService } from "@app/shared/services/common.service";
 import { RoleService } from "@app/shared/services/role.service";
+import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
+import { forkJoin, of, Subject } from "rxjs";
+import { catchError, finalize, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-role-user",
   templateUrl: "./role-user.component.html",
   styleUrls: ["./role-user.component.css"],
 })
-export class RoleUserComponent implements OnInit {
+export class RoleUserComponent implements OnInit, OnDestroy {
   roles: Role[];
   allUsers: User[];
   selectedUser: User = null;
@@ -26,11 +35,14 @@ export class RoleUserComponent implements OnInit {
   isLoading: boolean = true;
   isSaving: boolean = false;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private commonService: CommonService,
     private roleService: RoleService,
     private cdk: ChangeDetectorRef,
     private toastrService: ToastrService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -38,73 +50,91 @@ export class RoleUserComponent implements OnInit {
     this.getUsers();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  @HostListener("document:keydown.escape", ["$event"])
+  onEscapePress(event: KeyboardEvent) {
+    if (this.isModalOpen && !this.isSaving) {
+      this.closeModal();
+    }
+  }
+
   getRoles() {
-    this.commonService.getRolesForDropdown().subscribe(
-      (roles: Role[]) => {
-        this.roles = roles;
-        this.loadRoleUsersForAll();
-        this.cdk.markForCheck();
-      },
-      (error) => {
-        console.error("Error loading roles:", error);
-        this.isLoading = false;
-        this.cdk.markForCheck();
-      },
-    );
+    this.commonService
+      .getRolesForDropdown()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (roles: Role[]) => {
+          this.roles = roles;
+          this.loadRoleUsersForAll();
+          this.cdk.markForCheck();
+        },
+        error: (error) => {
+          console.error("Error loading roles:", error);
+          this.isLoading = false;
+          this.cdk.markForCheck();
+        },
+      });
   }
 
   loadRoleUsersForAll() {
     if (!this.roles || this.roles.length === 0) {
       this.isLoading = false;
-      this.cdk.markForCheck();
       return;
     }
 
-    let loadedCount = 0;
-
-    this.roles.forEach((role) => {
-      this.roleService.getRoleUsers(role.id).subscribe(
-        (users: UserRoles[]) => {
-          this.userRoleMapping[role.id] = users;
-          loadedCount++;
-
-          if (loadedCount === this.roles.length) {
-            this.isLoading = false;
-          }
-          this.cdk.markForCheck();
-        },
-        (error) => {
+    this.isLoading = true;
+    const roleRequests = this.roles.map((role) =>
+      this.roleService.getRoleUsers(role.id).pipe(
+        catchError((error) => {
           console.error(`Error loading users for role ${role.id}:`, error);
-          loadedCount++;
+          return of([] as UserRoles[]);
+        }),
+      ),
+    );
 
-          if (loadedCount === this.roles.length) {
-            this.isLoading = false;
-          }
+    forkJoin(roleRequests)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.isLoading = false;
           this.cdk.markForCheck();
+        }),
+      )
+      .subscribe({
+        next: (results: UserRoles[][]) => {
+          results.forEach((users, index) => {
+            const roleId = this.roles[index].id;
+            this.userRoleMapping[roleId] = users;
+          });
         },
-      );
-    });
+        error: (error) => {
+          console.error("Critical error loading role users:", error);
+        },
+      });
   }
 
   getUsers() {
-    this.commonService.getUsersForDropdown().subscribe(
-      (users: User[]) => {
-        this.allUsers = users;
-        this.filteredUsers = users;
-        this.cdk.markForCheck();
-      },
-      (error) => {
-        console.error("Error loading users:", error);
-        this.cdk.markForCheck();
-      },
-    );
+    this.commonService
+      .getUsersForDropdown()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (users: User[]) => {
+          this.allUsers = users;
+          this.filteredUsers = users;
+          this.cdk.markForCheck();
+        },
+        error: (error) => {
+          console.error("Error loading users:", error);
+          this.cdk.markForCheck();
+        },
+      });
   }
 
   filterUsers() {
-    if (!this.allUsers) {
-      this.filteredUsers = [];
-      return;
-    }
     if (!this.searchText.trim()) {
       this.filteredUsers = this.allUsers;
     } else {
@@ -171,7 +201,9 @@ export class RoleUserComponent implements OnInit {
     if (!this.selectedUser || this.isSaving) return;
 
     if (!this.hasChanges()) {
-      this.toastrService.info("No role changes made");
+      this.toastrService.info(
+        this.translate.instant("USERROLE.TOAST.NO_CHANGES"),
+      );
       this.closeModal();
       return;
     }
@@ -210,18 +242,21 @@ export class RoleUserComponent implements OnInit {
         }
 
         const updatePromise = new Promise<void>((resolve) => {
-          this.roleService.updateRoleUsers(role.id, updatedUsers).subscribe(
-            () => {
-              updateCount++;
-              this.userRoleMapping[role.id] = updatedUsers;
-              resolve();
-            },
-            (error) => {
-              errorCount++;
-              console.error(`Error updating role ${role.id}:`, error);
-              resolve();
-            },
-          );
+          this.roleService
+            .updateRoleUsers(role.id, updatedUsers)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                updateCount++;
+                this.userRoleMapping[role.id] = updatedUsers;
+                resolve();
+              },
+              error: (error) => {
+                errorCount++;
+                console.error(`Error updating role ${role.id}:`, error);
+                resolve();
+              },
+            });
         });
 
         updates.push(updatePromise);
@@ -230,26 +265,40 @@ export class RoleUserComponent implements OnInit {
 
     if (updates.length === 0) {
       this.isSaving = false;
-      this.toastrService.info("No role changes made");
+      this.toastrService.info(
+        this.translate.instant("USERROLE.TOAST.NO_CHANGES"),
+      );
       this.closeModal();
       return;
     }
 
     Promise.all(updates)
       .then(() => {
+        const userName = `${this.selectedUser.firstName} ${this.selectedUser.lastName}`;
+
         if (errorCount === 0) {
           this.toastrService.success(
-            `Roles updated successfully for ${this.selectedUser.firstName} ${this.selectedUser.lastName}`,
+            this.translate.instant("USERROLE.TOAST.UPDATED_SUCCESS", {
+              firstName: this.selectedUser.firstName,
+              lastName: this.selectedUser.lastName,
+            }),
           );
         } else if (updateCount > 0) {
           this.toastrService.warning(
-            `Some roles were updated, but ${errorCount} failed. Please try again.`,
+            this.translate.instant("USERROLE.TOAST.PARTIAL_SUCCESS", {
+              errorCount: errorCount,
+            }),
           );
         } else {
-          this.toastrService.error(`Error updating roles. Please try again.`);
+          this.toastrService.error(
+            this.translate.instant("USERROLE.TOAST.UPDATE_ERROR"),
+          );
         }
 
-        this.closeModal();
+        // Only close modal if there was some success
+        if (updateCount > 0 || errorCount === 0) {
+          this.closeModal();
+        }
       })
       .finally(() => {
         this.isSaving = false;

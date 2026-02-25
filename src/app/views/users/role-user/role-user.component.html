@@ -4,10 +4,11 @@
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
         <div class="row mb-3">
           <div class="col-md-12">
-            <label class="form-label">{{
+            <label class="form-label" for="userSearchInput">{{
               "USERROLE.SEARCH_USER" | translate
             }}</label>
             <input
+              id="userSearchInput"
               type="text"
               class="form-control"
               placeholder="{{ 'USERROLE.SEARCH_USER' | translate }}..."
@@ -30,6 +31,8 @@
                 *ngFor="let user of filteredUsers"
                 class="user-card"
                 (click)="openRoleModal(user)"
+                tabindex="0"
+                (keyup.enter)="openRoleModal(user)"
               >
                 <div class="user-avatar">
                   {{ user.firstName?.charAt(0) }}{{ user.lastName?.charAt(0) }}
@@ -38,6 +41,7 @@
                   <div class="user-name">
                     {{ user.firstName }} {{ user.lastName }}
                   </div>
+                  <div class="user-username">@{{ user.userName }}</div>
                   <div class="user-email">
                     {{ user.email }}
                   </div>
@@ -55,7 +59,7 @@
             </div>
 
             <div *ngIf="isLoading" class="empty-state">
-              <p>{{ "USERROLE.LOADING" | translate }}</p>
+              <p>Loading...</p>
             </div>
           </div>
         </div>
@@ -69,9 +73,14 @@
   class="modal-overlay"
   (click)="onBackdropClick($event)"
 >
-  <div class="modal-content discord-modal" role="dialog" aria-modal="true">
+  <div
+    class="modal-content discord-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
     <div class="modal-header discord-modal-header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" id="modal-title">
         {{ "USERROLE.MANAGE_ROLES_FOR" | translate }}
         {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}
       </h5>
@@ -118,6 +127,7 @@
                 type="checkbox"
                 [checked]="hasRole(role.id)"
                 (change)="toggleRole(role)"
+                [disabled]="isSaving"
               />
               <span class="role-name">{{ role.name }}</span>
             </label>
@@ -141,7 +151,12 @@
     </div>
 
     <div class="modal-footer discord-modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="closeModal()"
+        [disabled]="isSaving"
+      >
         {{ "USERROLE.CANCEL" | translate }}
       </button>
       <button

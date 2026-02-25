@@ -12,6 +12,13 @@ export const userRole = {
     OF: "of",
     CANCEL: "Cancel",
     SAVE_CHANGES: "Save Changes",
-    LOADING: "Loading",
+    TOAST: {
+      NO_CHANGES: "No role changes made",
+      UPDATED_SUCCESS:
+        "Roles updated successfully for {{firstName}} {{lastName}}",
+      PARTIAL_SUCCESS:
+        "Some roles were updated, but {{errorCount}} failed. Please try again.",
+      UPDATE_ERROR: "Error updating roles. Please try again.",
+    },
   },
 };
