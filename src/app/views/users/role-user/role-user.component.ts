@@ -13,7 +13,7 @@ import { RoleService } from "@app/shared/services/role.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { forkJoin, of, Subject } from "rxjs";
-import { catchError, finalize, takeUntil } from "rxjs/operators";
+import { catchError, finalize, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-role-user",
@@ -46,8 +46,7 @@ export class RoleUserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getRoles();
-    this.getUsers();
+    this.initData();
   }
 
   ngOnDestroy(): void {
@@ -62,88 +61,84 @@ export class RoleUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  getRoles() {
-    this.commonService
-      .getRolesForDropdown()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (roles: Role[]) => {
-          this.roles = roles;
-          this.loadRoleUsersForAll();
-          this.cdk.markForCheck();
-        },
-        error: (error) => {
-          console.error("Error loading roles:", error);
-          this.isLoading = false;
-          this.cdk.markForCheck();
-        },
-      });
-  }
-
-  loadRoleUsersForAll() {
-    if (!this.roles || this.roles.length === 0) {
-      this.isLoading = false;
-      return;
-    }
-
+  initData() {
     this.isLoading = true;
-    const roleRequests = this.roles.map((role) =>
-      this.roleService.getRoleUsers(role.id).pipe(
-        catchError((error) => {
-          console.error(`Error loading users for role ${role.id}:`, error);
-          return of([] as UserRoles[]);
+
+    forkJoin({
+      roles: this.commonService.getRolesForDropdown().pipe(
+        takeUntil(this.destroy$),
+        catchError((err) => {
+          console.error("Error loading roles:", err);
+          return of([] as Role[]);
         }),
       ),
-    );
-
-    forkJoin(roleRequests)
-      .pipe(
+      users: this.commonService.getUsersForDropdown().pipe(
         takeUntil(this.destroy$),
+        catchError((err) => {
+          console.error("Error loading users:", err);
+          return of([] as User[]);
+        }),
+      ),
+    })
+      .pipe(
+        switchMap(({ roles, users }) => {
+          this.roles = Array.isArray(roles) ? roles : [];
+          this.allUsers = Array.isArray(users) ? users : [];
+          this.filteredUsers = this.allUsers;
+
+          if (this.roles.length === 0) {
+            return of([] as UserRoles[][]);
+          }
+
+          const roleRequests = this.roles.map((role) =>
+            this.roleService.getRoleUsers(role.id).pipe(
+              catchError((error) => {
+                console.error(
+                  `Error loading users for role ${role.id}:`,
+                  error,
+                );
+                return of([] as UserRoles[]);
+              }),
+            ),
+          );
+
+          return forkJoin(roleRequests);
+        }),
         finalize(() => {
           this.isLoading = false;
           this.cdk.markForCheck();
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe({
         next: (results: UserRoles[][]) => {
-          results.forEach((users, index) => {
-            const roleId = this.roles[index].id;
-            this.userRoleMapping[roleId] = users;
-          });
+          if (this.roles && results.length > 0) {
+            results.forEach((users, index) => {
+              const roleId = this.roles[index].id;
+              this.userRoleMapping[roleId] = users;
+            });
+          }
         },
         error: (error) => {
-          console.error("Critical error loading role users:", error);
-        },
-      });
-  }
-
-  getUsers() {
-    this.commonService
-      .getUsersForDropdown()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (users: User[]) => {
-          this.allUsers = users;
-          this.filteredUsers = users;
-          this.cdk.markForCheck();
-        },
-        error: (error) => {
-          console.error("Error loading users:", error);
-          this.cdk.markForCheck();
+          console.error("Critical error during data initialization:", error);
         },
       });
   }
 
   filterUsers() {
+    if (!this.allUsers) {
+      this.filteredUsers = [];
+      return;
+    }
     if (!this.searchText.trim()) {
       this.filteredUsers = this.allUsers;
     } else {
       const search = this.searchText.toLowerCase();
-      this.filteredUsers = this.allUsers.filter(
+      this.filteredUsers = (this.allUsers || []).filter(
         (user) =>
-          user.firstName.toLowerCase().includes(search) ||
-          user.lastName.toLowerCase().includes(search) ||
-          user.userName.toLowerCase().includes(search) ||
+          (user.firstName || "").toLowerCase().includes(search) ||
+          (user.lastName || "").toLowerCase().includes(search) ||
+          (user.userName || "").toLowerCase().includes(search) ||
           (user.email && user.email.toLowerCase().includes(search)),
       );
     }
@@ -274,8 +269,6 @@ export class RoleUserComponent implements OnInit, OnDestroy {
 
     Promise.all(updates)
       .then(() => {
-        const userName = `${this.selectedUser.firstName} ${this.selectedUser.lastName}`;
-
         if (errorCount === 0) {
           this.toastrService.success(
             this.translate.instant("USERROLE.TOAST.UPDATED_SUCCESS", {
