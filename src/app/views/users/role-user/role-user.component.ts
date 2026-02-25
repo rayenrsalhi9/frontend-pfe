@@ -24,6 +24,7 @@ export class RoleUserComponent implements OnInit {
   searchText: string = "";
   filteredUsers: User[] = [];
   isLoading: boolean = true;
+  isSaving: boolean = false;
 
   constructor(
     private commonService: CommonService,
@@ -55,6 +56,7 @@ export class RoleUserComponent implements OnInit {
   loadRoleUsersForAll() {
     if (!this.roles || this.roles.length === 0) {
       this.isLoading = false;
+      this.cdk.markForCheck();
       return;
     }
 
@@ -99,6 +101,10 @@ export class RoleUserComponent implements OnInit {
   }
 
   filterUsers() {
+    if (!this.allUsers) {
+      this.filteredUsers = [];
+      return;
+    }
     if (!this.searchText.trim()) {
       this.filteredUsers = this.allUsers;
     } else {
@@ -162,7 +168,7 @@ export class RoleUserComponent implements OnInit {
   }
 
   saveUserRoles() {
-    if (!this.selectedUser) return;
+    if (!this.selectedUser || this.isSaving) return;
 
     if (!this.hasChanges()) {
       this.toastrService.info("No role changes made");
@@ -170,6 +176,7 @@ export class RoleUserComponent implements OnInit {
       return;
     }
 
+    this.isSaving = true;
     const userId = this.selectedUser.id;
     let updateCount = 0;
     let errorCount = 0;
@@ -222,27 +229,32 @@ export class RoleUserComponent implements OnInit {
     });
 
     if (updates.length === 0) {
+      this.isSaving = false;
       this.toastrService.info("No role changes made");
       this.closeModal();
       return;
     }
 
-    Promise.all(updates).then(() => {
-      if (errorCount === 0) {
-        this.toastrService.success(
-          `Roles updated successfully for ${this.selectedUser.firstName} ${this.selectedUser.lastName}`,
-        );
-      } else if (updateCount > 0) {
-        this.toastrService.warning(
-          `Some roles were updated, but ${errorCount} failed. Please try again.`,
-        );
-      } else {
-        this.toastrService.error(`Error updating roles. Please try again.`);
-      }
+    Promise.all(updates)
+      .then(() => {
+        if (errorCount === 0) {
+          this.toastrService.success(
+            `Roles updated successfully for ${this.selectedUser.firstName} ${this.selectedUser.lastName}`,
+          );
+        } else if (updateCount > 0) {
+          this.toastrService.warning(
+            `Some roles were updated, but ${errorCount} failed. Please try again.`,
+          );
+        } else {
+          this.toastrService.error(`Error updating roles. Please try again.`);
+        }
 
-      this.closeModal();
-      this.cdk.markForCheck();
-    });
+        this.closeModal();
+      })
+      .finally(() => {
+        this.isSaving = false;
+        this.cdk.markForCheck();
+      });
   }
 
   closeModal() {

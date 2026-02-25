@@ -12,5 +12,6 @@ export const userRole = {
     OF: "من",
     CANCEL: "إلغاء",
     SAVE_CHANGES: "حفظ التغييرات",
+    LOADING: "جاري التحميل",
   },
 };

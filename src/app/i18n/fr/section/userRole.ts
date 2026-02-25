@@ -12,5 +12,6 @@ export const userRole = {
     OF: "sur",
     CANCEL: "Annuler",
     SAVE_CHANGES: "Enregistrer les modifications",
+    LOADING: "Chargement...",
   },
 };
