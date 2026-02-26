@@ -332,3 +332,10 @@
 .mobile-close:focus-visible {
   outline-color: #11a1fd;
 }
+
+.register-cta {
+  border: 2px solid #11a1fd;
+  color: #11a1fd;
+  text-decoration: none;
+  font-weight: 500;
+}

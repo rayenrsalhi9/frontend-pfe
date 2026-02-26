@@ -29,7 +29,12 @@
     </div>
 
     <!-- Mobile Menu Button -->
-    <button type="button" class="mobile-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
+    <button
+      type="button"
+      class="mobile-toggle"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+    >
       <i class="feather icon-menu" style="font-size: 1.5rem"></i>
     </button>
   </div>
@@ -37,7 +42,12 @@
 
 <!-- Mobile Menu Overlay -->
 <div class="mobile-overlay" [class.is-open]="isMenuOpen">
-  <button type="button" class="mobile-close" (click)="toggleMenu()" aria-label="Close menu">
+  <button
+    type="button"
+    class="mobile-close"
+    (click)="toggleMenu()"
+    aria-label="Close menu"
+  >
     <i class="feather icon-x" style="font-size: 1.5rem"></i>
   </button>
 
@@ -80,15 +90,9 @@
         {{ "NAV.CONNEXION" | translate }}
       </a>
       <a
-        class="btn-outline-primary w-100 mt-2 d-block text-center py-2 rounded-pill"
+        class="btn-outline-primary w-100 mt-2 d-block text-center py-2 rounded-pill register-cta"
         routerLink="/register"
         (click)="toggleMenu()"
-        style="
-          border: 2px solid #11a1fd;
-          color: #11a1fd;
-          text-decoration: none;
-          font-weight: 500;
-        "
       >
         {{ "NAV.INSCRIPTION" | translate }}
       </a>
