@@ -59,7 +59,7 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     FormsModule,
     NgxExtendedPdfViewerModule,
     TranslateModule.forChild(),
-    NgxEmojiPickerModule.forRoot(),
+    NgxEmojiPickerModule,
   ],
   providers: [],
 })
