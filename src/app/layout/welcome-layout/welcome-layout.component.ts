@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Component, Input, OnInit, OnDestroy } from "@angular/core";
+import { Observable, Subject } from "rxjs";
+import { map, takeUntil } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { CompanyProfileService } from "@app/shared/services/company-profile.service";
 
@@ -9,9 +9,10 @@ import { CompanyProfileService } from "@app/shared/services/company-profile.serv
   templateUrl: "./welcome-layout.component.html",
   styleUrls: ["./welcome-layout.component.css"],
 })
-export class WelcomeLayoutComponent implements OnInit {
+export class WelcomeLayoutComponent implements OnInit, OnDestroy {
   @Input() isMobile: boolean;
   companyProfile: any;
+  private destroy$ = new Subject<void>();
   isMenuOpen: boolean = false;
   isAuthenticated$: Observable<boolean>;
 
@@ -29,9 +30,22 @@ export class WelcomeLayoutComponent implements OnInit {
   }
 
   getCompanyProfile() {
-    this.companyProfileService.getCompanyProfile().subscribe((data: any) => {
-      this.companyProfile = data;
-    });
+    this.companyProfileService
+      .getCompanyProfile()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data: any) => {
+          this.companyProfile = data;
+        },
+        (error) => {
+          console.error("Error fetching company profile", error);
+        },
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleMenu() {
