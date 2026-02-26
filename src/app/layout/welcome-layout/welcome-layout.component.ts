@@ -1,40 +1,42 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { SecurityService } from '@app/core/security/security.service';
-import { CompanyProfileService } from '@app/shared/services/company-profile.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { SecurityService } from "@app/core/security/security.service";
+import { CompanyProfileService } from "@app/shared/services/company-profile.service";
 
 @Component({
-  selector: 'app-welcome-layout',
-  templateUrl: './welcome-layout.component.html',
-  styleUrls: ['./welcome-layout.component.scss']
+  selector: "app-welcome-layout",
+  templateUrl: "./welcome-layout.component.html",
+  styleUrls: ["./welcome-layout.component.css"],
 })
 export class WelcomeLayoutComponent implements OnInit {
-
-  @Input() isMobile: boolean
-  companyProfile:any
+  @Input() isMobile: boolean;
+  companyProfile: any;
+  isMenuOpen: boolean = false;
 
   constructor(
     private companyProfileService: CompanyProfileService,
     private securityService: SecurityService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.getCompanyProfile()
+    this.getCompanyProfile();
   }
 
   getCompanyProfile() {
-    this.companyProfileService.getCompanyProfile().subscribe(
-      (data:any)=>{
-        console.log(data);
-        this.companyProfile = data
-      }
-    )
+    this.companyProfileService.getCompanyProfile().subscribe((data: any) => {
+      console.log(data);
+      this.companyProfile = data;
+    });
   }
 
   checkConnection() {
-    return this.securityService.isUserAuthenticate()
+    return this.securityService.isUserAuthenticate();
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   get currentYear(): number {
-    return new Date().getFullYear()
+    return new Date().getFullYear();
   }
 }
