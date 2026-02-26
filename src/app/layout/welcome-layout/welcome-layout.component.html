@@ -11,14 +11,17 @@
       <a class="menu-item" routerLink="/">{{ "NAV.HOME" | translate }}</a>
       <a class="menu-item" routerLink="/forum">{{ "NAV.FORUM" | translate }}</a>
       <a class="menu-item" routerLink="/blog">{{ "NAV.BLOG" | translate }}</a>
-      <a *ngIf="checkConnection()" class="menu-item" routerLink="/dashboard">{{
-        "NAV.DASHBOARD" | translate
-      }}</a>
+      <a
+        *ngIf="isAuthenticated$ | async"
+        class="menu-item"
+        routerLink="/dashboard"
+        >{{ "NAV.DASHBOARD" | translate }}</a
+      >
     </nav>
 
     <!-- Desktop CTA / Profile -->
     <div class="header-cta">
-      <ng-container *ngIf="checkConnection(); else notConnected">
+      <ng-container *ngIf="isAuthenticated$ | async; else notConnected">
         <nav-profile></nav-profile>
       </ng-container>
       <ng-template #notConnected>
@@ -67,7 +70,7 @@
         "NAV.BLOG" | translate
       }}</a>
     </li>
-    <li *ngIf="checkConnection()">
+    <li *ngIf="isAuthenticated$ | async">
       <a
         class="mobile-menu-item"
         routerLink="/dashboard"
@@ -78,7 +81,7 @@
   </ul>
 
   <div class="mobile-cta">
-    <ng-container *ngIf="checkConnection(); else notConnectedMobile">
+    <ng-container *ngIf="isAuthenticated$ | async; else notConnectedMobile">
       <nav-profile></nav-profile>
     </ng-container>
     <ng-template #notConnectedMobile>
@@ -148,7 +151,9 @@
       <div class="col-xs-6 col-md-3">
         <h6>{{ "FOOTER.PORTAL" | translate }}</h6>
         <ul class="footer-links">
-          <ng-container *ngIf="checkConnection(); else notConnectedPortal">
+          <ng-container
+            *ngIf="isAuthenticated$ | async; else notConnectedPortal"
+          >
             <li>
               <a routerLink="/dashboard">{{ "NAV.DASHBOARD" | translate }}</a>
             </li>

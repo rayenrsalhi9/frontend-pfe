@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { CompanyProfileService } from "@app/shared/services/company-profile.service";
 
@@ -11,6 +13,7 @@ export class WelcomeLayoutComponent implements OnInit {
   @Input() isMobile: boolean;
   companyProfile: any;
   isMenuOpen: boolean = false;
+  isAuthenticated$: Observable<boolean>;
 
   constructor(
     private companyProfileService: CompanyProfileService,
@@ -18,6 +21,10 @@ export class WelcomeLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => !!auth?.user?.userName && !!auth?.authorisation?.token),
+    );
+    this.securityService.isUserAuthenticate();
     this.getCompanyProfile();
   }
 
@@ -25,10 +32,6 @@ export class WelcomeLayoutComponent implements OnInit {
     this.companyProfileService.getCompanyProfile().subscribe((data: any) => {
       this.companyProfile = data;
     });
-  }
-
-  checkConnection() {
-    return this.securityService.isUserAuthenticate();
   }
 
   toggleMenu() {
