@@ -23,7 +23,6 @@ export class WelcomeLayoutComponent implements OnInit {
 
   getCompanyProfile() {
     this.companyProfileService.getCompanyProfile().subscribe((data: any) => {
-      console.log(data);
       this.companyProfile = data;
     });
   }

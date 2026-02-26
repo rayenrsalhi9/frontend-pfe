@@ -29,7 +29,7 @@
     </div>
 
     <!-- Mobile Menu Button -->
-    <button class="mobile-toggle" (click)="toggleMenu()">
+    <button type="button" class="mobile-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
       <i class="feather icon-menu" style="font-size: 1.5rem"></i>
     </button>
   </div>
@@ -37,7 +37,7 @@
 
 <!-- Mobile Menu Overlay -->
 <div class="mobile-overlay" [class.is-open]="isMenuOpen">
-  <button class="mobile-close" (click)="toggleMenu()">
+  <button type="button" class="mobile-close" (click)="toggleMenu()" aria-label="Close menu">
     <i class="feather icon-x" style="font-size: 1.5rem"></i>
   </button>
 

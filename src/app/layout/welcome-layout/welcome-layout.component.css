@@ -318,3 +318,17 @@
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
+
+.menu-item:focus-visible,
+.btn-get-started:focus-visible,
+.mobile-toggle:focus-visible,
+.mobile-close:focus-visible,
+.mobile-menu-item:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.mobile-menu-item:focus-visible,
+.mobile-close:focus-visible {
+  outline-color: #11a1fd;
+}
