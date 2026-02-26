@@ -19,6 +19,7 @@ const storageKey = "lang";
 })
 export class AppComponent implements OnInit, OnDestroy {
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
+  private appSubscription!: Subscription;
   private langChangeSubscription!: Subscription;
   currentLang: string;
 
@@ -35,11 +36,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.notificationSystem.requestPermission();
 
-    this.app$.subscribe((app) => {
+    this.appSubscription = this.app$.subscribe((app) => {
       this.currentLang =
         localStorage.getItem(storageKey) ||
         app.lang ||
-        this.translateService.getBrowserCultureLang();
+        this.translateService.getBrowserCultureLang()?.replace("-", "_") ||
+        "en_US";
       this.translateService.use(this.currentLang);
     });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -50,6 +52,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.appSubscription) {
+      this.appSubscription.unsubscribe();
+    }
     if (this.langChangeSubscription) {
       this.langChangeSubscription.unsubscribe();
     }
