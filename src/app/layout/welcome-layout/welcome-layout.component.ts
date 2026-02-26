@@ -33,14 +33,14 @@ export class WelcomeLayoutComponent implements OnInit, OnDestroy {
     this.companyProfileService
       .getCompanyProfile()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (data: any) => {
+      .subscribe({
+        next: (data: any) => {
           this.companyProfile = data;
         },
-        (error) => {
+        error: (error) => {
           console.error("Error fetching company profile", error);
         },
-      );
+      });
   }
 
   ngOnDestroy(): void {
