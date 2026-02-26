@@ -1,35 +1,105 @@
 <div class="header">
-  <div class="header-wrapper">
+  <div class="header-pill">
     <div class="header-left">
-      <nav-toggle *ngIf="isMobile" [isMobile]="isMobile"></nav-toggle>
-      <span routerLink="/" style="cursor: pointer">
+      <div class="logo-container" routerLink="/">
         <logo></logo>
-      </span>
+      </div>
     </div>
-    <div class="header-right">
-      <ul class="header-menu">
-        <li class="menu-item" routerLink="/">{{ "NAV.HOME" | translate }}</li>
-        <li class="menu-item" routerLink="/forum">
-          {{ "NAV.FORUM" | translate }}
-        </li>
-        <li class="menu-item" routerLink="/blog">
-          {{ "NAV.BLOG" | translate }}
-        </li>
-        <ng-container *ngIf="checkConnection(); else notConnected">
-          <li class="menu-item" routerLink="/dashboard">
-            {{ "NAV.DASHBOARD" | translate }}
-          </li>
-          <nav-profile></nav-profile>
-        </ng-container>
-        <ng-template #notConnected>
-          <li class="menu-item menu-item-login" routerLink="/login">
-            {{ "NAV.CONNEXION" | translate }}
-          </li>
-          <li class="menu-item menu-item-register" routerLink="/register">
-            {{ "NAV.INSCRIPTION" | translate }}
-          </li>        </ng-template>
-      </ul>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <a class="menu-item" routerLink="/">{{ "NAV.HOME" | translate }}</a>
+      <a class="menu-item" routerLink="/forum">{{ "NAV.FORUM" | translate }}</a>
+      <a class="menu-item" routerLink="/blog">{{ "NAV.BLOG" | translate }}</a>
+      <a
+        *ngIf="isAuthenticated$ | async"
+        class="menu-item"
+        routerLink="/dashboard"
+        >{{ "NAV.DASHBOARD" | translate }}</a
+      >
+    </nav>
+
+    <!-- Desktop CTA / Profile -->
+    <div class="header-cta">
+      <ng-container *ngIf="isAuthenticated$ | async; else notConnected">
+        <nav-profile></nav-profile>
+      </ng-container>
+      <ng-template #notConnected>
+        <a class="btn-get-started" routerLink="/login">
+          {{ "NAV.CONNEXION" | translate }}
+        </a>
+      </ng-template>
     </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      type="button"
+      class="mobile-toggle"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+    >
+      <i class="feather icon-menu" style="font-size: 1.5rem"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-overlay" [class.is-open]="isMenuOpen">
+  <button
+    type="button"
+    class="mobile-close"
+    (click)="toggleMenu()"
+    aria-label="Close menu"
+  >
+    <i class="feather icon-x" style="font-size: 1.5rem"></i>
+  </button>
+
+  <ul class="mobile-nav-list">
+    <li>
+      <a class="mobile-menu-item" routerLink="/" (click)="toggleMenu()">{{
+        "NAV.HOME" | translate
+      }}</a>
+    </li>
+    <li>
+      <a class="mobile-menu-item" routerLink="/forum" (click)="toggleMenu()">{{
+        "NAV.FORUM" | translate
+      }}</a>
+    </li>
+    <li>
+      <a class="mobile-menu-item" routerLink="/blog" (click)="toggleMenu()">{{
+        "NAV.BLOG" | translate
+      }}</a>
+    </li>
+    <li *ngIf="isAuthenticated$ | async">
+      <a
+        class="mobile-menu-item"
+        routerLink="/dashboard"
+        (click)="toggleMenu()"
+        >{{ "NAV.DASHBOARD" | translate }}</a
+      >
+    </li>
+  </ul>
+
+  <div class="mobile-cta">
+    <ng-container *ngIf="isAuthenticated$ | async; else notConnectedMobile">
+      <nav-profile></nav-profile>
+    </ng-container>
+    <ng-template #notConnectedMobile>
+      <a
+        class="btn-get-started w-100"
+        routerLink="/login"
+        (click)="toggleMenu()"
+      >
+        {{ "NAV.CONNEXION" | translate }}
+      </a>
+      <a
+        class="btn-outline-primary w-100 mt-2 d-block text-center py-2 rounded-pill register-cta"
+        routerLink="/register"
+        (click)="toggleMenu()"
+      >
+        {{ "NAV.INSCRIPTION" | translate }}
+      </a>
+    </ng-template>
   </div>
 </div>
 <div class="content">
@@ -81,7 +151,9 @@
       <div class="col-xs-6 col-md-3">
         <h6>{{ "FOOTER.PORTAL" | translate }}</h6>
         <ul class="footer-links">
-          <ng-container *ngIf="checkConnection(); else notConnectedPortal">
+          <ng-container
+            *ngIf="isAuthenticated$ | async; else notConnectedPortal"
+          >
             <li>
               <a routerLink="/dashboard">{{ "NAV.DASHBOARD" | translate }}</a>
             </li>
