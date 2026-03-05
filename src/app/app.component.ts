@@ -36,6 +36,18 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.notificationSystem.requestPermission();
 
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      (event: LangChangeEvent) => {
+        const locale = event.lang || "en_US";
+        const htmlLang = locale.replace("_", "-");
+        const baseLang = htmlLang.split("-")[0].toLowerCase();
+
+        localStorage.setItem(storageKey, locale);
+        document.documentElement.lang = htmlLang;
+        document.documentElement.dir = baseLang === "ar" ? "rtl" : "ltr";
+      },
+    );
+
     this.appSubscription = this.app$.subscribe((app) => {
       this.currentLang =
         localStorage.getItem(storageKey) ||
@@ -44,11 +56,6 @@ export class AppComponent implements OnInit, OnDestroy {
         "en_US";
       this.translateService.use(this.currentLang);
     });
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      (event: LangChangeEvent) => {
-        localStorage.setItem(storageKey, event.lang);
-      },
-    );
   }
 
   ngOnDestroy() {

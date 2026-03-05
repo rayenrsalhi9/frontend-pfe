@@ -71,20 +71,29 @@ body {
 .mat-app-background {
   height: 100%;
 }
+/* Better Global Scrollbar Design */
 ::-webkit-scrollbar {
-  width: 6px; /* width of the entire scrollbar */
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #eaeaea; /* color of the tracking area */
+  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background-color: #ccc; /* color of the scroll thumb */
-  border-radius: 20px; /* roundness of the scroll thumb */
-  border: 0; /* creates padding around scroll thumb */
+  background-color: rgba(17, 161, 253, 0.4);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 100px;
 }
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 161, 253, 0.7);
+}
+
 :root {
-  scrollbar-color: #ccc #eaeaea !important;
+  scrollbar-color: rgba(17, 161, 253, 0.4) transparent !important;
   scrollbar-width: thin !important;
 }
 .content-main {

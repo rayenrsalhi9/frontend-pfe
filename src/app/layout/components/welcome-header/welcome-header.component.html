@@ -1,0 +1,163 @@
+<ng-container *ngIf="{ auth: isAuthenticated$ | async } as vm">
+  <div class="header-container" [class.is-scrolled]="isScrolled">
+    <header class="header-pill">
+      <div class="header-left">
+        <a class="logo-wrapper" routerLink="/">
+          <logo></logo>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <ul class="nav-list">
+          <li>
+            <a
+              class="nav-link"
+              routerLink="/"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              >{{ "NAV.HOME" | translate }}</a
+            >
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/forum" routerLinkActive="active">{{
+              "NAV.FORUM" | translate
+            }}</a>
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/blog" routerLinkActive="active">{{
+              "NAV.BLOG" | translate
+            }}</a>
+          </li>
+          <li *ngIf="vm.auth">
+            <a
+              class="nav-link"
+              routerLink="/dashboard"
+              routerLinkActive="active"
+              >{{ "NAV.DASHBOARD" | translate }}</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Desktop CTA / Profile -->
+      <div class="header-right">
+        <ng-container *ngIf="vm.auth === true">
+          <div class="profile-area">
+            <nav-profile></nav-profile>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="vm.auth === false">
+          <div class="auth-buttons">
+            <a class="btn-login" routerLink="/login">
+              {{ "NAV.CONNEXION" | translate }}
+            </a>
+            <a class="btn-register" routerLink="/register">
+              {{ "NAV.INSCRIPTION" | translate }}
+            </a>
+          </div>
+        </ng-container>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          type="button"
+          class="mobile-toggle"
+          (click)="toggleMenu()"
+          [class.is-active]="isMenuOpen"
+          aria-label="Toggle menu"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-controls="welcome-mobile-menu"
+        >
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div
+    id="welcome-mobile-menu"
+    class="mobile-menu"
+    [class.is-open]="isMenuOpen"
+    [attr.aria-hidden]="!isMenuOpen"
+    [attr.inert]="!isMenuOpen ? '' : null"
+  >
+    <div class="mobile-menu-inner">
+      <div class="mobile-nav">
+        <ul class="mobile-nav-list">
+          <li>
+            <a
+              class="mobile-nav-link"
+              routerLink="/"
+              (click)="toggleMenu()"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="feather icon-home"></i>
+              {{ "NAV.HOME" | translate }}
+            </a>
+          </li>
+          <li>
+            <a
+              class="mobile-nav-link"
+              routerLink="/forum"
+              (click)="toggleMenu()"
+              routerLinkActive="active"
+            >
+              <i class="feather icon-message-square"></i>
+              {{ "NAV.FORUM" | translate }}
+            </a>
+          </li>
+          <li>
+            <a
+              class="mobile-nav-link"
+              routerLink="/blog"
+              (click)="toggleMenu()"
+              routerLinkActive="active"
+            >
+              <i class="feather icon-edit-3"></i>
+              {{ "NAV.BLOG" | translate }}
+            </a>
+          </li>
+          <li *ngIf="vm.auth">
+            <a
+              class="mobile-nav-link"
+              routerLink="/dashboard"
+              (click)="toggleMenu()"
+              routerLinkActive="active"
+            >
+              <i class="feather icon-grid"></i>
+              {{ "NAV.DASHBOARD" | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mobile-footer">
+        <ng-container *ngIf="vm.auth === true">
+          <nav-profile></nav-profile>
+        </ng-container>
+        <ng-container *ngIf="vm.auth === false">
+          <div class="mobile-auth-actions">
+            <a
+              class="btn-login w-100"
+              routerLink="/login"
+              (click)="toggleMenu()"
+            >
+              {{ "NAV.CONNEXION" | translate }}
+            </a>
+            <a
+              class="btn-register w-100 mt-3"
+              routerLink="/register"
+              (click)="toggleMenu()"
+            >
+              {{ "NAV.INSCRIPTION" | translate }}
+            </a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
