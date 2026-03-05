@@ -15,7 +15,7 @@
   <div
     class="language-menu"
     [class.is-open]="isMenuOpen"
-    role="menu"
+    role="listbox"
     aria-label="Language selector"
   >
     <button
@@ -24,7 +24,8 @@
       class="menu-item"
       [class.active]="currentLang === language.key"
       (click)="setLanguage(language.key)"
-      role="menuitem"
+      role="option"
+      [attr.aria-selected]="currentLang === language.key"
     >
       <span class="lang-name">
         {{ "LANG." + language.key.split("_")[0].toUpperCase() | translate }}

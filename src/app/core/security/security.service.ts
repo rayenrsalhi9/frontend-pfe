@@ -20,11 +20,11 @@ export class SecurityService {
   securityObject: UserAuth = new UserAuth();
   tokenTime: Date;
   clearTimeOutData: any;
-  private securityObject$: BehaviorSubject<UserAuth | undefined> =
-    new BehaviorSubject<UserAuth | undefined>(undefined);
+  private securityObject$: BehaviorSubject<UserAuth | null | undefined> =
+    new BehaviorSubject<UserAuth | null | undefined>(undefined);
   private _companyProfile$: BehaviorSubject<CompanyProfile> =
     new BehaviorSubject<CompanyProfile>(null);
-  public get SecurityObject(): Observable<UserAuth> {
+  public get SecurityObject(): Observable<UserAuth | null | undefined> {
     return this.securityObject$.asObservable();
   }
   public get companyProfile(): Observable<CompanyProfile> {
@@ -198,10 +198,12 @@ export class SecurityService {
         this.securityObject$.next(this.securityObject);
         return true;
       }
+      this.securityObject$.next(null);
       return false;
     } catch (error) {
       console.error("Error parsing user JSON:", error);
       localStorage.removeItem("currentUser");
+      this.securityObject$.next(null);
       return false;
     }
   }
