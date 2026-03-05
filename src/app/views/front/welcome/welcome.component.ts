@@ -26,6 +26,7 @@ export class WelcomeComponent implements OnInit {
   survey = null;
   errorMessage: string = "";
   bsModalRef: BsModalRef;
+  selectedRating: number = 0;
 
   constructor(
     private blogService: BlogService,
@@ -54,7 +55,9 @@ export class WelcomeComponent implements OnInit {
         this.articles = data;
       },
       (error) => {
-        this.errorMessage = "Erreur lors du chargement des articles";
+        this.errorMessage = this.translate.instant(
+          "WELCOME.ARTICLE_LOAD_ERROR",
+        );
         console.error(error);
       },
     );

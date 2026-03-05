@@ -1,26 +1,31 @@
-<dropdown
-  [dropDirection]="dropDirection"
-  dropdownClass="header-nav-item-select"
-  (click)="navI18n.toggle($event)"
->
-  <div class="toggle-wrapper">
-    <!-- <avatar [size]="22" [src]="'/assets/images/thumbs/' + currentLang + '.png'"></avatar> -->
+<div class="language-selector">
+  <button
+    type="button"
+    class="trigger-btn"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="isMenuOpen"
+    aria-haspopup="listbox"
+  >
     <i class="feather icon-globe"></i>
-    <span style="cursor: pointer; font-weight: 600">{{
-      currentLang?.split("_")[1] || currentLang
+    <span class="lang-code">{{
+      currentLang?.split("_")[0] || currentLang
     }}</span>
-  </div>
-  <dropdown-menu #navI18n alignment="right">
-    <a
-      href="javascript:void(0)"
-      dropdownItem
+  </button>
+
+  <div class="language-menu" [class.is-open]="isMenuOpen" role="listbox">
+    <button
       *ngFor="let language of languageList"
+      type="button"
+      class="menu-item"
+      [class.active]="currentLang === language.key"
       (click)="setLanguage(language.key)"
+      role="option"
+      [attr.aria-selected]="currentLang === language.key"
     >
-      <div class="d-flex align-items-center">
-        <!-- <avatar [size]="18" [src]="'/assets/images/thumbs/' + language.key + '.png'"></avatar> -->
-        <span class="ms-2">{{ language.lang }}</span>
-      </div>
-    </a>
-  </dropdown-menu>
-</dropdown>
+      <span class="lang-name">
+        {{ "LANG." + language.key.split("_")[0].toUpperCase() | translate }}
+      </span>
+      <span class="active-indicator"></span>
+    </button>
+  </div>
+</div>

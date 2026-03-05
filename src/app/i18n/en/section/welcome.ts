@@ -1,8 +1,9 @@
 export const welcome = {
   WELCOME: {
     LATEST_BLOGS: "Latest Blogs",
-    LATEST_BLOGS_DESC: "Discover the latest insights and updates from our community",
-    SEE_ALL_BLOGS: "See all blogs", 
+    LATEST_BLOGS_DESC:
+      "Discover the latest insights and updates from our community",
+    SEE_ALL_BLOGS: "See all blogs",
     LATEST_ARTICLES: "Latest Articles",
     LATEST_ARTICLES_DESC: "Explore the latest articles and publications",
     SEE_ALL_ARTICLES: "See all articles",
@@ -16,6 +17,7 @@ export const welcome = {
     NO_ARTICLES: "No articles published yet",
     NO_FORUMS: "No active discussions",
     NO_SURVEY: "No active survey at the moment",
+    ARTICLE_LOAD_ERROR: "Error loading articles",
   },
 
   BUTTONS: {

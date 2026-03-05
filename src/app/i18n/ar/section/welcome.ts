@@ -16,6 +16,7 @@ export const welcome = {
     NO_ARTICLES: "لم يتم نشر أي مقالات بعد",
     NO_FORUMS: "لا توجد نقاشات نشطة",
     NO_SURVEY: "لا يوجد استطلاع نشط حاليًا",
+    ARTICLE_LOAD_ERROR: "خطأ في تحميل المقالات",
   },
 
   BUTTONS: {

@@ -19,11 +19,6 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body {
-  background-color: var(--bg-app);
-}
-/* Responsive Bento Grid System */
-
 .welcome-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -80,15 +75,17 @@ body {
   grid-row: span 1;
 }
 
-/* Minimalist Scrollbar */
+/* Harmonized Minimal Scrollbar */
 .scroll-content {
   overflow-y: auto;
   flex-grow: 1;
-  padding-right: 0.5rem;
+  padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 161, 253, 0.4) transparent;
 }
 
 .scroll-content::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 .scroll-content::-webkit-scrollbar-track {
@@ -96,8 +93,14 @@ body {
 }
 
 .scroll-content::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
+  background-color: rgba(17, 161, 253, 0.4);
+  border: 2.5px solid transparent;
+  background-clip: padding-box;
+  border-radius: 100px;
+}
+
+.scroll-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 161, 253, 0.7);
 }
 
 /* Typography & UI Elements */

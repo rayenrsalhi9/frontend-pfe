@@ -85,9 +85,11 @@
           >
             <img
               [src]="
-                article?.files?.length
-                  ? getHost() + article.files[0].path
-                  : '/assets/images/others/bg-4.jpg'
+                article?.picture
+                  ? getHost() + article.picture
+                  : article?.files?.length
+                    ? getHost() + article.files[0].path
+                    : '/assets/images/others/bg-4.jpg'
               "
               class="thumbnail"
               alt="article"
@@ -132,7 +134,9 @@
           </ng-container>
 
           <ng-container *ngIf="survey?.type == 'rating'">
-            <rating (click)="surveyAnswer($event)" [max]="5"></rating>
+            <rating [max]="5"
+            [(ngModel)]="selectedRating"
+            (ngModelChange)="surveyAnswer($event)"></rating>
           </ng-container>
 
           <ng-container *ngIf="survey?.type == 'satisfaction'">
