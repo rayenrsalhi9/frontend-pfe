@@ -18,7 +18,7 @@ export const welcome = {
     NO_SURVEY: "No active survey at the moment",
   },
 
-  BUTONS: {
+  BUTTONS: {
     YES: "Yes",
     NO: "No",
     NEUTRAL: "Neutral",

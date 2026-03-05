@@ -24,7 +24,6 @@ export class WelcomeHeaderComponent implements OnInit {
     this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
       map((auth) => !!auth?.user?.userName && !!auth?.authorisation?.token),
     );
-    this.securityService.isUserAuthenticate();
   }
 
   toggleMenu() {

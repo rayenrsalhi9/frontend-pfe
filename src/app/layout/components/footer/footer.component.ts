@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { CompanyProfileService } from "@app/shared/services/company-profile.service";
+import { CommonError } from "@app/core/error-handler/common-error";
+import { CompanyProfile } from "@app/shared/enums/company-profile";
 
 @Component({
   selector: "app-footer",
@@ -13,7 +15,7 @@ import { CompanyProfileService } from "@app/shared/services/company-profile.serv
 })
 export class FooterComponent implements OnInit, OnDestroy {
   currentYear: number = new Date().getFullYear();
-  companyProfile: any;
+  companyProfile: CompanyProfile | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(private companyProfileService: CompanyProfileService) {}
@@ -22,18 +24,24 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.getCompanyProfile();
   }
 
-  getCompanyProfile() {
+  private getCompanyProfile(): void {
     this.companyProfileService
       .getCompanyProfile()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data: any) => {
-          this.companyProfile = data;
+        next: (data: CompanyProfile | CommonError) => {
+          if (data && "title" in data) {
+            this.companyProfile = data;
+          }
         },
         error: (error) => {
           console.error("Error fetching company profile in footer", error);
         },
       });
+  }
+
+  onRequestMembership(email: string): void {
+    console.log(email);
   }
 
   ngOnDestroy(): void {

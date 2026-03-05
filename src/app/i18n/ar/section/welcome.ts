@@ -18,7 +18,7 @@ export const welcome = {
     NO_SURVEY: "لا يوجد استطلاع نشط حاليًا",
   },
 
-  BUTONS: {
+  BUTTONS: {
     YES: "نعم",
     NO: "لا",
     NEUTRAL: "محايد",

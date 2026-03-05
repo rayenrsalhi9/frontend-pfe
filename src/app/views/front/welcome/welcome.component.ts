@@ -48,15 +48,13 @@ export class WelcomeComponent implements OnInit {
     this.loadPublicArticles();
   }
 
-  // Méthode pour charger les articles depuis l'API
   loadPublicArticles(): void {
     this.userService.getArticles().subscribe(
       (data) => {
-        this.articles = data; // Stocke les articles dans le tableau
-        console.log("data", this.articles);
+        this.articles = data;
       },
       (error) => {
-        this.errorMessage = "Erreur lors du chargement des articles"; // Gérer les erreurs
+        this.errorMessage = "Erreur lors du chargement des articles";
         console.error(error);
       },
     );
@@ -70,15 +68,6 @@ export class WelcomeComponent implements OnInit {
       initialState: initialState,
     });
   }
-  // getLatestArticles() {
-  //   this.articleService.allArticles({limit:4}).subscribe(
-  //     (data:any)=>{
-  //       this.latestArticles = data
-  //       this.cdr.markForCheck()
-  //     }
-  //   )
-  //   this.cdr.detectChanges()
-  // }
   getHost() {
     return environment.apiUrl;
   }
@@ -90,7 +79,6 @@ export class WelcomeComponent implements OnInit {
         this.banners = data;
         this.cdr.markForCheck();
       });
-    this.cdr.detectChanges();
   }
 
   getLatestBlogs() {
@@ -99,9 +87,7 @@ export class WelcomeComponent implements OnInit {
       .subscribe((data: any) => {
         this.latestBlogs = data;
         this.cdr.markForCheck();
-        console.log(this.latestBlogs);
       });
-    this.cdr.detectChanges();
   }
 
   getLastForums() {
@@ -109,7 +95,6 @@ export class WelcomeComponent implements OnInit {
       this.latestForums = data;
       this.cdr.markForCheck();
     });
-    this.cdr.detectChanges();
   }
 
   getLatestSurvey() {
@@ -117,7 +102,6 @@ export class WelcomeComponent implements OnInit {
       this.survey = Object.keys(data).length ? data : null;
       this.cdr.markForCheck();
     });
-    this.cdr.detectChanges();
   }
 
   surveyAnswer(value: any) {
@@ -125,7 +109,6 @@ export class WelcomeComponent implements OnInit {
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
     ) {
-      console.log(true);
       this.translate
         .get("SURVEY.TOAST")
         .subscribe((translatedMessage: string) => {
@@ -141,7 +124,6 @@ export class WelcomeComponent implements OnInit {
             );
         });
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
   }

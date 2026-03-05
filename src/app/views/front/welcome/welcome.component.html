@@ -57,10 +57,20 @@
     <!-- Articles Section -->
     <div class="bento-item item-articles">
       <div class="section-header">
-        <h3 class="section-title">
-          <i class="feather icon-file-text"></i>
-          {{ "WELCOME.LATEST_ARTICLES" | translate }}
-        </h3>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="section-title m-0">
+            <i class="feather icon-file-text"></i>
+            {{ "WELCOME.LATEST_ARTICLES" | translate }}
+          </h3>
+          <a
+            routerLink="/article"
+            class="badge badge-primary text-decoration-none"
+            *ngIf="articles?.length > 0"
+          >
+            {{ "WELCOME.SEE_ALL_ARTICLES" | translate }}
+            <i class="feather icon-arrow-right ml-1"></i>
+          </a>
+        </div>
         <p>
           {{ "WELCOME.LATEST_ARTICLES_DESC" | translate }}
         </p>
@@ -68,10 +78,10 @@
 
       <div class="scroll-content">
         <div *ngIf="articles?.length > 0; else noArticles">
-          <div
+          <a
             *ngFor="let article of articles | slice: 0 : 5"
             class="content-card"
-            (click)="viewArticle(article)"
+            [routerLink]="['/article', article.id]"
           >
             <img
               [src]="
@@ -89,7 +99,7 @@
                 {{ article?.createdAt | utcToLocalTime: "shortDate" }}
               </p>
             </div>
-          </div>
+          </a>
         </div>
         <ng-template #noArticles>
           <div class="empty-state">
@@ -114,15 +124,15 @@
         <div class="survey-btns">
           <ng-container *ngIf="survey?.type == 'simple'">
             <button (click)="surveyAnswer(1)" class="btn-minimal">
-              {{ "BUTONS.YES" | translate }}
+              {{ "BUTTONS.YES" | translate }}
             </button>
             <button (click)="surveyAnswer(0)" class="btn-minimal">
-              {{ "BUTONS.NO" | translate }}
+              {{ "BUTTONS.NO" | translate }}
             </button>
           </ng-container>
 
           <ng-container *ngIf="survey?.type == 'rating'">
-            <rating (onHover)="surveyAnswer($event)" [max]="5"></rating>
+            <rating (click)="surveyAnswer($event)" [max]="5"></rating>
           </ng-container>
 
           <ng-container *ngIf="survey?.type == 'satisfaction'">
@@ -130,19 +140,19 @@
               (click)="surveyAnswer(0)"
               class="btn-minimal satisfaction-btn satisfied"
             >
-              {{ "BUTONS.SATISFIED" | translate }}
+              {{ "BUTTONS.SATISFIED" | translate }}
             </button>
             <button
               (click)="surveyAnswer(1)"
               class="btn-minimal satisfaction-btn neutral"
             >
-              {{ "BUTONS.NEUTRAL" | translate }}
+              {{ "BUTTONS.NEUTRAL" | translate }}
             </button>
             <button
               (click)="surveyAnswer(2)"
               class="btn-minimal satisfaction-btn not-satisfied"
             >
-              {{ "BUTONS.NOT_SATISFIED" | translate }}
+              {{ "BUTTONS.NOT_SATISFIED" | translate }}
             </button>
           </ng-container>
         </div>
@@ -180,7 +190,7 @@
           <a
             *ngFor="let forum of latestForums | slice: 0 : 5"
             class="content-card"
-            [routerLink]="'/forum/' + forum?.id"
+            [routerLink]="['/forum', forum.id]"
           >
             <div class="card-info">
               <h4 class="card-title">{{ forum?.title }}</h4>

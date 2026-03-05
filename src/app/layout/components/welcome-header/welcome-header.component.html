@@ -64,6 +64,8 @@
         (click)="toggleMenu()"
         [class.is-active]="isMenuOpen"
         aria-label="Toggle menu"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-controls="welcome-mobile-menu"
       >
         <span class="hamburger-box">
           <span class="hamburger-inner"></span>
@@ -74,7 +76,13 @@
 </div>
 
 <!-- Mobile Menu Overlay -->
-<div class="mobile-menu" [class.is-open]="isMenuOpen">
+<div
+  id="welcome-mobile-menu"
+  class="mobile-menu"
+  [class.is-open]="isMenuOpen"
+  [attr.aria-hidden]="!isMenuOpen"
+  [attr.inert]="!isMenuOpen ? '' : null"
+>
   <div class="mobile-menu-inner">
     <div class="mobile-nav">
       <ul class="mobile-nav-list">

@@ -18,7 +18,7 @@ export const welcome = {
     NO_SURVEY: "Aucun sondage actif actuellement",
   },
 
-  BUTONS: {
+  BUTTONS: {
     YES: "Oui",
     NO: "Non",
     NEUTRAL: "Neutre",

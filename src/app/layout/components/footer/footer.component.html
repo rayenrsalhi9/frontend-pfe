@@ -17,16 +17,27 @@
         <p class="membership-description">
           {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}
         </p>
-        <div class="membership-form">
+        <form
+          class="membership-form"
+          (ngSubmit)="
+            onRequestMembership(emailInput.value); emailInput.value = ''
+          "
+        >
+          <label for="footer-membership-input" class="sr-only">{{
+            "FOOTER.EMAIL_PLACEHOLDER" | translate
+          }}</label>
           <input
+            #emailInput
+            id="footer-membership-input"
             type="email"
             [placeholder]="'FOOTER.EMAIL_PLACEHOLDER' | translate"
             class="membership-input"
+            required
           />
-          <button class="membership-btn">
+          <button type="submit" class="membership-btn">
             {{ "FOOTER.REQUEST_MEMBERSHIP" | translate }}
           </button>
-        </div>
+        </form>
       </div>
     </div>
 
