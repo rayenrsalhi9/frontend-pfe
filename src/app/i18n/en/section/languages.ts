@@ -4,4 +4,5 @@ export const languages = {
     FR: "French",
     AR: "Arabic",
   },
+  
 };

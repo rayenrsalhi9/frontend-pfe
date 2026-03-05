@@ -12,15 +12,19 @@
     }}</span>
   </button>
 
-  <div class="language-menu" [class.is-open]="isMenuOpen" role="listbox">
+  <div
+    class="language-menu"
+    [class.is-open]="isMenuOpen"
+    role="menu"
+    aria-label="Language selector"
+  >
     <button
       *ngFor="let language of languageList"
       type="button"
       class="menu-item"
       [class.active]="currentLang === language.key"
       (click)="setLanguage(language.key)"
-      role="option"
-      [attr.aria-selected]="currentLang === language.key"
+      role="menuitem"
     >
       <span class="lang-name">
         {{ "LANG." + language.key.split("_")[0].toUpperCase() | translate }}

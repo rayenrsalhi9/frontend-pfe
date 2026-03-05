@@ -6,10 +6,11 @@ import {
   ChangeDetectorRef,
   ElementRef,
   HostListener,
+  OnDestroy,
 } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
 import { AppConfig } from "@app/shared/types/app-config.interface";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { UpdateCurrentLanguage } from "@app/store/app-config/app-config.action";
 import { supportedLanguages } from "@app/configs/i18n.config";
 import { TranslateService } from "@ngx-translate/core";
@@ -20,9 +21,10 @@ import { TranslateService } from "@ngx-translate/core";
   styleUrls: ["./nav-i18n.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavI18NComponent implements OnInit {
+export class NavI18NComponent implements OnInit, OnDestroy {
   @Input() dropDirection: "dropdown" | "dropup" | "dropright" = "dropdown";
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
+  private appSubscription: Subscription;
   currentLang: string;
   languageList = [];
   isMenuOpen = false;
@@ -35,7 +37,7 @@ export class NavI18NComponent implements OnInit {
   ) {}
 
   @HostListener("document:click", ["$event"])
-  clickout(event) {
+  clickout(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
       this.cdr.markForCheck();
@@ -44,10 +46,16 @@ export class NavI18NComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLanguageList();
-    this.app$.subscribe((app) => {
+    this.appSubscription = this.app$.subscribe((app) => {
       this.currentLang = app.lang;
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.appSubscription) {
+      this.appSubscription.unsubscribe();
+    }
   }
 
   getLanguageList() {

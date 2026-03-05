@@ -11,7 +11,7 @@ import { SecurityService } from "@app/core/security/security.service";
 export class WelcomeHeaderComponent implements OnInit {
   isMenuOpen: boolean = false;
   isScrolled: boolean = false;
-  isAuthenticated$: Observable<boolean>;
+  isAuthenticated$: Observable<boolean | null>;
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
@@ -22,7 +22,15 @@ export class WelcomeHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
-      map((auth) => !!auth?.user?.userName && !!auth?.authorisation?.token),
+      map((auth) => {
+        if (auth === undefined) {
+          return null; // Initial loading state
+        }
+        if (auth === null) {
+          return false; // Confirmed not authenticated
+        }
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
     );
   }
 

@@ -20,8 +20,8 @@ export class SecurityService {
   securityObject: UserAuth = new UserAuth();
   tokenTime: Date;
   clearTimeOutData: any;
-  private securityObject$: BehaviorSubject<UserAuth> =
-    new BehaviorSubject<UserAuth>(null);
+  private securityObject$: BehaviorSubject<UserAuth | undefined> =
+    new BehaviorSubject<UserAuth | undefined>(undefined);
   private _companyProfile$: BehaviorSubject<CompanyProfile> =
     new BehaviorSubject<CompanyProfile>(null);
   public get SecurityObject(): Observable<UserAuth> {
@@ -40,7 +40,9 @@ export class SecurityService {
     private router: Router,
     private toastr: ToastrService,
     private translate: TranslateService,
-  ) {}
+  ) {
+    this.isUserAuthenticate();
+  }
 
   isUserAuthenticate(): boolean {
     if (
@@ -182,6 +184,7 @@ export class SecurityService {
   private parseSecurityObj(): boolean {
     const securityObjectString = localStorage.getItem("currentUser");
     if (!securityObjectString) {
+      this.securityObject$.next(null);
       return false;
     }
     try {
@@ -241,9 +244,7 @@ export class SecurityService {
 
     const finalize = () => {
       this.resetSecurityObject();
-      this.toastr.success(
-        this.translate.instant("SIGN.TOAST.LOGOUT_SUCCESS"),
-      );
+      this.toastr.success(this.translate.instant("SIGN.TOAST.LOGOUT_SUCCESS"));
     };
 
     // Only call logout API if we have a valid user ID

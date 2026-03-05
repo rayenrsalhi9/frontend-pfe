@@ -38,9 +38,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       (event: LangChangeEvent) => {
-        localStorage.setItem(storageKey, event.lang);
-        document.documentElement.lang = event.lang;
-        document.documentElement.dir = event.lang === "ar_AR" ? "rtl" : "ltr";
+        const locale = event.lang || "en_US";
+        const htmlLang = locale.replace("_", "-");
+        const baseLang = htmlLang.split("-")[0].toLowerCase();
+
+        localStorage.setItem(storageKey, locale);
+        document.documentElement.lang = htmlLang;
+        document.documentElement.dir = baseLang === "ar" ? "rtl" : "ltr";
       },
     );
 
