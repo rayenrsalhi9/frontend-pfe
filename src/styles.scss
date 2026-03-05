@@ -1,5 +1,9 @@
 @import './assets/scss/app.scss';
 
+[lang="ar_AR"], [dir="rtl"] {
+  font-family: 'Cairo', 'Inter', sans-serif !important;
+}
+
 .navbar .navbar-toggle {
   color: #2c303b;
 }

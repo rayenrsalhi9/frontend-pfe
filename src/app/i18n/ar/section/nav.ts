@@ -2,7 +2,7 @@ export const nav = {
   'NAV': {
 
     'HOME':'الصفحة الرئيسية',
-    'FORUM':'المنتدى',
+    'FORUM':'المنتديات',
     'BLOG':'المدونات',
     'CONNEXION':'تسجيل الدخول',
     'INSCRIPTION':'إنشاء حساب',

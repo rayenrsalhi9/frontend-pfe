@@ -1,7 +1,77 @@
-<div class="footer-content">
-   <!--  <p class="mb-0">Copyright © 2021 Theme_Nate. All rights reserved.</p>
-    <span>
-        <a href="" class="text-gray me-3">Term &amp; Conditions</a>
-        <a href="" class="text-gray">Privacy &amp; Policy</a>
-    </span> -->
-</div>
+<!-- Site footer -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <!-- Top section: Logo and Newsletter -->
+    <div class="footer-top">
+      <div class="footer-brand" routerLink="/">
+        <div class="brand-identity">
+          <logo></logo>
+          <h2 class="brand-title">{{ "FOOTER.BRAND_TITLE" | translate }}</h2>
+        </div>
+        <p class="brand-description">
+          {{ "FOOTER.BRAND_DESCRIPTION" | translate }}
+        </p>
+      </div>
+      <div class="footer-membership">
+        <p class="membership-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</p>
+        <p class="membership-description">
+          {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}
+        </p>
+        <div class="membership-form">
+          <input
+            type="email"
+            [placeholder]="'FOOTER.EMAIL_PLACEHOLDER' | translate"
+            class="membership-input"
+          />
+          <button class="membership-btn">
+            {{ "FOOTER.REQUEST_MEMBERSHIP" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="footer-nav">
+      <a routerLink="/" class="footer-nav-link">{{ "NAV.HOME" | translate }}</a>
+      <a routerLink="/forum" class="footer-nav-link">{{
+        "NAV.FORUM" | translate
+      }}</a>
+      <a routerLink="/blog" class="footer-nav-link">{{
+        "NAV.BLOG" | translate
+      }}</a>
+      <a routerLink="/apps/news" class="footer-nav-link">{{
+        "NAV.APPS_ARTICLE" | translate
+      }}</a>
+      <a routerLink="/help" class="footer-nav-link">{{
+        "FOOTER.HELP" | translate
+      }}</a>
+      <a routerLink="/privacy" class="footer-nav-link">{{
+        "FOOTER.PRIVACY" | translate
+      }}</a>
+    </div>
+
+    <hr class="footer-divider" />
+
+    <!-- Bottom Section: Copyright and Socials -->
+    <div class="footer-bottom">
+      <p class="footer-copyright">
+        &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}.
+        {{ "FOOTER.COPYRIGHT" | translate }}
+      </p>
+      <div class="footer-social">
+        <a href="#" class="social-icon" aria-label="Twitter">
+          <i class="feather icon-twitter"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="Website">
+          <i class="feather icon-globe"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="Facebook">
+          <i class="feather icon-facebook"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="LinkedIn">
+          <i class="feather icon-linkedin"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

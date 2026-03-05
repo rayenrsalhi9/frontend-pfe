@@ -2,8 +2,8 @@ export const nav = {
   'NAV': {
 
     'HOME':'Home',
-    'FORUM':'Forum',
-    'BLOG':'Blog',
+    'FORUM':'Forums',
+    'BLOG':'Blogs',
     'CONNEXION':'Sign in',
     'INSCRIPTION':'Sign up',
 
