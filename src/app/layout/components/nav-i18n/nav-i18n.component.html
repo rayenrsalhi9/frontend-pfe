@@ -1,10 +1,11 @@
-<div class="language-selector">
+<div class="language-selector" (keydown)="onKeyDown($event)">
   <button
     type="button"
     class="trigger-btn"
     (click)="toggleMenu()"
     [attr.aria-expanded]="isMenuOpen"
     aria-haspopup="listbox"
+    aria-controls="language-menu"
   >
     <i class="feather icon-globe"></i>
     <span class="lang-code">{{
@@ -13,19 +14,23 @@
   </button>
 
   <div
+    id="language-menu"
     class="language-menu"
     [class.is-open]="isMenuOpen"
     role="listbox"
     aria-label="Language selector"
   >
     <button
-      *ngFor="let language of languageList"
+      #optionBtn
+      *ngFor="let language of languageList; let i = index"
       type="button"
       class="menu-item"
       [class.active]="currentLang === language.key"
+      [class.focused]="focusedIndex === i"
       (click)="setLanguage(language.key)"
       role="option"
       [attr.aria-selected]="currentLang === language.key"
+      [tabindex]="isMenuOpen ? (focusedIndex === i ? 0 : -1) : -1"
     >
       <span class="lang-name">
         {{ "LANG." + language.key.split("_")[0].toUpperCase() | translate }}

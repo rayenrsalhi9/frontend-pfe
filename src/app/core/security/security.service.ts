@@ -114,35 +114,14 @@ export class SecurityService {
   }
 
   subscribeGuest(entity: any): Observable<any | CommonError> {
-    // Initialize security object
-    // this.resetSecurityObject();
     return this.http
       .post<UserAuth>("auth/subscribe", entity)
       .pipe(
         tap((resp) => {
-          console.log(resp);
-
           localStorage.setItem("guestUser", JSON.stringify(resp.user));
           localStorage.setItem("guestToken", resp.authorisation.token);
 
           window.location.reload();
-          /* this.tokenTime = new Date();
-
-          this.securityObject = this.clonerService.deepClone<UserAuth>(resp);
-          this.securityObject.tokenTime = new Date();
-          localStorage.setItem('currentUser', JSON.stringify(this.securityObject));
-          localStorage.setItem(
-            'bearerToken',
-            this.securityObject.authorisation.token
-          );
-          this.securityObject$.next(resp);
-          this.pusherService.connect()
-          this.pusherService.subscribeToChannel(`user.${this.securityObject.user.id}`,'notification',(data)=>{
-            if(data.type == 'message') {
-              this.notificationSystem.sendNotification(data.data.message)
-            }
-          })
-          this.refreshToken(); */
         }),
       )
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -153,7 +132,7 @@ export class SecurityService {
     currentDate.setMinutes(
       currentDate.getMinutes() - environment.tokenExpiredTimeInMin,
     );
-    let diffTime;
+    let diffTime: number;
     if (this.clearTimeOutData) {
       clearTimeout(this.clearTimeOutData);
     }
@@ -184,6 +163,8 @@ export class SecurityService {
   private parseSecurityObj(): boolean {
     const securityObjectString = localStorage.getItem("currentUser");
     if (!securityObjectString) {
+      localStorage.removeItem("bearerToken");
+      this.securityObject = new UserAuth();
       this.securityObject$.next(null);
       return false;
     }
@@ -198,11 +179,16 @@ export class SecurityService {
         this.securityObject$.next(this.securityObject);
         return true;
       }
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("bearerToken");
+      this.securityObject = new UserAuth();
       this.securityObject$.next(null);
       return false;
     } catch (error) {
       console.error("Error parsing user JSON:", error);
       localStorage.removeItem("currentUser");
+      localStorage.removeItem("bearerToken");
+      this.securityObject = new UserAuth();
       this.securityObject$.next(null);
       return false;
     }

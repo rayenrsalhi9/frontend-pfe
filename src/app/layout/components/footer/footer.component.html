@@ -19,9 +19,7 @@
         </p>
         <form
           class="membership-form"
-          (ngSubmit)="
-            onRequestMembership(emailInput.value); emailInput.value = ''
-          "
+          (ngSubmit)="onRequestMembership(emailInput.value)"
         >
           <label for="footer-membership-input" class="sr-only">{{
             "FOOTER.EMAIL_PLACEHOLDER" | translate
