@@ -52,4 +52,9 @@ export class MobileNavComponent implements OnInit {
     this.closeNav();
     this.securityService.logout();
   }
+
+  toggleNavCollapse() {
+    this.isOpen = !this.isOpen;
+    this.store.dispatch(new UpdateMobileNavCollapse(this.isOpen));
+  }
 }

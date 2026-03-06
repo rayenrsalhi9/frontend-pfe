@@ -8,15 +8,12 @@
 </div>
 
 <ng-template #vertical>
-  <div class="header-nav-left">
-    <nav-toggle [isMobile]="isMobile"></nav-toggle>
-  </div>
+  <div class="header-nav-left"></div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
 </ng-template>
 
 <ng-template #horizontal>
   <div class="header-nav-left">
-    <nav-toggle *ngIf="isMobile" [isMobile]="isMobile"></nav-toggle>
     <logo *ngIf="!isMobile" [white]="logoColor !== 'dark'"></logo>
   </div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>

@@ -102,4 +102,49 @@
       background: $white;
     }
   }
+
+  .ged-nav-toggle-btn {
+    position: absolute;
+    right: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.75rem;
+    height: 3rem;
+    border: 1px solid $ged-sidebar-border;
+    border-left: 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+    background: $white;
+    color: $ged-sidebar-muted;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    @include transition(all 0.2s ease);
+    z-index: 100;
+
+    &:hover {
+      color: $ged-sidebar-blue;
+      background: $ged-sidebar-panel;
+      width: 1.75rem;
+    }
+
+    i {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+  }
+
+  &:not(.is-open) {
+    .ged-nav-toggle-btn {
+      background: $ged-sidebar-blue;
+      color: $white;
+      border-color: $ged-sidebar-blue;
+
+      &:hover {
+        background: darken($ged-sidebar-blue, 5%);
+        border-color: darken($ged-sidebar-blue, 5%);
+      }
+    }
+  }
 }

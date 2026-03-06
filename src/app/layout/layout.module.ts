@@ -17,7 +17,6 @@ import { VerticalLayoutComponent } from "./components/vertical-layout/vertical-l
 import { SideNavComponent } from "./components/side-nav/side-nav.components";
 import { HeaderNavComponent } from "./components/header-nav/header-nav.component";
 import { HeaderNavbarComponent } from "./components/header-navbar/header-navbar.component";
-import { NavToggleComponent } from "./components/nav-toggle/nav-toggle.component";
 import { ContentComponent } from "./components/content/content.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { PageHeaderComponent } from "./components/page-header/page-header.component";
@@ -39,7 +38,6 @@ const mandatoryComponents = [
   SideNavComponent,
   HeaderNavComponent,
   HeaderNavbarComponent,
-  NavToggleComponent,
   ContentComponent,
   FooterComponent,
   PageHeaderComponent,

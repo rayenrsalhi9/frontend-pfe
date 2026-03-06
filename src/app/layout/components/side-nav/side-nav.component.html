@@ -14,4 +14,16 @@
     <i class="feather icon-log-out ged-logout-icon" aria-hidden="true"></i>
     <span class="ged-logout-label">Sign Out</span>
   </button>
+
+  <button
+    type="button"
+    class="ged-nav-toggle-btn"
+    (click)="toggleNavCollapse()"
+    aria-label="Toggle navigation"
+  >
+    <i
+      class="feather"
+      [ngClass]="collapse ? 'icon-chevron-right' : 'icon-chevron-left'"
+    ></i>
+  </button>
 </div>
