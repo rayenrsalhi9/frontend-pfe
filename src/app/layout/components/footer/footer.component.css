@@ -1,8 +1,32 @@
+:host {
+  --footer-bg-color: #0f172a;
+  --footer-text-color: #94a3b8;
+  --footer-border-color: rgba(255, 255, 255, 0.05);
+  --footer-brand-color: #f8fafc;
+  --footer-link-hover-color: #f8fafc;
+  --footer-accent-color: #2563eb;
+  --footer-accent-hover-color: #1d4ed8;
+  --footer-input-bg: rgba(30, 41, 59, 0.5);
+  --footer-input-border: rgba(255, 255, 255, 0.1);
+  --footer-input-focus-bg: rgba(30, 41, 59, 0.8);
+  --footer-input-focus-border: #2563eb;
+  --footer-input-focus-shadow: rgba(37, 99, 235, 0.1);
+  --footer-btn-bg: #2563eb;
+  --footer-btn-hover-bg: #1d4ed8;
+  --footer-btn-shadow: rgba(37, 99, 235, 0.3);
+  --footer-btn-hover-shadow: rgba(37, 99, 235, 0.4);
+  --footer-social-bg: rgba(255, 255, 255, 0.03);
+  --footer-social-border: rgba(255, 255, 255, 0.05);
+  --footer-social-hover-bg: #2563eb;
+  --footer-social-hover-border: #2563eb;
+  --footer-social-hover-shadow: rgba(37, 99, 235, 0.2);
+}
+
 .site-footer {
-  background-color: #0f172a; /* Slate 900 */
+  background-color: var(--footer-bg-color);
   padding: 5rem 1rem 3rem;
-  color: #94a3b8; /* Slate 400 */
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--footer-text-color);
+  border-top: 1px solid var(--footer-border-color);
   font-family: inherit;
 }
 
@@ -31,7 +55,7 @@
 }
 
 .brand-title {
-  color: #f8fafc;
+  color: var(--footer-brand-color);
   font-weight: 800;
   font-size: 1.6rem;
   margin: 0;
@@ -39,7 +63,7 @@
 }
 
 .brand-description {
-  color: #94a3b8;
+  color: var(--footer-text-color);
   font-size: 1rem;
   line-height: 1.7;
   margin: 0;
@@ -52,7 +76,7 @@
 }
 
 .membership-title {
-  color: #f8fafc;
+  color: var(--footer-brand-color);
   font-weight: 700;
   margin-bottom: 1.25rem;
   font-size: 1.25rem;
@@ -60,7 +84,7 @@
 }
 
 .membership-description {
-  color: #94a3b8;
+  color: var(--footer-text-color);
   font-size: 0.95rem;
   margin-bottom: 1.25rem;
 }
@@ -73,10 +97,10 @@
 
 .membership-input {
   flex: 1;
-  background: rgba(30, 41, 59, 0.5);
+  background: var(--footer-input-bg);
   padding: 0.75rem 1.25rem;
   border-radius: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--footer-input-border);
   backdrop-filter: blur(8px);
   color: #ffffff;
   font-size: 0.95rem;
@@ -84,18 +108,19 @@
 }
 
 .membership-input::placeholder {
-  color: #64748b;
+  color: var(--footer-text-color);
+  opacity: 0.7;
 }
 
 .membership-input:focus {
   outline: none;
-  border-color: #11a1fd;
-  background: rgba(30, 41, 59, 0.8);
-  box-shadow: 0 0 0 4px rgba(17, 161, 253, 0.1);
+  border-color: var(--footer-input-focus-border);
+  background: var(--footer-input-focus-bg);
+  box-shadow: 0 0 0 4px var(--footer-input-focus-shadow);
 }
 
 .membership-btn {
-  background: #11a1fd;
+  background: var(--footer-btn-bg);
   color: #ffffff;
   border: none;
   border-radius: 0.85rem;
@@ -105,15 +130,15 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(17, 161, 253, 0.3);
+  box-shadow: 0 4px 14px var(--footer-btn-shadow);
 }
 
 .membership-btn:hover,
 .membership-btn:focus,
 .membership-btn:focus-visible {
-  background: #0d8de0;
+  background: var(--footer-btn-hover-bg);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(17, 161, 253, 0.4);
+  box-shadow: 0 6px 20px var(--footer-btn-hover-shadow);
   outline: none;
 }
 
@@ -125,7 +150,7 @@
 }
 
 .footer-nav-link {
-  color: #94a3b8;
+  color: var(--footer-text-color);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -140,14 +165,14 @@
   inset-inline-start: 0;
   width: 0%;
   height: 2px;
-  background: #11a1fd;
+  background: var(--footer-accent-color);
   transition: width 0.3s ease;
 }
 
 .footer-nav-link:hover,
 .footer-nav-link:focus,
 .footer-nav-link:focus-visible {
-  color: #f8fafc;
+  color: var(--footer-link-hover-color);
   outline: none;
 }
 
@@ -159,7 +184,7 @@
 
 .footer-divider {
   border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--footer-border-color);
   margin: 3rem 0;
 }
 
@@ -183,7 +208,7 @@
 }
 
 .social-icon {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--footer-social-bg);
   color: #ffffff;
   width: 44px;
   height: 44px;
@@ -194,17 +219,17 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 1.2rem;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--footer-social-border);
 }
 
 .social-icon:hover,
 .social-icon:focus,
 .social-icon:focus-visible {
-  background: #11a1fd;
+  background: var(--footer-social-hover-bg);
   color: #ffffff;
   transform: translateY(-4px);
-  border-color: #11a1fd;
-  box-shadow: 0 8px 16px rgba(17, 161, 253, 0.2);
+  border-color: var(--footer-social-hover-border);
+  box-shadow: 0 8px 16px var(--footer-social-hover-shadow);
   outline: none;
 }
 
@@ -253,8 +278,8 @@
   }
 
   .membership-input {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--footer-input-bg);
+    border: 1px solid var(--footer-input-border);
     border-radius: 1rem;
     margin-bottom: 0.75rem;
     padding: 0.85rem 1.25rem;
