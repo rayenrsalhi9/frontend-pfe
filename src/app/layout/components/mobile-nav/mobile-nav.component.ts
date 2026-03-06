@@ -1,41 +1,55 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { Store, Select } from '@ngxs/store'; 
-import { Observable, Subscription } from 'rxjs';
-import { AppConfig, NavMenuColor } from '@app/shared/types/app-config.interface';
-import { UpdateMobileNavCollapse } from '@app/store/app-config/app-config.action';
+import { Component, OnInit, Input, ChangeDetectorRef } from "@angular/core";
+import { Store, Select } from "@ngxs/store";
+import { Observable, Subscription } from "rxjs";
+import {
+  AppConfig,
+  NavMenuColor,
+} from "@app/shared/types/app-config.interface";
+import { UpdateMobileNavCollapse } from "@app/store/app-config/app-config.action";
+import { SecurityService } from "@app/core/security/security.service";
 
 @Component({
-    selector: 'mobile-nav',
-    templateUrl: 'mobile-nav.component.html',
-    host: {
-        '[class.mobile-nav]': 'true',
-        '[class.is-open]': 'isOpen',
-        '[class.nav-menu-light]': "color === 'light'",
-        '[class.nav-menu-dark]': "color === 'dark'"
-    }
+  selector: "mobile-nav",
+  templateUrl: "mobile-nav.component.html",
+  host: {
+    "[class.mobile-nav]": "true",
+    "[class.is-open]": "isOpen",
+    "[class.nav-menu-light]": "color === 'light'",
+    "[class.nav-menu-dark]": "color === 'dark'",
+  },
 })
-
 export class MobileNavComponent implements OnInit {
-    @Select((state: { app: AppConfig; }) => state.app) app$: Observable<AppConfig>;
-    @Input() isOpen: boolean
-    @Input() color: NavMenuColor = 'light';
-    subscription: Subscription
+  @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
 
-    constructor(private cdr: ChangeDetectorRef, private store: Store) { }
+  @Input() isOpen: boolean;
+  @Input() color: NavMenuColor = "light";
 
-    ngOnInit() {
-        this.subscription = this.app$.subscribe(app => {
-            this.isOpen = app.mobileNavCollapse
-            this.cdr.markForCheck()
-        });
-    }
+  subscription: Subscription;
 
-    closeNav() {
-        this.isOpen = false;
-        this.store.dispatch(new UpdateMobileNavCollapse(this.isOpen));
-    }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private store: Store,
+    private securityService: SecurityService,
+  ) {}
 
-    onClicked() {
-        this.closeNav()
-    }
+  ngOnInit() {
+    this.subscription = this.app$.subscribe((app) => {
+      this.isOpen = app.mobileNavCollapse;
+      this.cdr.markForCheck();
+    });
+  }
+
+  closeNav() {
+    this.isOpen = false;
+    this.store.dispatch(new UpdateMobileNavCollapse(this.isOpen));
+  }
+
+  onClicked() {
+    this.closeNav();
+  }
+
+  logout(): void {
+    this.closeNav();
+    this.securityService.logout();
+  }
 }

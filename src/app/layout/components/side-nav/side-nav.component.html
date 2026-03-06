@@ -1,13 +1,17 @@
-<div class="nav-logo">
-    <a href="/">
-      <logo
-        [logoType]="!collapse || quickExpand ? 'logo' : 'fold' "
-        [height]="!collapse || quickExpand ? 70 : 40"
-        [white]= "color === 'dark'"
-        class="w-100"
-    ></logo>
-    </a>
-</div>
-<perfect-scrollbar class="side-nav-content">
+<div class="ged-side-nav-shell">
+  <a href="/" class="ged-brand-card" aria-label="GED home">
+    <div class="ged-brand-inner">
+      <i class="las la-file-alt ged-brand-icon" aria-hidden="true"></i>
+      <span class="ged-brand-text">GED</span>
+    </div>
+  </a>
+
+  <div class="ged-side-nav-menu-wrap">
     <vertical-menu-content></vertical-menu-content>
-</perfect-scrollbar>
+  </div>
+
+  <button type="button" class="ged-logout-btn" (click)="logout()">
+    <i class="feather icon-log-out ged-logout-icon" aria-hidden="true"></i>
+    <span class="ged-logout-label">Sign Out</span>
+  </button>
+</div>
