@@ -24,8 +24,6 @@ import { PageHeaderComponent } from "./components/page-header/page-header.compon
 import { NavNotificationComponent } from "./components/nav-notification/nav-notification.component";
 import { NavI18NComponent } from "./components/nav-i18n/nav-i18n.component";
 import { NavProfileComponent } from "./components/nav-profile/nav-profile.component";
-import { NavConfigComponent } from "./components/nav-config/nav-config.component";
-import { ThemeConfiguratorComponent } from "./components/theme-configurator/theme-configurator.component";
 import { VerticalMenuContentComponent } from "./components/vertical-menu-content/vertical-menu-content.component";
 import { MobileNavComponent } from "./components/mobile-nav/mobile-nav.component";
 import { ResetPasswordComponent } from "./components/reset-password/reset-password.component";
@@ -56,8 +54,6 @@ const optionalComponents = [
   NavNotificationComponent,
   NavProfileComponent,
   NavI18NComponent,
-  NavConfigComponent,
-  ThemeConfiguratorComponent,
 ];
 
 @NgModule({
