@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Input,
 } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -24,6 +25,7 @@ import { TranslateService } from "@ngx-translate/core";
   providers: [NotificationService],
 })
 export class NavNotificationComponent implements OnInit, OnDestroy {
+  @Input() dropDirection: "dropdown" | "dropup" = "dropdown";
   private destroy$ = new Subject<void>();
   private currentUserId: string | null = null;
   private refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
