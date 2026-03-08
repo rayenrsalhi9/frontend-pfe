@@ -129,9 +129,3 @@
 .menu-item.active .active-indicator {
   opacity: 1;
 }
-
-/* Animations for RTL support */
-:host-context([dir="rtl"]) .language-menu {
-  right: auto;
-  left: 0;
-}

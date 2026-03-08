@@ -1,115 +1,115 @@
 .header-nav {
-    background: $white;
-    border-bottom: 1px solid $border-color;
-    position: fixed;
-    top: 0;
-    right:0;
-    width: 100%;
-    z-index: 999;
+  background: $white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+  display: flex;
+  height: $header-nav-height;
+  padding: 0.5rem 0;
+  @include transition(all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+
+  &.layout-vertical {
+    @include screen-laptop-only {
+      width: calc(100% - #{$side-nav-width-laptop});
+    }
+
+    @include screen-laptop-above {
+      width: calc(100% - #{$side-nav-width});
+    }
+
+    &.is-collapse {
+      @include screen-tablet-above {
+        width: calc(100% - #{$side-nav-collapse-width});
+      }
+    }
+  }
+
+  .header-nav-wrap {
+    flex: 1;
     display: flex;
-    height: $header-nav-height;
+    justify-content: space-between;
+    padding: 0 1.5rem;
 
-    &.layout-vertical {
-    
-        @include screen-laptop-only {
-            width: calc(100% - #{$side-nav-width-laptop})
-        }
-
-        @include screen-laptop-above {
-            width: calc(100% - #{$side-nav-width})
-        }
-
-        &.is-collapse {
-            @include screen-tablet-above {
-                width: calc(100% - #{$side-nav-collapse-width})
-            }
-        }
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
     }
 
-    .header-nav-wrap {
-        flex: 1;
+    .header-nav-left,
+    .header-nav-right {
+      list-style-type: none;
+      padding-left: 0px;
+      margin-bottom: 0px;
+      align-items: stretch;
+      display: flex;
+    }
+
+    .header-nav-item {
+      text-decoration: none;
+      color: $gray-700;
+      display: flex;
+      align-items: center;
+      position: relative;
+      @include transition(all 0.2s ease);
+
+      .header-nav-item-select {
         display: flex;
-        justify-content: space-between;
-        padding: 0 0.9375rem;
+        align-items: center;
+        height: 100%;
+      }
 
-        .header-nav-left,
-        .header-nav-right {
-            list-style-type: none;
-            padding-left: 0px;
-            margin-bottom: 0px;
-            align-items: stretch;
-            display: flex;
+      .toggle-wrapper {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 0.75rem;
+        cursor: pointer;
+        border-radius: 12px;
+        margin: 0.5rem 0;
+        @include transition(all 0.2s ease);
+
+        &:hover {
+          background: rgba($primary, 0.05);
+          color: $primary;
         }
+      }
 
-        .header-nav-left {
-            margin-left: 10px;
-        }
-
-        .header-nav-right {
-            margin-right: 10px;
-        }
-
-        .header-nav-item {
-            text-decoration: none;
-            color: $body-color;
-            display: flex;
-            align-items: center;
-            position: relative;
-
-            .header-nav-item-select {
-                display: flex;
-                align-items: center;
-                height: 100%;
-            }
-
-            .toggle-wrapper {
-                display: flex;
-                align-items: center;
-                height: 100%;
-                padding: 0 0.65rem;
-                cursor: pointer;
-            }
-
-            .nav-icon {
-                font-size: 1.25rem;
-            }
-
-            &:last-child {
-                .header-nav-item-select {
-                    padding-right: 0;
-                }
-            }
-        }
-
-        .desktop-toggle {
-            @include screen-tablet {
-                display: none;
-            }
-        }
-
-        .mobile-toggle {
-            @include screen-tablet-above {
-                display: none;
-            }
-        }
+      .nav-icon {
+        font-size: 1.25rem;
+      }
     }
 
-    &.header-folded {
-
-        .logo {
-            width: $side-nav-folded;
-        }
+    .desktop-toggle {
+      @include screen-tablet {
+        display: none;
+      }
     }
 
-    &.header-text-light {
-        .header-nav-wrap {
-            .header-nav-item {
-                color: $white;
-            }
-        }
+    .mobile-toggle {
+      @include screen-tablet-above {
+        display: none;
+      }
     }
+  }
+
+  &.header-folded {
+    .logo {
+      width: $side-nav-folded;
+    }
+  }
+
+  &.header-text-light {
+    .header-nav-wrap {
+      .header-nav-item {
+        color: $white;
+      }
+    }
+  }
 }
 
 .pop-notification {
-    width: 350px;
+  width: 350px;
 }

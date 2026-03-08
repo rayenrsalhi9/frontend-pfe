@@ -8,13 +8,32 @@
 </div>
 
 <ng-template #vertical>
-  <div class="header-nav-left"></div>
+  <div class="header-nav-left">
+    <div class="header-nav-item">
+      <div
+        class="toggle-wrapper"
+        (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
+      >
+        <i
+          class="feather nav-icon"
+          [ngClass]="
+            isMobile ? 'icon-menu' : collapse ? 'icon-menu' : 'icon-align-left'
+          "
+        ></i>
+      </div>
+    </div>
+  </div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
 </ng-template>
 
 <ng-template #horizontal>
   <div class="header-nav-left">
     <logo *ngIf="!isMobile" [white]="logoColor !== 'dark'"></logo>
+    <div class="header-nav-item" *ngIf="isMobile">
+      <div class="toggle-wrapper" (click)="toggleMobileNav()">
+        <i class="feather nav-icon icon-menu"></i>
+      </div>
+    </div>
   </div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
 </ng-template>

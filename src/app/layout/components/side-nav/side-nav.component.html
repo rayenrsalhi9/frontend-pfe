@@ -12,18 +12,8 @@
 
   <button type="button" class="ged-logout-btn" (click)="logout()">
     <i class="feather icon-log-out ged-logout-icon" aria-hidden="true"></i>
-    <span class="ged-logout-label">Sign Out</span>
-  </button>
-
-  <button
-    type="button"
-    class="ged-nav-toggle-btn"
-    (click)="toggleNavCollapse()"
-    aria-label="Toggle navigation"
-  >
-    <i
-      class="feather"
-      [ngClass]="collapse ? 'icon-chevron-right' : 'icon-chevron-left'"
-    ></i>
+    <span class="ged-logout-label">{{
+      "DROPDOWN_PROFILE.LOGOUT" | translate
+    }}</span>
   </button>
 </div>
