@@ -47,6 +47,7 @@
           class="ged-nav-button ged-nav-button--group"
           [class.ged-nav-button--nested]="level > 0"
           [style.--ged-level]="level"
+          [attr.aria-expanded]="isExpanded(item)"
           (click)="toggleSubmenu(item)"
         >
           <span class="ged-nav-icon-shell">

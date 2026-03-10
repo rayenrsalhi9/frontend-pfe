@@ -5,10 +5,10 @@
       <div class="section-header">
         <h3 class="section-title lusitana-font">
           <i class="feather icon-activity"></i>
-          {{'DASHBOARD.OVERVIEW'|translate}}
+          {{ "DASHBOARD.OVERVIEW" | translate }}
         </h3>
         <p class="section-description">
-          {{'DASHBOARD.OVERVIEW_DESC'|translate}}
+          {{ "DASHBOARD.OVERVIEW_DESC" | translate }}
         </p>
       </div>
       <div class="scroll-content">
@@ -18,7 +18,7 @@
         <ng-template #noOverview>
           <div class="empty-state">
             <i class="feather icon-inbox"></i>
-            <p>{{'DASHBOARD.NO_OVERVIEW'|translate}}</p>
+            <p>{{ "DASHBOARD.NO_OVERVIEW" | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -29,27 +29,28 @@
       <div class="section-header">
         <h3 class="section-title lusitana-font">
           <i class="feather icon-pie-chart"></i>
-          {{'DASHBOARD.CATEGORIES'|translate}}
+          {{ "DASHBOARD.CATEGORIES" | translate }}
         </h3>
         <p class="section-description">
-          {{'DASHBOARD.CATEGORIES_DESC'|translate}}
+          {{ "DASHBOARD.CATEGORIES_DESC" | translate }}
         </p>
       </div>
       <div class="scroll-content">
         <div *ngIf="chartOptions?.series?.length > 0; else noCategories">
           <div class="chart-container">
-            <apx-chart 
-              [series]="chartOptions.series" 
-              [chart]="chartOptions.chart" 
+            <apx-chart
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
               [labels]="chartOptions.labels"
-              [responsive]="chartOptions.responsive">
+              [responsive]="chartOptions.responsive"
+            >
             </apx-chart>
           </div>
         </div>
         <ng-template #noCategories>
           <div class="empty-state">
             <i class="feather icon-pie-chart"></i>
-            <p>{{'DASHBOARD.NO_CATEGORIES'|translate}}</p>
+            <p>{{ "DASHBOARD.NO_CATEGORIES" | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -60,10 +61,10 @@
       <div class="section-header">
         <h3 class="section-title lusitana-font">
           <i class="feather icon-smartphone"></i>
-          {{'DASHBOARD.DEVICES'|translate}}
+          {{ "DASHBOARD.DEVICES" | translate }}
         </h3>
         <p class="section-description">
-          {{'DASHBOARD.DEVICES_DESC'|translate}}
+          {{ "DASHBOARD.DEVICES_DESC" | translate }}
         </p>
       </div>
       <div class="scroll-content">
@@ -73,7 +74,7 @@
         <ng-template #noDevices>
           <div class="empty-state">
             <i class="feather icon-smartphone"></i>
-            <p>{{'DASHBOARD.NO_DEVICES'|translate}}</p>
+            <p>{{ "DASHBOARD.NO_DEVICES" | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -85,53 +86,61 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h3 class="section-title lusitana-font m-0">
             <i class="feather icon-globe"></i>
-            {{'DASHBOARD.NEWS'|translate}}
+            {{ "DASHBOARD.NEWS" | translate }}
           </h3>
-          <a 
-            routerLink="/apps/news" 
+          <a
+            routerLink="/apps/news"
             class="badge badge-primary text-decoration-none"
-            *ngIf="articles?.length > 0">
-            {{'DASHBOARD.SEEALL'|translate}}
+            *ngIf="articles?.length > 0"
+          >
+            {{ "DASHBOARD.SEEALL" | translate }}
             <i class="feather icon-arrow-right ml-1"></i>
           </a>
         </div>
         <p class="section-description">
-          {{'DASHBOARD.NEWS_DESC'|translate}}
+          {{ "DASHBOARD.NEWS_DESC" | translate }}
         </p>
       </div>
       <div class="scroll-content">
         <div *ngIf="articles?.length > 0; else noNews">
           <div class="news-grid">
-            <div 
-              *ngFor="let article of articles | slice:0:4" 
+            <a
+              *ngFor="let article of articles | slice: 0 : 4"
               class="news-card cursor-pointer"
-              (click)="viewArticle(article)">
-              <div class="news-category-tag">{{article.category.name}}</div>
-              <img 
-                [src]="article.picture ? getHost()+article.picture : '/assets/images/others/bg-4.jpg'" 
-                class="news-thumbnail" 
-                alt="{{article.title}}">
+              [routerLink]="['/apps/news', article.id]"
+            >
+              <div class="news-category-tag">{{ article.category.name }}</div>
+              <img
+                [src]="
+                  article.picture
+                    ? getHost() + article.picture
+                    : '/assets/images/others/bg-4.jpg'
+                "
+                class="news-thumbnail"
+                alt="{{ article.title }}"
+              />
               <div class="news-content">
-                <h4 class="news-title">{{article.title}}</h4>
-                <p class="news-excerpt">{{article.shortText}}</p>
+                <h4 class="news-title">{{ article.title }}</h4>
+                <p class="news-excerpt">{{ article.shortText }}</p>
                 <div class="news-meta">
                   <span class="news-author">
                     <i class="feather icon-user"></i>
-                    {{article.creator.firstName}} {{article.creator.lastName}}
+                    {{ article.creator.firstName }}
+                    {{ article.creator.lastName }}
                   </span>
                   <span class="news-date">
                     <i class="feather icon-calendar"></i>
-                    {{article.createdAt | utcToLocalTime:'shortDate'}}
+                    {{ article.createdAt | utcToLocalTime: "shortDate" }}
                   </span>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
         <ng-template #noNews>
           <div class="empty-state">
             <i class="feather icon-globe"></i>
-            <p>{{'DASHBOARD.NO_NEWS'|translate}}</p>
+            <p>{{ "DASHBOARD.NO_NEWS" | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -143,60 +152,78 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h3 class="section-title lusitana-font m-0">
             <i class="feather icon-users"></i>
-            {{'DASHBOARD.USERS'|translate}}
+            {{ "DASHBOARD.USERS" | translate }}
           </h3>
-          <a 
-            routerLink="/apps/users" 
+          <a
+            routerLink="/apps/users"
             class="badge badge-primary text-decoration-none"
-            *ngIf="rows?.length > 0">
-            {{'DASHBOARD.SEEALL'|translate}}
+            *ngIf="rows?.length > 0"
+          >
+            {{ "DASHBOARD.SEEALL" | translate }}
             <i class="feather icon-arrow-right ml-1"></i>
           </a>
         </div>
         <p class="section-description">
-          {{'DASHBOARD.USERS_DESC'|translate}}
+          {{ "DASHBOARD.USERS_DESC" | translate }}
         </p>
       </div>
       <div class="scroll-content">
         <div *ngIf="rows?.length > 0; else noUsers">
           <div class="users-table-container">
-            <ngx-datatable 
-              [rows]="rows | slice:0:5" 
-              [columnMode]="ColumnMode.force" 
+            <ngx-datatable
+              [rows]="rows | slice: 0 : 5"
+              [columnMode]="ColumnMode.force"
               [headerHeight]="40"
               [footerHeight]="0"
-              rowHeight="auto" 
+              rowHeight="auto"
               [limit]="5"
-              class="modern-table">
-              
-              <ngx-datatable-column [name]="'USERS.LIST.TABLE.EMAIL' | translate" prop="email">
+              class="modern-table"
+            >
+              <ngx-datatable-column
+                [name]="'USERS.LIST.TABLE.EMAIL' | translate"
+                prop="email"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
                   <div class="user-cell">
-                    <avatar 
-                      [size]="32" 
-                      [src]="row.avatar ? getHost()+row.avatar : '/assets/images/avatars/thumb-16.jpg'"
-                      class="mr-2">
+                    <avatar
+                      [size]="32"
+                      [src]="
+                        row.avatar
+                          ? getHost() + row.avatar
+                          : '/assets/images/avatars/thumb-16.jpg'
+                      "
+                      class="mr-2"
+                    >
                     </avatar>
-                    <span class="user-email">{{row.email}}</span>
+                    <span class="user-email">{{ row.email }}</span>
                   </div>
                 </ng-template>
               </ngx-datatable-column>
-              
-              <ngx-datatable-column [name]="'USERS.LIST.TABLE.FIRSTNAME' | translate" prop="firstName">
+
+              <ngx-datatable-column
+                [name]="'USERS.LIST.TABLE.FIRSTNAME' | translate"
+                prop="firstName"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <span class="user-name">{{row.firstName}}</span>
+                  <span class="user-name">{{ row.firstName }}</span>
                 </ng-template>
               </ngx-datatable-column>
-              
-              <ngx-datatable-column [name]="'USERS.LIST.TABLE.LASTNAME' | translate" prop="lastName">
+
+              <ngx-datatable-column
+                [name]="'USERS.LIST.TABLE.LASTNAME' | translate"
+                prop="lastName"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <span class="user-name">{{row.lastName}}</span>
+                  <span class="user-name">{{ row.lastName }}</span>
                 </ng-template>
               </ngx-datatable-column>
-              
-              <ngx-datatable-column [name]="'USERS.LIST.TABLE.PHONE' | translate" prop="phoneNumber">
+
+              <ngx-datatable-column
+                [name]="'USERS.LIST.TABLE.PHONE' | translate"
+                prop="phoneNumber"
+              >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                  <span class="user-phone">{{row.phoneNumber || '—'}}</span>
+                  <span class="user-phone">{{ row.phoneNumber || "—" }}</span>
                 </ng-template>
               </ngx-datatable-column>
             </ngx-datatable>
@@ -205,7 +232,7 @@
         <ng-template #noUsers>
           <div class="empty-state">
             <i class="feather icon-users"></i>
-            <p>{{'DASHBOARD.NO_USERS'|translate}}</p>
+            <p>{{ "DASHBOARD.NO_USERS" | translate }}</p>
           </div>
         </ng-template>
       </div>

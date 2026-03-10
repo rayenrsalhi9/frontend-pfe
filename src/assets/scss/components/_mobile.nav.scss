@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .mobile-nav {
   .nav-backdrop {
     position: fixed;
@@ -142,8 +144,8 @@
       border-color: $ged-sidebar-blue;
 
       &:hover {
-        background: darken($ged-sidebar-blue, 5%);
-        border-color: darken($ged-sidebar-blue, 5%);
+        background: color.scale($ged-sidebar-blue, $lightness: -5%);
+        border-color: color.scale($ged-sidebar-blue, $lightness: -5%);
       }
     }
   }

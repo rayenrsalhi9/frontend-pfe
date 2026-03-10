@@ -44,7 +44,7 @@
 
             <a
               *ngIf="notification.message"
-              href="/apps/chat"
+              [routerLink]="['/apps/chat']"
               class="nav-notification-link"
             >
               <ng-container *ngIf="notification.type != 'message'">

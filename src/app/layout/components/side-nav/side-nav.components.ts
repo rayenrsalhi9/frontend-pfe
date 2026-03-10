@@ -17,14 +17,12 @@ import { UpdateSideNavCollapse } from "@app/store/app-config/app-config.action";
   host: {
     "[class.side-nav]": "true",
     "[class.nav-menu-collapse]": "collapse",
-    "[class.nav-menu-quick-expand]": "quickExpand",
     "[class.nav-menu-light]": "color === 'light'",
     "[class.nav-menu-dark]": "color === 'dark'",
   },
 })
 export class SideNavComponent {
   @Input() collapse: boolean;
-  @Input() quickExpand: boolean;
   @Input() color: NavMenuColor = "light";
 
   constructor(

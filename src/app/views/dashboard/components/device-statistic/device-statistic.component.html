@@ -3,7 +3,7 @@
     <div class="progress">
       <div
         *ngFor="let item of data.documents; let i = index"
-        [tooltip]="item.extension + ' total: ' + item.total"
+        [tooltip]="item.extension + ' ' + ('TABLE_MESSAGE.TOTAL' | translate) + ': ' + item.total"
         class="progress-bar cursor-pointer"
         [ngClass]="'bg-' + progressType[i]"
         [ngStyle]="{ width: (item.total / data.totalDocuments) * 100 + '%' }"
