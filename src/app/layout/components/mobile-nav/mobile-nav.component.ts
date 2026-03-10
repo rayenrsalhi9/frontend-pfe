@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
 import { Observable, Subscription } from "rxjs";
 import {
@@ -18,7 +18,7 @@ import { SecurityService } from "@app/core/security/security.service";
     "[class.nav-menu-dark]": "color === 'dark'",
   },
 })
-export class MobileNavComponent implements OnInit {
+export class MobileNavComponent implements OnInit, OnDestroy {
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
 
   @Input() isOpen: boolean;
@@ -37,6 +37,12 @@ export class MobileNavComponent implements OnInit {
       this.isOpen = app.mobileNavCollapse;
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   closeNav() {
