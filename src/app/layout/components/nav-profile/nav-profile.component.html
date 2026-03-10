@@ -30,7 +30,7 @@
     <div class="dropdown-items-container">
       <ng-container *ngFor="let menuItem of profileMenuList">
         <a
-          (click)="menuItem.click()"
+          (click)="menuItem.click ? menuItem.click() : null"
           *hasClaim="menuItem.claims"
           [routerLink]="menuItem.path"
           dropdownItem
