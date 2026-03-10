@@ -81,6 +81,15 @@ $ged-sidebar-border: #edf4f9;
     }
   }
 
+  :host-context(.dropup) .dropdown-menu,
+  &.dropup .dropdown-menu {
+    bottom: 100%;
+    top: auto;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    transform-origin: bottom;
+  }
+
   .nav-notification-header {
     display: flex;
     align-items: center;
