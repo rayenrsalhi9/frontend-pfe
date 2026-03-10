@@ -121,7 +121,13 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
     const iconClasses: string[] = [];
 
     if (item?.iconType === "line-awesome") {
-      iconClasses.push("lar", "las", "lab");
+      if (item.iconStyle === "regular") {
+        iconClasses.push("lar");
+      } else if (item.iconStyle === "brands") {
+        iconClasses.push("lab");
+      } else {
+        iconClasses.push("las");
+      }
     }
 
     if (item?.iconType === "feather") {
@@ -169,7 +175,9 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
         node.type === "title" ? [...ancestors] : [...ancestors, node.key];
 
       if (node.path && this.isExactRouteActive(node.path)) {
-        ancestors.forEach((key) => this.autoExpandedKeys.add(key));
+        ancestors.forEach((key) => {
+          this.autoExpandedKeys.add(key);
+        });
         return true;
       }
 
