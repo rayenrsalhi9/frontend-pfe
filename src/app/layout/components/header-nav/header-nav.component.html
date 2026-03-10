@@ -10,8 +10,10 @@
 <ng-template #vertical>
   <div class="header-nav-left">
     <div class="header-nav-item">
-      <div
+      <button
+        type="button"
         class="toggle-wrapper"
+        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
         (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
       >
         <i
@@ -20,7 +22,7 @@
             isMobile ? 'icon-menu' : collapse ? 'icon-menu' : 'icon-align-left'
           "
         ></i>
-      </div>
+      </button>
     </div>
   </div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
@@ -30,9 +32,14 @@
   <div class="header-nav-left">
     <logo *ngIf="!isMobile" [white]="logoColor !== 'dark'"></logo>
     <div class="header-nav-item" *ngIf="isMobile">
-      <div class="toggle-wrapper" (click)="toggleMobileNav()">
+      <button
+        type="button"
+        class="toggle-wrapper"
+        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
+        (click)="toggleMobileNav()"
+      >
         <i class="feather nav-icon icon-menu"></i>
-      </div>
+      </button>
     </div>
   </div>
   <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>

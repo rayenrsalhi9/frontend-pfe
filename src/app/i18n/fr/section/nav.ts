@@ -1,5 +1,7 @@
 export const nav = {
   NAV: {
+    TOGGLE_NAVIGATION: "Basculer la navigation",
+
     HOME: "Accueil",
     FORUM: "Forums",
     BLOG: "Blog",

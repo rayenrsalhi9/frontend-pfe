@@ -69,6 +69,9 @@
         cursor: pointer;
         border-radius: 12px;
         margin: 0.5rem 0;
+        color: rgba($primary, 0.8);
+        background: transparent;
+        border: none;
         @include transition(all 0.2s ease);
 
         &:hover {

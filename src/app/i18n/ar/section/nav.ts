@@ -1,5 +1,7 @@
 export const nav = {
   NAV: {
+    TOGGLE_NAVIGATION: "تبديل التنقل",
+
     HOME: "الرئيسية",
     FORUM: "المنتديات",
     BLOG: "المدونة",
