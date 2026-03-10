@@ -11,69 +11,69 @@
   </div>
   <dropdown-menu #navNotification alignment="right">
     <div class="nav-notification-header">
-      <h5 class="mb-0">{{ "NOTIFICATION.LABELS.TITLE" | translate }}</h5>
+      <h5 class="nav-notification-title">
+        {{ "NOTIFICATION.LABELS.TITLE" | translate }}
+      </h5>
       <a
         href="javascript:void(0)"
         (click)="markAllAsReadNotification()"
-        class="font-size-sm"
-        >{{ "NOTIFICATION.BUTTONS.READ" | translate }}</a
+        class="nav-notification-mark-read"
       >
+        {{ "NOTIFICATION.BUTTONS.READ" | translate }}
+      </a>
     </div>
     <perfect-scrollbar class="nav-notification-body">
+      <div *ngIf="notifications.length === 0" class="nav-notification-empty">
+        {{ "NOTIFICATION.LABELS.EMPTY" | translate }}
+      </div>
       <div
         class="nav-notification-item"
+        [class.is-unread]="!notification.isRead"
         *ngFor="let notification of notifications"
       >
-        <!-- <div>
-                    <ng-container
-                        [ngTemplateOutlet]="item.notificationType === 0 ? avatarTpl : iconTpl"
-                        [ngTemplateOutletContext]="{img: item.avatar, icon: item.notificationType}">
-                    </ng-container>
-                </div> -->
-        <div class="ms-2">
-          <span>
-            <span
-              style="margin-right: 5px"
-              *ngIf="!notification.isRead"
-              class="badge bg-success"
-              >{{ "NOTIFICATION.LABELS.NEW" | translate }}</span
-            >
+        <div class="nav-notification-item-content">
+          <div class="nav-notification-item-text">
+            <span *ngIf="!notification.isRead" class="nav-notification-badge">
+              {{ "NOTIFICATION.LABELS.NEW" | translate }}
+            </span>
             <ng-container *ngIf="!notification.message">
-              <b> {{ notification.documentName }}</b> :
+              <b>{{ notification.documentName }}</b
+              >:
               {{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}
             </ng-container>
 
-            <a href="/apps/chat">
-              <ng-container *ngIf="notification.message">
-                <ng-container *ngIf="notification.type != 'message'"
-                  ><b>{{ "NOTIFICATION.LABELS.REMINDER" | translate }}</b> ::
-                </ng-container>
-                <ng-container *ngIf="notification.type == 'message'"
-                  ><b>{{ "NOTIFICATION.LABELS.CHAT" | translate }}</b> ::
-                </ng-container>
-                <ng-container *ngIf="notification.documentId">
-                  <b> {{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b>
-                  : {{ notification.documentName }} ::
-                </ng-container>
-                {{ notification.user.firstName }}
-                {{ notification.user.lastName }}
-                {{ "NOTIFICATION.LABELS.SEND_MESSAGE" | translate }} <br />
-                {{ notification.message | translate }}
+            <a
+              *ngIf="notification.message"
+              href="/apps/chat"
+              class="nav-notification-link"
+            >
+              <ng-container *ngIf="notification.type != 'message'">
+                <b>{{ "NOTIFICATION.LABELS.REMINDER" | translate }}</b> ::
               </ng-container>
+              <ng-container *ngIf="notification.type == 'message'">
+                <b>{{ "NOTIFICATION.LABELS.CHAT" | translate }}</b> ::
+              </ng-container>
+              <ng-container *ngIf="notification.documentId">
+                <b>{{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b
+                >: {{ notification.documentName }} ::
+              </ng-container>
+              {{ notification.user?.firstName }}
+              {{ notification.user?.lastName }}
+              {{ "NOTIFICATION.LABELS.SEND_MESSAGE" | translate }} <br />
+              <span class="nav-notification-link-msg">{{
+                notification.message | translate
+              }}</span>
             </a>
-          </span>
-          <div class="font-size-sm fw-bold mt-1">
+          </div>
+          <div class="nav-notification-item-time">
             <i class="feather icon-clock"></i>
-            <span class="ms-1">{{
+            <span>{{
               notification.createdDate | amLocale: momentLang | amTimeAgo: true
             }}</span>
           </div>
         </div>
       </div>
     </perfect-scrollbar>
-    <!-- <div class="nav-notification-footer">
-            <a href="#" class="font-size-sm">View All</a>
-        </div> -->
   </dropdown-menu>
 </dropdown>
 
@@ -88,19 +88,10 @@
   <avatar
     [size]="40"
     [class]="
-      'font-size-lg' +
-      ' ' +
+      'font-size-lg ' +
       notificationIconMap[icon] +
       ' ' +
       notificationColorMap[icon]
     "
   ></avatar>
 </ng-template>
-
-<!-- <ng-template #odd_tpl let-number='number'>
-    <li>Odd: {{number}}</li>
-  </ng-template>
-
-  <ng-template #even_tpl let-number='number'>
-    <li>Even: {{number}}</li>
-  </ng-template> -->

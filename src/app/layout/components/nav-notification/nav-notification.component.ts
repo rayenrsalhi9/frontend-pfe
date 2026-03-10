@@ -25,7 +25,7 @@ import { TranslateService } from "@ngx-translate/core";
   providers: [NotificationService],
 })
 export class NavNotificationComponent implements OnInit, OnDestroy {
-  @Input() dropDirection: "dropdown" | "dropup" = "dropdown";
+  @Input() dropDirection = "dropup";
   private destroy$ = new Subject<void>();
   private currentUserId: string | null = null;
   private refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -92,7 +92,11 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
         this.newNotificationCount = notifications.filter(
           (c) => !c.isRead,
         ).length;
-        this.notifications = notifications;
+        this.notifications = notifications.sort(
+          (a, b) =>
+            new Date(b.createdDate).getTime() -
+            new Date(a.createdDate).getTime(),
+        );
         this.isUnReadNotification = this.notifications.some((n) => !n.isRead);
         this.cd.detectChanges();
 
