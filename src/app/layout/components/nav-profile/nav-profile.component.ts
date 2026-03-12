@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
 } from "@angular/core";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, take } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { UserService } from "@app/shared/services/user.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -71,6 +71,7 @@ export class NavProfileComponent implements OnInit, OnDestroy {
 
   getUserData() {
     this.securityService.SecurityObject.pipe(
+      take(1),
       takeUntil(this.destroy$),
     ).subscribe((data: any) => {
       if (data) {

@@ -96,6 +96,9 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
   }
 
   isExpanded(item: NavMenu): boolean {
+    if (!item?.key) {
+      return false;
+    }
     return (
       this.manualExpandedKeys.has(item.key) ||
       this.autoExpandedKeys.has(item.key)

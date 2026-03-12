@@ -1,16 +1,18 @@
-<dropdown
-  *ngIf="user"
-  dropdownClass="header-nav-item-select nav-profile"
-  (click)="navProfile.toggle($event)"
->
-  <div class="toggle-wrapper">
+<dropdown *ngIf="user" dropdownClass="header-nav-item-select nav-profile">
+  <button
+    class="toggle-wrapper"
+    type="button"
+    aria-haspopup="true"
+    [attr.aria-expanded]="navProfile.isOpen"
+    (click)="navProfile.toggle($event)"
+  >
     <avatar
       [size]="35"
       [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
     ></avatar>
     <span class="user-name mx-2">{{ user.firstName }} {{ user.lastName }}</span>
     <i class="feather icon-chevron-down opacity-50"></i>
-  </div>
+  </button>
   <dropdown-menu #navProfile alignment="right">
     <div class="nav-profile-header">
       <div class="d-flex align-items-center gap-3">
@@ -29,21 +31,37 @@
 
     <div class="dropdown-items-container">
       <ng-container *ngFor="let menuItem of profileMenuList">
-        <a
-          (click)="menuItem.click ? menuItem.click() : null"
-          *hasClaim="menuItem.claims"
-          [routerLink]="menuItem.path"
-          dropdownItem
-        >
-          <i [ngClass]="menuItem.icon"></i>
-          <span>{{ menuItem.item | translate }}</span>
-        </a>
+        <ng-container *hasClaim="menuItem.claims">
+          <a
+            *ngIf="menuItem.path"
+            [routerLink]="menuItem.path"
+            (click)="menuItem.click ? menuItem.click() : null"
+            dropdownItem
+          >
+            <i [ngClass]="menuItem.icon"></i>
+            <span>{{ menuItem.item | translate }}</span>
+          </a>
+          <button
+            *ngIf="!menuItem.path && menuItem.click"
+            type="button"
+            (click)="menuItem.click()"
+            dropdownItem
+          >
+            <i [ngClass]="menuItem.icon"></i>
+            <span>{{ menuItem.item | translate }}</span>
+          </button>
+        </ng-container>
       </ng-container>
 
-      <a class="cursor-pointer" (click)="logout()" dropdownItem>
+      <button
+        type="button"
+        class="cursor-pointer"
+        (click)="logout()"
+        dropdownItem
+      >
         <i class="feather icon-power"></i>
         <span>{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
-      </a>
+      </button>
     </div>
   </dropdown-menu>
 </dropdown>

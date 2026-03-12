@@ -13,7 +13,7 @@
       </div>
       <div class="scroll-content">
         <ng-container *ngIf="overviewLoaded">
-          <div *ngIf="overviewData; else noOverview">
+          <div *ngIf="overviewData?.duration?.length > 0; else noOverview">
             <overview [data]="overviewData"></overview>
           </div>
           <ng-template #noOverview>

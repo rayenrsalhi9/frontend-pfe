@@ -3,24 +3,29 @@
   dropdownClass="header-nav-item-select nav-notification"
   (click)="navNotification.toggle($event)"
 >
-  <div class="toggle-wrapper notification-trigger">
+  <button
+    class="toggle-wrapper notification-trigger"
+    type="button"
+    aria-haspopup="true"
+    [attr.aria-expanded]="navNotification.isOpen"
+  >
     <div class="icon-badge-container">
       <i class="feather icon-bell"></i>
       <div *ngIf="newNotificationCount > 0" class="notification-badge"></div>
     </div>
-  </div>
+  </button>
   <dropdown-menu #navNotification alignment="right">
     <div class="nav-notification-header">
       <h5 class="nav-notification-title">
         {{ "NOTIFICATION.LABELS.TITLE" | translate }}
       </h5>
-      <a
-        href="javascript:void(0)"
+      <button
+        type="button"
         (click)="markAllAsReadNotification()"
         class="nav-notification-mark-read"
       >
         {{ "NOTIFICATION.BUTTONS.READ" | translate }}
-      </a>
+      </button>
     </div>
     <perfect-scrollbar class="nav-notification-body">
       <div *ngIf="notifications.length === 0" class="nav-notification-empty">

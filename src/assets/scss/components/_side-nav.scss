@@ -311,7 +311,7 @@ $ged-sidebar-border: #edf4f9;
       .ged-nav-chevron,
       .ged-nav-section-title,
       .ged-logout-label {
-        display: none;
+        @include visually-hidden;
       }
 
       .ged-brand-icon {
@@ -335,7 +335,7 @@ $ged-sidebar-border: #edf4f9;
       }
 
       .ged-side-nav-menu-wrap {
-        overflow: hidden;
+        overflow-y: auto;
       }
     }
   }

@@ -5,11 +5,12 @@
     border-radius: 50px;
     padding: 0.5rem;
     background: rgba($primary, 0.05);
+    border: none;
     color: $primary;
     @include transition(all 0.2s ease);
 
     [dir="rtl"] & {
-      [avatar], avatar {
+      [avatar] {
         order: 3;
       }
       .user-name {

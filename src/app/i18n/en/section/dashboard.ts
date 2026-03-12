@@ -1,32 +1,33 @@
 export const dashboard = {
   DASHBOARD: {
-    TRANSMISSION: "Document Transfers",
-    EXTENSIONS: "Documents by File Type",
+    TRANSMISSION: "Document Activity",
+    EXTENSIONS: "Documents by File Format",
     CATEGORIES: "Document Categories",
-    USERS: "Recent Users",
-    NEWS: "Latest News",
+    USERS: "Recently Registered Users",
+    NEWS: "Latest Announcements",
 
-    SEEALL: "View all",
+    SEEALL: "View All",
     CREATEDBY: "Created by",
     CREATEDAT: "Created on",
 
-    OVERVIEW: "Overview",
+    OVERVIEW: "System Overview",
     OVERVIEW_DESC:
-      "General overview of the system and key performance indicators",
+      "A summary of the platform's activity and key performance indicators.",
 
-    CATEGORIES_DESC: "Distribution of documents across different categories",
+    CATEGORIES_DESC: "Breakdown of stored documents organized by category.",
 
-    DEVICES: "Device Statistics",
-    DEVICES_DESC: "Analytics on device usage across the platform",
+    DEVICES: "Documents by File Format",
+    DEVICES_DESC: "Breakdown of stored documents by file format.",
 
-    NEWS_DESC: "Latest platform news and announcements",
+    NEWS_DESC:
+      "Recent news, updates, and important announcements related to the platform.",
 
-    USERS_DESC: "Users who have recently joined the platform",
+    USERS_DESC: "List of users who have recently registered on the platform.",
 
-    NO_OVERVIEW: "No overview data available",
-    NO_CATEGORIES: "No category statistics available",
-    NO_DEVICES: "No device statistics available",
-    NO_NEWS: "No news articles available",
-    NO_USERS: "No users found",
+    NO_OVERVIEW: "No system overview data available",
+    NO_CATEGORIES: "No document category statistics available",
+    NO_DEVICES: "No file format statistics available",
+    NO_NEWS: "No announcements available at this time",
+    NO_USERS: "No recently registered users found",
   },
 };

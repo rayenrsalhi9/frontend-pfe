@@ -1,32 +1,37 @@
 export const dashboard = {
   DASHBOARD: {
-    TRANSMISSION: "Transmissions de documents",
-    EXTENSIONS: "Documents par type de fichier",
+    TRANSMISSION: "Activité des documents",
+    EXTENSIONS: "Documents par format de fichier",
     CATEGORIES: "Catégories de documents",
-    USERS: "Utilisateurs récents",
-    NEWS: "Dernières actualités",
+    USERS: "Utilisateurs récemment inscrits",
+    NEWS: "Dernières annonces",
 
     SEEALL: "Voir tout",
     CREATEDBY: "Créé par",
     CREATEDAT: "Créé le",
 
-    OVERVIEW: "Vue générale",
+    OVERVIEW: "Vue d’ensemble du système",
     OVERVIEW_DESC:
-      "Aperçu global du système et des principaux indicateurs de performance",
+      "Résumé de l’activité de la plateforme et des principaux indicateurs de performance.",
 
-    CATEGORIES_DESC: "Répartition des documents selon leurs catégories",
+    CATEGORIES_DESC:
+      "Répartition des documents stockés selon leurs catégories.",
 
-    DEVICES: "Statistiques des appareils",
-    DEVICES_DESC: "Analyse de l'utilisation des appareils sur la plateforme",
+    DEVICES: "Documents par format de fichier",
+    DEVICES_DESC:
+      "Répartition des documents enregistrés selon leur format de fichier.",
 
-    NEWS_DESC: "Dernières actualités et annonces de la plateforme",
+    NEWS_DESC:
+      "Dernières actualités, mises à jour et annonces importantes concernant la plateforme.",
 
-    USERS_DESC: "Utilisateurs récemment inscrits sur la plateforme",
+    USERS_DESC:
+      "Liste des utilisateurs qui se sont récemment inscrits sur la plateforme.",
 
-    NO_OVERVIEW: "Aucune donnée de vue générale disponible",
-    NO_CATEGORIES: "Aucune statistique de catégorie disponible",
-    NO_DEVICES: "Aucune statistique d'appareil disponible",
-    NO_NEWS: "Aucune actualité disponible",
-    NO_USERS: "Aucun utilisateur trouvé",
+    NO_OVERVIEW: "Aucune donnée de vue d’ensemble disponible",
+    NO_CATEGORIES:
+      "Aucune statistique sur les catégories de documents disponible",
+    NO_DEVICES: "Aucune statistique sur les formats de fichiers disponible",
+    NO_NEWS: "Aucune annonce disponible pour le moment",
+    NO_USERS: "Aucun utilisateur récemment inscrit trouvé",
   },
 };

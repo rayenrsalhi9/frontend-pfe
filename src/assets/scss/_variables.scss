@@ -345,7 +345,7 @@ $input-border-radius-sm: $border-radius-sm;
 $input-border-radius-lg: $border-radius-lg;
 
 $input-focus-bg: $input-bg;
-$input-focus-border-color: color.scale($component-active-bg, $lightness: 25%);
+$input-focus-border-color: color.adjust($component-active-bg, $lightness: 25%);
 $input-focus-color: $input-color;
 $input-focus-width: $input-btn-focus-width;
 $input-focus-box-shadow: $input-btn-focus-box-shadow;
@@ -498,7 +498,7 @@ $form-range-thumb-focus-box-shadow:
   0 0 0 1px $body-bg,
   $input-focus-box-shadow;
 $form-range-thumb-focus-box-shadow-width: $input-focus-width; // For focus box shadow issue in Edge
-$form-range-thumb-active-bg: color.scale($component-active-bg, $lightness: 35%);
+$form-range-thumb-active-bg: color.adjust($component-active-bg, $lightness: 35%);
 $form-range-thumb-disabled-bg: $gray-500;
 $form-range-thumb-transition:
   background-color 0.15s ease-in-out,
@@ -740,7 +740,7 @@ $popover-inner-border-radius: subtract(
 );
 $popover-box-shadow: $box-shadow;
 
-$popover-header-bg: color.scale($popover-bg, $lightness: -3%);
+$popover-header-bg: color.adjust($popover-bg, $lightness: -3%);
 $popover-header-color: $headings-color;
 $popover-header-padding-y: 0.5rem;
 $popover-header-padding-x: $spacer;

@@ -15,7 +15,6 @@ import {
   CountriesData,
   DeviceStatistic,
 } from "./dashboard.type";
-import { COLOR_1, COLOR_2, COLOR_3, COLOR_4 } from "@app/configs/chart.config";
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -146,10 +145,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getArticles() {
     this._subscriptions.push(
-      this.articleService.allArticles({ limit: 4 }).subscribe((data: any) => {
-        this.articles = data;
-        this.newsLoaded = true;
-        this.cdr.markForCheck();
+      this.articleService.allArticles({ limit: 4 }).subscribe({
+        next: (data: any) => {
+          this.articles = data;
+          this.newsLoaded = true;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.articles = [];
+          this.newsLoaded = true;
+          this.cdr.markForCheck();
+        },
       }),
     );
   }
@@ -210,65 +216,82 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
 
     this._subscriptions.push(
-      this.documentService.documentTransaction().subscribe((data: any) => {
-        let duration = [];
-        let expense = [];
-        let income = [];
+      this.documentService.documentTransaction().subscribe(
+        (data: any) => {
+          let duration = [];
+          let expense = [];
+          let income = [];
 
-        data.sort((a, b) => a.month - b.month);
+          data.sort((a, b) => a.month - b.month);
 
-        data.forEach((item) => {
-          duration.push(months[this.translate.currentLang][item.month - 1]);
-          expense.push(parseInt(item.downloadCount));
-          income.push(parseInt(item.uploadCount));
-        });
+          data.forEach((item) => {
+            const locale = this.translate.currentLang;
+            const monthNames =
+              months[locale] ||
+              months[locale?.replace("-", "_")] ||
+              months.en_US;
+            duration.push(monthNames[item.month - 1]);
+            expense.push(parseInt(item.downloadCount));
+            income.push(parseInt(item.uploadCount));
+          });
 
-        this.overviewData = {
-          duration: duration,
-          expense: expense,
-          income: income,
-        };
+          this.overviewData = {
+            duration: duration,
+            expense: expense,
+            income: income,
+          };
 
-        this.overviewLoaded = true;
-        this.cdr.detectChanges();
-      }),
+          this.overviewLoaded = true;
+          this.cdr.detectChanges();
+        },
+        () => {
+          this.overviewLoaded = true;
+          this.cdr.markForCheck();
+        },
+      ),
     );
   }
 
   categoriesDonut() {
     this._subscriptions.push(
-      this.dashboardService.getDocumentByCategory().subscribe((data) => {
-        const series = [];
-        const labels = [];
+      this.dashboardService.getDocumentByCategory().subscribe(
+        (data) => {
+          const series = [];
+          const labels = [];
 
-        data.forEach((item) => {
-          labels.push(item.categoryName);
-          series.push(item.documentCount);
-        });
+          data.forEach((item) => {
+            labels.push(item.categoryName);
+            series.push(item.documentCount);
+          });
 
-        this.chartOptions = {
-          series: series,
-          chart: {
-            type: "donut",
-          },
-          labels: labels,
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {},
-                legend: {
-                  position: "bottom",
+          this.chartOptions = {
+            series: series,
+            chart: {
+              type: "donut",
+            },
+            labels: labels,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {},
+                  legend: {
+                    position: "bottom",
+                  },
                 },
               },
-            },
-          ],
-        };
+            ],
+          };
 
-        this.categoriesLoaded = true;
-        this.cdr.markForCheck();
-        this.cdr.detectChanges();
-      }),
+          this.categoriesLoaded = true;
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        },
+        () => {
+          this.categoriesLoaded = true;
+          this.cdr.markForCheck();
+        },
+      ),
     );
   }
 
@@ -299,11 +322,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   initDeviceStatisticData() {
     this._subscriptions.push(
-      this.documentService.getDocumentByExtension().subscribe((data: any) => {
-        this.deviceStatisticData = data;
-        this.devicesLoaded = true;
-        this.cdr.markForCheck();
-      }),
+      this.documentService.getDocumentByExtension().subscribe(
+        (data: any) => {
+          this.deviceStatisticData = data;
+          this.devicesLoaded = true;
+          this.cdr.markForCheck();
+        },
+        () => {
+          this.devicesLoaded = true;
+          this.cdr.markForCheck();
+        },
+      ),
     );
   }
 
