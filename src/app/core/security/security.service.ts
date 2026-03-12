@@ -12,6 +12,7 @@ import { ClonerService } from "@app/shared/services/clone.service";
 import { PusherService } from "@app/shared/services/pusher.service";
 import { NotificationSystem } from "@app/shared/services/notification-system.service";
 import { NotificationService } from "@app/shared/services/notification.service";
+import { NotificationType } from "@app/shared/enums/notification";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -83,8 +84,6 @@ export class SecurityService {
   }
 
   login(entity: any): Observable<UserAuth | CommonError> {
-    // Initialize security object
-    // this.resetSecurityObject();
     return this.http
       .post<UserAuth>("auth/login", entity)
       .pipe(
@@ -200,7 +199,7 @@ export class SecurityService {
         `user.${this.securityObject.user.id}`,
         "notification",
         (data) => {
-          if (data.type === "message") {
+          if (data.type === NotificationType.Message) {
             this.notificationSystem.sendNotification(data.data.message);
           }
         },

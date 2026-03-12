@@ -53,10 +53,10 @@
               [routerLink]="['/apps/chat']"
               class="nav-notification-link"
             >
-              <ng-container *ngIf="notification.type != 'message'">
+              <ng-container *ngIf="notification.type != NotificationType.Message">
                 <b>{{ "NOTIFICATION.LABELS.REMINDER" | translate }}</b> ::
               </ng-container>
-              <ng-container *ngIf="notification.type == 'message'">
+              <ng-container *ngIf="notification.type == NotificationType.Message">
                 <b>{{ "NOTIFICATION.LABELS.CHAT" | translate }}</b> ::
               </ng-container>
               <ng-container *ngIf="notification.documentId">

@@ -5,7 +5,6 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from "@angular/core";
-import { DashboardService } from "./dashboard.service";
 import { Subscription } from "rxjs";
 import {
   RegionData,
@@ -91,7 +90,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   rows: any[] = [];
   selected = [];
   documentResource: DocumentResource;
-  subscription: Subscription;
   chartOptions: any;
   articles: any[];
   categoriesLoaded: boolean = false;
@@ -101,7 +99,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   overviewLoaded: boolean = false;
 
   constructor(
-    private dashboardSvc: DashboardService,
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private commonService: CommonService,
@@ -295,7 +292,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           }
 
           this.categoriesLoaded = true;
-          this.cdr.markForCheck();
           this.cdr.detectChanges();
         },
         () => {
@@ -318,19 +314,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
         (err: CommonError) => {
           this.usersLoaded = true;
-          err.messages.forEach((msg) => {
-            this.cdr.detectChanges();
-          });
+          this.cdr.detectChanges();
+          console.error(err);
         },
       ),
     );
-  }
-
-  initRecentTransactionData() {
-    return this.dashboardSvc.getRecentTransactionData().subscribe((res) => {
-      this.recentTransactionData = res;
-      this.cdr.markForCheck();
-    });
   }
 
   initDeviceStatisticData() {

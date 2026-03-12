@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CommonHttpErrorService } from '@app/core/error-handler/common-http-error.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { CommonError } from '../enums/common-error';
 import { DocumentResource } from '../enums/document-resource';
 import { UserNotification } from '../enums/notification';
@@ -27,7 +27,10 @@ export class NotificationService {
   getNotification(): Observable<UserNotification[] | CommonError> {
     const url = `userNotification/notification`;
     return this.httpClient.get<UserNotification[]>(url)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
+      .pipe(
+        map(notifications => notifications.map(n => new UserNotification(n))),
+        catchError(this.commonHttpErrorService.handleError)
+      );
   }
 
   getNotifications(resource: DocumentResource): Observable<HttpResponse<UserNotification[]> | CommonError> {
@@ -46,7 +49,15 @@ export class NotificationService {
     return this.httpClient.get<UserNotification[]>(url, {
       params: customParams,
       observe: 'response'
-    }).pipe(catchError(this.commonHttpErrorService.handleError));
+    }).pipe(
+      map(response => {
+        if (response.body) {
+          (response as any).body = response.body.map(n => new UserNotification(n));
+        }
+        return response;
+      }),
+      catchError(this.commonHttpErrorService.handleError)
+    );
   }
 
   markAsRead(id: string) {
