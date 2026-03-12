@@ -1,13 +1,14 @@
 <dropdown
   [dropDirection]="dropDirection"
   dropdownClass="header-nav-item-select nav-notification"
-  (click)="navNotification.toggle($event)"
 >
   <button
     class="toggle-wrapper notification-trigger"
     type="button"
     aria-haspopup="true"
     [attr.aria-expanded]="navNotification.isOpen"
+    [attr.aria-label]="'NOTIFICATION.LABELS.TITLE' | translate"
+    (click)="navNotification.toggle($event)"
   >
     <div class="icon-badge-container">
       <i class="feather icon-bell"></i>

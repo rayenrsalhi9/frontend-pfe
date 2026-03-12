@@ -112,11 +112,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {
     this.documentResource = new DocumentResource();
     this.chartOptions = {
-      series: [0],
+      series: [],
       chart: {
         type: "donut",
       },
-      labels: [0],
+      labels: [],
       responsive: [
         {
           breakpoint: 480,
@@ -245,6 +245,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         () => {
+          this.overviewData = {
+            duration: [],
+            expense: [],
+            income: [],
+            sum: [],
+          };
           this.overviewLoaded = true;
           this.cdr.markForCheck();
         },
@@ -256,38 +262,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this._subscriptions.push(
       this.dashboardService.getDocumentByCategory().subscribe(
         (data) => {
-          const series = [];
-          const labels = [];
+          if (!data || data.length === 0) {
+            this.chartOptions.series = [];
+            this.chartOptions.labels = [];
+          } else {
+            const series = [];
+            const labels = [];
 
-          data.forEach((item) => {
-            labels.push(item.categoryName);
-            series.push(item.documentCount);
-          });
+            data.forEach((item) => {
+              labels.push(item.categoryName);
+              series.push(item.documentCount);
+            });
 
-          this.chartOptions = {
-            series: series,
-            chart: {
-              type: "donut",
-            },
-            labels: labels,
-            responsive: [
-              {
-                breakpoint: 480,
-                options: {
-                  chart: {},
-                  legend: {
-                    position: "bottom",
+            this.chartOptions = {
+              series: series,
+              chart: {
+                type: "donut",
+              },
+              labels: labels,
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {},
+                    legend: {
+                      position: "bottom",
+                    },
                   },
                 },
-              },
-            ],
-          };
+              ],
+            };
+          }
 
           this.categoriesLoaded = true;
           this.cdr.markForCheck();
           this.cdr.detectChanges();
         },
         () => {
+          this.chartOptions.series = [];
+          this.chartOptions.labels = [];
           this.categoriesLoaded = true;
           this.cdr.markForCheck();
         },

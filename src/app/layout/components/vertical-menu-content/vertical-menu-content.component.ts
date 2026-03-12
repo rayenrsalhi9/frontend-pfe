@@ -118,9 +118,7 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
   }
 
   isBranchActive(item: NavMenu): boolean {
-    return (
-      this.hasChildren(item) && this.containsActiveRoute(item.submenu || [])
-    );
+    return !!item?.key && this.autoExpandedKeys.has(item.key);
   }
 
   getIconClass(item: NavMenu): string[] {
@@ -194,23 +192,6 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
         if (node.type !== "title" && node.key) {
           this.autoExpandedKeys.add(node.key);
         }
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private containsActiveRoute(nodes: NavMenu[]): boolean {
-    for (const node of nodes || []) {
-      if (node.path && this.isExactRouteActive(node.path)) {
-        return true;
-      }
-
-      if (
-        this.hasChildren(node) &&
-        this.containsActiveRoute(node.submenu || [])
-      ) {
         return true;
       }
     }

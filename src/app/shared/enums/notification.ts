@@ -1,4 +1,5 @@
 import { DocumentInfo } from './document-info';
+import { User } from './user';
 
 export class UserNotification {
     id?: string;
@@ -8,5 +9,7 @@ export class UserNotification {
     documentName?: string;
     documentId?: string;
     isRead:boolean;
-    document?: DocumentInfo
+    document?: DocumentInfo;
+    type?: string;
+    user?: User;
 }
