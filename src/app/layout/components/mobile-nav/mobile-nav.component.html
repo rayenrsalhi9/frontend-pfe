@@ -4,9 +4,10 @@
   <div class="ged-mobile-nav-shell">
     <div class="ged-mobile-nav-header">
       <a
-        routerLink="['/']"
+        routerLink="/"
+        (click)="closeNav()"
         class="ged-brand-card ged-brand-card--mobile"
-        aria-label="GED home"
+        [attr.aria-label]="'NAV.GED_HOME' | translate"
       >
         <div class="ged-brand-inner">
           <i class="las la-file-alt ged-brand-icon" aria-hidden="true"></i>
@@ -18,7 +19,7 @@
         type="button"
         class="ged-mobile-close-btn"
         (click)="closeNav()"
-        aria-label="Close navigation"
+        [attr.aria-label]="'NAV.CLOSE_NAVIGATION' | translate"
       >
         <i class="feather icon-arrow-left" aria-hidden="true"></i>
       </button>

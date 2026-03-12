@@ -61,7 +61,7 @@
               {{ notification.user?.lastName }}
               {{ "NOTIFICATION.LABELS.SEND_MESSAGE" | translate }} <br />
               <span class="nav-notification-link-msg">{{
-                notification.message | translate
+                notification.message
               }}</span>
             </a>
           </div>
@@ -76,22 +76,3 @@
     </perfect-scrollbar>
   </dropdown-menu>
 </dropdown>
-
-<ng-template #avatarTpl let-avatar="img">
-  <avatar
-    [size]="40"
-    [src]="'/assets/images/avatars/' + avatar + '.jpg'"
-  ></avatar>
-</ng-template>
-
-<ng-template #iconTpl let-icon="icon">
-  <avatar
-    [size]="40"
-    [class]="
-      'font-size-lg ' +
-      notificationIconMap[icon] +
-      ' ' +
-      notificationColorMap[icon]
-    "
-  ></avatar>
-</ng-template>

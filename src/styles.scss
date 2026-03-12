@@ -13,6 +13,48 @@
   overflow: visible !important;
 }
 
+/* Modern Table (ngx-datatable overrides) */
+.modern-table {
+  border: none !important;
+  box-shadow: none !important;
+
+  .datatable-header {
+    background: var(--bg-app) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+
+    .datatable-header-cell {
+      font-weight: 600 !important;
+      font-size: 0.75rem !important;
+      color: var(--text-secondary) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      padding: 0.75rem 1rem !important;
+    }
+  }
+
+  .datatable-body-cell {
+    padding: 0.75rem 1rem !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  .datatable-row-wrapper:last-child .datatable-body-cell {
+    border-bottom: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-table {
+    .datatable-header-cell {
+      font-size: 0.7rem !important;
+      padding: 0.5rem 0.75rem !important;
+    }
+
+    .datatable-body-cell {
+      padding: 0.5rem 0.75rem !important;
+    }
+  }
+}
+
 .sidebar {
   margin-top: 8px;
   border-radius: 0rem 0.5rem 0rem 0rem;

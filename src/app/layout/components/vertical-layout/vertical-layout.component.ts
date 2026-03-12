@@ -32,13 +32,14 @@ export class VerticalLayoutComponent implements OnInit {
   isMobileNavOpen: boolean;
   navMenuColor: NavMenuColor;
   headerNavColor: string;
+  private resizeSubscription: Subscription;
   subscription: Subscription;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private screenSizeSvc: ScreenSizeService,
   ) {
-    this.screenSizeSvc.onResize$.pipe(delay(0)).subscribe((sizes) => {
+    this.resizeSubscription = this.screenSizeSvc.onResize$.pipe(delay(0)).subscribe((sizes) => {
       const sizeTabletAbove =
         sizes.includes(SCREEN_SIZE.XXL) ||
         sizes.includes(SCREEN_SIZE.XL) ||
@@ -73,5 +74,6 @@ export class VerticalLayoutComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.resizeSubscription?.unsubscribe();
   }
 }

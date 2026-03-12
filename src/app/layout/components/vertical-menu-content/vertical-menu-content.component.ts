@@ -1,6 +1,7 @@
 import {
   Component,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   ViewEncapsulation,
   OnInit,
   EventEmitter,
@@ -31,6 +32,7 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private securityService: SecurityService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +43,7 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.syncExpandedState();
+        this.cdr.markForCheck();
       });
   }
 

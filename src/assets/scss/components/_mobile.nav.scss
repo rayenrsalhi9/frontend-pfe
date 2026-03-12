@@ -22,11 +22,15 @@
     z-index: $zindex-tooltip + 2;
     background: $white;
     border-right: 1px solid $ged-sidebar-border;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   &.is-open {
     .mobile-nav-panel {
       left: 0;
+      visibility: visible;
+      pointer-events: auto;
     }
   }
 

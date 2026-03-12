@@ -1,6 +1,8 @@
 export const nav = {
   NAV: {
+    GED_HOME: "GED Home",
     TOGGLE_NAVIGATION: "Toggle Navigation",
+    CLOSE_NAVIGATION: "Close Navigation",
 
     HOME: "Home",
     FORUM: "Forums",

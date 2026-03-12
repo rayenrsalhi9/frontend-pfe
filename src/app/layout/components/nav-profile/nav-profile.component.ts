@@ -1,9 +1,12 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { UserService } from "@app/shared/services/user.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -19,7 +22,8 @@ import { ResetPasswordComponent } from "../reset-password/reset-password.compone
     "[class.header-nav-item]": "true",
   },
 })
-export class NavProfileComponent implements OnInit {
+export class NavProfileComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   user: any;
   userImg: any = null;
 
@@ -66,7 +70,9 @@ export class NavProfileComponent implements OnInit {
   }
 
   getUserData() {
-    this.securityService.SecurityObject.subscribe((data: any) => {
+    this.securityService.SecurityObject.pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((data: any) => {
       if (data) {
         this.userImg = data.user.avatar
           ? !data.user.avatar.startsWith("data:image")
@@ -81,9 +87,14 @@ export class NavProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserData();
-    this.userService.data$.subscribe(() => {
+    this.userService.data$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.getUserData();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   changePassword() {
@@ -91,7 +102,7 @@ export class NavProfileComponent implements OnInit {
       data: Object.assign({}, this.user),
     };
 
-    this.modalService.show(ResetPasswordComponent, {
+    this.bsModalRef = this.modalService.show(ResetPasswordComponent, {
       initialState: initialState,
     });
   }

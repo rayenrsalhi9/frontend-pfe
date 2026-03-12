@@ -9,7 +9,7 @@
     @include transition(all 0.2s ease);
 
     [dir="rtl"] & {
-      avatar {
+      [avatar], avatar {
         order: 3;
       }
       .user-name {

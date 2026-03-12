@@ -1,6 +1,8 @@
 export const nav = {
   NAV: {
+    GED_HOME: "الرئيسية",
     TOGGLE_NAVIGATION: "تبديل التنقل",
+    CLOSE_NAVIGATION: "إغلاق التنقل",
 
     HOME: "الرئيسية",
     FORUM: "المنتديات",

@@ -34,14 +34,13 @@
           *hasClaim="menuItem.claims"
           [routerLink]="menuItem.path"
           dropdownItem
-          class="dropdown-item"
         >
           <i [ngClass]="menuItem.icon"></i>
           <span>{{ menuItem.item | translate }}</span>
         </a>
       </ng-container>
 
-      <a class="cursor-pointer dropdown-item" (click)="logout()" dropdownItem>
+      <a class="cursor-pointer" (click)="logout()" dropdownItem>
         <i class="feather icon-power"></i>
         <span>{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
       </a>

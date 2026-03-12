@@ -6,7 +6,8 @@ export const users = {
         "FIRSTNAME": "الاسم الأول",
         "LASTNAME": "اسم العائلة",
         "MOBILE": "الجوال",
-        "ACTION": "أجراءات"
+        "ACTION": "أجراءات",
+        "PHONE":"الهاتف"
       },
       "BUTTONS": {
         "ADD": "إضافة مستخدم",

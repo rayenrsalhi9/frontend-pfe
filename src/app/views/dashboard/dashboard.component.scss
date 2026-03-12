@@ -12,7 +12,8 @@
   --radius-lg: 20px;
   --radius-md: 12px;
   --radius-sm: 8px;
-  --transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+  --transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -253,7 +254,8 @@
   color: var(--text-secondary);
 }
 
-.news-author, .news-date {
+.news-author,
+.news-date {
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -265,34 +267,6 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
-}
-
-.modern-table {
-  border: none;
-  box-shadow: none;
-}
-
-.modern-table .datatable-header {
-  background: var(--bg-app);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.modern-table .datatable-header .datatable-header-cell {
-  font-weight: 600;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.75rem 1rem;
-}
-
-.modern-table .datatable-body-cell {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.modern-table .datatable-row-wrapper:last-child .datatable-body-cell {
-  border-bottom: none;
 }
 
 .user-cell {
@@ -340,27 +314,27 @@
   .bento-grid {
     grid-template-columns: repeat(8, 1fr);
   }
-  
+
   .item-overview {
     grid-column: span 8;
   }
-  
+
   .item-categories {
     grid-column: span 4;
   }
-  
+
   .item-devices {
     grid-column: span 4;
   }
-  
+
   .item-news {
     grid-column: span 4;
   }
-  
+
   .item-users {
     grid-column: span 8;
   }
-  
+
   .news-grid {
     grid-template-columns: 1fr;
   }
@@ -370,12 +344,12 @@
   .dashboard-container {
     padding: 1rem;
   }
-  
+
   .bento-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .item-overview,
   .item-categories,
   .item-devices,
@@ -384,26 +358,17 @@
     grid-column: span 1;
     grid-row: span 1;
   }
-  
+
   .news-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .section-title {
     font-size: 1.125rem;
   }
-  
+
   .bento-item {
     padding: 1.25rem;
-  }
-  
-  .modern-table .datatable-header-cell {
-    font-size: 0.7rem;
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .modern-table .datatable-body-cell {
-    padding: 0.5rem 0.75rem;
   }
 }
 
@@ -411,21 +376,21 @@
   .dashboard-container {
     padding: 0.75rem;
   }
-  
+
   .section-title {
     font-size: 1rem;
   }
-  
+
   .bento-item {
     padding: 1rem;
   }
-  
+
   .user-cell {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .news-meta {
     flex-direction: column;
     align-items: flex-start;
