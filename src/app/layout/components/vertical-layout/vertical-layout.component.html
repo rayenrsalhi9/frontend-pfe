@@ -1,19 +1,21 @@
-<header-nav 
-    layoutType="vertical" 
-    [collapse]="isCollapse"
-    [color]="headerNavColor"
-    [isMobile]="isMobile"
+<header-nav
+  layoutType="vertical"
+  [collapse]="isCollapse"
+  [color]="headerNavColor"
+  [isMobile]="isMobile"
 ></header-nav>
 <side-nav
-    *ngIf="!isMobile"
-    [color]="navMenuColor"
-    [quickExpand]="quickExpand"
-    [collapse]="isCollapse" 
-    (mouseenter)="mouseEnterExpand()"
-    (mouseleave)="mouseLeaveCollapse()"
+  *ngIf="!isMobile"
+  [color]="navMenuColor"
+  [collapse]="isCollapse"
 ></side-nav>
-<mobile-nav *ngIf="isMobile" [isOpen]="isMobileNavOpen" [color]="navMenuColor"></mobile-nav>
+<mobile-nav
+  *ngIf="isMobile"
+  [isOpen]="isMobileNavOpen"
+  [color]="navMenuColor"
+></mobile-nav>
 <content [collapse]="isCollapse"></content>
 <div class="floating-i18n-widget">
+  <nav-notification dropDirection="dropup"></nav-notification>
   <nav-i18n dropDirection="dropup"></nav-i18n>
 </div>

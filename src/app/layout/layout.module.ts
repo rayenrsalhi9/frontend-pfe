@@ -17,15 +17,12 @@ import { VerticalLayoutComponent } from "./components/vertical-layout/vertical-l
 import { SideNavComponent } from "./components/side-nav/side-nav.components";
 import { HeaderNavComponent } from "./components/header-nav/header-nav.component";
 import { HeaderNavbarComponent } from "./components/header-navbar/header-navbar.component";
-import { NavToggleComponent } from "./components/nav-toggle/nav-toggle.component";
 import { ContentComponent } from "./components/content/content.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { PageHeaderComponent } from "./components/page-header/page-header.component";
 import { NavNotificationComponent } from "./components/nav-notification/nav-notification.component";
 import { NavI18NComponent } from "./components/nav-i18n/nav-i18n.component";
 import { NavProfileComponent } from "./components/nav-profile/nav-profile.component";
-import { NavConfigComponent } from "./components/nav-config/nav-config.component";
-import { ThemeConfiguratorComponent } from "./components/theme-configurator/theme-configurator.component";
 import { VerticalMenuContentComponent } from "./components/vertical-menu-content/vertical-menu-content.component";
 import { MobileNavComponent } from "./components/mobile-nav/mobile-nav.component";
 import { ResetPasswordComponent } from "./components/reset-password/reset-password.component";
@@ -41,7 +38,6 @@ const mandatoryComponents = [
   SideNavComponent,
   HeaderNavComponent,
   HeaderNavbarComponent,
-  NavToggleComponent,
   ContentComponent,
   FooterComponent,
   PageHeaderComponent,
@@ -56,8 +52,6 @@ const optionalComponents = [
   NavNotificationComponent,
   NavProfileComponent,
   NavI18NComponent,
-  NavConfigComponent,
-  ThemeConfiguratorComponent,
 ];
 
 @NgModule({

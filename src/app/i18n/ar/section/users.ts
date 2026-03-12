@@ -1,92 +1,106 @@
 export const users = {
-  "USERS": {
-    "LIST": {
-      "TABLE": {
-        "EMAIL": "بريد إلكتروني",
-        "FIRSTNAME": "الاسم الأول",
-        "LASTNAME": "اسم العائلة",
-        "MOBILE": "الجوال",
-        "ACTION": "أجراءات"
+  USERS: {
+    LIST: {
+      TABLE: {
+        EMAIL: "البريد الإلكتروني",
+        FIRSTNAME: "الاسم الأول",
+        LASTNAME: "اسم العائلة",
+        MOBILE: "رقم الهاتف المحمول",
+        PHONE: "رقم الهاتف",
+        ACTION: "الإجراءات",
       },
-      "BUTTONS": {
-        "ADD": "إضافة مستخدم",
-        "EDIT": "تعديل",
-        "DELETE": "حذف",
-        "RESETPASSWORD": "إعادة ضبط كلمة المرور"
-      }
+      BUTTONS: {
+        ADD: "إضافة مستخدم",
+        EDIT: "تعديل",
+        DELETE: "حذف",
+        RESETPASSWORD: "إعادة تعيين كلمة المرور",
+      },
     },
-    "ADD": {
-      "LABELS": {
-        "FIRSTNAME": "الاسم الأول",
-        "LASTNAME": "اسم العائلة",
-        "MOBILE": "الجوال",
-        "EMAIL": "بريد إلكتروني",
-        "PASSWORD":"كلمة المرور",
-        "CONFPASSWORD":"تأكيد كلمة المرور",
-        "ROLES":"الأدوار",
-        "MATRICULE":"الرقم التعريفي",
-        "DIRECTION":"الاتجاه"
+
+    ADD: {
+      LABELS: {
+        FIRSTNAME: "الاسم الأول",
+        LASTNAME: "اسم العائلة",
+        MOBILE: "رقم الهاتف المحمول",
+        EMAIL: "البريد الإلكتروني",
+        PASSWORD: "كلمة المرور",
+        CONFPASSWORD: "تأكيد كلمة المرور",
+        ROLES: "أدوار المستخدم",
+        MATRICULE: "المعرّف الوظيفي",
+        DIRECTION: "القسم",
       },
-      "BUTTONS":{
-        "ADD":"أضف",
-        "CANCEL":"إلغاء"
+
+      BUTTONS: {
+        ADD: "حفظ",
+        CANCEL: "إلغاء",
       },
-      "ERRORS": {
-        "FIRST_NAME_IS_REQUIRED": "الاسم الأول مطلوب",
-        "LAST_NAME_IS_REQUIRED": "الاسم الأخير مطلوب",
-        "MOBILE_IS_REQUIRED": "رقم الجوال مطلوب",
-        "EMAIL_IS_REQUIRED": "البريد الإلكتروني مطلوب",
-        "PLEASE_ENTER_VALID_EMAIL": "الرجاء إدخال بريد إلكتروني صالح",
-        "PASSWORD_IS_REQUIRED": "كلمة المرور مطلوبة",
-        "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "يجب إدخال رقم واحد على الأقل",
-        "CONFIRM_PASSWORD_IS_REQUIRED": "تأكيد كلمة المرور مطلوب",
-        "PASSWORDS_DO_NOT_MATCH": "كلمات المرور غير متطابقة",
-        "DIRECTION_IS_REQUIRED": "الاتجاه مطلوب",
-        "MATRICULE_IS_REQUIRED": "الرقم التعريفي مطلوب"
+
+      ERRORS: {
+        FIRST_NAME_IS_REQUIRED: "الاسم الأول مطلوب",
+        LAST_NAME_IS_REQUIRED: "اسم العائلة مطلوب",
+        MOBILE_IS_REQUIRED: "رقم الهاتف المحمول مطلوب",
+        EMAIL_IS_REQUIRED: "البريد الإلكتروني مطلوب",
+        PLEASE_ENTER_VALID_EMAIL: "يرجى إدخال بريد إلكتروني صالح",
+        PASSWORD_IS_REQUIRED: "كلمة المرور مطلوبة",
+        YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT:
+          "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+        CONFIRM_PASSWORD_IS_REQUIRED: "تأكيد كلمة المرور مطلوب",
+        PASSWORDS_DO_NOT_MATCH: "كلمتا المرور غير متطابقتين",
+        DIRECTION_IS_REQUIRED: "القسم مطلوب",
+        MATRICULE_IS_REQUIRED: "المعرّف الوظيفي مطلوب",
       },
-      "TOAST": {
-        "ADDED_SUCCESS": "تمت إضافة المستخدم بنجاح",
-        "USER_UPDATED_SUCCESSFULLY": "تم تحديث المستخدم بنجاح",
-        "ADDED_ERROR": "حدث خطأ أثناء إضافة المستخدم",
-        "PLEASE_ENTER_PROPER_DATA":"الرجاء إدخال البيانات المناسبة"     
-      }
+
+      TOAST: {
+        ADDED_SUCCESS: "تم إنشاء المستخدم بنجاح",
+        USER_UPDATED_SUCCESSFULLY: "تم تحديث بيانات المستخدم بنجاح",
+        ADDED_ERROR: "حدث خطأ أثناء إنشاء المستخدم",
+        PLEASE_ENTER_PROPER_DATA: "يرجى إدخال بيانات صحيحة وكاملة",
+      },
     },
-    "PASSWORD": {
-      "LABELS": {
-        "TITLE": "كلمة مرور المستخدم",
-        "EMAIL": "البريد الإلكتروني",
-        "PASSWORD": "كلمة المرور",
-        "CONFPASSWORD": "تأكيد كلمة المرور"
+
+    PASSWORD: {
+      LABELS: {
+        TITLE: "كلمة مرور المستخدم",
+        EMAIL: "البريد الإلكتروني",
+        PASSWORD: "كلمة المرور الجديدة",
+        CONFPASSWORD: "تأكيد كلمة المرور",
       },
-      "BUTTONS": {
-        "SAVE": "حفظ",
-        "CANCEL": "إلغاء"
+
+      BUTTONS: {
+        SAVE: "حفظ",
+        CANCEL: "إلغاء",
       },
-      "ERRORS": {
-        "EMAIL_IS_REQUIRED": "البريد الإلكتروني مطلوب",
-        "PLEASE_ENTER_VALID_EMAIL": "الرجاء إدخال بريد إلكتروني صالح",
-        "PASSWORD_IS_REQUIRED": "كلمة المرور مطلوبة",
-        "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "يجب إدخال رقم واحد على الأقل",
-        "CONFIRM_PASSWORD_IS_REQUIRED": "تأكيد كلمة المرور مطلوب",
-        "PASSWORDS_DO_NOT_MATCH": "كلمات المرور غير متطابقة"
+
+      ERRORS: {
+        EMAIL_IS_REQUIRED: "البريد الإلكتروني مطلوب",
+        PLEASE_ENTER_VALID_EMAIL: "يرجى إدخال بريد إلكتروني صالح",
+        PASSWORD_IS_REQUIRED: "كلمة المرور مطلوبة",
+        YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT:
+          "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+        CONFIRM_PASSWORD_IS_REQUIRED: "تأكيد كلمة المرور مطلوب",
+        PASSWORDS_DO_NOT_MATCH: "كلمتا المرور غير متطابقتين",
       },
-      "TOAST": {
-        "SUCCESSFULLY_CHANGED_PASSWORD": "تم تغيير كلمة المرور بنجاح"
-      }
+
+      TOAST: {
+        SUCCESSFULLY_CHANGED_PASSWORD: "تم تغيير كلمة المرور بنجاح",
+      },
     },
-    "DELETE": {
-      "LABEL":{
-        "title": "هل تريد حذف هذا المستخدم؟",
-        "message": "هل أنت متأكد من رغبتك في حذف هذا المستخدم",
-        "button": {
-         "cancel": "إلغاء",
-         "confirm": "تأكيد"
-        }
+
+    DELETE: {
+      LABEL: {
+        title: "حذف المستخدم",
+        message: "هل أنت متأكد من رغبتك في حذف حساب هذا المستخدم بشكل نهائي؟",
+        button: {
+          cancel: "إلغاء",
+          confirm: "تأكيد",
+        },
       },
-      "ERROR":{},
-      "TOAST":{
-        "USER_DELETED_SUCCESSFULLY": "تم حذف المستخدم بنجاح"
-      }
+
+      ERROR: {},
+
+      TOAST: {
+        USER_DELETED_SUCCESSFULLY: "تم حذف المستخدم بنجاح",
+      },
     },
   },
-}
+};

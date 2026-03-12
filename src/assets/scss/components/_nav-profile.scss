@@ -1,14 +1,90 @@
 .nav-profile {
-    .dropdown-menu {
-        min-width: 220px;
-        padding-top: 0;
+  .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 0.5rem;
+    background: rgba($primary, 0.05);
+    border: none;
+    color: $primary;
+    @include transition(all 0.2s ease);
+
+    [dir="rtl"] & {
+      [avatar] {
+        order: 3;
+      }
+      .user-name {
+        order: 2;
+      }
+      > i {
+        order: 1;
+      }
     }
-    
-    .nav-profile-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.9375rem;
-        border-bottom: 1px solid $border-color;
+
+    &:hover {
+      background: rgba($primary, 0.08);
+      box-shadow: 0 2px 8px rgba($primary, 0.1);
     }
+  }
+  .dropdown-menu {
+    min-width: 260px;
+    padding: 0.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    [dir="rtl"] & {
+      right: 0 !important;
+      left: auto !important;
+    }
+  }
+
+  .nav-profile-header {
+    padding: 1rem 0.75rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba($primary, 0.02);
+    border-radius: 12px 12px 0 0;
+
+    .avatar {
+      box-shadow: 0 4px 10px rgba($primary, 0.1);
+    }
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin: 0.15rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $gray-700;
+    font-weight: 500;
+    @include transition(all 0.2s ease);
+
+    &:hover {
+      background: rgba($primary, 0.05);
+      color: $primary;
+
+      i {
+        color: $primary;
+      }
+    }
+
+    i {
+      font-size: 1.1rem;
+      color: $gray-500;
+      @include transition(color 0.2s ease);
+    }
+
+    &.cursor-pointer:hover {
+      background: rgba($red, 0.05);
+      color: $red;
+
+      i {
+        color: $red;
+      }
+    }
+  }
 }

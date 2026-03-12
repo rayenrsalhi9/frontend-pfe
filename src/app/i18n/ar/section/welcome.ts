@@ -1,33 +1,40 @@
 export const welcome = {
   WELCOME: {
-    LATEST_BLOGS: "أحدث المدونات",
-    LATEST_BLOGS_DESC: "اكتشف أحدث الأفكار والتحديثات من مجتمعنا",
-    SEE_ALL_BLOGS: "عرض جميع المدونات",
+    LATEST_BLOGS: "أحدث مقالات المدونة",
+    LATEST_BLOGS_DESC:
+      "اطّلع على أحدث الأخبار والمقالات والمحتوى الذي يقدمه مجتمعنا.",
+    SEE_ALL_BLOGS: "عرض جميع مقالات المدونة",
+
     LATEST_ARTICLES: "أحدث المقالات",
-    LATEST_ARTICLES_DESC: "استكشف أحدث المقالات والمنشورات",
+    LATEST_ARTICLES_DESC:
+      "استكشف أحدث المقالات والمنشورات المتوفرة على المنصة.",
     SEE_ALL_ARTICLES: "عرض جميع المقالات",
-    LATEST_FORUMS: "أحدث المنتديات",
-    LATEST_FORUMS_DESC: "انضم إلى المحادثة وشارك أفكارك",
-    SEE_ALL_FORUMS: "عرض جميع المنتديات",
-    SURVEY: "استطلاع رأي",
+
+    LATEST_FORUMS: "أحدث المناقشات",
+    LATEST_FORUMS_DESC: "انضم إلى المناقشات الجارية وشارك أفكارك مع المجتمع.",
+    SEE_ALL_FORUMS: "عرض جميع المناقشات",
+
+    SURVEY: "استبيان",
     POSTED_ON: "نُشر في",
     BY: "بواسطة",
-    NO_BLOGS: "لا توجد مدونات متاحة بعد",
-    NO_ARTICLES: "لم يتم نشر أي مقالات بعد",
-    NO_FORUMS: "لا توجد نقاشات نشطة",
-    NO_SURVEY: "لا يوجد استطلاع نشط حاليًا",
-    ARTICLE_LOAD_ERROR: "خطأ في تحميل المقالات",
+
+    NO_BLOGS: "لا توجد مقالات في المدونة حالياً",
+    NO_ARTICLES: "لا توجد مقالات منشورة حالياً",
+    NO_FORUMS: "لا توجد مناقشات حالياً",
+    NO_SURVEY: "لا يوجد استبيان نشط حالياً",
+
+    ARTICLE_LOAD_ERROR: "تعذر تحميل المقالات",
   },
 
   BUTTONS: {
     YES: "نعم",
     NO: "لا",
     NEUTRAL: "محايد",
-    SATISFIED: "راضي",
-    NOT_SATISFIED: "غير راض",
+    SATISFIED: "راضٍ",
+    NOT_SATISFIED: "غير راضٍ",
   },
 
   COMMON: {
-    TOTAL: "إجمالي",
+    TOTAL: "الإجمالي",
   },
 };

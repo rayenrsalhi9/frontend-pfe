@@ -1,12 +1,41 @@
 <div class="nav-backdrop" *ngIf="isOpen" (click)="closeNav()"></div>
+
 <div class="mobile-nav-panel">
-    <div class="nav-logo d-flex align-items-center justify-content-between">
-        <logo [height]="70" [white]= "color === 'dark'"></logo>
-        <div class="cursor-pointer" (click)="closeNav()">
-            <i class="feather icon-arrow-left font-size-lg"></i>
+  <div class="ged-mobile-nav-shell">
+    <div class="ged-mobile-nav-header">
+      <a
+        routerLink="/"
+        (click)="closeNav()"
+        class="ged-brand-card ged-brand-card--mobile"
+        [attr.aria-label]="'NAV.GED_HOME' | translate"
+      >
+        <div class="ged-brand-inner">
+          <i class="las la-file-alt ged-brand-icon" aria-hidden="true"></i>
+          <span class="ged-brand-text">GED</span>
         </div>
+      </a>
+
+      <button
+        type="button"
+        class="ged-mobile-close-btn"
+        (click)="closeNav()"
+        [attr.aria-label]="'NAV.CLOSE_NAVIGATION' | translate"
+      >
+        <i class="feather icon-arrow-left" aria-hidden="true"></i>
+      </button>
     </div>
-    <perfect-scrollbar class="mobile-nav-panel-content">
-        <vertical-menu-content (onNavLinkClick)="onClicked()"></vertical-menu-content>
-    </perfect-scrollbar>
+
+    <div class="ged-mobile-nav-menu-wrap">
+      <vertical-menu-content
+        (onNavLinkClick)="onClicked()"
+      ></vertical-menu-content>
+    </div>
+
+    <button type="button" class="ged-logout-btn" (click)="logout()">
+      <i class="feather icon-log-out ged-logout-icon" aria-hidden="true"></i>
+      <span class="ged-logout-label">{{
+        "DROPDOWN_PROFILE.LOGOUT" | translate
+      }}</span>
+    </button>
+  </div>
 </div>

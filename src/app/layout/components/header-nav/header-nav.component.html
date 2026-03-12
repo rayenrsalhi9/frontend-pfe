@@ -1,29 +1,50 @@
 <div
-    class="header-nav-wrap"
-    [ngClass]="{'container': layoutType === 'horizontal'}"
+  class="header-nav-wrap"
+  [ngClass]="{ container: layoutType === 'horizontal' }"
 >
-    <ng-container *ngTemplateOutlet="layoutType === 'vertical' ? vertical : horizontal"></ng-container>
+  <ng-container
+    *ngTemplateOutlet="layoutType === 'vertical' ? vertical : horizontal"
+  ></ng-container>
 </div>
 
 <ng-template #vertical>
-    <div class="header-nav-left">
-        <nav-toggle [isMobile]="isMobile"></nav-toggle>
+  <div class="header-nav-left">
+    <div class="header-nav-item">
+      <button
+        type="button"
+        class="toggle-wrapper"
+        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
+        (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
+      >
+        <i
+          class="feather nav-icon"
+          [ngClass]="
+            isMobile ? 'icon-menu' : collapse ? 'icon-menu' : 'icon-align-left'
+          "
+        ></i>
+      </button>
     </div>
-    <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  </div>
+  <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
 </ng-template>
 
 <ng-template #horizontal>
-    <div class="header-nav-left">
-        <nav-toggle *ngIf="isMobile" [isMobile]="isMobile"></nav-toggle>
-        <logo *ngIf="!isMobile" [white]= "logoColor !== 'dark'"></logo>
+  <div class="header-nav-left">
+    <logo *ngIf="!isMobile" [white]="logoColor !== 'dark'"></logo>
+    <div class="header-nav-item" *ngIf="isMobile">
+      <button
+        type="button"
+        class="toggle-wrapper"
+        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
+        (click)="toggleMobileNav()"
+      >
+        <i class="feather nav-icon icon-menu"></i>
+      </button>
     </div>
-    <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  </div>
+  <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
 </ng-template>
 
 <ng-template #headerNavRight>
-    <div class="header-nav-right">
-        <nav-notification></nav-notification>
-        <nav-config></nav-config>
-        <nav-profile></nav-profile>
-    </div>
+  <nav-profile></nav-profile>
 </ng-template>

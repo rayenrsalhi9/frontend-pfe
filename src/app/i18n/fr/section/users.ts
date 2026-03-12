@@ -1,92 +1,108 @@
 export const users = {
-  "USERS":{
-    "LIST":{
-      "TABLE":{
-        "EMAIL":"Email",
-        "FIRSTNAME":"Prénom",
-        "LASTNAME":"Nom de famille",
-        "MOBILE":"Numéro de téléphone",
-        "ACTION":"Actions"
+  USERS: {
+    LIST: {
+      TABLE: {
+        EMAIL: "Adresse e-mail",
+        FIRSTNAME: "Prénom",
+        LASTNAME: "Nom",
+        MOBILE: "Numéro de mobile",
+        PHONE: "Numéro de téléphone",
+        ACTION: "Actions",
       },
-      "BUTTONS":{
-        "ADD":"Ajouter un utilisateur",
-        "EDIT":"Modifier",
-        "DELETE":"Supprimer",
-        "RESETPASSWORD":"Réinitialiser le mot de passe"
-      }
+      BUTTONS: {
+        ADD: "Ajouter un utilisateur",
+        EDIT: "Modifier",
+        DELETE: "Supprimer",
+        RESETPASSWORD: "Réinitialiser le mot de passe",
+      },
     },
-    "ADD":{
-      "LABELS":{
-        "FIRSTNAME":"Prénom",
-        "LASTNAME":"Nom de famille",
-        "MOBILE": "Numéro de téléphone",
-        "EMAIL": "Email",
-        "PASSWORD":"Mot de passe",
-        "CONFPASSWORD":"Confirmez le mot de passe",
-        "ROLES":"Rôles",
-        "MATRICULE":"Matricule",
-        "DIRECTION":"Direction"
+
+    ADD: {
+      LABELS: {
+        FIRSTNAME: "Prénom",
+        LASTNAME: "Nom",
+        MOBILE: "Numéro de mobile",
+        EMAIL: "Adresse e-mail",
+        PASSWORD: "Mot de passe",
+        CONFPASSWORD: "Confirmer le mot de passe",
+        ROLES: "Rôles utilisateur",
+        MATRICULE: "Matricule",
+        DIRECTION: "Département",
       },
-      "BUTTONS":{
-        "ADD":"Sauvegarder",
-        "CANCEL":"Annuler"
+
+      BUTTONS: {
+        ADD: "Enregistrer",
+        CANCEL: "Annuler",
       },
-      "ERRORS": {
-        "FIRST_NAME_IS_REQUIRED": "Le prénom est requis",
-        "LAST_NAME_IS_REQUIRED": "Le nom est requis",
-        "MOBILE_IS_REQUIRED": "Le numéro de téléphone est requis",
-        "EMAIL_IS_REQUIRED": "L'adresse e-mail est requise",
-        "PLEASE_ENTER_VALID_EMAIL": "Veuillez saisir une adresse e-mail valide",
-        "PASSWORD_IS_REQUIRED": "Le mot de passe est requis",
-        "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "Vous devez saisir au moins un chiffre",
-        "CONFIRM_PASSWORD_IS_REQUIRED": "La confirmation du mot de passe est requise",
-        "PASSWORDS_DO_NOT_MATCH": "Les mots de passe ne correspondent pas",
-        "DIRECTION_IS_REQUIRED": "La direction est requise",
-        "MATRICULE_IS_REQUIRED": "Le matricule est requis"
+
+      ERRORS: {
+        FIRST_NAME_IS_REQUIRED: "Le prénom est obligatoire",
+        LAST_NAME_IS_REQUIRED: "Le nom est obligatoire",
+        MOBILE_IS_REQUIRED: "Le numéro de mobile est obligatoire",
+        EMAIL_IS_REQUIRED: "L'adresse e-mail est obligatoire",
+        PLEASE_ENTER_VALID_EMAIL: "Veuillez saisir une adresse e-mail valide",
+        PASSWORD_IS_REQUIRED: "Le mot de passe est obligatoire",
+        YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT:
+          "Le mot de passe doit contenir au moins un chiffre",
+        CONFIRM_PASSWORD_IS_REQUIRED: "Veuillez confirmer le mot de passe",
+        PASSWORDS_DO_NOT_MATCH: "Les mots de passe ne correspondent pas",
+        DIRECTION_IS_REQUIRED: "Le département est obligatoire",
+        MATRICULE_IS_REQUIRED: "Le matricule est obligatoire",
       },
-      "TOAST": {
-        "ADDED_SUCCESS": "Utilisateur ajouté avec succès",
-        "USER_UPDATED_SUCCESSFULLY": "Utilisateur mis à jour avec succès",
-        "ADDED_ERROR": "Erreur lors de l'ajout de l'utilisateur",
-        "PLEASE_ENTER_PROPER_DATA":"Veuillez saisir les données appropriées"
-      }
+
+      TOAST: {
+        ADDED_SUCCESS: "Utilisateur ajouté avec succès",
+        USER_UPDATED_SUCCESSFULLY: "Utilisateur mis à jour avec succès",
+        ADDED_ERROR: "Une erreur est survenue lors de l'ajout de l'utilisateur",
+        PLEASE_ENTER_PROPER_DATA: "Veuillez saisir des informations valides",
+      },
     },
-    "PASSWORD":{
-      "LABELS":{
-        "TITLE":"Mot de passe Utilisateur",
-        "EMAIL": "Email",
-        "PASSWORD":"Mot de passe",
-        "CONFPASSWORD":"Confirmez le mot de passe",
+
+    PASSWORD: {
+      LABELS: {
+        TITLE: "Mot de passe utilisateur",
+        EMAIL: "Adresse e-mail",
+        PASSWORD: "Nouveau mot de passe",
+        CONFPASSWORD: "Confirmer le mot de passe",
       },
-      "BUTTONS":{
-        "SAVE":"Sauvegarder",
-        "CANCEL":"Annuler"
+
+      BUTTONS: {
+        SAVE: "Enregistrer",
+        CANCEL: "Annuler",
       },
-      "ERRORS": {
-        "EMAIL_IS_REQUIRED": "L'adresse e-mail est requise",
-        "PLEASE_ENTER_VALID_EMAIL": "Veuillez saisir une adresse e-mail valide",
-        "PASSWORD_IS_REQUIRED": "Le mot de passe est requis",
-        "YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT": "Vous devez saisir au moins un chiffre",
-        "CONFIRM_PASSWORD_IS_REQUIRED": "La confirmation du mot de passe est requise",
-        "PASSWORDS_DO_NOT_MATCH": "Les mots de passe ne correspondent pas"
+
+      ERRORS: {
+        EMAIL_IS_REQUIRED: "L'adresse e-mail est obligatoire",
+        PLEASE_ENTER_VALID_EMAIL: "Veuillez saisir une adresse e-mail valide",
+        PASSWORD_IS_REQUIRED: "Le mot de passe est obligatoire",
+        YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT:
+          "Le mot de passe doit contenir au moins un chiffre",
+        CONFIRM_PASSWORD_IS_REQUIRED:
+          "La confirmation du mot de passe est obligatoire",
+        PASSWORDS_DO_NOT_MATCH: "Les mots de passe ne correspondent pas",
       },
-      "TOAST": {
-        "SUCCESSFULLY_CHANGED_PASSWORD":"Mot de passe changé avec succès"
-      }
+
+      TOAST: {
+        SUCCESSFULLY_CHANGED_PASSWORD: "Mot de passe modifié avec succès",
+      },
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "Supprimer utilisateur",
-        "message": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
-        "button": {
-          "cancel": "Annuler",
-          "confirm": "Confirmer"
-        }
+
+    DELETE: {
+      LABEL: {
+        title: "Supprimer l'utilisateur",
+        message:
+          "Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ?",
+        button: {
+          cancel: "Annuler",
+          confirm: "Confirmer",
+        },
       },
-      "ERROR": {},
-      "TOAST": {
-        "USER_DELETED_SUCCESSFULLY": "Utilisateur supprimée avec succès"
-      } 
-    }
+
+      ERROR: {},
+
+      TOAST: {
+        USER_DELETED_SUCCESSFULLY: "Utilisateur supprimé avec succès",
+      },
+    },
   },
-}
+};

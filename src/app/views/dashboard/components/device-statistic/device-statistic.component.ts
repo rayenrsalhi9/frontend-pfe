@@ -1,23 +1,60 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { DeviceStatistic, DeviceStatisticData } from '../../dashboard.type';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+import { Component, Input, OnInit, OnDestroy } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { DeviceStatistic } from "../../dashboard.type";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'device-satistic',
-  templateUrl: './device-statistic.component.html',
+  selector: "device-satistic",
+  templateUrl: "./device-statistic.component.html",
   host: {
-    '[class.card]': 'true'
-  }
+    "[class.card]": "true",
+  },
 })
-export class DeviceStatisticComponent implements OnInit {
-
-  @Input() data: DeviceStatistic
+export class DeviceStatisticComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
+  @Input() data: DeviceStatistic;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
 
-  progressType: string[] = ['danger', 'warning', 'info', 'primary', 'light', 'success', 'secondary']
+  progressType: string[] = [
+    "danger",
+    "warning",
+    "info",
+    "primary",
+    "light",
+    "success",
+    "secondary",
+  ];
 
-  constructor() { }
+  tableMessages = {
+    emptyMessage: "",
+    selectedMessage: "",
+    totalMessage: "",
+  };
 
-  ngOnInit(): void { }
+  constructor(private translate: TranslateService) {}
+
+  ngOnInit(): void {
+    this.translate
+      .stream([
+        "TABLE_MESSAGE.EMPTY",
+        "TABLE_MESSAGE.SELECTED",
+        "TABLE_MESSAGE.TOTAL",
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.tableMessages = {
+          emptyMessage: res["TABLE_MESSAGE.EMPTY"],
+          selectedMessage: res["TABLE_MESSAGE.SELECTED"],
+          totalMessage: res["TABLE_MESSAGE.TOTAL"],
+        };
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

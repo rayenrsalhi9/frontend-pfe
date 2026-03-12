@@ -4,11 +4,12 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Input,
 } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
-import { UserNotification } from "@app/shared/enums/notification";
+import { UserNotification, NotificationType } from "@app/shared/enums/notification";
 import { NotificationSystem } from "@app/shared/services/notification-system.service";
 import { NotificationService } from "@app/shared/services/notification.service";
 import { PusherService } from "@app/shared/services/pusher.service";
@@ -24,6 +25,7 @@ import { TranslateService } from "@ngx-translate/core";
   providers: [NotificationService],
 })
 export class NavNotificationComponent implements OnInit, OnDestroy {
+  @Input() dropDirection = "dropup";
   private destroy$ = new Subject<void>();
   private currentUserId: string | null = null;
   private refreshTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -33,6 +35,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
   refreshReminderTimeInMinute = 10;
   isUnReadNotification = false;
   momentLang: string = "en";
+  readonly NotificationType = NotificationType;
 
   constructor(
     private notificationService: NotificationService,
@@ -67,7 +70,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
           `user.${user.user.id}`,
           "notification",
           (data) => {
-            if (data.type === "message") {
+            if (data.type === NotificationType.Message) {
               this.getNotification();
               this.notificationSystem.sendNotification(data.data.message);
             }
@@ -90,7 +93,11 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
         this.newNotificationCount = notifications.filter(
           (c) => !c.isRead,
         ).length;
-        this.notifications = notifications;
+        this.notifications = notifications.sort(
+          (a, b) =>
+            new Date(b.createdDate).getTime() -
+            new Date(a.createdDate).getTime(),
+        );
         this.isUnReadNotification = this.notifications.some((n) => !n.isRead);
         this.cd.detectChanges();
 

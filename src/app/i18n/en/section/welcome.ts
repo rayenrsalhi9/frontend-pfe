@@ -1,23 +1,30 @@
 export const welcome = {
   WELCOME: {
-    LATEST_BLOGS: "Latest Blogs",
+    LATEST_BLOGS: "Latest Blog Posts",
     LATEST_BLOGS_DESC:
-      "Discover the latest insights and updates from our community",
-    SEE_ALL_BLOGS: "See all blogs",
+      "Stay informed with the latest insights, updates, and stories from our community.",
+    SEE_ALL_BLOGS: "View all blog posts",
+
     LATEST_ARTICLES: "Latest Articles",
-    LATEST_ARTICLES_DESC: "Explore the latest articles and publications",
-    SEE_ALL_ARTICLES: "See all articles",
-    LATEST_FORUMS: "Latest Forums",
-    LATEST_FORUMS_DESC: "Join the conversation and share your thoughts",
-    SEE_ALL_FORUMS: "See all forums",
+    LATEST_ARTICLES_DESC:
+      "Browse the most recent articles and publications available on the platform.",
+    SEE_ALL_ARTICLES: "View all articles",
+
+    LATEST_FORUMS: "Recent Discussions",
+    LATEST_FORUMS_DESC:
+      "Join ongoing conversations and share your ideas with the community.",
+    SEE_ALL_FORUMS: "View all discussions",
+
     SURVEY: "Survey",
-    POSTED_ON: "Posted on",
+    POSTED_ON: "Published on",
     BY: "by",
-    NO_BLOGS: "No blogs available yet",
-    NO_ARTICLES: "No articles published yet",
-    NO_FORUMS: "No active discussions",
-    NO_SURVEY: "No active survey at the moment",
-    ARTICLE_LOAD_ERROR: "Error loading articles",
+
+    NO_BLOGS: "No blog posts available yet",
+    NO_ARTICLES: "No articles have been published yet",
+    NO_FORUMS: "No discussions available",
+    NO_SURVEY: "No active survey available at the moment",
+
+    ARTICLE_LOAD_ERROR: "Unable to load articles",
   },
 
   BUTTONS: {
