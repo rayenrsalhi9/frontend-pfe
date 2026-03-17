@@ -619,7 +619,7 @@ const apps: NavMenu[] = [
     iconType: 'feather',
     icon: 'icon-grid',
     key: 'apps',
-    claims: ['REMINDER_VIEW_REMINDERS','ARTICLE_VIEW_ARTICLES','CHAT_VIEW_CHATS','LOGIN_AUDIT_VIEW_LOGIN_AUDIT_LOGS'],
+    claims: ['REMINDER_VIEW_REMINDERS','ARTICLE_VIEW_ARTICLES','CHAT_VIEW_CHATS','LOGIN_AUDIT_VIEW_LOGIN_AUDIT_LOGS', 'FORUM_VIEW_FORUMS'],
     submenu: [
       /* {
           path: '/apps/mail',
@@ -751,7 +751,7 @@ const apps: NavMenu[] = [
         iconType: 'feather',
         icon: 'icon-feather',
         key: 'apps.forums',
-        claims: ['show'],
+        claims: ['FORUM_VIEW_FORUMS'],
         submenu: [
           {
             path: '/apps/forums',
@@ -761,7 +761,7 @@ const apps: NavMenu[] = [
             iconType: 'line-awesome',
             icon: 'la-newspaper',
             key: 'apps.forums.list',
-            claims: ['show'],
+            claims: ['FORUM_VIEW_FORUMS'],
             submenu: [],
           },
           {
@@ -772,7 +772,7 @@ const apps: NavMenu[] = [
             iconType: 'line-awesome',
             icon: 'la-newspaper',
             key: 'apps.forums.categories',
-            claims: ['show'],
+            claims: ['FORUM_VIEW_FORUMS'],
             submenu: [],
           },
         ],

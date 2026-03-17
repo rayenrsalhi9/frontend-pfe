@@ -8,7 +8,7 @@ const routes: Routes = [
     loadChildren: () => import('./forum-list/forum-list.module').then(m => m.ForumListModule),
     data: {
       title: 'NAV.APPS_FORUM_LIST',
-      hidePageHeader: false
+      hidePageHeader: true
     },
     canLoad: [AuthGuard],
   },
@@ -17,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./forum-add/forum-add.module').then(m => m.ForumAddModule),
     data: {
       title: 'FORUM.BUTTONS.ADD',
-      hidePageHeader: false
+      hidePageHeader: true
     },
     canLoad: [AuthGuard],
   },
@@ -26,7 +26,7 @@ const routes: Routes = [
     loadChildren: () => import('./forum-edit/forum-edit.module').then(m => m.ForumEditModule),
     data: {
       title: 'FORUM.BUTTONS.EDIT',
-      hidePageHeader: false
+      hidePageHeader: true
     },
     canLoad: [AuthGuard],
   },
@@ -35,7 +35,7 @@ const routes: Routes = [
     loadChildren: () => import('./forum-category/forum-category.module').then(m => m.ForumCategoryModule),
     data: {
       title: 'NAV.APPS_FORUM_CATEGORY',
-      hidePageHeader: false
+      hidePageHeader: true
     },
     canLoad: [AuthGuard],
   },

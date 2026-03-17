@@ -1,17 +1,26 @@
-<div class="card">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-12">
-        <h4 class="text-center">{{title}}</h4>
-        <p class="text-center">{{message}}</p>
+<div class="confirm-modal-container">
+  <div class="confirm-modal-box">
+    <!-- Icon Header -->
+    <div class="modal-illustration">
+      <div class="icon-wrapper danger">
+        <i class="feather icon-alert-triangle"></i>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-md-6 d-flex gap-2">
-        <button class="btn btn-success" (click)="confirm()">{{button.confirm}}</button>
-        <button class="btn btn-danger" (click)="close()">{{button.cancel}}</button>
-      </div>
 
+    <!-- Content -->
+    <div class="modal-content-area">
+      <h3 class="modal-title">{{ title }}</h3>
+      <p class="modal-message">{{ message }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions-grid">
+      <button type="button" class="btn-cancel" (click)="close()">
+        {{ button.cancel }}
+      </button>
+      <button type="button" class="btn-confirm" (click)="confirm()">
+        {{ button.confirm }}
+      </button>
     </div>
   </div>
 </div>
