@@ -1,102 +1,285 @@
-<div class="card mb-0">
-  <div class="card-body">
-    <div class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button routerLink="/apps/forums/add" class="btn btn-primary mb-3">
-          <i class="feather icon-plus"></i>
-          <span>{{"FORUM.BUTTONS.ADD" | translate}}</span>
-        </button>
+<div class="forum-view-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="title-group">
+        <h1 class="page-title">{{ "FORUM.TITLE" | translate }}</h1>
+        <p class="page-description">{{ "FORUM.DESCRIPTION" | translate }}</p>
       </div>
+      <button routerLink="/apps/forums/add" class="btn-create">
+        <i class="feather icon-plus"></i>
+        <span>{{ "FORUM.BUTTONS.ADD" | translate }}</span>
+      </button>
     </div>
-    <div class="row align-items-center">
-      <div class="col-md-4">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control"  (keyup)="onNameChange($event)" [placeholder]="'FORUM.TABLE.SEARCH_BY_NAME'| translate">
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section bento-item">
+    <div class="filters-grid">
+      <div class="filter-col">
+        <div class="input-modern">
+          <i class="feather icon-search prefix-icon"></i>
+          <input
+            type="text"
+            class="form-control"
+            (keyup)="onNameChange($event)"
+            [placeholder]="'FORUM.TABLE.SEARCH_BY_NAME' | translate"
+          />
         </div>
       </div>
-      <div class="col-md-4">
-        <ng-select [multiple]="false" [placeholder]="'FORUM.TABLE.SEARCH_BY_CATEGORY' | translate" (change)="onCategoryChange($event)">
-          <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+
+      <div class="filter-col">
+        <ng-select
+          class="modern-select"
+          [multiple]="false"
+          [placeholder]="'FORUM.TABLE.SEARCH_BY_CATEGORY' | translate"
+          (change)="onCategoryChange($event)"
+        >
+          <ng-option *ngFor="let category of categories" [value]="category.id"
+            >{{ category.name }}
+          </ng-option>
         </ng-select>
       </div>
-      <div class="col-md-4">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" bsDatepicker [bsConfig]="{dateInputFormat: 'DD-MM-YYYY'}" (bsValueChange)="onDateChange($event)" [placeholder]="'FORUM.TABLE.SEARCH_BY_DATE' | translate">
+
+      <div class="filter-col">
+        <div class="input-modern">
+          <i class="feather icon-calendar prefix-icon"></i>
+          <input
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+            (bsValueChange)="onDateChange($event)"
+            [placeholder]="'FORUM.TABLE.SEARCH_BY_DATE' | translate"
+          />
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox" (activate)="onActivate($event)" (select)="onSelect($event)">
-          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-            [resizeable]="false">
-            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-              let-selectFn="selectFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
-                  (change)="selectFn(!allRowsSelected)" />
-              </div>
-            </ng-template>
-            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
-              let-onCheckboxChangeFn="onCheckboxChangeFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="isSelected"
-                  (change)="onCheckboxChangeFn($event)" />
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <!-- <ngx-datatable-column [name]="'Picture'" prop="picture">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <img style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;" [src]="value?getHost()+value:'/assets/images/others/bg-4.jpg'" alt="">
-            </ng-template>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'FORUM.TABLE.TOPIC' | translate"  prop="title"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'FORUM.TABLE.CATEGORY' | translate"  prop="category">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value.name}}</ng-template>
-          </ngx-datatable-column>
-          <!-- <ngx-datatable-column [name]="'Description'" prop="shortText">
-            <div style="max-width: 40px; text-overflow: ellipsis; overflow: hidden; background: red;">
-              <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value}}</ng-template>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-section bento-item">
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="bootstrap modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="10"
+        [selected]="selected"
+        [selectionType]="SelectionType.checkbox"
+        (activate)="onActivate($event)"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [width]="50"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+        >
+          <ng-template
+            ngx-datatable-header-template
+            let-allRowsSelected="allRowsSelected"
+            let-selectFn="selectFn"
+          >
+            <div class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="allRowsSelected"
+                (change)="selectFn(!allRowsSelected)"
+                id="header-check"
+              />
+              <label for="header-check"></label>
             </div>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'FORUM.TABLE.CREATOR' | translate" prop="creator">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value.firstName}} {{value.lastName}}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'FORUM.TABLE.CREATED' | translate" prop="createdAt">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false" >{{value | utcToLocalTime:'shortDate' }}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'FORUM.TABLE.CLOSED' | translate"  prop="closed">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              {{(value?'BLOG.BANNER.YES':'BLOG.BANNER.NO') | translate}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'FORUM.TABLE.REPLIES' | translate"  prop="replies">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              --
-            </ng-template>
-          </ngx-datatable-column>
-          <!-- <ngx-datatable-column [name]="'FORUM.TABLE.STATUS' | translate" prop="closed">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              {{value?'Closed':'Open'}}
-            </ng-template>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'FORUM.TABLE.ACTIONS' | translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <div class="btn-group" dropdown [insideClick]="true">
-                <button dropdownToggle type="button" class="btn">  <i class="feather icon-more-horizontal"></i>  </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer"  [routerLink]="'/apps/forums/edit/'+row.id">{{"FORUM.BUTTONS.EDIT" | translate}}</a></li>
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer"   (click)="deleteForum(row)">{{"FORUM.BUTTONS.DELETE" | translate}}</a>
-                  </li>
-                </ul>
+          </ng-template>
+          <ng-template
+            ngx-datatable-cell-template
+            let-isSelected="isSelected"
+            let-onCheckboxChangeFn="onCheckboxChangeFn"
+            let-row="row"
+          >
+            <div class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="isSelected"
+                (change)="onCheckboxChangeFn($event)"
+                id="row-check-{{ row.id }}"
+              />
+              <label for="row-check-{{ row.id }}"></label>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.TOPIC' | translate"
+          prop="title"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="topic-title">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.CATEGORY' | translate"
+          prop="category"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="badge badge-soft-primary" *ngIf="value?.name">{{
+              value.name
+            }}</span>
+            <span class="text-muted" *ngIf="!value?.name">-</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.CREATOR' | translate"
+          prop="creator"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <div class="creator-info">
+              <div class="creator-avatar-mini">
+                {{
+                  (value?.firstName?.charAt(0) || "") +
+                    (value?.lastName?.charAt(0) || "")
+                }}
               </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
+              <span
+                >{{ value?.firstName || "" }} {{ value?.lastName || "" }}</span
+              >
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.CREATED' | translate"
+          prop="createdAt"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="text-muted">{{
+              value | utcToLocalTime: "shortDate"
+            }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.STATUS' | translate"
+          prop="closed"
+          [width]="100"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span
+              [class]="
+                value ? 'badge badge-soft-danger' : 'badge badge-soft-success'
+              "
+            >
+              {{
+                (value ? "FORUM.STATUS.CLOSED" : "FORUM.STATUS.OPEN")
+                  | translate
+              }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.REACTIONS' | translate"
+          prop="reactionsCount"
+          [width]="100"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <div class="stat-badge">
+              <i class="feather icon-heart text-danger"></i>
+              <span>{{ value ?? 0 }}</span>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.REPLIES' | translate"
+          prop="commentsCount"
+          [width]="100"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-row="row"
+            let-value="value"
+          >
+            <button
+              type="button"
+              class="btn-stat-link"
+              (click)="openCommentsModal(row)"
+              [attr.aria-label]="'FORUM.TABLE.REPLIES' | translate"
+            >
+              <i class="feather icon-message-circle text-primary"></i>
+              <span>{{ value ?? 0 }}</span>
+            </button>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'FORUM.TABLE.ACTIONS' | translate"
+          [sortable]="false"
+          [width]="80"
+          cellClass="actions-cell"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              class="btn-group"
+              dropdown
+              placement="bottom right"
+              [container]="'body'"
+            >
+              <button
+                dropdownToggle
+                type="button"
+                class="btn-action-trigger"
+                [attr.aria-label]="'FORUM.TABLE.ACTIONS' | translate"
+              >
+                <i class="feather icon-more-vertical"></i>
+              </button>
+              <ul *dropdownMenu class="dropdown-menu-modern" role="menu">
+                <li role="menuitem">
+                  <button
+                    type="button"
+                    class="dropdown-item-modern"
+                    (click)="openCommentsModal(row)"
+                  >
+                    <i class="feather icon-message-square"></i>
+                    <span>{{ "FORUM.BUTTONS.COMMENTS" | translate }}</span>
+                  </button>
+                </li>
+                <li role="menuitem">
+                  <a
+                    class="dropdown-item-modern"
+                    [routerLink]="'/apps/forums/edit/' + row.id"
+                  >
+                    <i class="feather icon-edit-2"></i>
+                    <span>{{ "FORUM.BUTTONS.EDIT" | translate }}</span>
+                  </a>
+                </li>
+                <li class="dropdown-divider-modern"></li>
+                <li role="menuitem">
+                  <button
+                    type="button"
+                    class="dropdown-item-modern text-danger"
+                    (click)="deleteForum(row)"
+                  >
+                    <i class="feather icon-trash-2"></i>
+                    <span>{{ "FORUM.BUTTONS.DELETE" | translate }}</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

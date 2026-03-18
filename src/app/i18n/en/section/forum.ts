@@ -1,65 +1,110 @@
 export const forum = {
-  "FORUM": {
-    "TABLE":{
-      "TOPIC":"Topic",
-      "CATEGORY":"Category",
-      "REPLIES":"Replies",
-      "REACTIONS":"Reactions",
-      "ACTIVITY":"Date of last action",
-      "CREATED": "Created by",
-      "CLOSED": "Closed",
-      "CREATOR": "Creator",
-      "STATUS": "Status",
-      "ACTIONS": "Actions",
-      "SEARCH_BY_NAME": "Search by name",
-      "SEARCH_BY_CATEGORY": "Search by category",
-      "SEARCH_BY_DATE": "Search by date",
+  FORUM: {
+    TITLE: "Community Forum",
+    DESCRIPTION: "Browse, create, and manage discussion topics",
+
+    TABLE: {
+      TOPIC: "Topic",
+      CATEGORY: "Category",
+      REPLIES: "Replies",
+      REACTIONS: "Reactions",
+      ACTIVITY: "Last Activity",
+      CREATED: "Created On",
+      CLOSED: "Closed",
+      CREATOR: "Author",
+      STATUS: "Status",
+      ACTIONS: "Actions",
+      SEARCH_BY_NAME: "Search topics...",
+      SEARCH_BY_CATEGORY: "Filter by category",
+      SEARCH_BY_DATE: "Filter by date",
     },
-    "BUTTONS": {
-      "VIEW": "View",
-      "ADD": "Add",
-      "EDIT": "Edit",
-      "DELETE": "Delete"
+
+    BUTTONS: {
+      VIEW: "View Details",
+      ADD: "New Topic",
+      EDIT: "Edit Topic",
+      DELETE: "Delete Topic",
+      COMMENTS: "Comments",
     },
-    "ADD":{
-      "LABELS":{
-        "TITLE":"Topic",
-        "TAGS":"Tags",
-        "CATEGORY": "Category",
-        "CONTENT":"Content",
-        "PRIVATE": "Private",
-        "CLOSED": "Closed",
+
+    ADD: {
+      LABELS: {
+        TITLE: "Topic Title",
+        TAGS: "Tags",
+        CATEGORY: "Category",
+        CONTENT: "Description",
+        PRIVATE: "Private Topic",
+        CLOSED: "Mark as Closed",
       },
-      "BUTTONS": {
-        "SAVE": "Save",
-        "CANCEL": "Cancel",
+      BUTTONS: {
+        SAVE: "Publish Topic",
+        CANCEL: "Cancel",
       },
-      "ERROR": {
-        "TITLE": "Topic is required",
-        "CATEGORY": "Category is required",
-        "CONTENT": "Content is required"
+      ERROR: {
+        TITLE: "Please enter a topic title",
+        CATEGORY: "Please select a category",
+        CONTENT: "Content cannot be empty",
       },
-      "TOAST": {
-        "SAVE_SUCCESSFULLY": "",
-      }
+      TOAST: {
+        SAVE_SUCCESSFULLY: "Topic created successfully",
+      },
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "Delete topic",
-        "message": "Are you sure you want to delete this topic?",
-        "button": {
-          "cancel": "Cancel",
-          "confirm": "Confirm"
-        }
+
+    DELETE_COMMENT: {
+      LABEL: {
+        TITLE: "Delete Comment",
+        MESSAGE:
+          "Are you sure you want to delete this comment? This action cannot be undone.",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
+        },
       },
-      "ERROR": {},
-      "TOAST": {
-        "DELETED_SUCCESSFULLY": "The topic has been successfully deleted"
-      }
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Comment deleted successfully",
+        DELETED_ERROR: "Failed to delete comment",
+      },
     },
-    "COMMENT":{
-      "TITLE_COMMENT":"Comment",
-      "ADD_COMMENT":"Add comment",
-    }
-  }
-}
+
+    DELETE: {
+      LABEL: {
+        TITLE: "Delete Topic",
+        MESSAGE:
+          "Are you sure you want to delete this topic? This action cannot be undone.",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Topic deleted successfully",
+        DELETED_ERROR: "Failed to delete topic",
+      },
+    },
+
+    COMMENT: {
+      TITLE_COMMENT: "Comments",
+      ADD_COMMENT: "Write a comment...",
+    },
+
+    STATUS: {
+      OPEN: "Open",
+      CLOSED: "Closed",
+    },
+
+    MODAL: {
+      TITLE: "Discussion Comments",
+      FETCHING: "Fetching conversation...",
+      TOTAL_CONTRIBUTIONS: "Total Contributions",
+      ADMIN_ONLY: "Super Admin Control Only",
+      EMPTY_STATE: "No comments have been shared here yet.",
+      TOOLTIP_DELETE: "Delete Comment",
+      BUTTON_DISMISS: "Dismiss",
+    },
+
+    TOAST: {
+      ERROR: "Failed to fetch forums",
+    },
+  },
+};

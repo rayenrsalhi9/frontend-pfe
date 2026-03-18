@@ -1,0 +1,88 @@
+<div class="elegant-modal">
+  <!-- Modal Header -->
+  <div class="modal-header-modern">
+    <div class="header-info">
+      <h5 class="modal-title-modern">
+        {{ 'FORUM.MODAL.TITLE' | translate }}
+      </h5>
+      <p class="modal-subtitle" *ngIf="forumTitle">{{ forumTitle }}</p>
+    </div>
+    <button type="button" class="btn-close-ghost" [attr.aria-label]="'FORUM.ADD.BUTTONS.CANCEL' | translate" (click)="close()">
+      <i class="feather icon-x"></i>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-modern scroll-content">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <p>{{ 'FORUM.MODAL.FETCHING' | translate }}</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && errorMessage" class="alert-modern alert-error">
+      <i class="feather icon-alert-circle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading && !errorMessage">
+      <!-- Stats Header -->
+      <div class="modal-stats-header">
+        <div class="stat-group">
+          <span class="stat-label">{{ 'FORUM.MODAL.TOTAL_CONTRIBUTIONS' | translate }}</span>
+          <span class="stat-value">{{ comments?.length ?? 0 }}</span>
+        </div>
+
+        <div *ngIf="!canDeleteComments" class="admin-badge">
+          <i class="feather icon-shield"></i>
+          <span>{{ 'FORUM.MODAL.ADMIN_ONLY' | translate }}</span>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="(comments?.length ?? 0) === 0" class="empty-state-modern">
+        <i class="feather icon-message-square"></i>
+        <p>{{ 'FORUM.MODAL.EMPTY_STATE' | translate }}</p>
+      </div>
+
+      <!-- Comments List -->
+      <div class="comments-list">
+        <div *ngFor="let comment of (comments ?? [])" class="comment-card-modern">
+          <div class="comment-header">
+            <div class="user-meta">
+              <div class="user-avatar">
+                {{ (comment?.user?.firstName?.charAt(0) || '') + (comment?.user?.lastName?.charAt(0) || '') }}
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ comment?.user?.firstName || '' }} {{ comment?.user?.lastName || '' }}</span>
+                <span class="comment-date">{{ comment?.createdAt ? (comment.createdAt | utcToLocalTime:'shortDate') : '' }}</span>
+              </div>
+            </div>
+
+            <button
+              *ngIf="canDeleteComments"
+              type="button"
+              class="btn-delete-ghost"
+              [tooltip]="'FORUM.MODAL.TOOLTIP_DELETE' | translate"
+              (click)="deleteComment(comment)"
+            >
+              <i class="feather icon-trash-2"></i>
+            </button>
+          </div>
+
+          <div class="comment-content">
+            {{ comment?.comment || '' }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer-modern">
+    <button type="button" class="btn-dismiss" (click)="close()">{{ 'FORUM.MODAL.BUTTON_DISMISS' | translate }}</button>
+  </div>
+</div>
