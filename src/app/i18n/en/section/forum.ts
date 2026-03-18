@@ -24,6 +24,7 @@ export const forum = {
       ADD: "New Topic",
       EDIT: "Edit Topic",
       DELETE: "Delete Topic",
+      COMMENTS: "Comments",
     },
 
     ADD: {
@@ -51,32 +52,34 @@ export const forum = {
 
     DELETE_COMMENT: {
       LABEL: {
-        title: "Delete Comment",
-        message:
+        TITLE: "Delete Comment",
+        MESSAGE:
           "Are you sure you want to delete this comment? This action cannot be undone.",
-        button: {
-          cancel: "Cancel",
-          confirm: "Delete",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
         },
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "Comment deleted successfully",
+        DELETED_ERROR: "Failed to delete comment",
       },
     },
 
     DELETE: {
       LABEL: {
-        title: "Delete Topic",
-        message:
+        TITLE: "Delete Topic",
+        MESSAGE:
           "Are you sure you want to delete this topic? This action cannot be undone.",
-        button: {
-          cancel: "Cancel",
-          confirm: "Delete",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
         },
       },
       ERROR: {},
       TOAST: {
         DELETED_SUCCESSFULLY: "Topic deleted successfully",
+        DELETED_ERROR: "Failed to delete topic",
       },
     },
 
@@ -98,6 +101,10 @@ export const forum = {
       EMPTY_STATE: "No comments have been shared here yet.",
       TOOLTIP_DELETE: "Delete Comment",
       BUTTON_DISMISS: "Dismiss",
-    }
+    },
+
+    TOAST: {
+      ERROR: "Failed to fetch forums",
+    },
   },
 };

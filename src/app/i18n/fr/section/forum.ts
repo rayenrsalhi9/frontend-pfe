@@ -24,6 +24,7 @@ export const forum = {
       ADD: "Nouveau sujet",
       EDIT: "Modifier",
       DELETE: "Supprimer",
+      COMMENTS: "Commentaires",
     },
 
     ADD: {
@@ -51,12 +52,12 @@ export const forum = {
 
     DELETE_COMMENT: {
       LABEL: {
-        title: "Supprimer le commentaire",
-        message:
+        TITLE: "Supprimer le commentaire",
+        MESSAGE:
           "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
-        button: {
-          cancel: "Annuler",
-          confirm: "Supprimer",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Supprimer",
         },
       },
       TOAST: {
@@ -66,17 +67,18 @@ export const forum = {
 
     DELETE: {
       LABEL: {
-        title: "Supprimer le sujet",
-        message:
+        TITLE: "Supprimer le sujet",
+        MESSAGE:
           "Êtes-vous sûr de vouloir supprimer ce sujet ? Cette action est irréversible.",
-        button: {
-          cancel: "Annuler",
-          confirm: "Supprimer",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Supprimer",
         },
       },
       ERROR: {},
       TOAST: {
         DELETED_SUCCESSFULLY: "Sujet supprimé avec succès",
+        DELETED_ERROR: "Échec de la suppression du sujet",
       },
     },
 
@@ -97,6 +99,10 @@ export const forum = {
       EMPTY_STATE: "Aucun commentaire n'a encore été partagé ici.",
       TOOLTIP_DELETE: "Supprimer le commentaire",
       BUTTON_DISMISS: "Fermer",
+    },
+
+    TOAST: {
+      ERROR: "Échec de la récupération des forums",
     },
   },
 };

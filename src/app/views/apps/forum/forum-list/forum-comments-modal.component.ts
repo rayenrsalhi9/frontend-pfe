@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { ForumService } from '../forum.service';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { ForumService } from "../forum.service";
+import { take } from "rxjs/operators";
 
 @Component({
-  selector: 'app-forum-comments-modal',
-  templateUrl: './forum-comments-modal.component.html',
-  styleUrls: ['./forum-comments-modal.component.css']
+  selector: "app-forum-comments-modal",
+  templateUrl: "./forum-comments-modal.component.html",
+  styleUrls: ["./forum-comments-modal.component.css"],
 })
 export class ForumCommentsModalComponent implements OnInit {
   forumId: string;
@@ -30,7 +31,7 @@ export class ForumCommentsModalComponent implements OnInit {
     private translateService: TranslateService,
     private forumService: ForumService,
     private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +40,7 @@ export class ForumCommentsModalComponent implements OnInit {
 
   loadForum(): void {
     if (!this.forumId) {
-      this.errorMessage = 'Forum id is missing.';
+      this.errorMessage = "Forum id is missing.";
       return;
     }
 
@@ -50,16 +51,18 @@ export class ForumCommentsModalComponent implements OnInit {
       (resp: any) => {
         this.forum = resp;
         this.comments = Array.isArray(resp?.comments) ? resp.comments : [];
-        this.canDeleteComments = !!(resp?.canDeleteComments ?? resp?.can_delete_comments);
+        this.canDeleteComments = !!(
+          resp?.canDeleteComments ?? resp?.can_delete_comments
+        );
 
         this.loading = false;
         this.cdr.markForCheck();
       },
       (err) => {
         this.loading = false;
-        this.errorMessage = err?.error?.message || 'Failed to load comments.';
+        this.errorMessage = err?.error?.message || "Failed to load comments.";
         this.cdr.markForCheck();
-      }
+      },
     );
   }
 
@@ -67,50 +70,60 @@ export class ForumCommentsModalComponent implements OnInit {
     if (!this.canDeleteComments) return;
     if (!comment?.id) return;
 
-    this.translateService.get('FORUM.DELETE_COMMENT.LABEL').subscribe((translations) => {
-      const confirmModalRef = this.modalService.show(ConfirmModalComponent, {
-        class: 'modal-confirm-custom',
-        initialState: {
-          title: translations.title,
-          message: translations.message,
-          button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
-        }
-      });
+    this.translateService
+      .get("FORUM.DELETE_COMMENT.LABEL")
+      .pipe(take(1))
+      .subscribe((translations) => {
+        const confirmModalRef = this.modalService.show(ConfirmModalComponent, {
+          class: "modal-confirm-custom",
+          initialState: {
+            title: translations.TITLE,
+            message: translations.MESSAGE,
+            button: {
+              cancel: translations.BUTTON.CANCEL,
+              confirm: translations.BUTTON.CONFIRM,
+            },
+          },
+        });
 
-      confirmModalRef.content.onClose.subscribe((result: boolean) => {
-        if (result) {
-          this.executeDelete(comment);
-        }
+        confirmModalRef.content.onClose
+          .pipe(take(1))
+          .subscribe((result: boolean) => {
+            if (result) {
+              this.executeDelete(comment);
+            }
+          });
       });
-    });
   }
 
   private executeDelete(comment: any): void {
     this.forumService.deleteComment(comment.id).subscribe(
       (resp: any) => {
         if (resp?.success === false) {
-          this.toastr.error(resp?.message || 'Failed to delete comment.');
+          this.toastr.error(resp?.message || "Failed to delete comment.");
           return;
         }
 
-        this.comments = (this.comments || []).filter((c) => c?.id !== comment.id);
+        this.comments = (this.comments || []).filter(
+          (c) => c?.id !== comment.id,
+        );
 
         if (this.onCommentsChanged) {
           this.onCommentsChanged();
         }
 
-        this.translateService.get('FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY')
-          .subscribe((msg: string) => this.toastr.success(msg || 'Comment deleted.'));
-        
+        this.translateService
+          .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
+          .subscribe((msg: string) =>
+            this.toastr.success(msg || "Comment deleted."),
+          );
+
         this.cdr.markForCheck();
       },
       (err) => {
-        const msg = err?.error?.message || 'Failed to delete comment.';
+        const msg = err?.error?.message || "Failed to delete comment.";
         this.toastr.error(msg);
-      }
+      },
     );
   }
 

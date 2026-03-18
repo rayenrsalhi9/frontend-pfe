@@ -24,6 +24,7 @@ export const forum = {
       ADD: "موضوع جديد",
       EDIT: "تعديل",
       DELETE: "حذف",
+      COMMENTS: "التعليقات",
     },
 
     ADD: {
@@ -51,12 +52,12 @@ export const forum = {
 
     DELETE_COMMENT: {
       LABEL: {
-        title: "حذف التعليق",
-        message:
+        TITLE: "حذف التعليق",
+        MESSAGE:
           "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
-        button: {
-          cancel: "إلغاء",
-          confirm: "حذف",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "حذف",
         },
       },
       TOAST: {
@@ -66,17 +67,18 @@ export const forum = {
 
     DELETE: {
       LABEL: {
-        title: "حذف الموضوع",
-        message:
+        TITLE: "حذف الموضوع",
+        MESSAGE:
           "هل أنت متأكد من حذف هذا الموضوع؟ لا يمكن التراجع عن هذا الإجراء.",
-        button: {
-          cancel: "إلغاء",
-          confirm: "حذف",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "حذف",
         },
       },
       ERROR: {},
       TOAST: {
         DELETED_SUCCESSFULLY: "تم حذف الموضوع بنجاح",
+        DELETED_ERROR: "فشل حذف الموضوع",
       },
     },
 
@@ -97,6 +99,10 @@ export const forum = {
       EMPTY_STATE: "لم يتم مشاركة أي تعليقات هنا بعد.",
       TOOLTIP_DELETE: "حذف التعليق",
       BUTTON_DISMISS: "إغلاق",
+    },
+
+    TOAST: {
+      ERROR: "فشل جلب المنتديات",
     },
   },
 };

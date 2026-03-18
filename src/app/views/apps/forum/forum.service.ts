@@ -1,15 +1,15 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { CommonError } from '@app/core/error-handler/common-error';
-import { CommonHttpErrorService } from '@app/core/error-handler/common-http-error.service';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { CommonError } from "@app/core/error-handler/common-error";
+import { CommonHttpErrorService } from "@app/core/error-handler/common-http-error.service";
+import { Observable } from "rxjs";
+import { catchError } from "rxjs/operators";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ForumService {
   constructor(
     private httpClient: HttpClient,
-    private commonHttpErrorService: CommonHttpErrorService
+    private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
   allForums(params = {}): Observable<any[] | CommonError> {
@@ -61,7 +61,7 @@ export class ForumService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteComment(id: any) {
+  deleteComment(id: any): Observable<any[] | CommonError> {
     const url = `forums/comments/delete/${id}`;
     return this.httpClient
       .delete<any[]>(url)
