@@ -122,11 +122,11 @@ export class ForumListComponent implements OnInit {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
           initialState: {
-            title: translations.title,
-            message: translations.message,
+            title: translations.TITLE,
+            message: translations.MESSAGE,
             button: {
-              cancel: translations.button.cancel,
-              confirm: translations.button.confirm,
+              cancel: translations.BUTTON.CANCEL,
+              confirm: translations.BUTTON.CONFIRM,
             },
           },
         });
@@ -148,7 +148,7 @@ export class ForumListComponent implements OnInit {
                 },
                 () => {
                   this.translateService
-                    .get("FORUM.DELETE.TOAST.DELETE_FAILED")
+                    .get("FORUM.DELETE.TOAST.DELETED_ERROR")
                     .pipe(take(1))
                     .subscribe((translatedMessage: string) =>
                       this.toastr.error(translatedMessage),
