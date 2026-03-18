@@ -1,3 +1,3 @@
 import { ArticlesListComponent } from "./articles-list.component";
 
-export const routes = [{ path: '', component: ArticlesListComponent }];
+export const routes = [{ path: "", component: ArticlesListComponent }];

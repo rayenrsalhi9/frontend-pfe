@@ -1,12 +1,17 @@
 export const users = {
   USERS: {
     LIST: {
+      TITLE: "Liste des utilisateurs",
+      DESCRIPTION:
+        "Gérez les comptes d'utilisateurs, les rôles et les autorisations au sein de votre organisation.",
       TABLE: {
         EMAIL: "Adresse e-mail",
         FIRSTNAME: "Prénom",
         LASTNAME: "Nom",
         MOBILE: "Numéro de mobile",
         PHONE: "Numéro de téléphone",
+        DIRECTION: "Direction",
+        MATRICULE: "Matricule",
         ACTION: "Actions",
       },
       BUTTONS: {

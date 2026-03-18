@@ -1,24 +1,55 @@
-<div class="card">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox">
-          <ngx-datatable-column [name]="'LOGINS.TABLE.DATETIME' | translate" prop="loginTime"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.EMAIL' | translate" prop="userName"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.IP' | translate" prop="remoteIP"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.STATUS' | translate" prop="status">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <span [class]="(value=='Success'?'bg-success':'bg-warning')+' p-1 rounded'" style="color: white;">
-                {{(value.toLowerCase() === "error")?('LOGINS.STATUS.ERROR' | translate):('LOGINS.STATUS.SUCCESS' | translate)}}
-              </span>
-            </ng-template>
-
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.LATITUDE' | translate" prop="latitude"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.LONGITUDE' | translate" prop="longitude"></ngx-datatable-column>
-        </ngx-datatable>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{'LOGINS.TITLE' | translate}}</h1>
+        <p class="page-description">{{'LOGINS.DESCRIPTION' | translate}}</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div class="modern-table-wrapper">
+      <ngx-datatable 
+        class="modern-table"
+        [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" 
+        [rows]="rows" 
+        [columnMode]="ColumnMode.force" 
+        [headerHeight]="60" 
+        [footerHeight]="60"
+        rowHeight="auto" 
+        [limit]="10">
+
+        <ngx-datatable-column [name]="'LOGINS.TABLE.DATETIME' | translate" prop="loginTime" [width]="200">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="text-muted font-weight-medium">{{value | utcToLocalTime:'shortDate'}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'LOGINS.TABLE.EMAIL' | translate" prop="userName" [width]="250">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="font-weight-bold text-dark">{{value}}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'LOGINS.TABLE.IP' | translate" prop="remoteIP" [width]="150"></ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'LOGINS.TABLE.STATUS' | translate" prop="status" [width]="120">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="badge" [ngClass]="{
+              'badge-soft-success': value === 'Success',
+              'badge-soft-danger': value === 'Error'
+            }">
+              {{ (value.toLowerCase() === 'error' ? 'LOGINS.STATUS.ERROR' : 'LOGINS.STATUS.SUCCESS') | translate }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'LOGINS.TABLE.LATITUDE' | translate" prop="latitude"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'LOGINS.TABLE.LONGITUDE' | translate" prop="longitude"></ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

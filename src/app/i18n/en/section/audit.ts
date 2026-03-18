@@ -1,25 +1,28 @@
 export const audit = {
-  "AUDIT":{
-    "LIST":{
-      "TABLE":{
-        "ACTION": "Action date",
-        "NAME": "Name",
-        "CATEGORY": "Category",
-        "OPERATION": "Operation",
-        "BY": "By whom",
-        "TO": "To whom",
-        "ROLE": "To whom role"
+  AUDIT: {
+    LIST: {
+      TITLE: "Audit Trails",
+      DESCRIPTION:
+        "Track and monitor all document activities and changes for compliance and security.",
+      TABLE: {
+        ACTION: "Action date",
+        NAME: "Name",
+        CATEGORY: "Category",
+        OPERATION: "Operation",
+        BY: "By whom",
+        TO: "To whom",
+        ROLE: "To whom role",
       },
-      "OPERATION":{
-        "READ":"Read",
-        "CREATED":"Created",
-        "DOWNLOAD":"Download",
+      OPERATION: {
+        READ: "Read",
+        CREATED: "Created",
+        DOWNLOAD: "Download",
       },
-      "LABELS": {
-        "SEARCH": "Search by name",
-        "CATEGORY": "Search by category",
-        "USER": "Search by user"
-      }
-    }
-  }
-}
+      LABELS: {
+        SEARCH: "Search by name",
+        CATEGORY: "Search by category",
+        USER: "Search by user",
+      },
+    },
+  },
+};

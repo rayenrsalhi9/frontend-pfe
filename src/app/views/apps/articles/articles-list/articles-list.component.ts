@@ -1,92 +1,84 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ArticleCategoryService } from '@app/shared/services/article-category.service';
-import { ArticleService } from '@app/shared/services/article.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { ArticlesCategoriesComponent } from '../articles-categories/articles-categories.component';
-import { ArticlesViewsComponent } from '../articles-views/articles-views.component';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { environment } from 'src/environments/environment';
-import { ArticleResource } from '@app/shared/enums/article-resource';
-import { TranslateService } from '@ngx-translate/core';
-import { SecurityService } from '@app/core/security/security.service';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ArticleCategoryService } from "@app/shared/services/article-category.service";
+import { ArticleService } from "@app/shared/services/article.service";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
+import { ArticlesViewsComponent } from "../articles-views/articles-views.component";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { environment } from "src/environments/environment";
+import { ArticleResource } from "@app/shared/enums/article-resource";
+import { TranslateService } from "@ngx-translate/core";
+import { SecurityService } from "@app/core/security/security.service";
 
 @Component({
-  selector: 'app-articles-list',
-  templateUrl: './articles-list.component.html',
-  styleUrls: ['./articles-list.component.css']
+  selector: "app-articles-list",
+  templateUrl: "./articles-list.component.html",
+  styleUrls: ["./articles-list.component.css"],
 })
 export class ArticlesListComponent implements OnInit {
-
-  showMobilePanel = false
+  showMobilePanel = false;
 
   rows: any[] = [];
   selected = [];
-  categories:any[] =[];
+  categories: any[] = [];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
-  articleResource:ArticleResource
+  articleResource: ArticleResource;
   bsModalRef: BsModalRef;
 
-  //currentUser:any
+  currentUser: any;
 
   constructor(
     private articleService: ArticleService,
     private articleCategoryService: ArticleCategoryService,
     private cdr: ChangeDetectorRef,
     private securityService: SecurityService,
-    private router: Router,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     this.articleResource = new ArticleResource();
-    this.articleResource.orderBy = 'createdAt desc'
-    this.articleResource.createdAt = ''
-   }
+    this.articleResource.orderBy = "createdAt desc";
+    this.articleResource.createdAt = "";
+  }
 
   ngOnInit(): void {
+    this.currentUser = this.securityService.getUserDetail().user;
 
-    //this.currentUser = this.securityService.getUserDetail().user;
-
-    this.getArtilces()
-    this.getCategories()
+    this.getArtilces();
+    this.getCategories();
   }
 
   getHost() {
-    return environment.apiUrl
+    return environment.apiUrl;
   }
 
-
   getArtilces(data = this.articleResource) {
-    this.articleService.allArticles(data).subscribe(
-      (data: any) => {
-        this.rows = data
-        this.cdr.markForCheck()
-      }
-    )
+    this.articleService.allArticles(data).subscribe((data: any) => {
+      this.rows = data;
+      this.cdr.markForCheck();
+    });
   }
 
   getCategories() {
     this.articleCategoryService.allCategories().subscribe(
-      (data:any)=>{
-        this.categories = data
-        this.cdr.markForCheck()
+      (data: any) => {
+        this.categories = data;
+        this.cdr.markForCheck();
       },
-      error=>{
-
-      }
-    )
+      (error) => {},
+    );
   }
 
   viewArticle(data: any) {
     const initialState = {
       data: Object.assign({}, data),
     };
-    this.modalService.show(ArticlesViewsComponent, { initialState: initialState })
+    this.modalService.show(ArticlesViewsComponent, {
+      initialState: initialState,
+    });
   }
 
   onSelect({ selected }) {
@@ -94,47 +86,44 @@ export class ArticlesListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {
-  }
+  onActivate(event) {}
 
-  updateArticle(data: any) {
-  }
+  updateArticle(data: any) {}
 
   deleteArticle(data: any) {
-
-    this.translate.get('ARTICLES.DELETE.LABEL').subscribe((translations) => {
+    this.translate.get("ARTICLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
           title: translations.title,
           message: translations.message,
           button: {
             cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
-        }
+            confirm: translations.button.confirm,
+          },
+        },
       });
     });
 
-    this.bsModalRef.content.onClose.subscribe(result => {
+    this.bsModalRef.content.onClose.subscribe((result) => {
       if (result) {
-        this.articleService.deleteArticle(data.id).subscribe(
-          (data: any) => {
-            this.translate.get('ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {this.toastr.success(translatedMessage); });
-            this.getArtilces()
-          }
-        )
-
+        this.articleService.deleteArticle(data.id).subscribe((data: any) => {
+          this.translate
+            .get("ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY")
+            .subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
+          this.getArtilces();
+        });
       }
-    })
-
+    });
   }
 
   onNameChange(event: any) {
-    let val = event.target.value
+    let val = event.target.value;
     if (val) {
       this.articleResource.name = val;
     } else {
-      this.articleResource.name = '';
+      this.articleResource.name = "";
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
@@ -144,7 +133,7 @@ export class ArticlesListComponent implements OnInit {
     if (event) {
       this.articleResource.articleCategoryId = event;
     } else {
-      this.articleResource.articleCategoryId = '';
+      this.articleResource.articleCategoryId = "";
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
@@ -154,10 +143,9 @@ export class ArticlesListComponent implements OnInit {
     if (event) {
       this.articleResource.createdAt = new Date(event).toDateString();
     } else {
-      this.articleResource.createdAt = '';
+      this.articleResource.createdAt = "";
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
   }
-
 }
