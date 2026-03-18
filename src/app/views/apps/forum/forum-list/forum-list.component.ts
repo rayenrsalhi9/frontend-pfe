@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
+import { take } from "rxjs/operators";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
 import { ForumCategoryService } from "../forum-category/forum-category.service";
@@ -73,7 +74,15 @@ export class ForumListComponent implements OnInit {
         this.cdr.markForCheck();
       },
       (err: any) => {
-        this.toastr.error(err?.error?.message || "FORUM.TOAST.ERROR");
+        if (err?.error?.message) {
+          this.toastr.error(err.error.message);
+        } else {
+          this.translateService
+            .get("FORUM.TOAST.ERROR")
+            .subscribe((translatedMessage: string) =>
+              this.toastr.error(translatedMessage),
+            );
+        }
       },
     );
   }
@@ -108,6 +117,7 @@ export class ForumListComponent implements OnInit {
   deleteForum(row: any) {
     this.translateService
       .get("FORUM.DELETE.LABEL")
+      .pipe(take(1))
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
@@ -121,16 +131,30 @@ export class ForumListComponent implements OnInit {
           },
         });
 
-        this.bsModalRef.content.onClose.subscribe((result) => {
+        this.bsModalRef.content.onClose.pipe(take(1)).subscribe((result) => {
           if (result) {
-            this.forumService.deleteForum(row.id).subscribe(() => {
-              this.translateService
-                .get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY")
-                .subscribe((translatedMessage: string) =>
-                  this.toastr.success(translatedMessage),
-                );
-              this.getAllForums(this.forumResource);
-            });
+            this.forumService
+              .deleteForum(row.id)
+              .pipe(take(1))
+              .subscribe(
+                () => {
+                  this.translateService
+                    .get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY")
+                    .pipe(take(1))
+                    .subscribe((translatedMessage: string) =>
+                      this.toastr.success(translatedMessage),
+                    );
+                  this.getAllForums(this.forumResource);
+                },
+                () => {
+                  this.translateService
+                    .get("FORUM.DELETE.TOAST.DELETE_FAILED")
+                    .pipe(take(1))
+                    .subscribe((translatedMessage: string) =>
+                      this.toastr.error(translatedMessage),
+                    );
+                },
+              );
           }
         });
       });

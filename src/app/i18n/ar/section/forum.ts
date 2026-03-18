@@ -62,6 +62,7 @@ export const forum = {
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "تم حذف التعليق بنجاح",
+        DELETED_ERROR: "فشل حذف التعليق",
       },
     },
 

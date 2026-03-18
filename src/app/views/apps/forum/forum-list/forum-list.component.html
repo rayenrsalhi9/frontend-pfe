@@ -65,7 +65,7 @@
         [messages]="{
           emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
           selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
-          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate,
         }"
         [rows]="rows"
         [columnMode]="ColumnMode.force"
@@ -215,6 +215,7 @@
               type="button"
               class="btn-stat-link"
               (click)="openCommentsModal(row)"
+              [attr.aria-label]="'FORUM.TABLE.REPLIES' | translate"
             >
               <i class="feather icon-message-circle text-primary"></i>
               <span>{{ value ?? 0 }}</span>

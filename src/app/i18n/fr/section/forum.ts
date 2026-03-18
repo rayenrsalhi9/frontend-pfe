@@ -62,6 +62,7 @@ export const forum = {
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "Commentaire supprimé avec succès",
+        DELETED_ERROR: "Échec de la suppression du commentaire",
       },
     },
 
