@@ -3,12 +3,18 @@
   <div class="header-section">
     <div class="header-actions">
       <div class="header-content">
-        <h1 class="page-title">{{'DOCUMENTS.LIST.TITLE' | translate}}</h1>
-        <p class="page-description">{{'DOCUMENTS.LIST.DESCRIPTION' | translate}}</p>
+        <h1 class="page-title">{{ "DOCUMENTS.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "DOCUMENTS.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
-      <button *hasClaim="'ALL_DOCUMENTS_CREATE_DOCUMENT'" class="btn-create" routerLink="/document/add">
+      <button
+        *hasClaim="'ALL_DOCUMENTS_CREATE_DOCUMENT'"
+        class="btn-create"
+        routerLink="/document/add"
+      >
         <i class="feather icon-plus"></i>
-        <span>{{"DOCUMENTS.LIST.BUTTONS.ADD" | translate}}</span>
+        <span>{{ "DOCUMENTS.LIST.BUTTONS.ADD" | translate }}</span>
       </button>
     </div>
   </div>
@@ -19,24 +25,37 @@
       <div class="filter-group">
         <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" (keyup)="onNameChange($event)" [placeholder]="'DOCUMENTS.LIST.LABELS.SEARCH' | translate">
+          <input
+            type="text"
+            class="form-control"
+            (keyup)="onNameChange($event)"
+            [placeholder]="'DOCUMENTS.LIST.LABELS.SEARCH' | translate"
+          />
         </div>
       </div>
       <div class="filter-group">
-        <div class="input-modern">
-          <i class="prefix-icon feather icon-tag"></i>
-          <input type="text" class="form-control" (keyup)="onTagChange($event)" [placeholder]="'DOCUMENTS.LIST.LABELS.TAGS' | translate">
-        </div>
-      </div>
-      <div class="filter-group">
-        <ng-select class="modern-select" [multiple]="false" [placeholder]="'DOCUMENTS.LIST.LABELS.CATEGORY' | translate" (change)="onCategoryChange($event)">
-          <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+        <ng-select
+          class="modern-select"
+          [multiple]="false"
+          [placeholder]="'DOCUMENTS.LIST.LABELS.CATEGORY' | translate"
+          (change)="onCategoryChange($event)"
+        >
+          <ng-option *ngFor="let category of categories" [value]="category.id"
+            >{{ category.name }}
+          </ng-option>
         </ng-select>
       </div>
       <div class="filter-group">
         <div class="input-modern">
           <i class="prefix-icon feather icon-calendar"></i>
-          <input type="text" class="form-control" bsDatepicker [bsConfig]="{dateInputFormat: 'DD-MM-YYYY'}" [placeholder]="'DOCUMENTS.LIST.LABELS.DATE' | translate" (bsValueChange)="onDateChange($event)">
+          <input
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+            [placeholder]="'DOCUMENTS.LIST.LABELS.DATE' | translate"
+            (bsValueChange)="onDateChange($event)"
+          />
         </div>
       </div>
     </div>
@@ -45,105 +64,194 @@
   <!-- Table Section -->
   <div class="bento-item table-section">
     <div class="modern-table-wrapper">
-      <ngx-datatable 
+      <ngx-datatable
         class="modern-table"
-        [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" 
-        [rows]="rows" 
-        [columnMode]="ColumnMode.force" 
-        [headerHeight]="60" 
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
         [footerHeight]="60"
-        rowHeight="auto" 
-        [limit]="10" 
-        [selected]="selected" 
+        rowHeight="auto"
+        [limit]="10"
+        [selected]="selected"
         [selectionType]="SelectionType.checkbox"
-        (activate)="onActivate($event)" 
-        (select)="onSelect($event)">
-
-        <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
-          <ng-template ngx-datatable-header-template let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+        (activate)="onActivate($event)"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [width]="50"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+        >
+          <ng-template
+            ngx-datatable-header-template
+            let-allRowsSelected="allRowsSelected"
+            let-selectFn="selectFn"
+          >
             <div class="custom-checkbox">
-              <input type="checkbox" [id]="'selectAll'" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
+              <input
+                type="checkbox"
+                [id]="'selectAll'"
+                [checked]="allRowsSelected"
+                (change)="selectFn(!allRowsSelected)"
+              />
               <label [for]="'selectAll'"></label>
             </div>
           </ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+          <ng-template
+            ngx-datatable-cell-template
+            let-row="row"
+            let-isSelected="isSelected"
+            let-onCheckboxChangeFn="onCheckboxChangeFn"
+          >
             <div class="custom-checkbox">
-              <input type="checkbox" [id]="row.id" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+              <input
+                type="checkbox"
+                [id]="row.id"
+                [checked]="isSelected"
+                (change)="onCheckboxChangeFn($event)"
+              />
               <label [for]="row.id"></label>
             </div>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'DOCUMENTS.LIST.TABLE.NAME' | translate" prop="name" [width]="300">
+        <ngx-datatable-column
+          [name]="'DOCUMENTS.LIST.TABLE.NAME' | translate"
+          prop="name"
+          [width]="300"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+          >
+            <div class="d-flex flex-column">
+              <a
+                class="doc-link font-weight-bold text-dark"
+                (click)="onDocumentView(row)"
+                >{{ value }}</a
+              >
+              <small class="text-muted">{{ row.categoryName }}</small>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'DOCUMENTS.LIST.TABLE.CREATED' | translate"
+          prop="createdDate"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="badge badge-soft-primary">{{
+              value | utcToLocalTime: "shortDate"
+            }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'DOCUMENTS.LIST.TABLE.CREATOR' | translate"
+          prop="createdByName"
+        >
           <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
             <div class="d-flex flex-column">
-              <a class="doc-link font-weight-bold text-dark" (click)="onDocumentView(row)">{{value}}</a>
-              <small class="text-muted">{{row.categoryName}}</small>
+              <span>{{ value }}</span>
+              <small class="text-muted">{{ row.createdByEmail }}</small>
             </div>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'DOCUMENTS.LIST.TABLE.CREATED' | translate" prop="createdDate">
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="badge badge-soft-primary">{{value | utcToLocalTime:'shortDate'}}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column [name]="'DOCUMENTS.LIST.TABLE.CREATOR' | translate" prop="createdByName">
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <div class="d-flex align-items-center">
-              <div class="avatar avatar-sm bg-light-primary text-primary mr-2">
-                {{value?.charAt(0)}}
-              </div>
-              <span>{{value}}</span>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column [name]="'DOCUMENTS.LIST.TABLE.ACTIONS' | translate" [sortable]="false" cellClass="overflow-visible">
+        <ngx-datatable-column
+          [name]="'DOCUMENTS.LIST.TABLE.ACTIONS' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <div class="btn-group" dropdown [insideClick]="true" container="body">
+            <div
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
               <button dropdownToggle type="button" class="btn-action-trigger">
                 <i class="feather icon-more-horizontal"></i>
               </button>
-              <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-modern" role="menu">
-                <button class="dropdown-item-modern" (click)="onDocumentView(row)">
-                  <i class="feather icon-eye text-primary"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.VIEW" | translate}}</span>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  (click)="onDocumentView(row)"
+                >
+                  <i class="feather icon-eye text-primary"></i>
+                  <span>{{ "DOCUMENTS.LIST.BUTTONS.VIEW" | translate }}</span>
                 </button>
-                <button *hasClaim="'ALL_DOCUMENTS_EDIT_DOCUMENT'" class="dropdown-item-modern" (click)="editDocument(row)">
-                  <i class="feather icon-edit-2 text-info"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.EDIT" | translate}}</span>
+                <button
+                  *hasClaim="'ALL_DOCUMENTS_EDIT_DOCUMENT'"
+                  class="dropdown-item-modern"
+                  (click)="editDocument(row)"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "DOCUMENTS.LIST.BUTTONS.EDIT" | translate }}</span>
                 </button>
-                <button *hasClaim="'ALL_DOCUMENTS_DOWNLOAD_DOCUMENT'" class="dropdown-item-modern" (click)="downloadDocument(row)">
-                  <i class="feather icon-download-cloud text-success"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.DOWNLOAD" | translate}}</span>
+                <button
+                  *hasClaim="'ALL_DOCUMENTS_DOWNLOAD_DOCUMENT'"
+                  class="dropdown-item-modern"
+                  (click)="downloadDocument(row)"
+                >
+                  <i class="feather icon-download-cloud text-success"></i>
+                  <span>{{
+                    "DOCUMENTS.LIST.BUTTONS.DOWNLOAD" | translate
+                  }}</span>
                 </button>
-                <button class="dropdown-item-modern" (click)="uploadNewVersion(row)">
-                  <i class="feather icon-upload-cloud text-warning"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.UPLOAD" | translate}}</span>
+                <button
+                  class="dropdown-item-modern"
+                  (click)="uploadNewVersion(row)"
+                >
+                  <i class="feather icon-upload-cloud text-warning"></i>
+                  <span>{{ "DOCUMENTS.LIST.BUTTONS.UPLOAD" | translate }}</span>
                 </button>
                 <div class="dropdown-divider-modern"></div>
-                <button class="dropdown-item-modern" (click)="onVersionHistoryClick(row)">
-                  <i class="feather icon-watch"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.HISTORY" | translate}}</span>
+                <button
+                  class="dropdown-item-modern"
+                  (click)="onVersionHistoryClick(row)"
+                >
+                  <i class="feather icon-watch"></i>
+                  <span>{{
+                    "DOCUMENTS.LIST.BUTTONS.HISTORY" | translate
+                  }}</span>
                 </button>
                 <button class="dropdown-item-modern" (click)="addComment(row)">
-                  <i class="feather icon-message-square"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.COMMENT" | translate}}</span>
+                  <i class="feather icon-message-square"></i>
+                  <span>{{
+                    "DOCUMENTS.LIST.BUTTONS.COMMENT" | translate
+                  }}</span>
                 </button>
                 <button class="dropdown-item-modern" (click)="addReminder(row)">
-                  <i class="feather icon-bell"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.REMINDER" | translate}}</span>
+                  <i class="feather icon-bell"></i>
+                  <span>{{
+                    "DOCUMENTS.LIST.BUTTONS.REMINDER" | translate
+                  }}</span>
                 </button>
                 <button class="dropdown-item-modern" (click)="sendEmail(row)">
-                  <i class="feather icon-mail"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.EMAIL" | translate}}</span>
+                  <i class="feather icon-mail"></i>
+                  <span>{{ "DOCUMENTS.LIST.BUTTONS.EMAIL" | translate }}</span>
                 </button>
                 <div class="dropdown-divider-modern"></div>
-                <button *hasClaim="'ALL_DOCUMENTS_DELETE_DOCUMENT'" class="dropdown-item-modern text-danger" (click)="deleteDocument(row)">
-                  <i class="feather icon-trash-2"></i> 
-                  <span>{{"DOCUMENTS.LIST.BUTTONS.DELETE" | translate}}</span>
+                <button
+                  *hasClaim="'ALL_DOCUMENTS_DELETE_DOCUMENT'"
+                  class="dropdown-item-modern text-danger"
+                  (click)="deleteDocument(row)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "DOCUMENTS.LIST.BUTTONS.DELETE" | translate }}</span>
                 </button>
               </div>
             </div>

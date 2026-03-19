@@ -7,8 +7,8 @@ const routes: Routes = [
     path: "mail",
     loadChildren: () => import("./mail/mail.module").then((m) => m.MailModule),
     data: {
-      title: "Mail",
-      hidePageHeader: false,
+      title: "NAV.APPS_MAIL",
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -17,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import("./chat/chat.module").then((m) => m.ChatModule),
     data: {
       title: "NAV.APPS_CHAT",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -27,7 +27,7 @@ const routes: Routes = [
       import("./calendar/calendar.module").then((m) => m.CalendarAppModule),
     data: {
       title: "NAV.APPS_CALENDAR",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -56,7 +56,7 @@ const routes: Routes = [
     loadChildren: () => import("./blog/blog.module").then((m) => m.BlogModule),
     data: {
       title: "NAV.APPS_BLOG",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -66,7 +66,7 @@ const routes: Routes = [
       import("./survey/survey.module").then((m) => m.SurveyModule),
     data: {
       title: "NAV.APPS_SURVEY",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },

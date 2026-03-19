@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Category } from '@app/shared/enums/category';
@@ -14,7 +13,6 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { DocumentView } from '@app/shared/enums/document-view';
 import { BasePreviewComponent } from '@app/shared/preview/base-preview/base-preview.component';
-import { DocumentCategory } from '@app/shared/enums/document-category';
 import { DocumentEditComponent } from '../document-edit/document-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { TranslateService } from '@ngx-translate/core';

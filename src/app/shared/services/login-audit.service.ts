@@ -26,6 +26,8 @@ export class LoginAuditService {
             .set('searchQuery', resource.searchQuery)
             .set('id', resource.id.toString())
             .set('userName', resource.userName.toString())
+            .set('status', resource.status)
+            .set('loginTime', resource.loginTime);
 
         return this.httpClient.get<LoginAudit[]>(url, {
             params: customParams,

@@ -5,22 +5,27 @@ export const roles = {
       DESCRIPTION:
         "Define and manage access levels and functional permissions for your users.",
       TABLE: {
-        NAME: "Name",
-        CREATED: "Created at",
-        UPDATED: "Updated at",
+        NAME: "Role Name",
+        CREATED: "Created At",
+        UPDATED: "Updated At",
         ACTIONS: "Actions",
       },
       BUTTONS: {
-        ADD: "Add role",
+        ADD: "Add Role",
         EDIT: "Edit",
         DELETE: "Delete",
       },
+      EMPTY_STATE: {
+        TITLE: "No roles found",
+        DESCRIPTION: "No roles are available at the moment.",
+      },
     },
+
     ADD: {
       LABELS: {
-        NAME: "Role name",
+        NAME: "Role Name",
         PERMISSIONS: "Permissions",
-        SELECTALL: "Select all",
+        SELECTALL: "Select All",
       },
       BUTTONS: {
         ADD: "Save",
@@ -28,31 +33,33 @@ export const roles = {
         CANCEL: "Cancel",
       },
       ERRORS: {
-        PLEASE_ENTER_ROLE_NAME: "Please enter role name",
-        PLEASE_SELECT_AT_LEAT_ONE_PERMISSION:
-          "Please select at least one permission",
+        PLEASE_ENTER_ROLE_NAME: "Please enter a role name.",
+        PLEASE_SELECT_AT_LEAST_ONE_PERMISSION:
+          "Please select at least one permission.",
       },
       TOAST: {
-        ROLE_SAVED_SUCCESSFULLY: "Role saved successfully",
-        ROLE_UPDATED_SUCCESSFULLY: "Role updated successfully",
+        ROLE_SAVED_SUCCESSFULLY: "Role saved successfully.",
+        ROLE_UPDATED_SUCCESSFULLY: "Role updated successfully.",
       },
     },
+
     DELETE: {
       LABEL: {
-        title: "Do you want to delete this role?",
-        message: "Are you sure you want to delete this role",
-        button: {
-          cancel: "cancel",
-          confirm: "confirm",
+        TITLE: "Delete Role",
+        MESSAGE: "Are you sure you want to delete this role?",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Confirm",
         },
       },
       ERROR: {},
       TOAST: {
-        ROLE_DELETED_SUCCESSFULLY: "The role was successfully deleted",
+        ROLE_DELETED_SUCCESSFULLY: "Role deleted successfully.",
       },
     },
+
     TOAST: {
-      ROLE_DELETED_SUCCESSFULLY: "Role deleted successfully",
+      ROLE_DELETED_SUCCESSFULLY: "Role deleted successfully.",
     },
   },
 };

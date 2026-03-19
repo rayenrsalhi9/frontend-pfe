@@ -1,7 +1,7 @@
-import { DocumentRolePermission } from './document-role-permission';
-import { DocumentUserPermission } from './document-user-permission';
-import { DocumentMetaData } from './documentMetaData';
-import { DocumentVersion } from './documentVersion';
+import { DocumentRolePermission } from "./document-role-permission";
+import { DocumentUserPermission } from "./document-user-permission";
+import { DocumentMetaData } from "./documentMetaData";
+import { DocumentVersion } from "./documentVersion";
 
 export interface DocumentInfo {
   id?: string;
@@ -10,6 +10,7 @@ export interface DocumentInfo {
   description?: string;
   createdDate?: Date;
   createdBy?: string;
+  createdByEmail?: string;
   categoryId?: string;
   categoryName?: string;
   documentSource?: string;

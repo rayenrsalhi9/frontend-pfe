@@ -4,7 +4,7 @@ import { AuthGuard } from "@app/core/security/auth.guard";
 
 const routes: Routes = [
   {
-    path: "/",
+    path: "",
     loadChildren: () =>
       import("./document-assigned/document-assigned.module").then(
         (m) => m.DocumentAssignedModule,
@@ -81,4 +81,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class DomcumentsRoutingModule {}
+export class DocumentsRoutingModule {}

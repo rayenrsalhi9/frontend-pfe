@@ -10,9 +10,9 @@ export const dashboard = {
     CREATEDBY: "Created by",
     CREATEDAT: "Created on",
 
-    OVERVIEW: "System Overview",
+    OVERVIEW: "Document Activity",
     OVERVIEW_DESC:
-      "A summary of the platform's activity and key performance indicators.",
+      "Statistical overview of document uploads and downloads trends.",
 
     CATEGORIES_DESC: "Breakdown of stored documents organized by category.",
 

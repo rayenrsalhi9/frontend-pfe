@@ -3,6 +3,7 @@ export interface DocumentAuditTrail {
   documentId?: string;
   documentName?: string;
   createdBy?: string;
+  createdByEmail?: string;
   createdDate?: Date;
   operationName: string;
   permissionUser?: string;

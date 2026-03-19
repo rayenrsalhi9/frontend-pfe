@@ -3,17 +3,17 @@ export const articles = {
     LIST: {
       TITLE: "المقالات",
       DESCRIPTION:
-        "إنشاء وإدارة الأخبار والإعلانات والمقالات الإعلامية لشركتك.",
+        "أنشئ وانشر وأدر أخبار الشركة والإعلانات والمقالات المعلوماتية من مكان واحد.",
       TABLES: {
-        SEARCH_BY_NAME: "البحث بالاسم",
-        SEARCH_BY_CATEGORY: "البحث بالفئة",
-        SEARCH_BY_DATE: "البحث بالتاريخ",
-        PICTURE: "صورة",
+        SEARCH_BY_NAME: "البحث حسب العنوان",
+        SEARCH_BY_CATEGORY: "التصفية حسب الفئة",
+        SEARCH_BY_DATE: "التصفية حسب التاريخ",
+        PICTURE: "صورة الغلاف",
         TITLE: "العنوان",
         CATEGORY: "الفئة",
         CREATED_BY: "تم الإنشاء بواسطة",
-        CREATED_AT: "تم الإنشاء في",
-        PRIVACY: "الخصوصية",
+        CREATED_AT: "تاريخ الإنشاء",
+        PRIVACY: "مستوى الوصول",
         ACTIONS: "الإجراءات",
       },
       PRIVACY: {
@@ -26,16 +26,20 @@ export const articles = {
         EDIT: "تعديل",
         DELETE: "حذف",
       },
+      EMPTY_STATE: {
+        TITLE: "لم يتم العثور على مقالات",
+        DESCRIPTION: "لا توجد مقالات تطابق عوامل التصفية المحددة.",
+      },
     },
     ADD: {
       LABEL: {
         TITLE: "العنوان",
         CATEGORY: "الفئة",
-        DESCRIPTION: "الوصف المختصر",
+        DESCRIPTION: "وصف مختصر",
         BODY: "المحتوى",
         PRIVATE: "خاص",
         USERS: "المستخدمون",
-        PICTURE: "صورة",
+        PICTURE: "صورة الغلاف",
         CHANGE_PICTURE: "تغيير الصورة",
       },
       BUTTONS: {
@@ -43,30 +47,35 @@ export const articles = {
         CANCEL: "إلغاء",
       },
       ERRORS: {
-        TITLE_IS_REQUIRED: "العنوان مطلوب",
-        CATEGORY_IS_REQUIRED: "الفئة مطلوبة",
-        DESCRIPTION_IS_REQUIRED: "الوصف مطلوب",
-        BODY_IS_REQUIRED: "المحتوى مطلوب",
-        PICTURE_IS_REQUIRED: "الصورة مطلوبة",
+        TITLE_IS_REQUIRED: "العنوان مطلوب.",
+        CATEGORY_IS_REQUIRED: "الفئة مطلوبة.",
+        DESCRIPTION_IS_REQUIRED: "الوصف المختصر مطلوب.",
+        BODY_IS_REQUIRED: "المحتوى مطلوب.",
+        PICTURE_IS_REQUIRED: "الصورة مطلوبة.",
       },
       TOAST: {
-        ADDED_SUCCESS: "تمت إضافة المقال بنجاح",
-        UPDATED_SUCCESSFULLY: "تم تحديث المقال بنجاح",
+        ADDED_SUCCESS: "تم إنشاء المقال بنجاح.",
+        UPDATED_SUCCESSFULLY: "تم تحديث المقال بنجاح.",
       },
     },
     DELETE: {
       LABEL: {
-        title: "حذف المقال",
-        message: "هل أنت متأكد أنك تريد حذف هذا المقال؟",
-        button: {
-          cancel: "إلغاء",
-          confirm: "تأكيد",
+        TITLE: "حذف المقال",
+        MESSAGE: "هل أنت متأكد أنك تريد حذف هذا المقال؟",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "تأكيد",
         },
       },
       ERROR: {},
       TOAST: {
-        ARTICLE_DELETED_SUCCESSFULLY: "تم حذف المقال بنجاح",
+        ARTICLE_DELETED_SUCCESSFULLY: "تم حذف المقال بنجاح.",
       },
+    },
+    CATEGORIES: {
+      TITLE: "فئات المقالات",
+      DESCRIPTION:
+        "نظّم المقالات ضمن فئات لمساعدة المستخدمين على العثور على المحتوى المناسب بسهولة أكبر.",
     },
   },
 };

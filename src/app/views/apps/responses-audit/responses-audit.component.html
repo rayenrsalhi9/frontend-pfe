@@ -3,8 +3,10 @@
   <div class="header-section">
     <div class="header-actions">
       <div class="header-content">
-        <h1 class="page-title">{{'RESPONSES.TITLE' | translate}}</h1>
-        <p class="page-description">{{'RESPONSES.DESCRIPTION' | translate}}</p>
+        <h1 class="page-title">{{ "RESPONSES.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "RESPONSES.DESCRIPTION" | translate }}
+        </p>
       </div>
     </div>
   </div>
@@ -13,13 +15,54 @@
   <div class="bento-item filters-section">
     <div class="filters-grid">
       <div class="filter-group">
+        <label class="filter-label">{{ "RESPONSES.FILTERS.SEARCH" | translate }}</label>
         <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
           <input
             type="text"
             class="form-control"
-            [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate"
-            (input)="onSearch($event.target.value)"
+            [placeholder]="'RESPONSES.FILTERS.SEARCH' | translate"
+            (keyup)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">{{ "RESPONSES.FILTERS.ACTION" | translate }}</label>
+        <ng-select
+          class="modern-select"
+          [items]="actions"
+          bindLabel="name"
+          [placeholder]="'RESPONSES.FILTERS.ACTION' | translate"
+          (change)="onActionChange($event)"
+        >
+        </ng-select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">{{ "RESPONSES.FILTERS.TYPE" | translate }}</label>
+        <ng-select
+          class="modern-select"
+          [items]="types"
+          bindLabel="name"
+          [placeholder]="'RESPONSES.FILTERS.TYPE' | translate"
+          (change)="onTypeChange($event)"
+        >
+        </ng-select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">{{ "RESPONSES.FILTERS.DATE" | translate }}</label>
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-calendar"></i>
+          <input
+            type="text"
+            class="form-control"
+            [placeholder]="'RESPONSES.FILTERS.DATE' | translate"
+            bsDatepicker
+            [bsConfig]="{
+              adaptivePosition: true,
+              containerClass: 'theme-default',
+              dateInputFormat: 'MMM DD, YYYY'
+            }"
+            (bsValueChange)="onDateChange($event)"
           />
         </div>
       </div>
@@ -31,80 +74,115 @@
     <div class="modern-table-wrapper">
       <ngx-datatable
         class="modern-table"
-        [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" 
-        [rows]="filteredRows"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
         [columnMode]="ColumnMode.force"
         [headerHeight]="60"
         [footerHeight]="60"
         rowHeight="auto"
-        [limit]="10"
+        [limit]="responseAuditResource.pageSize"
+        [externalPaging]="true"
+        [count]="totalCount"
+        [offset]="responseAuditResource.skip / responseAuditResource.pageSize"
+        (page)="onPageChange($event)"
         [loadingIndicator]="loading"
       >
-        <ngx-datatable-column [name]="'RESPONSES.TABLE.DATETIME' | translate" prop="createdDate" [width]="180">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="text-muted font-weight-medium">{{ value | utcToLocalTime: "shortDate" }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column [name]="'Forum'" prop="forumId" [width]="150">
-          <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
-            <a *ngIf="row.forumId; else noForum" [routerLink]="['/forum', value]" class="text-primary font-weight-bold">
+        <ngx-datatable-column [name]="'RESPONSES.TABLE.FORUM' | translate" prop="forumId" [width]="150">
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+          >
+            <a
+              *ngIf="row.forumId; else noForum"
+              [routerLink]="['/forum', value]"
+              class="text-primary font-weight-bold"
+            >
               <i class="feather icon-external-link mr-1"></i>
-              {{ row.forumTitle || "See forum" }}
+              {{ "RESPONSES.TABLE.SEE_FORUM" | translate }}
             </a>
             <ng-template #noForum>
               <span class="text-muted italic">
                 <i class="feather icon-minus-circle mr-1"></i>
-                {{ row.forumTitle || "No forum" }}
+                {{ "RESPONSES.TABLE.NO_FORUM" | translate }}
               </span>
             </ng-template>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'RESPONSES.TABLE.DETAILS' | translate" prop="responseContent" [width]="300">
+        <ngx-datatable-column
+          [name]="'RESPONSES.TABLE.DETAILS' | translate"
+          prop="responseContent"
+          [width]="300"
+        >
           <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="text-dark font-weight-medium d-inline-block text-truncate" style="max-width: 280px" [title]="value">
+            <span
+              class="text-dark font-weight-medium d-inline-block text-truncate"
+              style="max-width: 280px"
+              [title]="value"
+            >
               {{ value }}
             </span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'Type'" prop="responseType" [width]="120">
+        <ngx-datatable-column [name]="'RESPONSES.TABLE.TYPE' | translate" prop="responseType" [width]="120">
           <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="badge" [ngClass]="{
-              'badge-soft-primary': value === 'comment',
-              'badge-soft-warning': value === 'reaction'
-            }">
-              {{ value | uppercase }}
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-soft-primary': value?.toLowerCase() === 'comment',
+                'badge-soft-warning': value?.toLowerCase() === 'reaction'
+              }"
+            >
+              {{ "RESPONSES.BADGES." + value?.toUpperCase() | translate }}
             </span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'RESPONSES.TABLE.ACTION' | translate" prop="operationName" [width]="120">
+        <ngx-datatable-column
+          [name]="'RESPONSES.TABLE.ACTION' | translate"
+          prop="operationName"
+          [width]="120"
+        >
           <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="badge" [ngClass]="{
-              'badge-soft-success': value === 'Created',
-              'badge-soft-info': value === 'Updated',
-              'badge-soft-danger': value === 'Deleted'
-            }">
-              {{ value }}
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-soft-success': value?.toLowerCase() === 'created',
+                'badge-soft-info': value?.toLowerCase() === 'updated',
+                'badge-soft-danger': value?.toLowerCase() === 'deleted'
+              }"
+            >
+              {{ "RESPONSES.BADGES." + value?.toUpperCase() | translate }}
             </span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'RESPONSES.TABLE.USER' | translate" prop="user" [width]="200">
-          <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
-            <div *ngIf="value" class="d-flex align-items-center">
-              <div class="avatar avatar-sm bg-light-primary text-primary mr-2">
-                {{ value.firstName?.charAt(0) }}{{ value.lastName?.charAt(0) }}
+        <ngx-datatable-column
+          [name]="'RESPONSES.TABLE.USER' | translate"
+          prop="user"
+          [width]="200"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+          >
+            <div *ngIf="value">
+              <div class="font-weight-bold text-dark">
+                {{ value.firstName }} {{ value.lastName }}
               </div>
-              <div>
-                <div class="font-weight-bold text-dark">{{ value.firstName }} {{ value.lastName }}</div>
-                <small class="text-muted">@{{ value.userName }}</small>
-              </div>
+              <small class="text-muted">@{{ value.userName }}</small>
             </div>
-            <div *ngIf="!value" class="d-flex align-items-center">
-              <div class="avatar avatar-sm bg-light-secondary text-secondary mr-2">
+            <div *ngIf="!value">
+              <div
+                class="avatar avatar-sm bg-light-secondary text-secondary mr-2"
+              >
                 {{ row.createdByName?.charAt(0) }}
               </div>
               <span class="text-dark">{{ row.createdByName }}</span>
@@ -112,7 +190,11 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'LOGINS.TABLE.DATETIME' | translate" prop="modifiedDate" [width]="180">
+        <ngx-datatable-column
+          [name]="'RESPONSES.TABLE.DATETIME' | translate"
+          prop="modifiedDate"
+          [width]="180"
+        >
           <ng-template let-value="value" ngx-datatable-cell-template>
             <span *ngIf="value" class="text-muted italic">
               {{ value | utcToLocalTime: "shortDate" }}

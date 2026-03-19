@@ -3,17 +3,17 @@ export const articles = {
     LIST: {
       TITLE: "Articles",
       DESCRIPTION:
-        "Créez et gérez les actualités, les annonces et les articles informatifs pour votre entreprise.",
+        "Créez, publiez et gérez les actualités, annonces et articles informatifs de l’entreprise depuis un seul endroit.",
       TABLES: {
-        SEARCH_BY_NAME: "Rechercher par nom",
-        SEARCH_BY_CATEGORY: "Rechercher par catégorie",
-        SEARCH_BY_DATE: "Rechercher par date",
-        PICTURE: "Image",
+        SEARCH_BY_NAME: "Rechercher par titre",
+        SEARCH_BY_CATEGORY: "Filtrer par catégorie",
+        SEARCH_BY_DATE: "Filtrer par date",
+        PICTURE: "Image de couverture",
         TITLE: "Titre",
         CATEGORY: "Catégorie",
         CREATED_BY: "Créé par",
-        CREATED_AT: "Créé à",
-        PRIVACY: "Confidentialité",
+        CREATED_AT: "Créé le",
+        PRIVACY: "Visibilité",
         ACTIONS: "Actions",
       },
       PRIVACY: {
@@ -26,6 +26,10 @@ export const articles = {
         EDIT: "Modifier",
         DELETE: "Supprimer",
       },
+      EMPTY_STATE: {
+        TITLE: "Aucun article trouvé",
+        DESCRIPTION: "Aucun article ne correspond aux filtres sélectionnés.",
+      },
     },
     ADD: {
       LABEL: {
@@ -35,38 +39,43 @@ export const articles = {
         BODY: "Contenu",
         PRIVATE: "Privé",
         USERS: "Utilisateurs",
-        PICTURE: "Image",
-        CHANGE_PICTURE: "Changer l'image",
+        PICTURE: "Image de couverture",
+        CHANGE_PICTURE: "Changer l’image",
       },
       BUTTONS: {
         SAVE: "Enregistrer",
         CANCEL: "Annuler",
       },
       ERRORS: {
-        TITLE_IS_REQUIRED: "Le titre est requis",
-        CATEGORY_IS_REQUIRED: "La catégorie est requise",
-        DESCRIPTION_IS_REQUIRED: "La description est requise",
-        BODY_IS_REQUIRED: "Le contenu est requis",
-        PICTURE_IS_REQUIRED: "Une photo est requise",
+        TITLE_IS_REQUIRED: "Le titre est requis.",
+        CATEGORY_IS_REQUIRED: "La catégorie est requise.",
+        DESCRIPTION_IS_REQUIRED: "La description courte est requise.",
+        BODY_IS_REQUIRED: "Le contenu est requis.",
+        PICTURE_IS_REQUIRED: "L’image est requise.",
       },
       TOAST: {
-        ADDED_SUCCESS: "Article ajouté avec succès",
-        UPDATED_SUCCESSFULLY: "Article mis à jour avec succès",
+        ADDED_SUCCESS: "Article créé avec succès.",
+        UPDATED_SUCCESSFULLY: "Article mis à jour avec succès.",
       },
     },
     DELETE: {
       LABEL: {
-        title: "Supprimer l'article",
-        message: "Êtes-vous sûr de vouloir supprimer cet article ?",
-        button: {
-          cancel: "Annuler",
-          confirm: "Confirmer",
+        TITLE: "Supprimer l’article",
+        MESSAGE: "Êtes-vous sûr de vouloir supprimer cet article ?",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Confirmer",
         },
       },
       ERROR: {},
       TOAST: {
-        ARTICLE_DELETED_SUCCESSFULLY: "Article supprimé avec succès",
+        ARTICLE_DELETED_SUCCESSFULLY: "Article supprimé avec succès.",
       },
+    },
+    CATEGORIES: {
+      TITLE: "Catégories d’articles",
+      DESCRIPTION:
+        "Organisez les articles par catégories afin d’aider les utilisateurs à trouver plus facilement le contenu pertinent.",
     },
   },
 };

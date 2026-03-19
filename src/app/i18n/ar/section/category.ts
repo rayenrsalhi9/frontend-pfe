@@ -3,43 +3,49 @@ export const category = {
     LIST: {
       TITLE: "فئات المستندات",
       DESCRIPTION:
-        "قم بتنظيم مستنداتك في فئات قابلة للتخصيص من أجل هيكل ووصول أفضل.",
+        "نظّم مستنداتك ضمن فئات قابلة للتخصيص لتحسين الهيكلة والتصنيف وإدارة الوصول.",
       TABLE: {
-        NAME: "اسم",
-        DESCRIPTION: "وصف",
-        CREATED: "تم الإنشاء في",
-        ACTIONS: "أجراءات",
+        NAME: "اسم الفئة",
+        DESCRIPTION: "الوصف",
+        CREATED: "تاريخ الإنشاء",
+        ACTIONS: "الإجراءات",
       },
       BUTTONS: {
-        ADD: "أضف فئة",
+        ADD: "إضافة فئة",
         EDIT: "تعديل",
         DELETE: "حذف",
       },
+      EMPTY_STATE: {
+        TITLE: "لم يتم العثور على فئات",
+        DESCRIPTION: "لا توجد فئات متاحة في الوقت الحالي.",
+      },
     },
     ADD: {
-      NAME: "الاسم",
+      NAME: "اسم الفئة",
       DESCRIPTION: "الوصف",
       BUTTONS: {
         CATEGORY_SAVE: "حفظ",
         CATEGORY_CANCEL: "إلغاء",
       },
       ERROR: {
-        CATEGORY_NAME_IS_REQUIRED: "اسم الفئة إجباري",
+        CATEGORY_NAME_IS_REQUIRED: "اسم الفئة مطلوب.",
       },
-      TOAST: {},
+      TOAST: {
+        CATEGORY_SAVED_SUCCESSFULLY: "تم حفظ الفئة بنجاح.",
+      },
     },
     DELETE: {
       LABEL: {
-        title: "حذف الفئة؟",
-        message: "هل أنت متأكد أنك تريد حذف هذه الفئة؟",
-        button: {
-          cancel: "إلغاء",
-          confirm: "تأكيد",
+        TITLE: "حذف الفئة",
+        MESSAGE: "هل أنت متأكد أنك تريد حذف هذه الفئة؟",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "تأكيد",
         },
       },
       ERROR: {},
       TOAST: {
-        CATEGORY_DELETED_SUCCESSFULLY: "تم حذف الفئة بنجاح",
+        CATEGORY_DELETED_SUCCESSFULLY: "تم حذف الفئة بنجاح.",
       },
     },
   },

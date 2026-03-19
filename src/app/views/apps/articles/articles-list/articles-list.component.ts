@@ -68,7 +68,9 @@ export class ArticlesListComponent implements OnInit {
         this.categories = data;
         this.cdr.markForCheck();
       },
-      (error) => {},
+      (error) => {
+        console.log(`Error fetching categories:`, error);
+      },
     );
   }
 
@@ -102,19 +104,19 @@ export class ArticlesListComponent implements OnInit {
           },
         },
       });
-    });
 
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.articleService.deleteArticle(data.id).subscribe((data: any) => {
-          this.translate
-            .get("ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage);
-            });
-          this.getArtilces();
-        });
-      }
+      this.bsModalRef.content.onClose.subscribe((result) => {
+        if (result) {
+          this.articleService.deleteArticle(data.id).subscribe((data: any) => {
+            this.translate
+              .get("ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastr.success(translatedMessage);
+              });
+            this.getArtilces();
+          });
+        }
+      });
     });
   }
 

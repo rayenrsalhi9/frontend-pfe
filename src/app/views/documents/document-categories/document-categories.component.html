@@ -3,12 +3,14 @@
   <div class="header-section">
     <div class="header-actions">
       <div class="header-content">
-        <h1 class="page-title">{{'CATEGORY.LIST.TITLE' | translate}}</h1>
-        <p class="page-description">{{'CATEGORY.LIST.DESCRIPTION' | translate}}</p>
+        <h1 class="page-title">{{ "CATEGORY.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "CATEGORY.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
       <button (click)="manageCategory(null)" class="btn-create">
         <i class="feather icon-plus"></i>
-        <span>{{"CATEGORY.LIST.BUTTONS.ADD" | translate}}</span>
+        <span>{{ "CATEGORY.LIST.BUTTONS.ADD" | translate }}</span>
       </button>
     </div>
   </div>
@@ -16,64 +18,133 @@
   <!-- Table Section -->
   <div class="bento-item table-section">
     <div class="modern-table-wrapper">
-      <ngx-datatable 
+      <ngx-datatable
         class="modern-table"
-        [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" 
-        [rows]="rows" 
-        [columnMode]="ColumnMode.force" 
-        [headerHeight]="60" 
+        [messages]="{
+          emptyMessage: ('TABLE_MESSAGE.EMPTY' | translate),
+          selectedMessage: ('TABLE_MESSAGE.SELECTED' | translate),
+          totalMessage: ('TABLE_MESSAGE.TOTAL' | translate)
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
         [footerHeight]="60"
-        rowHeight="auto" 
-        [limit]="10" 
-        [selected]="selected" 
+        rowHeight="auto"
+        [limit]="10"
+        [selected]="selected"
         [selectionType]="SelectionType.checkbox"
-        (activate)="onActivate($event)" 
-        (select)="onSelect($event)">
-
-        <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
-          <ng-template ngx-datatable-header-template let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+        (activate)="onActivate($event)"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [width]="50"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+        >
+          <ng-template
+            ngx-datatable-header-template
+            let-allRowsSelected="allRowsSelected"
+            let-selectFn="selectFn"
+          >
             <div class="custom-checkbox">
-              <input type="checkbox" [id]="'selectAll'" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
+              <input
+                type="checkbox"
+                [id]="'selectAll'"
+                [checked]="allRowsSelected"
+                (change)="selectFn(!allRowsSelected)"
+              />
               <label [for]="'selectAll'"></label>
             </div>
           </ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+
+          <ng-template
+            ngx-datatable-cell-template
+            let-row="row"
+            let-isSelected="isSelected"
+            let-onCheckboxChangeFn="onCheckboxChangeFn"
+          >
             <div class="custom-checkbox">
-              <input type="checkbox" [id]="row.id" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+              <input
+                type="checkbox"
+                [id]="row.id"
+                [checked]="isSelected"
+                (change)="onCheckboxChangeFn($event)"
+              />
               <label [for]="row.id"></label>
             </div>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.NAME' | translate" prop="name" [width]="250">
-          <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
-            <span class="font-weight-bold text-dark">{{value}}</span>
+        <ngx-datatable-column
+          [name]="'CATEGORY.LIST.TABLE.NAME' | translate"
+          prop="name"
+          [width]="250"
+        >
+          <ng-template
+            let-row="row"
+            let-value="value"
+            ngx-datatable-cell-template
+          >
+            <span class="font-weight-bold text-dark">{{ value }}</span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.DESCRIPTION' | translate" prop="description"></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'CATEGORY.LIST.TABLE.DESCRIPTION' | translate"
+          prop="description"
+        >
+        </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.CREATED' | translate" prop="createdDate">
+        <ngx-datatable-column
+          [name]="'CATEGORY.LIST.TABLE.CREATED' | translate"
+          prop="createdDate"
+        >
           <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="badge badge-soft-primary">{{value | utcToLocalTime:'shortDate'}}</span>
+            <span class="badge badge-soft-primary">
+              {{ value | utcToLocalTime: "shortDate" }}
+            </span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'CATEGORY.LIST.TABLE.ACTIONS' | translate" [sortable]="false" cellClass="overflow-visible">
+        <ngx-datatable-column
+          [name]="'CATEGORY.LIST.TABLE.ACTIONS' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <div class="btn-group" dropdown [insideClick]="true" container="body">
+            <div
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
               <button dropdownToggle type="button" class="btn-action-trigger">
                 <i class="feather icon-more-horizontal"></i>
               </button>
-              <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-modern" role="menu">
-                <button class="dropdown-item-modern" (click)="manageCategory(row)">
-                  <i class="feather icon-edit-2 text-info"></i> 
-                  <span>{{"CATEGORY.LIST.BUTTONS.EDIT" | translate}}</span>
+
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  (click)="manageCategory(row)"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "CATEGORY.LIST.BUTTONS.EDIT" | translate }}</span>
                 </button>
+
                 <div class="dropdown-divider-modern"></div>
-                <button class="dropdown-item-modern text-danger" (click)="deleteCategory(row.id)">
-                  <i class="feather icon-trash-2"></i> 
-                  <span>{{"CATEGORY.LIST.BUTTONS.DELETE" | translate}}</span>
+
+                <button
+                  class="dropdown-item-modern text-danger"
+                  (click)="deleteCategory(row.id)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "CATEGORY.LIST.BUTTONS.DELETE" | translate }}</span>
                 </button>
               </div>
             </div>

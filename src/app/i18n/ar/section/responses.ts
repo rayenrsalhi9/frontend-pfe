@@ -1,17 +1,34 @@
 export const responses = {
   RESPONSES: {
-    TITLE: "تدقيق الردود",
-    DESCRIPTION: "مراجعة جميع التفاعلات والتعليقات وردود الفعل عبر المنصة.",
+    TITLE: "سجل تدقيق الردود",
+    DESCRIPTION:
+      "تتبّع وراجع تفاعلات المستخدمين والتعليقات وردود الفعل عبر المنصة.",
     TABLE: {
       DATETIME: "التاريخ والوقت",
       USER: "المستخدم",
       ACTION: "الإجراء",
-      DETAILS: "التفاصيل",
-      STATUS: "الحالة",
+      DETAILS: "الرد",
+      TYPE: "النوع",
+      FORUM: "المنتدى",
+      SEE_FORUM: "عرض المنتدى",
+      NO_FORUM: "لا يوجد منتدى مرتبط",
     },
     STATUS: {
-      SUCCESS: "نجاح",
+      SUCCESS: "ناجح",
       FAILURE: "فشل",
+    },
+    BADGES: {
+      COMMENT: "تعليق",
+      REACTION: "تفاعل",
+      CREATED: "تم الإنشاء",
+      UPDATED: "تم التحديث",
+      DELETED: "تم الحذف",
+    },
+    FILTERS: {
+      SEARCH: "ابحث عن رد",
+      ACTION: "فلتر حسب الإجراء",
+      TYPE: "فلتر حسب النوع",
+      DATE: "فلتر حسب التاريخ",
     },
   },
 };

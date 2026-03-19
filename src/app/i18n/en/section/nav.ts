@@ -43,7 +43,7 @@ export const nav = {
     USERS: "Users & Roles",
     USERS_LIST: "User List",
     USERS_ROLES_LIST: "Roles",
-    USERS_ROLES: "User Role",
+    USERS_ROLES: "User Roles",
 
     COMPONENTS: "Components",
     COMPONENTS_UIELEMENTS: "UI Elements",

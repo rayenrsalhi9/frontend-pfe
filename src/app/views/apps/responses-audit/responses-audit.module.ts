@@ -5,6 +5,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ResponsesAuditComponent } from './responses-audit.component';
 import { RouterModule } from '@angular/router';
 import { routes } from './responses-audit.routing.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [ResponsesAuditComponent],
@@ -12,7 +14,9 @@ import { routes } from './responses-audit.routing.module';
     CommonModule,
     SharedModule,
     NgxDatatableModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NgSelectModule,
+    BsDatepickerModule.forRoot()
   ]
 })
 export class ResponsesAuditModule { }

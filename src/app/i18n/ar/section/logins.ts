@@ -15,5 +15,10 @@ export const logins = {
       ERROR: "خطأ",
       SUCCESS: "نجاح",
     },
+    LABELS: {
+      SEARCH: "بحث بالبريد الإلكتروني...",
+      STATUS: "تصفية حسب الحالة",
+      DATE: "تصفية حسب التاريخ",
+    },
   },
 };

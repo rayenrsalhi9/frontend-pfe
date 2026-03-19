@@ -197,6 +197,112 @@
     display: flex !important;
     align-items: center !important;
   }
+
+  /* Beautiful Empty State */
+  .empty-row {
+    padding: 6rem 2rem !important;
+    text-align: center;
+    background: #fff;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+
+    &::before {
+      content: "";
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'%3E%3C/path%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'%3E%3C/polyline%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'%3E%3C/line%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.8;
+    }
+
+    /* Optional: If we want to support different messages, we can style the text specifically */
+    .empty-message {
+      max-width: 300px;
+      line-height: 1.5;
+    }
+  }
+
+  /* Elegant Footer styling */
+  .datatable-footer {
+    background: #f8fafc !important;
+    border-top: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 0.825rem !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 1.5rem !important;
+
+    .page-count {
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem;
+    }
+
+    .datatable-pager {
+      flex: 1;
+      text-align: right !important;
+      margin: 0 !important;
+
+      ul li {
+        margin: 0 3px !important;
+
+        a {
+          width: 32px !important;
+          height: 32px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          border-radius: 8px !important;
+          border: 1px solid transparent !important;
+          color: var(--text-secondary) !important;
+          transition: var(--transition) !important;
+          font-weight: 600 !important;
+
+          &:hover {
+            background: var(--primary-glow) !important;
+            color: var(--primary) !important;
+            border-color: var(--primary-glow) !important;
+          }
+        }
+
+        &.active a {
+          background: var(--primary) !important;
+          color: #fff !important;
+          box-shadow: 0 3px 10px rgba(37, 99, 235, 0.2) !important;
+        }
+
+        &.disabled a {
+          opacity: 0.4 !important;
+          &:hover {
+            background: transparent !important;
+          }
+        }
+      }
+
+      .datatable-icon-left,
+      .datatable-icon-skip,
+      .datatable-icon-right,
+      .datatable-icon-prev {
+        font-size: 1.1rem !important;
+        font-style: normal !important;
+      }
+    }
+  }
 }
 
 /* Badges */
@@ -213,6 +319,21 @@
 .badge-soft-danger {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
+}
+
+.badge-soft-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.badge-soft-info {
+  background: rgba(14, 165, 233, 0.1);
+  color: #0ea5e9;
+}
+
+.badge-soft-secondary {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
 }
 
 .badge {
@@ -357,26 +478,6 @@
   border-radius: 0rem 0.5rem 0rem 0rem;
 }
 
-/* .cdk-overlay-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: white;
-  z-index: 5000;
-} */
-
-/* .cdk-overlay-container {
-  z-index: 2000;
-  position: fixed;
-  background: black;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-} */
-
 /* Better Global Scrollbar Design */
 ::-webkit-scrollbar {
   width: 10px;
@@ -480,7 +581,7 @@ html {
 }
 
 .cdk-overlay-dark-backdrop {
-  background: white;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .cdk-overlay-transparent-backdrop,

@@ -10,7 +10,7 @@ export const users = {
         LASTNAME: "Nom",
         MOBILE: "Numéro de mobile",
         PHONE: "Numéro de téléphone",
-        DIRECTION: "Direction",
+        DIRECTION: "Département",
         MATRICULE: "Matricule",
         ACTION: "Actions",
       },

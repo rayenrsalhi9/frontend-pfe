@@ -15,5 +15,10 @@ export const logins = {
       ERROR: "Error",
       SUCCESS: "Success",
     },
+    LABELS: {
+      SEARCH: "Search by email...",
+      STATUS: "Filter by status",
+      DATE: "Filter by date",
+    },
   },
 };
