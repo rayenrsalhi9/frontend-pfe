@@ -72,7 +72,7 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column
-          *hasClaim="'ARTICLE_EDIT_CATEGORY'; aRTICLE_DELETE_CATEGORY"
+          *hasClaim="['ARTICLE_EDIT_CATEGORY', 'ARTICLE_DELETE_CATEGORY']"
           [name]="'CATEGORY.LIST.TABLE.ACTIONS' | translate"
           [sortable]="false"
           cellClass="overflow-visible"

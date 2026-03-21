@@ -72,18 +72,18 @@ export class ArticlesCategoriesComponent implements OnInit {
           },
         },
       });
-    });
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.articleCategoryService.deleteCategory(id).subscribe((d) => {
-          this.translate
-            .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage);
-            });
-          this.getCategories();
-        });
-      }
+      this.bsModalRef.content.onClose.subscribe((result) => {
+        if (result) {
+          this.articleCategoryService.deleteCategory(id).subscribe((d) => {
+            this.translate
+              .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastr.success(translatedMessage);
+              });
+            this.getCategories();
+          });
+        }
+      });
     });
   }
 

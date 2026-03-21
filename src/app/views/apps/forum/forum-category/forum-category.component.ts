@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ForumCategoryService } from "./forum-category.service";
 import { Router } from "@angular/router";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
-import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { ColumnMode } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
 import { ManageComponent } from "./manage/manage.component";
@@ -15,10 +15,7 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class ForumCategoryComponent implements OnInit {
   rows: any[] = [];
-  selected = [];
-
   ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   bsModalRef: BsModalRef;
 
@@ -44,10 +41,6 @@ export class ForumCategoryComponent implements OnInit {
       (error) => {},
     );
   }
-
-  onSelect({ selected }) {}
-
-  onActivate(event) {}
 
   manageCategory(data: any) {
     const initialState = {

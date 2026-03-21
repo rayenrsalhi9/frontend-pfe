@@ -56,9 +56,6 @@ export const roles = {
         },
       },
       ERROR: {},
-      TOAST: {
-        ROLE_DELETED_SUCCESSFULLY: "Rôle supprimé avec succès.",
-      },
     },
 
     TOAST: {

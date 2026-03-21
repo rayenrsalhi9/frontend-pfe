@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { take, debounceTime, distinctUntilChanged, switchMap, catchError, tap } from "rxjs/operators";
+import { take, debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 import { Subject, of } from "rxjs";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
@@ -45,24 +45,30 @@ export class ForumListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getForumsCategories();
-    this.searchSubject.pipe(
-      debounceTime(300),
-      tap(() => this.isLoadingResults = true),
-      switchMap(() => this.forumService.allForums(this.forumResource).pipe(
-        catchError(err => {
-          console.log(err);
-          this.isLoadingResults = false;
-          return of(null);
-        })
-      ))
-    ).subscribe((resp: any) => {
-      if (resp) {
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        switchMap(() =>
+          this.forumService.allForums(this.forumResource).pipe(
+            catchError((err) => {
+              console.error(err);
+              this.isLoadingResults = false;
+              this.translateService
+                .get("FORUM.TOAST.ERROR")
+                .pipe(take(1))
+                .subscribe((msg: string) => this.toastr.error(msg));
+              return of([]);
+            }),
+          ),
+        ),
+      )
+      .subscribe((resp: any) => {
         const list = Array.isArray(resp) ? resp : (resp?.data ?? []);
         this.rows = (list || []).map((r: any) => this.normalizeForumRow(r));
-      }
-      this.isLoadingResults = false;
-      this.cdr.markForCheck();
-    });
+        this.isLoadingResults = false;
+        this.cdr.markForCheck();
+      });
     this.searchSubject.next();
   }
 

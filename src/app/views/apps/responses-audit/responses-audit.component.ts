@@ -3,19 +3,12 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { ResponseAuditTrailService } from "@app/shared/services/response-audit-trail.service";
 import { ResponseAuditResource } from "@app/shared/enums/response-audit-resource";
 import { ResponseAuditTrail } from "@app/shared/enums/response-audit-trail";
-import { CommonError } from "@app/shared/enums/common-error";
 import { HttpResponse } from "@angular/common/http";
 import { SecurityService } from "@app/core/security/security.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject, of } from "rxjs";
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  catchError,
-  tap,
-} from "rxjs/operators";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-responses-audit",
@@ -35,6 +28,7 @@ export class ResponsesAuditComponent implements OnInit {
 
   types: any[] = [];
   actions: any[] = [];
+  Math = Math;
 
   constructor(
     private cdr: ChangeDetectorRef,

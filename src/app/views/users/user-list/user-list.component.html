@@ -29,6 +29,7 @@
             class="form-control"
             (keyup)="onSearchChange($event)"
             [placeholder]="'USERS.LIST.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'USERS.LIST.LABELS.SEARCH' | translate"
           />
         </div>
       </div>
@@ -92,6 +93,7 @@
         >
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div
+              *ngIf="hasAnyUserActions(row)"
               class="btn-group"
               dropdown
               [insideClick]="true"
@@ -123,7 +125,9 @@
                     "USERS.LIST.BUTTONS.RESETPASSWORD" | translate
                   }}</span>
                 </button>
-                <div class="dropdown-divider-modern"></div>
+                <div 
+                  *ngIf="(canEdit(row) || canResetPassword(row)) && canDelete(row)"
+                  class="dropdown-divider-modern"></div>
                 <button
                   class="dropdown-item-modern text-danger"
                   *hasClaim="'USER_DELETE_USER'"

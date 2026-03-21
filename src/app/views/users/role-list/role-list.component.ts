@@ -45,13 +45,13 @@ export class RoleListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       (err) => {
-        console.log(err);
+        // TODO: handle error
       },
     );
   }
 
   deleteRole(role: Role) {
-    this.translate.get("USERS.DELETE.LABEL").subscribe((translations) => {
+    this.translate.get("ROLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
           title: translations.TITLE,
@@ -62,18 +62,18 @@ export class RoleListComponent implements OnInit {
           },
         },
       });
-    });
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.roleService.deleteRole(role.id).subscribe(() => {
-          this.translate
-            .get("ROLES.TOAST.ROLE_DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastrService.success(translatedMessage);
-            });
-          this.getRoles();
-        });
-      }
+      this.bsModalRef.content.onClose.subscribe((result) => {
+        if (result) {
+          this.roleService.deleteRole(role.id).subscribe(() => {
+            this.translate
+              .get("ROLES.TOAST.ROLE_DELETED_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastrService.success(translatedMessage);
+              });
+            this.getRoles();
+          });
+        }
+      });
     });
   }
 
@@ -100,8 +100,8 @@ export class RoleListComponent implements OnInit {
   onSearchChange(event: any) {
     const val = event.target.value.toLowerCase();
     if (val) {
-      this.rows = this.allRoles.filter(r => 
-        r.name?.toLowerCase().includes(val)
+      this.rows = this.allRoles.filter((r) =>
+        r.name?.toLowerCase().includes(val),
       );
     } else {
       this.rows = [...this.allRoles];

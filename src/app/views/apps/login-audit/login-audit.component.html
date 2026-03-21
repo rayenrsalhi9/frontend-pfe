@@ -18,8 +18,9 @@
           <input
             type="text"
             class="form-control"
-            (keyup)="onUserNameChange($event)"
+            (input)="onUserNameChange($event)"
             [placeholder]="'LOGINS.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'LOGINS.LABELS.SEARCH' | translate"
           />
         </div>
       </div>
@@ -31,6 +32,7 @@
           bindValue="id"
           [placeholder]="'LOGINS.LABELS.STATUS' | translate"
           (change)="onStatusChange($event)"
+          [attr.aria-label]="'LOGINS.LABELS.STATUS' | translate"
         >
         </ng-select>
       </div>
@@ -44,6 +46,7 @@
             [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
             (bsValueChange)="onDateChange($event)"
             [placeholder]="'LOGINS.LABELS.DATE' | translate"
+            [attr.aria-label]="'LOGINS.LABELS.DATE' | translate"
           />
         </div>
       </div>

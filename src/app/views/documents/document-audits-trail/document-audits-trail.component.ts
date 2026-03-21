@@ -3,6 +3,8 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { CommonError } from "@app/core/error-handler/common-error";
 import { DocumentResource } from "@app/shared/enums/document-resource";
 import { User } from "@app/shared/enums/user-auth";
+import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
+import { Category } from "@app/shared/enums/category";
 import { CategoryService } from "@app/shared/services/category.service";
 import { CommonService } from "@app/shared/services/common.service";
 import { DocumentAuditTrailService } from "@app/shared/services/document-audit-trail.service";
@@ -16,9 +18,9 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 export class DocumentAuditsTrailComponent implements OnInit {
   showMobilePanel = false;
 
-  rows: any[];
-  users: any[];
-  categories: any[];
+  rows: DocumentAuditTrail[] = [];
+  users: User[] = [];
+  categories: Category[] = [];
 
   selected = [];
 
@@ -54,7 +56,7 @@ export class DocumentAuditsTrailComponent implements OnInit {
         console.log(this.rows);
       },
       (err: any) => {
-        console.log(err);
+        // TODO: handle error
       },
     );
   }
@@ -65,15 +67,20 @@ export class DocumentAuditsTrailComponent implements OnInit {
         this.users = data;
       },
       (err: CommonError) => {
-        console.log(err);
+        // TODO: handle error
       },
     );
   }
 
   getCategories(): void {
-    this.categoryService.getAllCategoriesForDropDown().subscribe((c) => {
-      this.categories = c;
-    });
+    this.categoryService.getAllCategoriesForDropDown().subscribe(
+      (c) => {
+        this.categories = c;
+      },
+      (err) => {
+        // TODO: handle error
+      },
+  );
   }
 
   onNameChange(event: any) {

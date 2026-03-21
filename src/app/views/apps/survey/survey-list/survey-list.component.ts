@@ -1,42 +1,35 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ArticleResource } from '@app/shared/enums/article-resource';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { SurveyService } from '../survey.service';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
-import { Subject, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
-import { SurveyResource } from '@app/shared/enums/survey-resource';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { SurveyService } from "../survey.service";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
+import { Subject, of } from "rxjs";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
+import { SurveyResource } from "@app/shared/enums/survey-resource";
 
 @Component({
-  selector: 'app-survey-list',
-  templateUrl: './survey-list.component.html',
-  styleUrls: ['./survey-list.component.css']
+  selector: "app-survey-list",
+  templateUrl: "./survey-list.component.html",
+  styleUrls: ["./survey-list.component.css"],
 })
 export class SurveyListComponent implements OnInit {
-
-  showMobilePanel = false
+  showMobilePanel = false;
 
   rows: any[] = [];
   selected = [];
-  categories:any[] = [
-    "simple",
-    "rating",
-    /* "response", */
-    "satisfaction"
-  ]
+  categories: any[] = ["simple", "rating", "satisfaction"];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   bsModalRef: BsModalRef;
-  surveyResource: SurveyResource
+  surveyResource: SurveyResource;
   searchSubject: Subject<void> = new Subject<void>();
   isLoadingResults = false;
 
   constructor(
-    private surveyService:SurveyService,
+    private surveyService: SurveyService,
     private cdr: ChangeDetectorRef,
     private modalService: BsModalService,
     private translateService: TranslateService,
@@ -46,57 +39,65 @@ export class SurveyListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      tap(() => this.isLoadingResults = true),
-      switchMap(() => this.surveyService.allSurveys(this.surveyResource).pipe(
-        catchError(err => {
-          console.log(err);
-          this.isLoadingResults = false;
-          return of(null);
-        })
-      ))
-    ).subscribe((data : any)=>{
-      if (data) {
-        this.rows = data;
-      }
-      this.isLoadingResults = false;
-      this.cdr.markForCheck();
-    });
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        switchMap(() =>
+          this.surveyService.allSurveys(this.surveyResource).pipe(
+            catchError((err) => {
+              console.log(err);
+              this.isLoadingResults = false;
+              return of(null);
+            }),
+          ),
+        ),
+      )
+      .subscribe((data: any) => {
+        if (Array.isArray(data)) {
+          this.rows = data;
+        } else {
+          this.rows = [];
+        }
+        this.isLoadingResults = false;
+        this.cdr.markForCheck();
+      });
     this.searchSubject.next();
   }
 
-  getAllSurveys(data = this.surveyResource){
+  getAllSurveys(data = this.surveyResource) {
     this.surveyResource = data;
     this.searchSubject.next();
   }
 
-  deleteSurvey(data:any) {
-
-    this.translateService.get('SURVEY.DELETE.LABEL').subscribe((translations) => {
-      this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-        initialState: {
-          title: translations.title,
-          message: translations.message,
-          button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
-        }
+  deleteSurvey(data: any) {
+    this.translateService
+      .get("SURVEY.DELETE.LABEL")
+      .subscribe((translations) => {
+        this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+          initialState: {
+            title: translations.title,
+            message: translations.message,
+            button: {
+              cancel: translations.button.cancel,
+              confirm: translations.button.confirm,
+            },
+          },
+        });
       });
-    });
 
-    this.bsModalRef.content.onClose.subscribe(result => {
+    this.bsModalRef.content.onClose.subscribe((result) => {
       if (result) {
-        this.surveyService.deleteSurvey(data.id).subscribe(
-          (data: any) => {
-            this.translateService.get('SURVEY.DELETE.TOAST.DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {this.toastr.success(translatedMessage); });
-            this.getAllSurveys()
-          }
-        )
-
+        this.surveyService.deleteSurvey(data.id).subscribe((data: any) => {
+          this.translateService
+            .get("SURVEY.DELETE.TOAST.DELETED_SUCCESSFULLY")
+            .subscribe((translatedMessage: string) => {
+              this.toastr.success(translatedMessage);
+            });
+          this.getAllSurveys();
+        });
       }
-    })
+    });
 
     /* this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
       initialState: {
@@ -124,15 +125,14 @@ export class SurveyListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  getAnswerCount(value:number, results:any[]) {
-    return results.filter((val) => val.answer === value).length
+  getAnswerCount(value: number, results: any[]) {
+    return results.filter((val) => val.answer === value).length;
   }
 
-  onActivate(event) {
-  }
+  onActivate(event) {}
 
   onNameChange(event: any) {
-    let val = event.target.value
+    let val = event.target.value;
     this.surveyResource.title = val ? val : "";
     this.surveyResource.skip = 0;
     this.searchSubject.next();
@@ -149,5 +149,4 @@ export class SurveyListComponent implements OnInit {
     this.surveyResource.skip = 0;
     this.searchSubject.next();
   }
-
 }
