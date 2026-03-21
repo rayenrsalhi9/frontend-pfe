@@ -8,7 +8,6 @@ import { ColumnPanelModule } from "@app/shared/components/column-panel/column-pa
 import { DropdownModule } from "@app/shared/components/dropdown/dropdown.module";
 import { RadioModule } from "@app/shared/components/radio/radio.module";
 import { SharedModule } from "@app/shared/shared.module";
-import { DocumentsRoutingModule } from "@app/views/documents/document.routing.module";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -22,13 +21,12 @@ import { QuillModule } from "ngx-quill";
   imports: [
     ArticlesRoutingModule,
     CommonModule,
-    DocumentsRoutingModule,
     ModalModule.forRoot(),
     SharedModule,
     AvatarModule,
     DropdownModule,
     ColumnPanelModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     NgSelectModule,
     QuillModule.forRoot({}),
     CheckboxModule,
@@ -36,7 +34,6 @@ import { QuillModule } from "ngx-quill";
     NgxDatatableModule,
     RatingModule,
     PerfectScrollbarModule,
-    CheckboxModule,
   ],
 })
 export class ArticlesModule {}

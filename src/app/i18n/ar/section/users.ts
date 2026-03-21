@@ -19,6 +19,9 @@ export const users = {
         DELETE: "حذف",
         RESETPASSWORD: "إعادة تعيين كلمة المرور",
       },
+      LABELS: {
+        SEARCH: "بحث عن مستخدمين...",
+      },
     },
 
     ADD: {

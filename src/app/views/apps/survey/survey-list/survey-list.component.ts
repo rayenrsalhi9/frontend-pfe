@@ -6,6 +6,8 @@ import { SurveyService } from '../survey.service';
 import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
 import { SurveyResource } from '@app/shared/enums/survey-resource';
 
 @Component({
@@ -29,7 +31,9 @@ export class SurveyListComponent implements OnInit {
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   bsModalRef: BsModalRef;
-  surveyResource:SurveyResource
+  surveyResource: SurveyResource
+  searchSubject: Subject<void> = new Subject<void>();
+  isLoadingResults = false;
 
   constructor(
     private surveyService:SurveyService,
@@ -42,17 +46,29 @@ export class SurveyListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllSurveys()
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.isLoadingResults = true),
+      switchMap(() => this.surveyService.allSurveys(this.surveyResource).pipe(
+        catchError(err => {
+          console.log(err);
+          this.isLoadingResults = false;
+          return of(null);
+        })
+      ))
+    ).subscribe((data : any)=>{
+      if (data) {
+        this.rows = data;
+      }
+      this.isLoadingResults = false;
+      this.cdr.markForCheck();
+    });
+    this.searchSubject.next();
   }
 
   getAllSurveys(data = this.surveyResource){
-    this.surveyService.allSurveys(data).subscribe(
-      (data:any)=>{
-        this.rows = data
-        this.cdr.markForCheck()
-      }
-    )
-    this.cdr.detectChanges()
+    this.surveyResource = data;
+    this.searchSubject.next();
   }
 
   deleteSurvey(data:any) {
@@ -117,33 +133,21 @@ export class SurveyListComponent implements OnInit {
 
   onNameChange(event: any) {
     let val = event.target.value
-    if (val) {
-      this.surveyResource.title = val;
-    } else {
-      this.surveyResource.title = '';
-    }
+    this.surveyResource.title = val ? val : "";
     this.surveyResource.skip = 0;
-    this.getAllSurveys(this.surveyResource);
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {
-    if (event) {
-      this.surveyResource.type = event;
-    } else {
-      this.surveyResource.type = '';
-    }
+    this.surveyResource.type = event ? event : "";
     this.surveyResource.skip = 0;
-    this.getAllSurveys(this.surveyResource);
+    this.searchSubject.next();
   }
 
   onDateChange(event: any) {
-    if (event) {
-      this.surveyResource.createdAt = new Date(event).toDateString();
-    } else {
-      this.surveyResource.createdAt = '';
-    }
+    this.surveyResource.createdAt = event ? new Date(event).toDateString() : "";
     this.surveyResource.skip = 0;
-    this.getAllSurveys(this.surveyResource);
+    this.searchSubject.next();
   }
 
 }

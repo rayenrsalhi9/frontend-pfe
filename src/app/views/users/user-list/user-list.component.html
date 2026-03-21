@@ -3,88 +3,134 @@
   <div class="header-section">
     <div class="header-actions">
       <div class="header-content">
-        <h1 class="page-title">{{'USERS.LIST.TITLE' | translate}}</h1>
-        <p class="page-description">{{'USERS.LIST.DESCRIPTION' | translate}}</p>
+        <h1 class="page-title">{{ "USERS.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "USERS.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
-      <button *hasClaim="'USER_CREATE_USER'" routerLink="/user/user-add" class="btn-create">
+      <a
+        *hasClaim="'USER_CREATE_USER'"
+        routerLink="/user/user-add"
+        class="btn-create"
+      >
         <i class="feather icon-plus"></i>
-        <span>{{'USERS.LIST.BUTTONS.ADD' | translate}}</span>
-      </button>
+        <span>{{ "USERS.LIST.BUTTONS.ADD" | translate }}</span>
+      </a>
+    </div>
+  </div>
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            (keyup)="onSearchChange($event)"
+            [placeholder]="'USERS.LIST.LABELS.SEARCH' | translate"
+          />
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Table Section -->
   <div class="bento-item table-section">
     <div class="modern-table-wrapper">
-      <ngx-datatable 
+      <ngx-datatable
         class="modern-table"
-        [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" 
-        [rows]="rows" 
-        [columnMode]="ColumnMode.force" 
-        [headerHeight]="60" 
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
         [footerHeight]="60"
-        rowHeight="auto" 
-        [limit]="10" 
-        [selected]="selected" 
+        rowHeight="auto"
+        [limit]="10"
+        [selected]="selected"
         [selectionType]="SelectionType.checkbox"
-        (activate)="onActivate($event)" 
-        (select)="onSelect($event)">
-
-        <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
-          <ng-template ngx-datatable-header-template let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
-            <div class="custom-checkbox">
-              <input type="checkbox" [id]="'selectAll'" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
-              <label [for]="'selectAll'"></label>
-            </div>
-          </ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
-            <div class="custom-checkbox">
-              <input type="checkbox" [id]="row.id" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
-              <label [for]="row.id"></label>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column [name]="'USERS.LIST.TABLE.EMAIL' | translate" prop="email">
-          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+        (activate)="onActivate($event)"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.EMAIL' | translate"
+          prop="email"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-row="row"
+            let-value="value"
+          >
             <div class="user-info-cell">
-              <span class="user-email d-block font-weight-bold">{{value}}</span>
-              <small class="text-muted">{{row.firstName}} {{row.lastName}}</small>
+              <span class="user-email d-block font-weight-bold">{{
+                value
+              }}</span>
+              <small class="text-muted"
+                >{{ row.firstName }} {{ row.lastName }}</small
+              >
             </div>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'USERS.LIST.TABLE.MATRICULE' | translate" prop="matricule">
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.DIRECTION' | translate"
+          prop="direction"
+        >
           <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="badge badge-soft-secondary font-weight-medium">{{value || '-'}}</span>
+            <span class="text-dark">{{ value || "-" }}</span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'USERS.LIST.TABLE.DIRECTION' | translate" prop="direction">
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="text-dark">{{value || '-'}}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column [name]="'USERS.LIST.TABLE.ACTION' | translate" [sortable]="false" cellClass="overflow-visible">
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.ACTION' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <div class="btn-group" dropdown [insideClick]="true" container="body">
+            <div
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
               <button dropdownToggle type="button" class="btn-action-trigger">
                 <i class="feather icon-more-horizontal"></i>
               </button>
-              <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-modern" role="menu">
-                <button class="dropdown-item-modern" *hasClaim="'USER_EDIT_USER'" (click)="editUser(row.id)">
-                  <i class="feather icon-edit-2 text-info"></i> 
-                  <span>{{'USERS.LIST.BUTTONS.EDIT' | translate}}</span>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  *hasClaim="'USER_EDIT_USER'"
+                  (click)="editUser(row.id)"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "USERS.LIST.BUTTONS.EDIT" | translate }}</span>
                 </button>
-                <button class="dropdown-item-modern" *hasClaim="'USER_RESET_PASSWORD'" (click)="resetPassword(row)">
-                  <i class="feather icon-lock text-warning"></i> 
-                  <span>{{'USERS.LIST.BUTTONS.RESETPASSWORD' | translate}}</span>
+                <button
+                  class="dropdown-item-modern"
+                  *hasClaim="'USER_RESET_PASSWORD'"
+                  (click)="resetPassword(row)"
+                >
+                  <i class="feather icon-lock text-warning"></i>
+                  <span>{{
+                    "USERS.LIST.BUTTONS.RESETPASSWORD" | translate
+                  }}</span>
                 </button>
                 <div class="dropdown-divider-modern"></div>
-                <button class="dropdown-item-modern text-danger" *hasClaim="'USER_DELETE_USER'" (click)="deleteUser(row)">
-                  <i class="feather icon-trash-2"></i> 
-                  <span>{{'USERS.LIST.BUTTONS.DELETE' | translate}}</span>
+                <button
+                  class="dropdown-item-modern text-danger"
+                  *hasClaim="'USER_DELETE_USER'"
+                  (click)="deleteUser(row)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "USERS.LIST.BUTTONS.DELETE" | translate }}</span>
                 </button>
               </div>
             </div>

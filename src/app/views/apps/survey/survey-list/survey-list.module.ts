@@ -35,7 +35,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TooltipModule.forRoot(),
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
   ]
 })
 export class SurveyListModule { }

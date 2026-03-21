@@ -28,7 +28,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     DropdownModule,
     ColumnPanelModule,
     BsDropdownModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     NgSelectModule,
     NgxDatatableModule,
     RatingModule,

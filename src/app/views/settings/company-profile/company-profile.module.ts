@@ -29,7 +29,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
     AvatarModule,
     DropdownModule,
     ColumnPanelModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     NgSelectModule,
     CheckboxModule,
     RadioModule,

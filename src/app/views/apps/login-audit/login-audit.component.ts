@@ -5,6 +5,8 @@ import { ClonerService } from "@app/shared/services/clone.service";
 import { LoginAuditService } from "@app/shared/services/login-audit.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { TranslateService } from "@ngx-translate/core";
+import { Subject, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-login-audit",
@@ -23,6 +25,7 @@ export class LoginAuditComponent implements OnInit {
 
   rows: any[] = [];
   totalCount: number = 0;
+  searchSubject: Subject<void> = new Subject<void>();
 
   constructor(
     public clonerService: ClonerService,
@@ -35,23 +38,31 @@ export class LoginAuditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadLoginAudits();
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.isLoadingResults = true),
+      switchMap(() => this.loginAuditService.getLoginAudits(this.loginAuditResource).pipe(
+        catchError(err => {
+          console.log(err);
+          this.isLoadingResults = false;
+          return of(null);
+        })
+      ))
+    ).subscribe({
+      next: (res: HttpResponse<any>) => {
+        if (res) {
+          this.rows = res.body;
+          this.totalCount = parseInt(res.headers.get('totalCount') || '0', 10);
+        }
+        this.isLoadingResults = false;
+        this.cdr.detectChanges();
+      }
+    });
+    this.searchSubject.next();
   }
 
   loadLoginAudits() {
-    this.isLoadingResults = true;
-    this.loginAuditService.getLoginAudits(this.loginAuditResource).subscribe({
-      next: (res: HttpResponse<any>) => {
-        this.rows = res.body;
-        this.totalCount = parseInt(res.headers.get('totalCount') || '0', 10);
-        this.isLoadingResults = false;
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        console.log(err);
-        this.isLoadingResults = false;
-      },
-    });
+    this.searchSubject.next();
   }
 
   onPageChange(event: any) {
@@ -61,32 +72,20 @@ export class LoginAuditComponent implements OnInit {
 
   onUserNameChange(event: any) {
     const val = event.target.value;
-    if (val) {
-      this.loginAuditResource.userName = val;
-    } else {
-      this.loginAuditResource.userName = '';
-    }
+    this.loginAuditResource.userName = val ? val : "";
     this.loginAuditResource.skip = 0;
-    this.loadLoginAudits();
+    this.searchSubject.next();
   }
 
   onStatusChange(event: any) {
-    if (event) {
-      this.loginAuditResource.status = event.id;
-    } else {
-      this.loginAuditResource.status = '';
-    }
+    this.loginAuditResource.status = event ? event.id : "";
     this.loginAuditResource.skip = 0;
-    this.loadLoginAudits();
+    this.searchSubject.next();
   }
 
   onDateChange(event: any) {
-    if (event) {
-      this.loginAuditResource.loginTime = new Date(event).toDateString();
-    } else {
-      this.loginAuditResource.loginTime = '';
-    }
+    this.loginAuditResource.loginTime = event ? new Date(event).toDateString() : "";
     this.loginAuditResource.skip = 0;
-    this.loadLoginAudits();
+    this.searchSubject.next();
   }
 }

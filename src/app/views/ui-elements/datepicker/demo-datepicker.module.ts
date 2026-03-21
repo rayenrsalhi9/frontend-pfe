@@ -42,7 +42,7 @@ locales.forEach((locale: LocaleData) => {
   ],
   imports: [
     DatepickerModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     TabsModule.forRoot(),
     CommonModule,
     FormsModule,

@@ -35,7 +35,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     RouterModule.forChild(routes),
   ],
   providers:[

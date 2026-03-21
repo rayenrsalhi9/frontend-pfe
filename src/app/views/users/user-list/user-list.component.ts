@@ -20,6 +20,7 @@ export class UserListComponent implements OnInit {
 
   showMobilePanel = false
   users: User[] = [];
+  allUsers: any[] = [];
   rows:any[] = [];
   selected = [];
 
@@ -78,6 +79,7 @@ export class UserListComponent implements OnInit {
     this.commonService.getUsers().subscribe(
       (data: any) => {
         this.isLoadingResults = false;
+        this.allUsers = data;
         this.rows = data;
         this.cdr.detectChanges();
       },
@@ -108,6 +110,21 @@ export class UserListComponent implements OnInit {
   }
   userPermission(userId: string) {
     //this.router.navigate(['/users/permission', userId]);
+  }
+
+  onSearchChange(event: any) {
+    const val = event.target.value.toLowerCase();
+    if (val) {
+      this.rows = this.allUsers.filter(u => 
+        u.userName?.toLowerCase().includes(val) || 
+        u.email?.toLowerCase().includes(val) ||
+        u.firstName?.toLowerCase().includes(val) ||
+        u.lastName?.toLowerCase().includes(val)
+      );
+    } else {
+      this.rows = [...this.allUsers];
+    }
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit() {

@@ -1,51 +1,51 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Category } from '@app/shared/enums/category';
-import { DocumentInfo } from '@app/shared/enums/document-info';
-import { DocumentResource } from '@app/shared/enums/document-resource';
-import { ClonerService } from '@app/shared/services/clone.service';
-import { DocumentService } from '@app/shared/services/document.service';
-import { Observable } from 'rxjs';
-import { CategoryService } from '@app/shared/services/category.service';
-import { CommonService } from '@app/shared/services/common.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { DocumentView } from '@app/shared/enums/document-view';
-import { BasePreviewComponent } from '@app/shared/preview/base-preview/base-preview.component';
-import { DocumentEditComponent } from '../document-edit/document-edit.component';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { TranslateService } from '@ngx-translate/core';
-import { DocumentAuditTrail } from '@app/shared/enums/document-audit-trail';
-import { DocumentOperation } from '@app/shared/enums/document-operation';
-import { ToastrService } from 'ngx-toastr';
-import { DocumentVersion } from '@app/shared/enums/documentVersion';
-import { DocumentUploadNewVersionComponent } from '../document-upload-new-version/document-upload-new-version.component';
-import { DocumentHistoryComponent } from '../document-history/document-history.component';
-import { DocumentSendEmailComponent } from '../document-send-email/document-send-email.component';
-import { DocumentReminderComponent } from '../document-reminder/document-reminder.component';
-import { DocumentCommentComponent } from '../document-comment/document-comment.component';
-import { DocumentShareComponent } from '../document-share/document-share.component';
-import { PusherService } from '@app/shared/services/pusher.service';
-import { formatDate } from '@angular/common';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { OverlayPanel } from '@app/shared/preview/overlay-panel/overlay-panel.service';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { Category } from "@app/shared/enums/category";
+import { DocumentInfo } from "@app/shared/enums/document-info";
+import { DocumentResource } from "@app/shared/enums/document-resource";
+import { ClonerService } from "@app/shared/services/clone.service";
+import { DocumentService } from "@app/shared/services/document.service";
+import { CategoryService } from "@app/shared/services/category.service";
+import { CommonService } from "@app/shared/services/common.service";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { HttpEventType, HttpResponse } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { DocumentView } from "@app/shared/enums/document-view";
+import { BasePreviewComponent } from "@app/shared/preview/base-preview/base-preview.component";
+import { DocumentEditComponent } from "../document-edit/document-edit.component";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { TranslateService } from "@ngx-translate/core";
+import { Subject, of, Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from "rxjs/operators";
+import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
+import { DocumentOperation } from "@app/shared/enums/document-operation";
+import { ToastrService } from "ngx-toastr";
+import { DocumentVersion } from "@app/shared/enums/documentVersion";
+import { DocumentUploadNewVersionComponent } from "../document-upload-new-version/document-upload-new-version.component";
+import { DocumentHistoryComponent } from "../document-history/document-history.component";
+import { DocumentSendEmailComponent } from "../document-send-email/document-send-email.component";
+import { DocumentReminderComponent } from "../document-reminder/document-reminder.component";
+import { DocumentCommentComponent } from "../document-comment/document-comment.component";
+import { DocumentShareComponent } from "../document-share/document-share.component";
+import { PusherService } from "@app/shared/services/pusher.service";
+import { formatDate } from "@angular/common";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.service";
 
 @Component({
-  selector: 'app-document-list',
-  templateUrl: './document-list.component.html',
-  styleUrls: ['./document-list.component.css']
+  selector: "app-document-list",
+  templateUrl: "./document-list.component.html",
+  styleUrls: ["./document-list.component.css"],
 })
 export class DocumentListComponent implements OnInit {
-
   documents: DocumentInfo[] = [];
   displayedColumns: string[] = [
-    'select',
-    'action',
-    'name',
-    'categoryName',
-    'createdDate',
-    'createdBy',
+    "select",
+    "action",
+    "name",
+    "categoryName",
+    "createdDate",
+    "createdBy",
   ];
   isLoadingResults = true;
   documentResource: DocumentResource;
@@ -56,12 +56,13 @@ export class DocumentListComponent implements OnInit {
   SelectionType = SelectionType;
 
   rows: any[] = [];
-  createdDate = new FormControl('');
+  createdDate = new FormControl("");
 
   max = new Date();
   selected = [];
 
   bsModalRef: BsModalRef;
+  searchSubject: Subject<void> = new Subject<void>();
 
   constructor(
     private documentService: DocumentService,
@@ -74,20 +75,36 @@ export class DocumentListComponent implements OnInit {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private pusherService: PusherService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     this.documentResource = new DocumentResource();
     this.documentResource.pageSize = 10;
-    this.documentResource.orderBy = 'createdDate desc';
+    this.documentResource.orderBy = "createdDate desc";
   }
 
   ngOnInit(): void {
-    this.loadDocuments(this.documentResource)
-    this.getCategories()
+    this.getCategories();
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.isLoadingResults = true),
+      switchMap(() => this.documentService.getDocuments(this.documentResource).pipe(
+        catchError(err => {
+          console.log(err);
+          this.isLoadingResults = false;
+          return of(null);
+        })
+      ))
+    ).subscribe((res: HttpResponse<any>) => {
+      if (res) {
+        this.rows = res.body;
+      }
+      this.isLoadingResults = false;
+      this.cdr.detectChanges();
+    });
+    this.searchSubject.next();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   getCategories(): void {
     this.categoryService.getAllCategoriesForDropDown().subscribe((c) => {
@@ -95,7 +112,6 @@ export class DocumentListComponent implements OnInit {
       this.setDeafLevel();
     });
   }
-
 
   setDeafLevel(parent?: Category, parentId?: string) {
     const children = this.categories.filter((c) => c.parentId == parentId);
@@ -112,64 +128,38 @@ export class DocumentListComponent implements OnInit {
   }
 
   loadDocuments(data = this.documentResource) {
-    this.isLoadingResults = false
-    this.documentService.getDocuments(data).subscribe(
-      (res: HttpResponse<any>) => {
-        this.rows = res.body
-        this.isLoadingResults = true
-        this.cdr.detectChanges();
-      },
-      (err: any) => {
-        console.log(err);
-      }
-    )
+    this.documentResource = data;
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {
-    if (event) {
-      this.documentResource.categoryId = event;
-    } else {
-      this.documentResource.categoryId = '';
-    }
+    this.documentResource.categoryId = event ? event : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onNameChange(event: any) {
-    let val = event.target.value
-    if (val) {
-      this.documentResource.name = val;
-    } else {
-      this.documentResource.name = '';
-    }
+    const val = event.target.value;
+    this.documentResource.name = val ? val : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onTagChange(event: any) {
-    let val = event.target.value
-    if (val) {
-      this.documentResource.metaTags = val;
-    } else {
-      this.documentResource.metaTags = '';
-    }
+    const val = event.target.value;
+    this.documentResource.metaTags = val ? val : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onDateChange(event: any) {
-    if (event) {
-      this.documentResource.createDate = new Date(event).toDateString();
-    } else {
-      this.documentResource.createDate = '';
-    }
+    this.documentResource.createDate = event ? new Date(event).toDateString() : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
-
   onDocumentView(document: DocumentInfo) {
-    const urls = document.url.split('.');
+    const urls = document.url.split(".");
     const extension = urls[1];
     const documentView: DocumentView = {
       documentId: document.id,
@@ -180,16 +170,16 @@ export class DocumentListComponent implements OnInit {
       isFromPreview: true,
     };
     this.overlay.open(BasePreviewComponent, {
-      position: 'center',
-      origin: 'global',
-      panelClass: ['file-preview-overlay-container', 'white-background'],
+      position: "center",
+      origin: "global",
+      panelClass: ["file-preview-overlay-container", "white-background"],
       data: documentView,
     });
   }
 
   getExpiryDate(
     maxRolePermissionEndDate: Date,
-    maxUserPermissionEndDate: Date
+    maxUserPermissionEndDate: Date,
   ) {
     if (maxRolePermissionEndDate && maxUserPermissionEndDate) {
       return maxRolePermissionEndDate > maxUserPermissionEndDate
@@ -209,53 +199,56 @@ export class DocumentListComponent implements OnInit {
   }
 
   private cellOverflowVisible() {
-    const cells = document.getElementsByClassName('datatable-body-cell overflow-visible');
+    const cells = document.getElementsByClassName(
+      "datatable-body-cell overflow-visible",
+    );
     for (let i = 0, len = cells.length; i < len; i++) {
-      cells[i].setAttribute('style', 'overflow: visible !important');
+      cells[i].setAttribute("style", "overflow: visible !important");
     }
   }
 
   editDocument(documentInfo: DocumentInfo) {
-
     const initialState = {
       document: documentInfo,
       categories: this.categories,
     };
 
-    this.bsModalRef = this.modalService.show(DocumentEditComponent, { initialState });
+    this.bsModalRef = this.modalService.show(DocumentEditComponent, {
+      initialState,
+    });
   }
 
   private downloadFile(data: HttpResponse<Blob>, documentInfo: DocumentInfo) {
     const downloadedFile = new Blob([data.body], { type: data.body.type });
-    const a = document.createElement('a');
-    a.setAttribute('style', 'display:none;');
+    const a = document.createElement("a");
+    a.setAttribute("style", "display:none;");
     document.body.appendChild(a);
     a.download = documentInfo.name;
     a.href = URL.createObjectURL(downloadedFile);
-    a.target = '_blank';
+    a.target = "_blank";
     a.click();
     document.body.removeChild(a);
   }
 
   downloadDocument(documentInfo: DocumentInfo) {
-    this.commonService
-      .downloadDocument(documentInfo.id, false)
-      .subscribe(
-        (event) => {
-          if (event.type === HttpEventType.Response) {
-            this.addDocumentTrail(
-              documentInfo.id,
-              DocumentOperation.Download.toString()
-            );
-            this.downloadFile(event, documentInfo);
-          }
-        },
-        (error) => {
-          this.translate.get('DOCUMENTS.DOWNLOAD.TOAST.ERROR_WHILE_DOWNLOADING_DOCUMENT').subscribe((translatedMessage: string) => {
-            this.toastr.success(translatedMessage); // Display translated message using Toastr
-          });  
+    this.commonService.downloadDocument(documentInfo.id, false).subscribe(
+      (event) => {
+        if (event.type === HttpEventType.Response) {
+          this.addDocumentTrail(
+            documentInfo.id,
+            DocumentOperation.Download.toString(),
+          );
+          this.downloadFile(event, documentInfo);
         }
-      );
+      },
+      (error) => {
+        this.translate
+          .get("DOCUMENTS.DOWNLOAD.TOAST.ERROR_WHILE_DOWNLOADING_DOCUMENT")
+          .subscribe((translatedMessage: string) => {
+            this.toastr.success(translatedMessage); // Display translated message using Toastr
+          });
+      },
+    );
   }
 
   addDocumentTrail(id: string, operation: string) {
@@ -263,9 +256,7 @@ export class DocumentListComponent implements OnInit {
       documentId: id,
       operationName: operation,
     };
-    this.commonService
-      .addDocumentAuditTrail(objDocumentAuditTrail)
-      .subscribe();
+    this.commonService.addDocumentAuditTrail(objDocumentAuditTrail).subscribe();
   }
 
   onVersionHistoryClick(document: DocumentInfo): void {
@@ -274,38 +265,40 @@ export class DocumentListComponent implements OnInit {
     this.documentService
       .getDocumentVersion(document.id)
       .subscribe((documentVersions: DocumentVersion[]) => {
-
         documentInfo.documentVersions = documentVersions;
 
         const initialState = {
-          width: '800px',
-          maxHeight: '70vh',
-          panelClass: 'full-width-dialog',
+          width: "800px",
+          maxHeight: "70vh",
+          panelClass: "full-width-dialog",
           data: Object.assign({}, documentInfo),
         };
 
-        const dialogRef = this.modalService.show(DocumentHistoryComponent, { initialState });
+        const dialogRef = this.modalService.show(DocumentHistoryComponent, {
+          initialState,
+        });
       });
   }
 
   uploadNewVersion(document: Document) {
-
     const initialState = {
-      width: '800px',
-      maxHeight: '70vh',
-      panelClass: 'full-width-dialog',
+      width: "800px",
+      maxHeight: "70vh",
+      panelClass: "full-width-dialog",
       data: Object.assign({}, document),
     };
 
-    const dialogRef = this.modalService.show(DocumentUploadNewVersionComponent, { initialState });
+    const dialogRef = this.modalService.show(
+      DocumentUploadNewVersionComponent,
+      { initialState },
+    );
   }
 
   sendEmail(documentInfo: DocumentInfo) {
-
     const initialState = {
       data: documentInfo,
-      width: '80vw',
-      height: '80vh',
+      width: "80vw",
+      height: "80vh",
     };
 
     this.modalService.show(DocumentSendEmailComponent, { initialState });
@@ -314,70 +307,66 @@ export class DocumentListComponent implements OnInit {
   addReminder(documentInfo: DocumentInfo) {
     const initialState = {
       data: documentInfo,
-      width: '80vw',
-      height: '80vh'
+      width: "80vw",
+      height: "80vh",
     };
     this.modalService.show(DocumentReminderComponent, { initialState });
   }
 
   addComment(document: Document) {
-
     const initialState = {
-      width: '800px',
-      maxHeight: '70vh',
-      panelClass: 'full-width-dialog',
+      width: "800px",
+      maxHeight: "70vh",
+      panelClass: "full-width-dialog",
       data: Object.assign({}, document),
     };
 
     this.modalService.show(DocumentCommentComponent, { initialState });
-
   }
 
   onSharedSelectDocument(document: Document) {
-
     const initialState = {
-      width: '800px',
-      maxHeight: '70vh',
-      panelClass: 'modal-lg',
+      width: "800px",
+      maxHeight: "70vh",
+      panelClass: "modal-lg",
       data: Object.assign({}, document),
     };
 
-    const dialogRef = this.modalService.show(DocumentShareComponent, { initialState: initialState });
+    const dialogRef = this.modalService.show(DocumentShareComponent, {
+      initialState: initialState,
+    });
   }
 
   deleteDocument(document: DocumentInfo) {
-
-    this.translate.get('DOCUMENTS.DELETE.LABEL').subscribe((translations) => {
+    this.translate.get("DOCUMENTS.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
-          title: translations.title,
-          message: translations.message,
+          title: translations.TITLE,
+          message: translations.MESSAGE,
           button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
-        }
+            cancel: translations.BUTTON.CANCEL,
+            confirm: translations.BUTTON.CONFIRM,
+          },
+        },
       });
-    }); 
+    });
 
-    this.bsModalRef.content.onClose.subscribe(result => {
+    this.bsModalRef.content.onClose.subscribe((result) => {
       if (result) {
-
-        this.documentService
-          .deleteDocument(document.id)
-          .subscribe(() => {
-            this.addDocumentTrail(
-              document.id,
-              DocumentOperation.Deleted.toString()
-            );
-            this.translate.get('DOCUMENTS.DELETE.TOAST.DOCUMENT_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
+        this.documentService.deleteDocument(document.id).subscribe(() => {
+          this.addDocumentTrail(
+            document.id,
+            DocumentOperation.Deleted.toString(),
+          );
+          this.translate
+            .get("DOCUMENTS.DELETE.TOAST.DOCUMENT_DELETED_SUCCESSFULLY")
+            .subscribe((translatedMessage: string) => {
               this.toastr.success(translatedMessage); // Display translated message using Toastr
-            });  
-            this.loadDocuments();
-          });
+            });
+          this.loadDocuments();
+        });
       }
-    })
-
+    });
   }
 
   onSelect({ selected }) {
@@ -385,8 +374,7 @@ export class DocumentListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {
-  }
+  onActivate(event) {}
 
   add() {
     this.selected.push(this.rows[1], this.rows[3]);
@@ -399,8 +387,4 @@ export class DocumentListComponent implements OnInit {
   remove() {
     this.selected = [];
   }
-
-
-
-
 }

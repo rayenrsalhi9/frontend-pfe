@@ -73,51 +73,12 @@
         [footerHeight]="60"
         rowHeight="auto"
         [limit]="10"
+        [loadingIndicator]="isLoadingResults"
         [selected]="selected"
         [selectionType]="SelectionType.checkbox"
         (activate)="onActivate($event)"
         (select)="onSelect($event)"
       >
-        <ngx-datatable-column
-          [width]="50"
-          [sortable]="false"
-          [canAutoResize]="false"
-          [draggable]="false"
-          [resizeable]="false"
-        >
-          <ng-template
-            ngx-datatable-header-template
-            let-allRowsSelected="allRowsSelected"
-            let-selectFn="selectFn"
-          >
-            <div class="custom-checkbox">
-              <input
-                type="checkbox"
-                [checked]="allRowsSelected"
-                (change)="selectFn(!allRowsSelected)"
-                id="header-check"
-              />
-              <label for="header-check"></label>
-            </div>
-          </ng-template>
-          <ng-template
-            ngx-datatable-cell-template
-            let-isSelected="isSelected"
-            let-onCheckboxChangeFn="onCheckboxChangeFn"
-            let-row="row"
-          >
-            <div class="custom-checkbox">
-              <input
-                type="checkbox"
-                [checked]="isSelected"
-                (change)="onCheckboxChangeFn($event)"
-                id="row-check-{{ row.id }}"
-              />
-              <label for="row-check-{{ row.id }}"></label>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-
         <ngx-datatable-column
           [name]="'FORUM.TABLE.TOPIC' | translate"
           prop="title"

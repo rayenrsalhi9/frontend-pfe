@@ -19,6 +19,9 @@ export const roles = {
         TITLE: "Aucun rôle trouvé",
         DESCRIPTION: "Aucun rôle n’est disponible pour le moment.",
       },
+      LABELS: {
+        SEARCH: "Rechercher des rôles...",
+      },
     },
 
     ADD: {

@@ -96,11 +96,11 @@ export class ArticlesListComponent implements OnInit {
     this.translate.get("ARTICLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
-          title: translations.title,
-          message: translations.message,
+          title: translations.TITLE,
+          message: translations.MESSAGE,
           button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm,
+            cancel: translations.BUTTON.CANCEL,
+            confirm: translations.BUTTON.CONFIRM,
           },
         },
       });

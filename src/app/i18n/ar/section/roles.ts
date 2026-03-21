@@ -19,6 +19,9 @@ export const roles = {
         TITLE: "لم يتم العثور على أدوار",
         DESCRIPTION: "لا توجد أدوار متاحة في الوقت الحالي.",
       },
+      LABELS: {
+        SEARCH: "بحث عن أدوار...",
+      },
     },
 
     ADD: {
@@ -53,9 +56,6 @@ export const roles = {
         },
       },
       ERROR: {},
-      TOAST: {
-        ROLE_DELETED_SUCCESSFULLY: "تم حذف الدور بنجاح.",
-      },
     },
 
     TOAST: {

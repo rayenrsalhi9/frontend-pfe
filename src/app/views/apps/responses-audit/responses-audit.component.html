@@ -197,7 +197,7 @@
         >
           <ng-template let-value="value" ngx-datatable-cell-template>
             <span *ngIf="value" class="text-muted italic">
-              {{ value | utcToLocalTime: "shortDate" }}
+              {{ value | utcToLocalTime: "short" }}
             </span>
             <span *ngIf="!value" class="text-muted">-</span>
           </ng-template>

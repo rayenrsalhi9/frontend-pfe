@@ -20,6 +20,9 @@ export const users = {
         DELETE: "Delete",
         RESETPASSWORD: "Reset Password",
       },
+      LABELS: {
+        SEARCH: "Search for users...",
+      },
     },
 
     ADD: {

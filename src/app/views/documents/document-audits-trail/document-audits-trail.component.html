@@ -22,6 +22,7 @@
             class="form-control"
             (keyup)="onNameChange($event)"
             [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'AUDIT.LIST.LABELS.SEARCH' | translate"
           />
         </div>
       </div>
@@ -31,6 +32,7 @@
           class="modern-select"
           [multiple]="false"
           [placeholder]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
+          [attr.aria-label]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
           (change)="onCategoryChange($event)"
         >
           <ng-option *ngFor="let category of categories" [value]="category.id">
@@ -44,6 +46,7 @@
           class="modern-select"
           [multiple]="false"
           [placeholder]="'AUDIT.LIST.LABELS.USER' | translate"
+          [attr.aria-label]="'AUDIT.LIST.LABELS.USER' | translate"
           (change)="onUserChange($event)"
         >
           <ng-option *ngFor="let user of users" [value]="user.id">
@@ -110,23 +113,9 @@
           <ng-template let-value="value" ngx-datatable-cell-template>
             <span
               class="badge"
-              [ngClass]="{
-                'badge-soft-success': value === 'Created' || value === 'Create' || value === 'Add_Permission',
-                'badge-soft-primary': value === 'Read',
-                'badge-soft-info': value === 'Download' || value === 'Modified' || value === 'Send_Email',
-                'badge-soft-warning': value === 'Remove_Permission',
-                'badge-soft-danger': value === 'Deleted' || value === 'Delete'
-              }"
+              [ngClass]="getBadgeClass(value)"
             >
-              {{
-                "AUDIT.LIST.OPERATION." +
-                  ((value === "Created"
-                    ? "CREATE"
-                    : value === "Deleted"
-                      ? "DELETE"
-                      : value || "UNKNOWN"
-                  ) | uppercase) | translate
-              }}
+              {{ "AUDIT.LIST.OPERATION." + getOperationKey(value) | translate }}
             </span>
           </ng-template>
         </ngx-datatable-column>
@@ -152,7 +141,7 @@
           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
             <div *ngIf="value">
               <div class="font-weight-bold text-dark">{{ value }}</div>
-              <small class="text-muted">{{ row.createdByEmail }}</small>
+              <small class="text-muted">{{ row.permissionUserEmail || row.recipientEmail }}</small>
             </div>
             <span *ngIf="!value">-</span>
           </ng-template>

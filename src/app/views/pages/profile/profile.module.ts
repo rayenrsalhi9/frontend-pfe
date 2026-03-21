@@ -30,7 +30,7 @@ import { SocialConnectComponent } from './social-connect/social-connect.componen
         SharedModule,
         ColumnPanelModule,
         RadioModule,
-        BsDatepickerModule.forRoot(),
+        BsDatepickerModule,
         UploadModule.forRoot(),
         SwitchModule,
         ToastrModule.forRoot(),

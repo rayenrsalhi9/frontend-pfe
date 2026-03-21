@@ -43,7 +43,7 @@ import { TimepickerModule } from "ngx-bootstrap/timepicker";
     TimepickerModule.forRoot(),
     ColumnPanelModule,
     QuillModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     NgSelectModule,
 
     CheckboxModule,
@@ -51,8 +51,6 @@ import { TimepickerModule } from "ngx-bootstrap/timepicker";
     NgxDatatableModule,
     RatingModule,
     PerfectScrollbarModule,
-    CheckboxModule,
-    QuillModule.forRoot(),
   ],
   bootstrap: [DocumentShareComponent],
   providers: [],

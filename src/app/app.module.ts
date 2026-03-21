@@ -17,6 +17,7 @@ import { ToastrModule } from "ngx-toastr";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HttpRequestInterceptor } from "./core/interceptor/http-interceptor.module";
 import { NgxEmojiPickerModule } from "ngx-emoji-picker";
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { NgxEmojiPickerModule } from "ngx-emoji-picker";
     NgxsLoggerPluginModule.forRoot(),
     ToastrModule.forRoot(),
     NgxEmojiPickerModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   providers: [
     {

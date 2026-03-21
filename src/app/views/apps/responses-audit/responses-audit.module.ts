@@ -16,7 +16,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgxDatatableModule,
     RouterModule.forChild(routes),
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule
   ]
 })
 export class ResponsesAuditModule { }

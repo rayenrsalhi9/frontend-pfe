@@ -41,7 +41,7 @@ import { ManageComponent } from './manage/manage.component';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule
   ]
 })
 export class BlogCategoryModule { }

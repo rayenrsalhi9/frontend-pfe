@@ -37,47 +37,6 @@
         (select)="onSelect($event)"
       >
         <ngx-datatable-column
-          [width]="50"
-          [sortable]="false"
-          [canAutoResize]="false"
-          [draggable]="false"
-          [resizeable]="false"
-        >
-          <ng-template
-            ngx-datatable-header-template
-            let-allRowsSelected="allRowsSelected"
-            let-selectFn="selectFn"
-          >
-            <div class="custom-checkbox">
-              <input
-                type="checkbox"
-                [id]="'selectAll'"
-                [checked]="allRowsSelected"
-                (change)="selectFn(!allRowsSelected)"
-              />
-              <label [for]="'selectAll'"></label>
-            </div>
-          </ng-template>
-
-          <ng-template
-            ngx-datatable-cell-template
-            let-row="row"
-            let-isSelected="isSelected"
-            let-onCheckboxChangeFn="onCheckboxChangeFn"
-          >
-            <div class="custom-checkbox">
-              <input
-                type="checkbox"
-                [id]="row.id"
-                [checked]="isSelected"
-                (change)="onCheckboxChangeFn($event)"
-              />
-              <label [for]="row.id"></label>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
           [name]="'CATEGORY.LIST.TABLE.NAME' | translate"
           prop="name"
           [width]="250"

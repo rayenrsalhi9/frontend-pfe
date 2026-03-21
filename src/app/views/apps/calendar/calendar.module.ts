@@ -38,7 +38,7 @@ registerLocaleData(localeAr);
         NgSelectModule,
         ModalModule.forRoot(),
         PopoverModule.forRoot(),
-        BsDatepickerModule.forRoot(),
+        BsDatepickerModule,
         RouterModule.forChild(routes)
     ],
     exports: [],

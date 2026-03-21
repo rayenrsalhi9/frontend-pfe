@@ -40,7 +40,7 @@ import { CKEditorModule } from 'ckeditor4-angular';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule
   ]
 })
 export class BlogEditModule { }
