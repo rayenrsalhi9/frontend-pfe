@@ -51,7 +51,7 @@
 }
 
 .btn-create:hover {
-  background-color: #1d4ed8;
+  background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
 }

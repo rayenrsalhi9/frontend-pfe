@@ -5,14 +5,14 @@
   --footer-brand-color: #f8fafc;
   --footer-link-hover-color: #f8fafc;
   --footer-accent-color: var(--primary);
-  --footer-accent-hover-color: #1d4ed8;
+  --footer-accent-hover-color: var(--primary-hover);
   --footer-input-bg: rgba(30, 41, 59, 0.5);
   --footer-input-border: rgba(255, 255, 255, 0.1);
   --footer-input-focus-bg: rgba(30, 41, 59, 0.8);
   --footer-input-focus-border: var(--primary);
   --footer-input-focus-shadow: var(--primary-glow);
   --footer-btn-bg: var(--primary);
-  --footer-btn-hover-bg: #1d4ed8;
+  --footer-btn-hover-bg: var(--primary-hover);
   --footer-btn-shadow: rgba(37, 99, 235, 0.3);
   --footer-btn-hover-shadow: rgba(37, 99, 235, 0.4);
   --footer-social-bg: rgba(255, 255, 255, 0.03);

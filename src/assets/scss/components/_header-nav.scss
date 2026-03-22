@@ -65,7 +65,7 @@
         border-radius: 12px;
         background: transparent;
         border: none;
-        color: var(--text-secondary);
+        color: inherit;
         @include transition(var(--transition));
 
         &:hover {

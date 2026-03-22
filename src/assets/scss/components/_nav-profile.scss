@@ -31,7 +31,8 @@
       }
     }
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       background: rgba($primary, 0.1);
       border-color: rgba($primary, 0.1);
       box-shadow: 0 4px 12px rgba($primary, 0.15);

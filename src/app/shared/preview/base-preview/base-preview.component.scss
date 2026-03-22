@@ -10,15 +10,15 @@
   display: flex;
   width: 100%;
   align-items: center;
-  color: #fff;
+  color: $text-on-primary;
   height: 60px;
   padding: 0 15px;
-  background: #000;
+  background: $background-primary;
   z-index: 10;
 }
 
 .back-arrow {
-  color: #ffff;
+  color: $white;
   font-size: x-large;
   font-weight: bold;
   cursor: pointer;
@@ -31,6 +31,6 @@
 }
 
 .file-name {
-  color: #fff;
+  color: $white;
   margin-left: 10px;
 }
