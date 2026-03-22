@@ -1,4 +1,4 @@
-<div class="bento-main-container">
+<div class="bento-main-container" *hasClaim="'FORUM_VIEW_FORUMS'">
   <!-- Header Section -->
   <div class="header-section">
     <div class="header-actions">
@@ -6,7 +6,11 @@
         <h1 class="page-title">{{ "FORUM.TITLE" | translate }}</h1>
         <p class="page-description">{{ "FORUM.DESCRIPTION" | translate }}</p>
       </div>
-      <button routerLink="/apps/forums/add" class="btn-create">
+      <button
+        *hasClaim="'FORUM_ADD_TOPIC'"
+        routerLink="/apps/forums/add"
+        class="btn-create"
+      >
         <i class="feather icon-plus"></i>
         <span>{{ "FORUM.BUTTONS.ADD" | translate }}</span>
       </button>
@@ -185,6 +189,7 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column
+          *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
           [name]="'FORUM.TABLE.ACTIONS' | translate"
           [sortable]="false"
           [width]="80"
@@ -216,7 +221,7 @@
                     <span>{{ "FORUM.BUTTONS.COMMENTS" | translate }}</span>
                   </button>
                 </li>
-                <li role="menuitem">
+                <li role="menuitem" *hasClaim="'FORUM_EDIT_TOPIC'">
                   <a
                     class="dropdown-item-modern"
                     [routerLink]="'/apps/forums/edit/' + row.id"
@@ -225,8 +230,11 @@
                     <span>{{ "FORUM.BUTTONS.EDIT" | translate }}</span>
                   </a>
                 </li>
-                <li class="dropdown-divider-modern"></li>
-                <li role="menuitem">
+                <li
+                  class="dropdown-divider-modern"
+                  *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
+                ></li>
+                <li role="menuitem" *hasClaim="'FORUM_DELETE_TOPIC'">
                   <button
                     type="button"
                     class="dropdown-item-modern text-danger"

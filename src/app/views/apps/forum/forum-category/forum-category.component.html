@@ -1,4 +1,4 @@
-<div class="bento-main-container">
+<div class="bento-main-container" *hasClaim="'FORUM_VIEW_CATEGORIES'">
   <!-- Header Section -->
   <div class="header-section">
     <div class="header-actions">
@@ -8,7 +8,11 @@
           {{ "FORUM.CATEGORIES.DESCRIPTION" | translate }}
         </p>
       </div>
-      <button (click)="manageCategory(null)" class="btn-create">
+      <button
+        *hasClaim="'FORUM_ADD_CATEGORY'"
+        (click)="manageCategory(null)"
+        class="btn-create"
+      >
         <i class="feather icon-plus"></i>
         <span>{{ "CATEGORY.LIST.BUTTONS.ADD" | translate }}</span>
       </button>
@@ -62,6 +66,7 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column
+          *hasClaim="['FORUM_EDIT_CATEGORY', 'FORUM_DELETE_CATEGORY']"
           [name]="'CATEGORY.LIST.TABLE.ACTIONS' | translate"
           [sortable]="false"
           cellClass="overflow-visible"
@@ -88,14 +93,21 @@
               >
                 <button
                   class="dropdown-item-modern"
+                  *hasClaim="'FORUM_EDIT_CATEGORY'"
                   (click)="manageCategory(row)"
                 >
                   <i class="feather icon-edit-2 text-info"></i>
                   <span>{{ "CATEGORY.LIST.BUTTONS.EDIT" | translate }}</span>
                 </button>
-                <div class="dropdown-divider-modern"></div>
+                <ng-container *hasClaim="'FORUM_EDIT_CATEGORY'">
+                  <div
+                    *hasClaim="'FORUM_DELETE_CATEGORY'"
+                    class="dropdown-divider-modern"
+                  ></div>
+                </ng-container>
                 <button
                   class="dropdown-item-modern text-danger"
+                  *hasClaim="'FORUM_DELETE_CATEGORY'"
                   (click)="deleteCategory(row)"
                 >
                   <i class="feather icon-trash-2"></i>

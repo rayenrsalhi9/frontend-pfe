@@ -10,8 +10,9 @@ const routes: Routes = [
     data: {
       title: "NAV.APPS_FORUM_LIST",
       hidePageHeader: true,
+      claimType: "FORUM_VIEW_FORUMS",
     },
-    canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: "add",
@@ -20,8 +21,9 @@ const routes: Routes = [
     data: {
       title: "FORUM.BUTTONS.ADD",
       hidePageHeader: true,
+      claimType: "FORUM_ADD_TOPIC",
     },
-    canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: "edit/:id",
@@ -30,8 +32,9 @@ const routes: Routes = [
     data: {
       title: "FORUM.BUTTONS.EDIT",
       hidePageHeader: true,
+      claimType: "FORUM_EDIT_TOPIC",
     },
-    canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: "categories",
@@ -42,8 +45,9 @@ const routes: Routes = [
     data: {
       title: "NAV.APPS_FORUM_CATEGORY",
       hidePageHeader: true,
+      claimType: "FORUM_VIEW_CATEGORIES",
     },
-    canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
   },
 ];
 
