@@ -1,141 +1,186 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { ResponseAuditTrailService } from '@app/shared/services/response-audit-trail.service';
-import { ResponseAuditResource } from '@app/shared/enums/response-audit-resource';
-import { ResponseAuditTrail } from '@app/shared/enums/response-audit-trail';
-import { CommonError } from '@app/shared/enums/common-error';
-import { HttpResponse } from '@angular/common/http';
-import { SecurityService } from '@app/core/security/security.service';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { ResponseAuditTrailService } from "@app/shared/services/response-audit-trail.service";
+import { ResponseAuditResource } from "@app/shared/enums/response-audit-resource";
+import { ResponseAuditTrail } from "@app/shared/enums/response-audit-trail";
+import { HttpResponse } from "@angular/common/http";
+import { SecurityService } from "@app/core/security/security.service";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
+import { Subject, of } from "rxjs";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 
 @Component({
-  selector: 'app-responses-audit',
-  templateUrl: './responses-audit.component.html',
-  styleUrls: ['./responses-audit.component.css']
+  selector: "app-responses-audit",
+  templateUrl: "./responses-audit.component.html",
+  styleUrls: ["./responses-audit.component.css"],
 })
 export class ResponsesAuditComponent implements OnInit {
-
   rows: ResponseAuditTrail[] = [];
-  filteredRows: ResponseAuditTrail[] = [];
   selected = [];
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   loading: boolean = false;
   totalCount: number = 0;
-  pageSize: number = 50;
-  skip: number = 0;
+
+  responseAuditResource: ResponseAuditResource;
+  searchSubject: Subject<void> = new Subject<void>();
+
+  types: any[] = [];
+  actions: any[] = [];
+  Math = Math;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private responseAuditTrailService: ResponseAuditTrailService,
     private securityService: SecurityService,
-    private toastrService: ToastrService
-  ) { }
-
-  ngOnInit(): void {
-    this.loadResponseAuditTrails();
+    private toastrService: ToastrService,
+    private translateService: TranslateService,
+  ) {
+    this.responseAuditResource = new ResponseAuditResource();
+    this.responseAuditResource.pageSize = 10;
   }
 
-  loadResponseAuditTrails(): void {
-    this.loading = true;
-    
-    // Check if user has permission to view response audit trails
-    if (!this.securityService.hasClaim('RESPONSE_AUDIT_TRAIL_VIEW_RESPONSE_AUDIT_TRAIL')) {
-      this.toastrService.error('You do not have permission to view response audit trails');
-      this.loading = false;
-      this.rows = [];
-      this.filteredRows = [];
-      return;
-    }
-    
-    const resource: ResponseAuditResource = {
-      fields: 'id,forumId,forumTitle,responseId,responseType,operationName,responseContent,previousContent,ipAddress,userAgent,createdBy,createdByName,createdDate,modifiedBy,modifiedDate',
-      orderBy: 'createdDate desc',
-      pageSize: this.pageSize,
-      skip: this.skip,
-      searchQuery: '',
-      forumId: '',
-      userId: '',
-      operation: '',
-      responseType: 'all',
-      dateFrom: '',
-      dateTo: '',
-      name: '',
-      description: '',
-      totalCount: 0,
-      metaTags: ''
-    };
+  ngOnInit(): void {
+    this.types = [
+      {
+        id: "comment",
+        name: this.translateService.instant("RESPONSES.BADGES.COMMENT"),
+      },
+      {
+        id: "reaction",
+        name: this.translateService.instant("RESPONSES.BADGES.REACTION"),
+      },
+    ];
+    this.actions = [
+      {
+        id: "Created",
+        name: this.translateService.instant("RESPONSES.BADGES.CREATED"),
+      },
+      {
+        id: "Updated",
+        name: this.translateService.instant("RESPONSES.BADGES.UPDATED"),
+      },
+      {
+        id: "Deleted",
+        name: this.translateService.instant("RESPONSES.BADGES.DELETED"),
+      },
+    ];
 
-    this.responseAuditTrailService.getResponseAuditTrails(resource).subscribe({
-      next: (response: HttpResponse<ResponseAuditTrail[]> | CommonError) => {
-        if (response instanceof HttpResponse) {
-          this.rows = response.body || [];
-          this.filteredRows = [...this.rows];
-          this.totalCount = parseInt(response.headers.get('totalCount') || '0', 10);
-        } else {
-          console.error('Error loading response audit trails:', response);
-          this.toastrService.error('Failed to load response audit trails');
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.loading = true)),
+        switchMap(() => {
+          if (
+            !this.securityService.hasClaim(
+              "RESPONSE_AUDIT_TRAIL_VIEW_RESPONSE_AUDIT_TRAIL",
+            )
+          ) {
+            this.toastrService.error(
+              "You do not have permission to view response audit trails",
+            );
+            return of({ error: true });
+          }
+          this.responseAuditResource.fields =
+            "id,forumId,forumTitle,responseId,responseType,operationName,responseContent,previousContent,ipAddress,userAgent,createdBy,createdByName,createdDate,modifiedBy,modifiedDate";
+          return this.responseAuditTrailService
+            .getResponseAuditTrails(this.responseAuditResource)
+            .pipe(
+              catchError((error) => {
+                console.error("Error loading response audit trails:", error);
+                this.toastrService.error(
+                  "Failed to load response audit trails. Please try again later.",
+                );
+                return of(null);
+              }),
+            );
+        }),
+      )
+      .subscribe((response: any) => {
+        if (response && !response.error) {
+          if (response instanceof HttpResponse) {
+            this.rows = response.body || [];
+            this.totalCount = parseInt(
+              response.headers.get("totalCount") || "0",
+              10,
+            );
+          }
+        } else if (response && response.error) {
           this.rows = [];
-          this.filteredRows = [];
         }
         this.loading = false;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading response audit trails:', error);
-        this.toastrService.error('Failed to load response audit trails. Please try again later.');
-        this.loading = false;
-        this.rows = [];
-        this.filteredRows = [];
-        this.cdr.detectChanges();
-      }
-    });
+      });
+
+    this.searchSubject.next();
+  }
+
+  loadResponseAuditTrails(): void {
+    this.searchSubject.next();
   }
 
   extractUserAgentInfo(userAgent: string): string {
-    if (!userAgent) return '-';
-    
+    if (!userAgent) return "-";
+
     // Extract browser name and OS info from user agent
-    const browserMatch = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/[\d.]+/);
+    const browserMatch = userAgent.match(
+      /(Chrome|Firefox|Safari|Edge|Opera)\/[\d.]+/,
+    );
     const osMatch = userAgent.match(/\(([^)]+)\)/);
-    
+
     if (browserMatch && osMatch) {
-      return `${browserMatch[0]} (${osMatch[1].split(';')[0]})`;
+      return `${browserMatch[0]} (${osMatch[1].split(";")[0]})`;
     } else if (browserMatch) {
       return browserMatch[0];
     } else if (osMatch) {
-      return osMatch[1].split(';')[0];
+      return osMatch[1].split(";")[0];
     }
-    
-    return userAgent.substring(0, 50) + (userAgent.length > 50 ? '...' : '');
+
+    return userAgent.substring(0, 50) + (userAgent.length > 50 ? "..." : "");
   }
 
-  onSearch(term: string): void {
-    if (!term || term.trim() === '') {
-      this.filteredRows = [...this.rows];
+  onPageChange(event: any) {
+    this.responseAuditResource.skip =
+      event.offset * this.responseAuditResource.pageSize;
+    this.loadResponseAuditTrails();
+  }
+
+  onSearchChange(event: any) {
+    this.responseAuditResource.searchQuery = event.target.value
+      ? event.target.value
+      : "";
+    this.responseAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
+
+  onTypeChange(event: any) {
+    this.responseAuditResource.responseType = event ? event.id : "all";
+    this.responseAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
+
+  onActionChange(event: any) {
+    this.responseAuditResource.operation = event ? event.id : "";
+    this.responseAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
+
+  onDateChange(event: any) {
+    if (event) {
+      const date = new Date(event);
+      const localDay = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-");
+      this.responseAuditResource.dateFrom = `${localDay} 00:00:00`;
+      this.responseAuditResource.dateTo = `${localDay} 23:59:59`;
     } else {
-      const searchTerm = term.toLowerCase();
-      this.filteredRows = this.rows.filter(row => {
-        return (
-          row.createdByName?.toLowerCase().includes(searchTerm) ||
-          row.forumTitle?.toLowerCase().includes(searchTerm) ||
-          row.responseContent?.toLowerCase().includes(searchTerm) ||
-          row.operationName?.toLowerCase().includes(searchTerm) ||
-          row.ipAddress?.toLowerCase().includes(searchTerm) ||
-          row.responseType?.toLowerCase().includes(searchTerm) ||
-          row.userAgent?.toLowerCase().includes(searchTerm) ||
-          row.previousContent?.toLowerCase().includes(searchTerm) ||
-          // Search by user details
-          (row.user?.firstName?.toLowerCase().includes(searchTerm)) ||
-          (row.user?.lastName?.toLowerCase().includes(searchTerm)) ||
-          (row.user?.userName?.toLowerCase().includes(searchTerm)) ||
-          (row.user?.email?.toLowerCase().includes(searchTerm)) ||
-          // Search by forum ID
-          (row.forumId?.toLowerCase().includes(searchTerm))
-        );
-      });
+      this.responseAuditResource.dateFrom = "";
+      this.responseAuditResource.dateTo = "";
     }
-    this.cdr.detectChanges();
+    this.responseAuditResource.skip = 0;
+    this.searchSubject.next();
   }
-
 }

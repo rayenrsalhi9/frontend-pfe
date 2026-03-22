@@ -43,7 +43,7 @@ import { JoditAngularModule } from 'jodit-angular';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule
   ]
 })
 export class BlogAddModule { }

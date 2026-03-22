@@ -1,12 +1,16 @@
 export const users = {
   USERS: {
     LIST: {
+      TITLE: "قائمة المستخدمين",
+      DESCRIPTION: "إدارة حسابات المستخدمين والأدوار والأذونات عبر مؤسستك.",
       TABLE: {
         EMAIL: "البريد الإلكتروني",
         FIRSTNAME: "الاسم الأول",
         LASTNAME: "اسم العائلة",
         MOBILE: "رقم الهاتف المحمول",
         PHONE: "رقم الهاتف",
+        DIRECTION: "الإدارة",
+        MATRICULE: "الرقم الوظيفي",
         ACTION: "الإجراءات",
       },
       BUTTONS: {
@@ -14,6 +18,9 @@ export const users = {
         EDIT: "تعديل",
         DELETE: "حذف",
         RESETPASSWORD: "إعادة تعيين كلمة المرور",
+      },
+      LABELS: {
+        SEARCH: "بحث عن مستخدمين...",
       },
     },
 

@@ -36,7 +36,7 @@ import { QuillModule } from "ngx-quill";
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     ModalModule,
   ],
 })

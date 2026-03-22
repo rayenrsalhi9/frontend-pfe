@@ -1,69 +1,81 @@
 export const articles = {
-    "ARTICLES":{
-      "LIST":{
-        "TABLES":{
-          "SEARCH_BY_NAME":"Search by name",
-          "SEARCH_BY_CATEGORY":"Search by Category",
-          "SEARCH_BY_DATE":"Search by date",
-          "PICTURE":"Picture",
-          "TITLE":"Title",
-          "CATEGORY":"Category",
-          "CREATED_BY":"Created by",
-          "CREATED_AT":"Created at",
-          "PRIVACY":"Privacy",
-          "ACTIONS":"Actions"
-        },
-        "PRIVACY":{
-          "PUBLIC":"Public",
-          "PRIVATE":"Private"
-        },
-        "BUTTONS":{
-          "VIEW":"View",
-          "ADD":"Add article",
-          "EDIT":"Edit",
-          "DELETE":"Delete",
-        }
+  ARTICLES: {
+    LIST: {
+      TITLE: "Articles",
+      DESCRIPTION:
+        "Create, publish, and manage company news, announcements, and informational articles in one place.",
+      TABLES: {
+        SEARCH_BY_NAME: "Search by title",
+        SEARCH_BY_CATEGORY: "Filter by category",
+        SEARCH_BY_DATE: "Filter by date",
+        PICTURE: "Cover Image",
+        TITLE: "Title",
+        CATEGORY: "Category",
+        CREATED_BY: "Created By",
+        CREATED_AT: "Created At",
+        PRIVACY: "Visibility",
+        ACTIONS: "Actions",
       },
-      "ADD":{
-        "LABEL":{
-          "TITLE":"Title",
-          "CATEGORY":"Category",
-          "DESCRIPTION": "Short Description",
-          "BODY": "Body",
-          "PRIVATE":"Private",
-          "USERS":"Users",
-          "PICTURE":"Picture",
-          "CHANGE_PICTURE":"Change Picture",
-        },
-        "BUTTONS":{
-          "SAVE":"Save",
-          "CANCEL":"Cancel"
-        },
-        "ERRORS": {
-          "TITLE_IS_REQUIRED": "Title is required",
-          "CATEGORY_IS_REQUIRED": "Category is required",
-          "DESCRIPTION_IS_REQUIRED": "Description is required",
-          "BODY_IS_REQUIRED": " Body is required",
-          "PICTURE_IS_REQUIRED":"Picture is required",
-        },
-        "TOAST": {
-         "ADDED_SUCCESS":"News added successfully",
-         "UPDATED_SUCCESSFULLY":"News updated successfully",
-        }
+      PRIVACY: {
+        PUBLIC: "Public",
+        PRIVATE: "Private",
       },
-      "DELETE": {
-        "LABEL": {
-          "title": "Delete Article",
-          "message": "Are you sure you want to delete this article?",
-          "button": {
-            "cancel": "Cancel",
-            "confirm": "Confirm"
-          }
-        },
-        "ERROR": {},
-        "TOAST": {
-          "ARTICLE_DELETED_SUCCESSFULLY": "Article deleted successfully"
-        }
+      BUTTONS: {
+        VIEW: "View",
+        ADD: "Add Article",
+        EDIT: "Edit",
+        DELETE: "Delete",
       },
-    }
-  }
+      EMPTY_STATE: {
+        TITLE: "No articles found",
+        DESCRIPTION: "No articles match the selected filters.",
+      },
+    },
+    ADD: {
+      LABEL: {
+        TITLE: "Title",
+        CATEGORY: "Category",
+        DESCRIPTION: "Short Description",
+        BODY: "Content",
+        PRIVATE: "Private",
+        USERS: "Users",
+        PICTURE: "Cover Image",
+        CHANGE_PICTURE: "Change Image",
+      },
+      BUTTONS: {
+        SAVE: "Save",
+        CANCEL: "Cancel",
+      },
+      ERRORS: {
+        TITLE_IS_REQUIRED: "Title is required.",
+        CATEGORY_IS_REQUIRED: "Category is required.",
+        DESCRIPTION_IS_REQUIRED: "Short description is required.",
+        BODY_IS_REQUIRED: "Content is required.",
+        PICTURE_IS_REQUIRED: "Image is required.",
+      },
+      TOAST: {
+        ADDED_SUCCESS: "Article created successfully.",
+        UPDATED_SUCCESSFULLY: "Article updated successfully.",
+      },
+    },
+    DELETE: {
+      LABEL: {
+        TITLE: "Delete Article",
+        MESSAGE: "Are you sure you want to delete this article?",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Confirm",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        ARTICLE_DELETED_SUCCESSFULLY: "Article deleted successfully.",
+      },
+    },
+    CATEGORIES: {
+      TITLE: "Article Categories",
+      DESCRIPTION:
+        "Organize articles into categories so users can find relevant content more easily.",
+    },
+  },
+};

@@ -1,95 +1,226 @@
-<div class="card mb-0">
-  <div class="card-body">
-    <div class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button *hasClaim="'ARTICLE_ADD_ARTICLE'" routerLink="/apps/news/add" class="btn btn-primary mb-3">
-          <i class="feather icon-plus"></i>
-          <span>{{"ARTICLES.LIST.BUTTONS.ADD" | translate}}</span>
-        </button>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{ "ARTICLES.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "ARTICLES.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
+      <button
+        *hasClaim="'ARTICLE_ADD_ARTICLE'"
+        routerLink="/apps/news/add"
+        class="btn-create"
+      >
+        <i class="feather icon-plus"></i>
+        <span>{{ "ARTICLES.LIST.BUTTONS.ADD" | translate }}</span>
+      </button>
     </div>
-    <div class="row align-items-center">
-      <div class="col-md-4">
-        <div class="input-affix">
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control"  (keyup)="onNameChange($event)" [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_NAME'| translate">
+          <input
+            type="text"
+            class="form-control"
+            (input)="onNameChange($event)"
+            [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_NAME' | translate"
+          />
         </div>
       </div>
-      <div class="col-md-4">
-        <ng-select [multiple]="false" [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate" (change)="onCategoryChange($event)">
-          <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
+      <div class="filter-group">
+        <ng-select
+          class="modern-select"
+          [multiple]="false"
+          [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate"
+          (change)="onCategoryChange($event)"
+        >
+          <ng-option *ngFor="let category of categories" [value]="category.id"
+            >{{ category.name }}
+          </ng-option>
         </ng-select>
       </div>
-      <div class="col-md-4">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" bsDatepicker [bsConfig]="{dateInputFormat: 'DD-MM-YYYY'}" (bsValueChange)="onDateChange($event)" [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_DATE'| translate">
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-calendar"></i>
+          <input
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+            (bsValueChange)="onDateChange($event)"
+            [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_DATE' | translate"
+          />
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox"
-          (activate)="onActivate($event)" (select)="onSelect($event)">
-          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-            [resizeable]="false">
-            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-              let-selectFn="selectFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
-                  (change)="selectFn(!allRowsSelected)" />
-              </div>
-            </ng-template>
-            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
-              let-onCheckboxChangeFn="onCheckboxChangeFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="isSelected"
-                  (change)="onCheckboxChangeFn($event)" />
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.PICTURE' | translate" prop="picture">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <img style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;" [src]="value?getHost()+value:'/assets/images/others/bg-4.jpg'" alt="">
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.TITLE' | translate"  prop="title"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.CATEGORY' | translate"  prop="category">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value.name}}</ng-template>
-          </ngx-datatable-column>
-          <!-- <ngx-datatable-column [name]="'Description'" prop="shortText">
-            <div style="max-width: 40px; text-overflow: ellipsis; overflow: hidden; background: red;">
-              <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value}}</ng-template>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="10"
+      >
+        <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.PICTURE' | translate"
+          prop="picture"
+          [width]="100"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <div class="article-img-container">
+              <img
+                [src]="
+                  value ? getHost() + value : '/assets/images/others/bg-4.jpg'
+                "
+                class="article-img"
+                alt="Article Thumbnail"
+              />
             </div>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.CREATED_BY' | translate" prop="creator">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value.firstName}} {{value.lastName}}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.CREATED_AT' | translate" prop="createdAt">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false" >{{value | utcToLocalTime:'shortDate' }}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'ARTICLES.LIST.TABLES.PRIVACY' | translate" prop="privacy">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <span *ngIf="value == 'public'">{{'ARTICLES.LIST.PRIVACY.PUBLIC' | translate}}</span>
-              <span *ngIf="value == 'private'">{{'ARTICLES.LIST.PRIVACY.PRIVATE' | translate}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column *hasClaim="'ARTICLE_EDIT_ARTICLE','ARTICLE_DELETE_ARTICLE'" [name]="'ARTICLES.LIST.TABLES.ACTIONS' | translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <div class="btn-group" dropdown [insideClick]="true">
-                <button dropdownToggle type="button" class="btn">  <i class="feather icon-more-horizontal"></i>  </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ARTICLE_VIEW_ARTICLES'" (click)="viewArticle(row)">{{"ARTICLES.LIST.BUTTONS.VIEW" | translate}}</a></li>
-                  <li *ngIf="row.createdBy == currentUser.id" role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ARTICLE_EDIT_ARTICLE'" [routerLink]="'/apps/news/edit/'+row.id">{{"ARTICLES.LIST.BUTTONS.EDIT" | translate}}</a></li>
-                  <li *ngIf="row.createdBy == currentUser.id"  role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'ARTICLE_DELETE_ARTICLE'" (click)="deleteArticle(row)">{{"ARTICLES.LIST.BUTTONS.DELETE" | translate}}</a>
-                  </li>
-                </ul>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.TITLE' | translate"
+          prop="title"
+          [width]="300"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+          >
+            <div class="article-title-cell">
+              <span class="font-weight-bold text-dark d-block">{{
+                value
+              }}</span>
+              <small class="text-primary">{{ row.category?.name }}</small>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.CREATED_BY' | translate"
+          prop="creator"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="text-dark"
+              >{{ value.firstName }} {{ value.lastName }}</span
+            >
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.CREATED_AT' | translate"
+          prop="createdAt"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="badge badge-soft-primary">{{
+              value | utcToLocalTime: "shortDate"
+            }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.PRIVACY' | translate"
+          prop="privacy"
+          [width]="120"
+        >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-soft-success': value === 'public',
+                'badge-soft-warning': value === 'private'
+              }"
+            >
+              {{
+                (value === "public"
+                  ? "ARTICLES.LIST.PRIVACY.PUBLIC"
+                  : "ARTICLES.LIST.PRIVACY.PRIVATE"
+                ) | translate
+              }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          *hasClaim="['ARTICLE_EDIT_ARTICLE', 'ARTICLE_DELETE_ARTICLE']"
+          [name]="'ARTICLES.LIST.TABLES.ACTIONS' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              *ngIf="hasAnyArticleActions(row)"
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
+              <button dropdownToggle type="button" class="btn-action-trigger">
+                <i class="feather icon-more-horizontal"></i>
+              </button>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  *hasClaim="'ARTICLE_VIEW_ARTICLES'"
+                  (click)="viewArticle(row)"
+                >
+                  <i class="feather icon-eye text-primary"></i>
+                  <span>{{ "ARTICLES.LIST.BUTTONS.VIEW" | translate }}</span>
+                </button>
+                <ng-container *ngIf="row.createdBy === currentUser.id">
+                  <button
+                    class="dropdown-item-modern"
+                    *hasClaim="'ARTICLE_EDIT_ARTICLE'"
+                    [routerLink]="'/apps/news/edit/' + row.id"
+                  >
+                    <i class="feather icon-edit-2 text-info"></i>
+                    <span>{{ "ARTICLES.LIST.BUTTONS.EDIT" | translate }}</span>
+                  </button>
+                </ng-container>
+                <div
+                  *ngIf="row.createdBy == currentUser.id"
+                  class="dropdown-divider-modern"
+                ></div>
+                <ng-container *ngIf="row.createdBy === currentUser.id">
+                  <button
+                    class="dropdown-item-modern text-danger"
+                    *hasClaim="'ARTICLE_DELETE_ARTICLE'"
+                    (click)="deleteArticle(row)"
+                  >
+                    <i class="feather icon-trash-2"></i>
+                    <span>{{
+                      "ARTICLES.LIST.BUTTONS.DELETE" | translate
+                    }}</span>
+                  </button>
+                </ng-container>
               </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

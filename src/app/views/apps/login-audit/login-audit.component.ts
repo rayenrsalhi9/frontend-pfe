@@ -1,91 +1,117 @@
-import { HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Category } from '@app/shared/enums/category';
-import { ResponseHeader } from '@app/shared/enums/document-header';
-import { DocumentInfo } from '@app/shared/enums/document-info';
-import { DocumentResource } from '@app/shared/enums/document-resource';
-import { LoginAudit } from '@app/shared/enums/login-audit';
-import { LoginAuditResource } from '@app/shared/enums/login-audit-resource';
-import { OverlayPanel } from '@app/shared/preview/overlay-panel/overlay-panel.service';
-import { CategoryService } from '@app/shared/services/category.service';
-import { ClonerService } from '@app/shared/services/clone.service';
-import { CommonService } from '@app/shared/services/common.service';
-import { DocumentService } from '@app/shared/services/document.service';
-import { LoginAuditService } from '@app/shared/services/login-audit.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { HttpResponse } from "@angular/common/http";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { LoginAuditResource } from "@app/shared/enums/login-audit-resource";
+import { ClonerService } from "@app/shared/services/clone.service";
+import { LoginAuditService } from "@app/shared/services/login-audit.service";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { TranslateService } from "@ngx-translate/core";
+import { Subject, of } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 
 @Component({
-  selector: 'app-login-audit',
-  templateUrl: './login-audit.component.html',
-  styleUrls: ['./login-audit.component.css']
+  selector: "app-login-audit",
+  templateUrl: "./login-audit.component.html",
+  styleUrls: ["./login-audit.component.css"],
 })
 export class LoginAuditComponent implements OnInit {
-
-  documents: DocumentInfo[] = [];
-  displayedColumns: string[] = [
-    'select',
-    'action',
-    'name',
-    'categoryName',
-    'createdDate',
-    'createdBy',
-  ];
+  private destroy$ = new Subject<void>();
   isLoadingResults = true;
-  documentResource: DocumentResource;
-  categories: Category[] = [];
-  allCategories: Category[] = [];
-  loading$: Observable<boolean>;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
-  loginAuditResource:LoginAuditResource
+  loginAuditResource: LoginAuditResource;
+  statuses: { id: string; name: string }[] = [];
 
   rows: any[] = [];
-  createdDate = new FormControl('');
-
-  max = new Date();
-  selected = [];
-
-  bsModalRef: BsModalRef;
+  totalCount: number = 0;
+  searchSubject: Subject<void> = new Subject<void>();
+  Math = Math;
 
   constructor(
-    private documentService: DocumentService,
-    private commonService: CommonService,
-    private categoryService: CategoryService,
     public clonerService: ClonerService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
-    private overlay: OverlayPanel,
-    private modalService: BsModalService,
-    private toastr: ToastrService,
-    private loginAuditService: LoginAuditService
+    private loginAuditService: LoginAuditService,
+    private translateService: TranslateService,
   ) {
     this.loginAuditResource = new LoginAuditResource();
+    this.loginAuditResource.pageSize = 6;
   }
 
   ngOnInit(): void {
-    this.loadLoginAudits()
+    this.statuses = [
+      {
+        id: "success",
+        name: this.translateService.instant("LOGINS.STATUS.SUCCESS"),
+      },
+      {
+        id: "error",
+        name: this.translateService.instant("LOGINS.STATUS.ERROR"),
+      },
+    ];
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        takeUntil(this.destroy$),
+        switchMap(() =>
+          this.loginAuditService.getLoginAudits(this.loginAuditResource).pipe(
+            catchError((err) => {
+              console.log(err);
+              this.isLoadingResults = false;
+              return of(null);
+            }),
+          ),
+        ),
+      )
+      .subscribe({
+        next: (res: HttpResponse<any>) => {
+          if (res) {
+            this.rows = res.body;
+            this.totalCount = parseInt(
+              res.headers.get("totalCount") || "0",
+              10,
+            );
+          }
+          this.isLoadingResults = false;
+          this.cdr.detectChanges();
+        },
+      });
+    this.searchSubject.next();
   }
 
   loadLoginAudits() {
-    this.loginAuditService.getLoginAudits(this.loginAuditResource).subscribe(
-      (res: HttpResponse<any>) => {
-        this.rows = res.body
-        this.cdr.detectChanges();
-      },
-      (err: any) => {
-        console.log(err);
-      }
-    );
+    this.searchSubject.next();
   }
 
+  onPageChange(event: any) {
+    this.loginAuditResource.skip =
+      event.offset * this.loginAuditResource.pageSize;
+    this.loadLoginAudits();
+  }
 
+  onUserNameChange(event: any) {
+    const val = event.target.value;
+    this.loginAuditResource.userName = val ? val : "";
+    this.loginAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
 
+  onStatusChange(event: any) {
+    this.loginAuditResource.status = event ? event.id : "";
+    this.loginAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
 
+  onDateChange(event: any) {
+    this.loginAuditResource.loginTime = event
+      ? new Date(event).toDateString()
+      : "";
+    this.loginAuditResource.skip = 0;
+    this.searchSubject.next();
+  }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

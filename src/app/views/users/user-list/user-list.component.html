@@ -1,82 +1,154 @@
-<div class="card mb-0">
-  <div class="card-body">
-    <div *hasClaim="'USER_CREATE_USER'" class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button routerLink="/user/user-add" class="btn btn-primary mb-3">
-          <i class="feather icon-plus"></i>
-          <span>{{'USERS.LIST.BUTTONS.ADD' | translate}}</span>
-        </button>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{ "USERS.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "USERS.LIST.DESCRIPTION" | translate }}
+        </p>
+      </div>
+      <a
+        *hasClaim="'USER_CREATE_USER'"
+        routerLink="/user/user-add"
+        class="btn-create"
+      >
+        <i class="feather icon-plus"></i>
+        <span>{{ "USERS.LIST.BUTTONS.ADD" | translate }}</span>
+      </a>
+    </div>
+  </div>
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            (input)="onSearchChange($event)"
+            [placeholder]="'USERS.LIST.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'USERS.LIST.LABELS.SEARCH' | translate"
+          />
+        </div>
       </div>
     </div>
-    <!-- <div class="row align-items-center">
-      <div class="col-md-3">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" placeholder="Search by name">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" placeholder="Search by tags">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" placeholder="Search by category">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" placeholder="Search by date">
-        </div>
-      </div>
-    </div> -->
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox"
-          (activate)="onActivate($event)" (select)="onSelect($event)">
-          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-            [resizeable]="false">
-            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-              let-selectFn="selectFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
-                  (change)="selectFn(!allRowsSelected)" />
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="10"
+        [selected]="selected"
+        [selectionType]="SelectionType.checkbox"
+        (activate)="onActivate($event)"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.EMAIL' | translate"
+          prop="email"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-row="row"
+            let-value="value"
+          >
+            <div class="user-info-cell">
+              <span class="user-email d-block font-weight-bold">{{
+                value
+              }}</span>
+              <small class="text-muted"
+                >{{ row.firstName }} {{ row.lastName }}</small
+              >
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.DIRECTION' | translate"
+          prop="direction"
+        >
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <span class="text-dark">{{ value || "-" }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'USERS.LIST.TABLE.ACTION' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div
+              *ngIf="hasAnyUserActions(row)"
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
+              <button
+                dropdownToggle
+                type="button"
+                class="btn-action-trigger"
+                [attr.aria-label]="'USERS.LIST.TABLE.ACTIONS' | translate"
+              >
+                <i class="feather icon-more-horizontal"></i>
+              </button>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  *hasClaim="'USER_EDIT_USER'"
+                  (click)="editUser(row.id)"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "USERS.LIST.BUTTONS.EDIT" | translate }}</span>
+                </button>
+                <button
+                  class="dropdown-item-modern"
+                  *hasClaim="'USER_RESET_PASSWORD'"
+                  (click)="resetPassword(row)"
+                >
+                  <i class="feather icon-lock text-warning"></i>
+                  <span>{{
+                    "USERS.LIST.BUTTONS.RESETPASSWORD" | translate
+                  }}</span>
+                </button>
+                <div
+                  *ngIf="
+                    (canEdit(row) || canResetPassword(row)) && canDelete(row)
+                  "
+                  class="dropdown-divider-modern"
+                ></div>
+                <button
+                  class="dropdown-item-modern text-danger"
+                  *hasClaim="'USER_DELETE_USER'"
+                  (click)="deleteUser(row)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "USERS.LIST.BUTTONS.DELETE" | translate }}</span>
+                </button>
               </div>
-            </ng-template>
-            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
-              let-onCheckboxChangeFn="onCheckboxChangeFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="isSelected"
-                  (change)="onCheckboxChangeFn($event)" />
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'USERS.LIST.TABLE.EMAIL' | translate" prop="email"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'USERS.LIST.TABLE.FIRSTNAME' | translate" prop="firstName"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'USERS.LIST.TABLE.LASTNAME' | translate" prop="lastName"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Matricule' | translate" prop="matricule"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Direction' | translate" prop="direction"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'USERS.LIST.TABLE.ACTION' | translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <div class="btn-group" dropdown [insideClick]="true">
-                <button dropdownToggle type="button" class="btn"> <i class="feather icon-more-horizontal"></i> </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu" >
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'USER_EDIT_USER'" (click)="editUser(row.id)"><i class="feather icon-edit-2"></i> {{'USERS.LIST.BUTTONS.EDIT' | translate}}</a></li>
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'USER_DELETE_USER'" (click)="deleteUser(row)"><i class="feather icon-trash-2"></i> {{'USERS.LIST.BUTTONS.DELETE' | translate}}</a>
-                  <!-- <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'USER_ASSIGN_PERMISSION'" href="#"><i class="feather icon-shield"></i> Permission</a> -->
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" *hasClaim="'USER_RESET_PASSWORD'" (click)="resetPassword(row)"><i class="feather icon-lock"></i> {{'USERS.LIST.BUTTONS.RESETPASSWORD' | translate}}</a>
-                  </li>
-                </ul>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

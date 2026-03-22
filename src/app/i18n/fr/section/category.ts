@@ -1,43 +1,52 @@
 export const category = {
-  "CATEGORY":{
-    "LIST":{
-      "TABLE":{
-        "NAME": "nom",
-        "DESCRIPTION": "Description",
-        "CREATED": "Créé à",
-        "ACTIONS": "Actions"
+  CATEGORY: {
+    LIST: {
+      TITLE: "Catégories de documents",
+      DESCRIPTION:
+        "Organisez vos documents en catégories personnalisables pour une meilleure structure, classification et gestion des accès.",
+      TABLE: {
+        NAME: "Nom de la catégorie",
+        DESCRIPTION: "Description",
+        CREATED: "Créé le",
+        ACTIONS: "Actions",
       },
-      "BUTTONS":{
-        "ADD": "Ajouter une catégorie",
-        "EDIT": "Modifier",
-        "DELETE": "Supprimer"
-      }
+      BUTTONS: {
+        ADD: "Ajouter une catégorie",
+        EDIT: "Modifier",
+        DELETE: "Supprimer",
+      },
+      EMPTY_STATE: {
+        TITLE: "Aucune catégorie trouvée",
+        DESCRIPTION: "Aucune catégorie n’est disponible pour le moment.",
+      },
     },
-    "ADD": {
-      "NAME": "Nom",
-      "DESCRIPTION": "Description",
-      "BUTTONS": {
-        "CATEGORY_SAVE": "Enregistrer",
-        "CATEGORY_CANCEL": "Annuler"
+    ADD: {
+      NAME: "Nom de la catégorie",
+      DESCRIPTION: "Description",
+      BUTTONS: {
+        CATEGORY_SAVE: "Enregistrer",
+        CATEGORY_CANCEL: "Annuler",
       },
-      "ERROR": {
-        "CATEGORY_NAME_IS_REQUIRED": "Le nom de la catégorie est requis"
+      ERROR: {
+        CATEGORY_NAME_IS_REQUIRED: "Le nom de la catégorie est requis.",
       },
-      "TOAST": {}
+      TOAST: {
+        CATEGORY_SAVED_SUCCESSFULLY: "Catégorie enregistrée avec succès.",
+      },
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "Supprimer la catégorie",
-        "message": "Êtes-vous sûr de vouloir supprimer cette catégorie?",
-        "button": {
-          "cancel": "Annuler",
-          "confirm": "Confirmer"
-        }
+    DELETE: {
+      LABEL: {
+        TITLE: "Supprimer la catégorie",
+        MESSAGE: "Êtes-vous sûr de vouloir supprimer cette catégorie ?",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Confirmer",
+        },
       },
-      "ERROR": {},
-      "TOAST": {
-        "CATEGORY_DELETED_SUCCESSFULLY": "Catégorie supprimée avec succès"
-      } 
-    }
-  }
-}
+      ERROR: {},
+      TOAST: {
+        CATEGORY_DELETED_SUCCESSFULLY: "Catégorie supprimée avec succès.",
+      },
+    },
+  },
+};

@@ -35,7 +35,7 @@ import { UploadModule } from '@app/shared/components/upload/upload.module';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     RouterModule.forChild(routes),
   ]
 })

@@ -12,7 +12,7 @@
       <div class="col-md-4">
         <div class="input-affix">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control"  (keyup)="onNameChange($event)" [placeholder]="'SURVEY.TABLE.SEARCH_BY_NAME'| translate">
+          <input type="text" class="form-control"  (input)="onNameChange($event)" [placeholder]="'SURVEY.TABLE.SEARCH_BY_NAME'| translate">
         </div>
       </div>
       <div class="col-md-4">
@@ -29,8 +29,24 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox" (activate)="onActivate($event)" (select)="onSelect($event)">
+        <ngx-datatable
+          [messages]="{
+            emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+            selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+            totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+          }"
+          [rows]="rows"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          rowHeight="auto"
+          [limit]="10"
+          [loadingIndicator]="isLoadingResults"
+          [selected]="selected"
+          [selectionType]="SelectionType.checkbox"
+          (activate)="onActivate($event)"
+          (select)="onSelect($event)"
+        >
           <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
             [resizeable]="false">
             <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"

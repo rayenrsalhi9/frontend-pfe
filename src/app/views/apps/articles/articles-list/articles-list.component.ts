@@ -1,92 +1,117 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ArticleCategoryService } from '@app/shared/services/article-category.service';
-import { ArticleService } from '@app/shared/services/article.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { ArticlesCategoriesComponent } from '../articles-categories/articles-categories.component';
-import { ArticlesViewsComponent } from '../articles-views/articles-views.component';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { environment } from 'src/environments/environment';
-import { ArticleResource } from '@app/shared/enums/article-resource';
-import { TranslateService } from '@ngx-translate/core';
-import { SecurityService } from '@app/core/security/security.service';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject, of } from "rxjs";
+import {
+  debounceTime,
+  switchMap,
+  catchError,
+  tap,
+  takeUntil,
+} from "rxjs/operators";
+import { ArticleCategoryService } from "@app/shared/services/article-category.service";
+import { ArticleService } from "@app/shared/services/article.service";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
+import { ArticlesViewsComponent } from "../articles-views/articles-views.component";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { environment } from "src/environments/environment";
+import { ArticleResource } from "@app/shared/enums/article-resource";
+import { TranslateService } from "@ngx-translate/core";
+import { SecurityService } from "@app/core/security/security.service";
 
 @Component({
-  selector: 'app-articles-list',
-  templateUrl: './articles-list.component.html',
-  styleUrls: ['./articles-list.component.css']
+  selector: "app-articles-list",
+  templateUrl: "./articles-list.component.html",
+  styleUrls: ["./articles-list.component.css"],
 })
-export class ArticlesListComponent implements OnInit {
-
-  showMobilePanel = false
+export class ArticlesListComponent implements OnInit, OnDestroy {
+  showMobilePanel = false;
 
   rows: any[] = [];
   selected = [];
-  categories:any[] =[];
+  categories: any[] = [];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
-  articleResource:ArticleResource
+  articleResource: ArticleResource;
   bsModalRef: BsModalRef;
+  searchSubject: Subject<void> = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
-  //currentUser:any
+  currentUser: any;
 
   constructor(
     private articleService: ArticleService,
     private articleCategoryService: ArticleCategoryService,
     private cdr: ChangeDetectorRef,
     private securityService: SecurityService,
-    private router: Router,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     this.articleResource = new ArticleResource();
-    this.articleResource.orderBy = 'createdAt desc'
-    this.articleResource.createdAt = ''
-   }
+    this.articleResource.orderBy = "createdAt desc";
+    this.articleResource.createdAt = "";
+  }
 
   ngOnInit(): void {
+    this.currentUser = this.securityService.getUserDetail().user;
 
-    //this.currentUser = this.securityService.getUserDetail().user;
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => this.cdr.detectChanges()),
+        switchMap(() =>
+          this.articleService.allArticles(this.articleResource).pipe(
+            catchError((err) => {
+              console.error(err);
+              return of([]);
+            }),
+          ),
+        ),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((data: any) => {
+        this.rows = data;
+        this.cdr.markForCheck();
+      });
+    this.searchSubject.next();
+    this.getCategories();
+  }
 
-    this.getArtilces()
-    this.getCategories()
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getHost() {
-    return environment.apiUrl
+    return environment.apiUrl;
   }
 
-
   getArtilces(data = this.articleResource) {
-    this.articleService.allArticles(data).subscribe(
-      (data: any) => {
-        this.rows = data
-        this.cdr.markForCheck()
-      }
-    )
+    this.articleResource = data;
+    this.searchSubject.next();
   }
 
   getCategories() {
     this.articleCategoryService.allCategories().subscribe(
-      (data:any)=>{
-        this.categories = data
-        this.cdr.markForCheck()
+      (data: any) => {
+        this.categories = data;
+        this.cdr.markForCheck();
       },
-      error=>{
-
-      }
-    )
+      (error) => {
+        console.log(`Error fetching categories:`, error);
+      },
+    );
   }
 
   viewArticle(data: any) {
     const initialState = {
       data: Object.assign({}, data),
     };
-    this.modalService.show(ArticlesViewsComponent, { initialState: initialState })
+    this.modalService.show(ArticlesViewsComponent, {
+      initialState: initialState,
+    });
   }
 
   onSelect({ selected }) {
@@ -94,57 +119,46 @@ export class ArticlesListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {
-  }
-
-  updateArticle(data: any) {
-  }
-
   deleteArticle(data: any) {
-
-    this.translate.get('ARTICLES.DELETE.LABEL').subscribe((translations) => {
+    this.translate.get("ARTICLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
-          title: translations.title,
-          message: translations.message,
+          title: translations.TITLE,
+          message: translations.MESSAGE,
           button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
+            cancel: translations.BUTTON.CANCEL,
+            confirm: translations.BUTTON.CONFIRM,
+          },
+        },
+      });
+
+      this.bsModalRef.content.onClose.subscribe((result) => {
+        if (result) {
+          this.articleService.deleteArticle(data.id).subscribe(() => {
+            this.translate
+              .get("ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastr.success(translatedMessage);
+              });
+            this.getArtilces();
+          });
         }
       });
     });
-
-    this.bsModalRef.content.onClose.subscribe(result => {
-      if (result) {
-        this.articleService.deleteArticle(data.id).subscribe(
-          (data: any) => {
-            this.translate.get('ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {this.toastr.success(translatedMessage); });
-            this.getArtilces()
-          }
-        )
-
-      }
-    })
-
   }
 
   onNameChange(event: any) {
-    let val = event.target.value
-    if (val) {
-      this.articleResource.name = val;
-    } else {
-      this.articleResource.name = '';
-    }
+    const val = event.target.value;
+    this.articleResource.name = val ? val : "";
     this.articleResource.skip = 0;
-    this.getArtilces(this.articleResource);
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {
     if (event) {
       this.articleResource.articleCategoryId = event;
     } else {
-      this.articleResource.articleCategoryId = '';
+      this.articleResource.articleCategoryId = "";
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
@@ -154,10 +168,20 @@ export class ArticlesListComponent implements OnInit {
     if (event) {
       this.articleResource.createdAt = new Date(event).toDateString();
     } else {
-      this.articleResource.createdAt = '';
+      this.articleResource.createdAt = "";
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
   }
 
+  hasAnyArticleActions(row: any): boolean {
+    const isOwner = row.createdBy === this.currentUser?.id;
+    const hasViewClaim = this.securityService.hasClaim("ARTICLE_VIEW_ARTICLES");
+    const hasEditClaim = this.securityService.hasClaim("ARTICLE_EDIT_ARTICLE");
+    const hasDeleteClaim = this.securityService.hasClaim(
+      "ARTICLE_DELETE_ARTICLE",
+    );
+
+    return hasViewClaim || (isOwner && (hasEditClaim || hasDeleteClaim));
+  }
 }

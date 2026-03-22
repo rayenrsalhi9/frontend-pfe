@@ -57,32 +57,36 @@ export class DocumentCategoriesComponent implements OnInit {
   }
 
   deleteCategory(id: string): void {
-
     this.translate.get('CATEGORY.DELETE.LABEL').subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         initialState: {
-          title: translations.title,
-          message: translations.message,
+          title: translations.TITLE,
+          message: translations.MESSAGE,
           button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
+            cancel: translations.BUTTON.CANCEL,
+            confirm: translations.BUTTON.CONFIRM
           }
         }
       });
-    }); 
-    this.bsModalRef.content.onClose.subscribe(result => {
 
-      if(result) {
-        this.categoryService.delete(id).subscribe((d) => {
-          this.translate.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage); // Display translated message using Toastr
-          }); 
-          this.getCategories();
-        });
-      }
-    
-    })
-
+      this.bsModalRef.content.onClose.subscribe(result => {
+        if (result) {
+          this.categoryService.delete(id).subscribe(
+            (d) => {
+              this.translate.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
+                this.toastrService.success(translatedMessage);
+              });
+              this.getCategories();
+            },
+            (error) => {
+              this.translate.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETE_FAILED').subscribe((translatedMessage: string) => {
+                this.toastrService.error(translatedMessage);
+              });
+            }
+          );
+        }
+      });
+    });
   }
 
   manageCategory(category: Category): void {

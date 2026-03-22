@@ -1,0 +1,11 @@
+::ng-deep .modern-table.ngx-datatable .datatable-footer {
+  overflow: hidden !important;
+}
+
+::ng-deep .modern-table.ngx-datatable .datatable-body {
+  overflow-y: hidden !important;
+}
+
+::ng-deep .ngx-datatable.modern-table .datatable-footer .datatable-footer-inner {
+  overflow: hidden !important;
+}

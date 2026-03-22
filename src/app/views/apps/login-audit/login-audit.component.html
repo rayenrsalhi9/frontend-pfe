@@ -1,24 +1,139 @@
-<div class="card">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable [messages]="{emptyMessage:'TABLE_MESSAGE.EMPTY' | translate,selectedMessage:'TABLE_MESSAGE.SELECTED' | translate,totalMessage:'TABLE_MESSAGE.TOTAL' | translate}" [rows]="rows" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50"
-          rowHeight="auto" [limit]="5" [selected]="selected" [selectionType]="SelectionType.checkbox">
-          <ngx-datatable-column [name]="'LOGINS.TABLE.DATETIME' | translate" prop="loginTime"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.EMAIL' | translate" prop="userName"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.IP' | translate" prop="remoteIP"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.STATUS' | translate" prop="status">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <span [class]="(value=='Success'?'bg-success':'bg-warning')+' p-1 rounded'" style="color: white;">
-                {{(value.toLowerCase() === "error")?('LOGINS.STATUS.ERROR' | translate):('LOGINS.STATUS.SUCCESS' | translate)}}
-              </span>
-            </ng-template>
-
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.LATITUDE' | translate" prop="latitude"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'LOGINS.TABLE.LONGITUDE' | translate" prop="longitude"></ngx-datatable-column>
-        </ngx-datatable>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{ "LOGINS.TITLE" | translate }}</h1>
+        <p class="page-description">{{ "LOGINS.DESCRIPTION" | translate }}</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-search"></i>
+          <input
+            type="text"
+            class="form-control"
+            (input)="onUserNameChange($event)"
+            [placeholder]="'LOGINS.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'LOGINS.LABELS.SEARCH' | translate"
+          />
+        </div>
+      </div>
+      <div class="filter-group">
+        <ng-select
+          class="modern-select"
+          [items]="statuses"
+          bindLabel="name"
+          bindValue="id"
+          [placeholder]="'LOGINS.LABELS.STATUS' | translate"
+          (change)="onStatusChange($event)"
+          [attr.aria-label]="'LOGINS.LABELS.STATUS' | translate"
+        >
+        </ng-select>
+      </div>
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-calendar"></i>
+          <input
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+            (bsValueChange)="onDateChange($event)"
+            [placeholder]="'LOGINS.LABELS.DATE' | translate"
+            [attr.aria-label]="'LOGINS.LABELS.DATE' | translate"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="loginAuditResource.pageSize"
+        [loadingIndicator]="isLoadingResults"
+        [externalPaging]="true"
+        [count]="totalCount"
+        [offset]="
+          Math.floor(loginAuditResource.skip / loginAuditResource.pageSize)
+        "
+        (page)="onPageChange($event)"
+      >
+        <ngx-datatable-column
+          [name]="'LOGINS.TABLE.DATETIME' | translate"
+          prop="loginTime"
+          [width]="200"
+        >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="text-muted font-weight-medium">{{
+              value | utcToLocalTime: "short"
+            }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'LOGINS.TABLE.EMAIL' | translate"
+          prop="userName"
+          [width]="250"
+        >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="font-weight-bold text-dark">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'LOGINS.TABLE.IP' | translate"
+          prop="remoteIP"
+          [width]="150"
+        ></ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'LOGINS.TABLE.STATUS' | translate"
+          prop="status"
+          [width]="120"
+        >
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-soft-success': value?.toLowerCase() === 'success',
+                'badge-soft-danger': value?.toLowerCase() === 'error',
+                'badge-soft-secondary':
+                  !value ||
+                  (value?.toLowerCase() !== 'success' &&
+                    value?.toLowerCase() !== 'error')
+              }"
+            >
+              {{
+                (value?.toLowerCase() === "error"
+                  ? "LOGINS.STATUS.ERROR"
+                  : value?.toLowerCase() === "success"
+                    ? "LOGINS.STATUS.SUCCESS"
+                    : "LOGINS.STATUS.UNKNOWN"
+                ) | translate
+              }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

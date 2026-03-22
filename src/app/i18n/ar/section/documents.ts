@@ -1,229 +1,257 @@
 export const documents = {
-  "DOCUMENTS": {
-    "LIST": {
-      "BUTTONS": {
-        "ADD": "أضف وثيقة",
-        "VIEW": "عرض",
-        "EDIT": "تعديل",
-        "DOWNLOAD": "تحميل",
-        "UPLOAD": "تحميل نسخة جديدة",
-        "HISTORY": "تاريخ",
-        "COMMENT": "تعليق",
-        "REMINDER": "تذكير",
-        "EMAIL": "بريد إلكتروني",
-        "DELETE": "حذف"
+  DOCUMENTS: {
+    LIST: {
+      TITLE: "المستندات",
+      DESCRIPTION:
+        "قم بإدارة وتنظيم والوصول إلى جميع مستندات الشركة بأمان من مكان واحد.",
+      BUTTONS: {
+        ADD: "إضافة مستند",
+        VIEW: "عرض",
+        EDIT: "تعديل",
+        DOWNLOAD: "تنزيل",
+        UPLOAD: "رفع نسخة جديدة",
+        HISTORY: "سجل الإصدارات",
+        COMMENT: "تعليق",
+        REMINDER: "تذكير",
+        EMAIL: "إرسال بريد إلكتروني",
+        DELETE: "حذف",
       },
-      "TABLE": {
-        "NAME": "اسم",
-        "CATEGORY": "فئة",
-        "CREATED": "تم الإنشاء في",
-        "CREATOR": "انشأ من قبل",
-        "UPDATED": "تم التحديث في",
-        "ACTIONS": "أجراءات"
+      TABLE: {
+        NAME: "اسم المستند",
+        CATEGORY: "الفئة",
+        CREATED: "تاريخ الإنشاء",
+        CREATOR: "تم الإنشاء بواسطة",
+        UPDATED: "تاريخ التحديث",
+        ACTIONS: "الإجراءات",
       },
-      "LABELS": {
-        "SEARCH": "البحث بالاسم",
-        "TAGS": "البحث بالوسوم",
-        "CATEGORY": "البحث حسب الفئات",
-        "DATE": "البحث حسب التاريخ"
-      }
+      LABELS: {
+        SEARCH: "البحث باسم المستند",
+        TAGS: "التصفية حسب العلامات",
+        CATEGORY: "التصفية حسب الفئة",
+        DATE: "التصفية حسب التاريخ",
+      },
+      EMPTY_STATE: {
+        TITLE: "لم يتم العثور على مستندات",
+        DESCRIPTION: "لا توجد مستندات تطابق عوامل التصفية المحددة.",
+      },
     },
-    "ASSIGNED": {
-      "BUTTONS": {
-        "ADD": "أضف وثيقة",
-        "VIEW": "عرض",
-        "EDIT": "تعديل",
-        "DOWNLOAD": "تحميل",
-        "UPLOAD": "تحميل نسخة جديدة",
-        "HISTORY": "تاريخ",
-        "COMMENT": "تعليق",
-        "REMINDER": "تذكير",
-        "EMAIL": "بريد إلكتروني",
-        "DELETE": "حذف"
+
+    ASSIGNED: {
+      TITLE: "المستندات المعيّنة",
+      DESCRIPTION:
+        "اعرض وأدر المستندات التي تمت مشاركتها معك أو تعيينها إلى دورك.",
+      BUTTONS: {
+        ADD: "إضافة مستند",
+        VIEW: "عرض",
+        EDIT: "تعديل",
+        DOWNLOAD: "تنزيل",
+        UPLOAD: "رفع نسخة جديدة",
+        HISTORY: "سجل الإصدارات",
+        COMMENT: "تعليق",
+        REMINDER: "تذكير",
+        EMAIL: "إرسال بريد إلكتروني",
+        DELETE: "حذف",
       },
-      "TABLE": {
-        "NAME": "اسم",
-        "CATEGORY": "فئة",
-        "CREATED": "تم الإنشاء في",
-        "CREATOR": "انشأ من قبل",
-        "UPDATED": "تم التحديث في",
-        "EXPIRE": "تنتهي في",
-        "ACTIONS": "أجراءات"
+      TABLE: {
+        NAME: "اسم المستند",
+        CATEGORY: "الفئة",
+        CREATED: "تاريخ الإنشاء",
+        CREATOR: "تم الإنشاء بواسطة",
+        UPDATED: "تاريخ التحديث",
+        EXPIRE: "تاريخ الانتهاء",
+        ACTIONS: "الإجراءات",
       },
-      "LABELS": {
-        "SEARCH": "البحث بالاسم",
-        "TAGS": "البحث بالوسوم",
-        "CATEGORY": "البحث حسب الفئات",
-        "DATE": "البحث حسب التاريخ"
-      }
+      LABELS: {
+        SEARCH: "البحث باسم المستند",
+        TAGS: "التصفية حسب العلامات",
+        CATEGORY: "التصفية حسب الفئة",
+        DATE: "التصفية حسب التاريخ",
+      },
+      EMPTY_STATE: {
+        TITLE: "لم يتم العثور على مستندات معيّنة",
+        DESCRIPTION: "لا توجد مستندات معيّنة تطابق عوامل التصفية المحددة.",
+      },
     },
-    "ADD": {
-      "LABEL": {
-        "DOCUMENT_UPLOAD": "تحميل الوثيقة",
-        "DOCUMENT_NAME": "اسم الملف",
-        "DOCUMENT_CATEGORY": "فئة",
-        "DOCUMENT_DESCRIPTION": "وصف",
-        "DOCUMENT_TAGS": "العلامات الفوقية",
-        "DOCUMENT_ROLE_ASSIGN": "تعيين/مشاركة مع الأدوار",
-        "DOCUMENT_USER_ASSIGN": "تعيين/مشاركة مع المستخدمين",
-        "DOCUMENT_PERIODE": "تحديد الفترة",
-        "DOCUMENT_PERIODE_SD": "تاريخ البدء",
-        "DOCUMENT_PERIODE_ED": "تاريخ الانتهاء",
-        "DOCUMENT_DOWNLOAD": "السماح بالتحميل",
-        "DOCUMENT_SAVE": "حفظ",
-        "DOCUMENT_CANCEL": "إلغاء",
+
+    ADD: {
+      LABEL: {
+        DOCUMENT_UPLOAD: "رفع مستند",
+        DOCUMENT_NAME: "اسم المستند",
+        DOCUMENT_CATEGORY: "الفئة",
+        DOCUMENT_DESCRIPTION: "الوصف",
+        DOCUMENT_TAGS: "العلامات",
+        DOCUMENT_ROLE_ASSIGN: "تعيين/مشاركة مع الأدوار",
+        DOCUMENT_USER_ASSIGN: "تعيين/مشاركة مع المستخدمين",
+        DOCUMENT_PERIODE: "تحديد الفترة",
+        DOCUMENT_PERIODE_SD: "تاريخ البداية",
+        DOCUMENT_PERIODE_ED: "تاريخ النهاية",
+        DOCUMENT_DOWNLOAD: "السماح بالتنزيل",
+        DOCUMENT_SAVE: "حفظ",
+        DOCUMENT_CANCEL: "إلغاء",
       },
-      "ERROR": {
-        "DOCUMENT_IS_REQUIRED": "الوثيقة مطلوبة",
-        "DOCUMENT_TYPE_IS_NOT_ALLOW": "النوع غير مسموح به",
-        "NAME_IS_REQUIRED": "الإسم مطلوب",
-        "CATEGORY_IS_REQUIRED": "الفئة مطلوبة",
-        "START_DATE_IS_REQURED": "تاريخ البدء مطلوب",
-        "END_DATE_IS_REQURED": "تاريخ الانتهاء مطلوب",
+      ERROR: {
+        DOCUMENT_IS_REQUIRED: "المستند مطلوب.",
+        DOCUMENT_TYPE_IS_NOT_ALLOW: "نوع الملف غير مسموح به.",
+        NAME_IS_REQUIRED: "اسم المستند مطلوب.",
+        CATEGORY_IS_REQUIRED: "الفئة مطلوبة.",
+        START_DATE_IS_REQURED: "تاريخ البداية مطلوب.",
+        END_DATE_IS_REQURED: "تاريخ النهاية مطلوب.",
       },
-      "TOAST": {
-        "DOCUMENT_SAVE_SUCCESSFULLY": "تم حفظ المستند بنجاح",
-      }
+      TOAST: {
+        DOCUMENT_SAVE_SUCCESSFULLY: "تم حفظ المستند بنجاح.",
+      },
     },
-    "EDIT": {
-      "LABEL":{
-       "DOCUMENT_EDIT":"تعديل الوثيقة",
-       "DOCUMENT_NAME": "اسم الملف",
-       "DOCUMENT_CATEGORY": "فئة",
-       "DOCUMENT_DESCRIPTION": "وصف",
-       "DOCUMENT_TAGS": "العلامات الفوقية",
-       "DOCUMENT_SAVE": "حفظ",
-       "DOCUMENT_CANCEL": "إلغاء",
+
+    EDIT: {
+      LABEL: {
+        DOCUMENT_EDIT: "تعديل المستند",
+        DOCUMENT_NAME: "اسم المستند",
+        DOCUMENT_CATEGORY: "الفئة",
+        DOCUMENT_DESCRIPTION: "الوصف",
+        DOCUMENT_TAGS: "العلامات",
+        DOCUMENT_SAVE: "حفظ",
+        DOCUMENT_CANCEL: "إلغاء",
       },
-      "ERROR":{
-        "NAME_IS_REQUIRED": "الإسم مطلوب",
-        "CATEGORY_IS_REQUIRED": "الفئة مطلوبة",
+      ERROR: {
+        NAME_IS_REQUIRED: "اسم المستند مطلوب.",
+        CATEGORY_IS_REQUIRED: "الفئة مطلوبة.",
       },
-      "TOAST":{
-       "DOCUMENT_UPDATE_SUCCESSFULLY":"تم تعديل الوثيقة بنجاح"
-      }
-    },
-    "UPLOAD": {
-      "LABEL":{
-        "DOCUMENT_NEW_VERSION": "تحميل نسخة جديدة",
-        "DOCUMENT_UPLOAD": "تحميل الوثيقة",
-        "DOCUMENT_SAVE": "حفظ",
-        "DOCUMENT_CANCEL": "إلغاء",
+      TOAST: {
+        DOCUMENT_UPDATE_SUCCESSFULLY: "تم تحديث المستند بنجاح.",
       },
-      "ERROR":{
-        "DOCUMENT_TYPE_IS_NOT_ALLOW": "النوع غير مسموح به",
+    },
+
+    UPLOAD: {
+      LABEL: {
+        DOCUMENT_NEW_VERSION: "رفع نسخة جديدة",
+        DOCUMENT_UPLOAD: "رفع المستند",
+        DOCUMENT_SAVE: "حفظ",
+        DOCUMENT_CANCEL: "إلغاء",
       },
-      "TOAST":{
-        "DOCUMENT_SAVE_SUCCESSFULLY": "تم حفظ المستند بنجاح",
-      }
-    },
-    "DOWNLOAD": {
-      "TOAST": {
-        "ERROR_WHILE_DOWNLOADING_DOCUMENT": "خطأ أثناء تحميل المستند"
-      }
-    },
-    "HISTORY": {
-      "LABEL":{
-        "DOCUMENT_VERSION_HISTORY":"سجل الإصدارات",
-        "DOCUMENT_ADDED_BY": "تمت الإضافة بواسطة",
-        "DOCUMENT_CURRENT_VERSION": "الإصدار الحالي",
-        "DOCUMENT_VISIBILITY":"الرؤية",
-        "DOCUMENT_DOWNLOAD": "تنزيل",
-        "DOCUMENT_RESTORE": "استعادة",
+      ERROR: {
+        DOCUMENT_TYPE_IS_NOT_ALLOW: "نوع الملف غير مسموح به.",
       },
-      "ERROR":{},
-      "TOAST": {
-        "VERSION_RESTORED_SUCCESSFULLY": "تم استعادة النسخة بنجاح",
-        "ERROR_WHILE_DOWNLOADING_DOCUMENT": "خطأ أثناء تحميل المستند"
-      }
-    },
-    "COMMENT": {
-      "LABEL":{
-        "DOCUMENT_COMMENT_TITLE":"تعليق على الوثيقة",
-        "DOCUMENT_COMMENT":"تعليق",
-        "DOCUMENT_ADD_COMMENT": "أضف تعليقًا",
-        "DOCUMENT_CLOSE": "إغلاق",
+      TOAST: {
+        DOCUMENT_SAVE_SUCCESSFULLY: "تم رفع المستند بنجاح.",
       },
-      "ERROR":{"COMMENT_IS_REQUIRED":"التعليق إجبارِيّ",},
-      "TOAST":{}
     },
-    "REMINDER": {
-      "LABEL":{
-        "DOCUMENT_REMINDER_TITLE": "إضافة تذكير على الوثيقة",
-          "DOCUMENT_REMINDER_SUBJECT": "الموضوع",
-          "DOCUMENT_REMINDER_MESSAGE": "رسالة",
-          "DOCUMENT_REMINDER_REPEAT": "تكرار التذكير",
-          "DOCUMENT_REMINDER_SEND_EMAIL": "إرسال بريد إلكتروني",
-          "DOCUMENT_REMINDER_USERS": "تحديد المستخدمين",
-          "DOCUMENT_REMINDER_FREQUENCY": "تردد التذكير",
-          "DOCUMENT_REMINDER_WEEKDAYS": "أيام الأسبوع",
-          "DOCUMENT_REMINDER_DATE": "تاريخ التذكير",
-          "DOCUMENT_REMINDER_START_DATE": "تاريخ البدء",
-          "DOCUMENT_REMINDER_END_DATE": "تاريخ الانتهاء",
-          "DOCUMENT_REMINDER_SAVE": "حفظ",
-          "DOCUMENT_REMINDER_CANCEL": "إلغاء",
-          "SELECT_QUARTER_DATE": "اختر تاريخ الربع الفصلي للتذكير",
-          "SELECT_REMINDER_MONTH": "اختر شهر التذكير",
-          "SELECT_REMINDER_DAY": "اختر يوم التذكير",
-          "SELECT_DATE": "اختر تاريخًا",
+
+    DOWNLOAD: {
+      TOAST: {
+        ERROR_WHILE_DOWNLOADING_DOCUMENT: "حدث خطأ أثناء تنزيل المستند.",
       },
-      "ERROR":{
-        "SUBJECT_IS_REQUIRED": "الموضوع إجباري",
-        "MESSAGE_IS_REQUIRED": "الرسالة إجبارية",
-        "FREQUENCY_IS_REQUIRED": "التكرار إجباري",
-        "PLEASE_SELECT_VALID_DAY": "يرجى اختيار يوم صالح",
-        "DATE_IS_REQUIRED": "التاريخ إجباري",
-        "START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME": "يجب أن يكون تاريخ البدء أكبر من التاريخ والوقت الحاليين",
-        "START_DATE_IS_REQUIRED": "تاريخ البدء إجباري"
+    },
+
+    HISTORY: {
+      LABEL: {
+        DOCUMENT_VERSION_HISTORY: "سجل الإصدارات",
+        DOCUMENT_ADDED_BY: "تمت الإضافة بواسطة",
+        DOCUMENT_CURRENT_VERSION: "الإصدار الحالي",
+        DOCUMENT_VISIBILITY: "إمكانية الوصول",
+        DOCUMENT_DOWNLOAD: "تنزيل",
+        DOCUMENT_RESTORE: "استعادة",
       },
-      "TOAST":{
-        "REMINDER_CREATED_SUCCESSFULLY": "تم إنشاء التذكير بنجاح",
-        "REMINDER_UPDATED_SUCCESSFULLY": "تم تحديث التذكير بنجاح"
-      }
-    },
-    "EMAIL": {
-      "LABEL": {
-        "DOCUMENT_EMAIL_TITLE": "إرسال بريد إلكتروني",
-        "DOCUMENT_EMAIL_TO": "إلى",
-        "DOCUMENT_EMAIL_SUBJECT": "الموضوع",
-        "DOCUMENT_EMAIL_BODY": "النص",
-        "DOCUMENT_EMAIL_ATTACHMENT_DOCUMENT": "وثيقة المرفق",
-        "DOCUMENT_EMAIL_SEND": "إرسال"
-    },
-    "ERROR": {
-      "TO_ADDRESS_IS_REQUIRED": " عنوان البريد الإلكتروني المرسل إليه إجبارِيّ",
-      "EMAIL_IS_NOT_PROPER_FORMAT": "بنية عنوان البريد الإلكتروني المرسل إليه غير صحيح",
-      "SUBJECT_IS_REQUIRED": "الموضوع إجبارِيّ",
-      "BODY_IS_REQUIRED": "النص إجبارِيّ"
-    },
-      "TOAST":{
-        "EMAIL_SENT_SUCCESSFULLY":"تم إرسال البريد الإلكتروني بنجاح"
-      }
-    },
-    "DELETE": {
-      "LABEL":{
-        "title": "هل أنت متأكد أنك تريد حذف المستند؟",
-        "message": "هل أنت متأكد أنك تريد حذف هذا المستند؟",
-        "button": {
-         "cancel": "إلغاء",
-         "confirm": "تأكيد"
-        }
+      ERROR: {},
+      TOAST: {
+        VERSION_RESTORED_SUCCESSFULLY: "تمت استعادة الإصدار بنجاح.",
+        ERROR_WHILE_DOWNLOADING_DOCUMENT: "حدث خطأ أثناء تنزيل المستند.",
       },
-      "ERROR":{},
-      "TOAST":{
-        "DOCUMENT_DELETED_SUCCESSFULLY": "تم حذف المستند بنجاح"
-      }
     },
-    "SHARE": {
-      "LABEL": {
-        "DOCUMENT_SHARE": "مشاركة المستند",
-        "DOCUMENT_NAME": "اسم المستند",
-        "DESCRIPTION": "الوصف"
+
+    COMMENT: {
+      LABEL: {
+        DOCUMENT_COMMENT_TITLE: "تعليقات المستند",
+        DOCUMENT_COMMENT: "تعليق",
+        DOCUMENT_ADD_COMMENT: "إضافة تعليق",
+        DOCUMENT_CLOSE: "إغلاق",
       },
-      "ERROR": {},
-      "TOAST": {
-        "PERMISSION_DELETED_SUCCESSFULLY": "تم حذف الإذن بنجاح"
-      }
-    }
-  }
-}
+      ERROR: {
+        COMMENT_IS_REQUIRED: "التعليق مطلوب.",
+      },
+      TOAST: {},
+    },
+
+    REMINDER: {
+      LABEL: {
+        DOCUMENT_REMINDER_TITLE: "تذكير المستند",
+        DOCUMENT_REMINDER_SUBJECT: "الموضوع",
+        DOCUMENT_REMINDER_MESSAGE: "الرسالة",
+        DOCUMENT_REMINDER_REPEAT: "تكرار التذكير",
+        DOCUMENT_REMINDER_SEND_EMAIL: "إرسال بريد إلكتروني",
+        DOCUMENT_REMINDER_USERS: "اختر المستخدمين",
+        DOCUMENT_REMINDER_FREQUENCY: "التكرار",
+        DOCUMENT_REMINDER_WEEKDAYS: "أيام الأسبوع",
+        DOCUMENT_REMINDER_DATE: "تاريخ التذكير",
+        DOCUMENT_REMINDER_START_DATE: "تاريخ البداية",
+        DOCUMENT_REMINDER_END_DATE: "تاريخ النهاية",
+        DOCUMENT_REMINDER_SAVE: "حفظ",
+        DOCUMENT_REMINDER_CANCEL: "إلغاء",
+        SELECT_QUARTER_DATE: "اختر تاريخ الربع",
+        SELECT_REMINDER_MONTH: "اختر شهر التذكير",
+        SELECT_REMINDER_DAY: "اختر يوم التذكير",
+        SELECT_DATE: "اختر التاريخ",
+      },
+      ERROR: {
+        SUBJECT_IS_REQUIRED: "الموضوع مطلوب.",
+        MESSAGE_IS_REQUIRED: "الرسالة مطلوبة.",
+        FREQUENCY_IS_REQUIRED: "التكرار مطلوب.",
+        PLEASE_SELECT_VALID_DAY: "يرجى اختيار يوم صالح.",
+        DATE_IS_REQUIRED: "تاريخ التذكير مطلوب.",
+        START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME:
+          "يجب أن يكون تاريخ البداية بعد التاريخ والوقت الحاليين.",
+        START_DATE_IS_REQUIRED: "تاريخ البداية مطلوب.",
+      },
+      TOAST: {
+        REMINDER_CREATED_SUCCESSFULLY: "تم إنشاء التذكير بنجاح.",
+        REMINDER_UPDATED_SUCCESSFULLY: "تم تحديث التذكير بنجاح.",
+      },
+    },
+
+    EMAIL: {
+      LABEL: {
+        DOCUMENT_EMAIL_TITLE: "إرسال بريد إلكتروني",
+        DOCUMENT_EMAIL_TO: "إلى",
+        DOCUMENT_EMAIL_SUBJECT: "الموضوع",
+        DOCUMENT_EMAIL_BODY: "الرسالة",
+        DOCUMENT_EMAIL_ATTACHMENT_DOCUMENT: "إرفاق المستند",
+        DOCUMENT_EMAIL_SEND: "إرسال",
+      },
+      ERROR: {
+        TO_ADDRESS_IS_REQUIRED: "عنوان بريد المستلم مطلوب.",
+        EMAIL_IS_NOT_PROPER_FORMAT: "يرجى إدخال عنوان بريد إلكتروني صالح.",
+        SUBJECT_IS_REQUIRED: "الموضوع مطلوب.",
+        BODY_IS_REQUIRED: "محتوى الرسالة مطلوب.",
+      },
+      TOAST: {
+        EMAIL_SENT_SUCCESSFULLY: "تم إرسال البريد الإلكتروني بنجاح.",
+      },
+    },
+
+    DELETE: {
+      LABEL: {
+        TITLE: "هل أنت متأكد؟",
+        MESSAGE: "هل أنت متأكد أنك تريد حذف هذا المستند؟",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "تأكيد",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        DOCUMENT_DELETED_SUCCESSFULLY: "تم حذف المستند بنجاح.",
+      },
+    },
+
+    SHARE: {
+      LABEL: {
+        DOCUMENT_SHARE: "مشاركة المستند",
+        DOCUMENT_NAME: "اسم المستند",
+        DESCRIPTION: "الوصف",
+      },
+      ERROR: {},
+      TOAST: {
+        PERMISSION_DELETED_SUCCESSFULLY: "تم حذف الصلاحية بنجاح.",
+      },
+    },
+  },
+};

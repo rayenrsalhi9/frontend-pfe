@@ -41,7 +41,7 @@ import { ForumPreviewComponent } from './forum-preview/forum-preview.component';
     PerfectScrollbarModule,
     QuillModule.forRoot(),
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
   ]
 })
 export class ForumModule { }

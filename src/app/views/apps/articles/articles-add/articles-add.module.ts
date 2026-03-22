@@ -37,7 +37,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     RatingModule,
     PerfectScrollbarModule,
     NgSelectModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     RouterModule.forChild(routes),
   ]
 })

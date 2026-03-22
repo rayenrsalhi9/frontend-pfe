@@ -4,7 +4,8 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { take } from "rxjs/operators";
+import { take, debounceTime, switchMap, catchError, tap } from "rxjs/operators";
+import { Subject, of } from "rxjs";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
 import { ForumCategoryService } from "../forum-category/forum-category.service";
@@ -28,6 +29,8 @@ export class ForumListComponent implements OnInit {
 
   bsModalRef: BsModalRef;
   forumResource: ForumResource;
+  searchSubject: Subject<void> = new Subject<void>();
+  isLoadingResults = false;
 
   constructor(
     private forumService: ForumService,
@@ -41,8 +44,32 @@ export class ForumListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllForums();
     this.getForumsCategories();
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        switchMap(() =>
+          this.forumService.allForums(this.forumResource).pipe(
+            catchError((err) => {
+              console.error(err);
+              this.isLoadingResults = false;
+              this.translateService
+                .get("FORUM.TOAST.ERROR")
+                .pipe(take(1))
+                .subscribe((msg: string) => this.toastr.error(msg));
+              return of([]);
+            }),
+          ),
+        ),
+      )
+      .subscribe((resp: any) => {
+        const list = Array.isArray(resp) ? resp : (resp?.data ?? []);
+        this.rows = (list || []).map((r: any) => this.normalizeForumRow(r));
+        this.isLoadingResults = false;
+        this.cdr.markForCheck();
+      });
+    this.searchSubject.next();
   }
 
   private normalizeForumRow(row: any) {
@@ -67,24 +94,8 @@ export class ForumListComponent implements OnInit {
   }
 
   getAllForums(data = this.forumResource) {
-    this.forumService.allForums(data).subscribe(
-      (resp: any) => {
-        const list = Array.isArray(resp) ? resp : (resp?.data ?? []);
-        this.rows = (list || []).map((r: any) => this.normalizeForumRow(r));
-        this.cdr.markForCheck();
-      },
-      (err: any) => {
-        if (err?.error?.message) {
-          this.toastr.error(err.error.message);
-        } else {
-          this.translateService
-            .get("FORUM.TOAST.ERROR")
-            .subscribe((translatedMessage: string) =>
-              this.toastr.error(translatedMessage),
-            );
-        }
-      },
-    );
+    this.forumResource = data;
+    this.searchSubject.next();
   }
 
   getForumsCategories() {
@@ -164,18 +175,18 @@ export class ForumListComponent implements OnInit {
     const val = event.target.value;
     this.forumResource.title = val ? val : "";
     this.forumResource.skip = 0;
-    this.getAllForums(this.forumResource);
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {
     this.forumResource.category = event ? event : "";
     this.forumResource.skip = 0;
-    this.getAllForums(this.forumResource);
+    this.searchSubject.next();
   }
 
   onDateChange(event: any) {
     this.forumResource.createdAt = event ? new Date(event).toDateString() : "";
     this.forumResource.skip = 0;
-    this.getAllForums(this.forumResource);
+    this.searchSubject.next();
   }
 }

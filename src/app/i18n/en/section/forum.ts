@@ -106,5 +106,10 @@ export const forum = {
     TOAST: {
       ERROR: "Failed to fetch forums",
     },
+    CATEGORIES: {
+      TITLE: "Forum Categories",
+      DESCRIPTION:
+        "Organize forum discussions into relevant categories to improve navigation and discoverability.",
+    },
   },
 };

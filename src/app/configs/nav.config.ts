@@ -772,7 +772,7 @@ const apps: NavMenu[] = [
             iconType: 'line-awesome',
             icon: 'la-newspaper',
             key: 'apps.forums.categories',
-            claims: ['FORUM_VIEW_FORUMS'],
+            claims: ['FORUM_VIEW_CATEGORIES'],
             submenu: [],
           },
         ],

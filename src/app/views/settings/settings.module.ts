@@ -28,7 +28,7 @@ import { QuillModule } from 'ngx-quill';
     AvatarModule,
     DropdownModule,
     ColumnPanelModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     NgSelectModule,
     CheckboxModule,
     RadioModule,

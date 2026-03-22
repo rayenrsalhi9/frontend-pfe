@@ -105,5 +105,10 @@ export const forum = {
     TOAST: {
       ERROR: "Échec de la récupération des forums",
     },
+    CATEGORIES: {
+      TITLE: "Catégories de forum",
+      DESCRIPTION:
+        "Organisez les discussions du forum en catégories pertinentes pour améliorer la navigation et la recherche.",
+    },
   },
 };
