@@ -81,7 +81,12 @@
               [insideClick]="true"
               container="body"
             >
-              <button dropdownToggle type="button" class="btn-action-trigger">
+              <button
+                dropdownToggle
+                type="button"
+                class="btn-action-trigger"
+                [attr.aria-label]="'CATEGORY.LIST.TABLE.ACTIONS' | translate"
+              >
                 <i class="feather icon-more-horizontal"></i>
               </button>
               <div

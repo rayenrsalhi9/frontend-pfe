@@ -19,7 +19,7 @@ import { SecurityService } from "@app/core/security/security.service";
   templateUrl: "./user-list.component.html",
   styleUrls: ["./user-list.component.css"],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
   users: User[] = [];
   allUsers: any[] = [];
@@ -47,14 +47,13 @@ export class UserListComponent implements OnInit {
 
   ngOnInit() {
     this.getUsers();
-    this.searchSubject.pipe(
-      debounceTime(300),
-      takeUntil(this.destroy$)
-    ).subscribe((val: string) => {
-      this.searchTerm = val;
-      this.applyFilter();
-      this.cdr.detectChanges();
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe((val: string) => {
+        this.searchTerm = val;
+        this.applyFilter();
+        this.cdr.detectChanges();
+      });
   }
 
   ngOnDestroy(): void {

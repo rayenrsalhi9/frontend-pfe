@@ -6,7 +6,8 @@ import { LoginAuditService } from "@app/shared/services/login-audit.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-login-audit",
@@ -14,14 +15,12 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from "
   styleUrls: ["./login-audit.component.css"],
 })
 export class LoginAuditComponent implements OnInit {
+  private destroy$ = new Subject<void>();
   isLoadingResults = true;
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   loginAuditResource: LoginAuditResource;
-  statuses = [
-    { id: 'success', name: this.translateService.instant('LOGINS.STATUS.SUCCESS') },
-    { id: 'error', name: this.translateService.instant('LOGINS.STATUS.ERROR') }
-  ];
+  statuses: { id: string; name: string }[] = [];
 
   rows: any[] = [];
   totalCount: number = 0;
@@ -39,26 +38,44 @@ export class LoginAuditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      tap(() => this.isLoadingResults = true),
-      switchMap(() => this.loginAuditService.getLoginAudits(this.loginAuditResource).pipe(
-        catchError(err => {
-          console.log(err);
+    this.statuses = [
+      {
+        id: "success",
+        name: this.translateService.instant("LOGINS.STATUS.SUCCESS"),
+      },
+      {
+        id: "error",
+        name: this.translateService.instant("LOGINS.STATUS.ERROR"),
+      },
+    ];
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        takeUntil(this.destroy$),
+        switchMap(() =>
+          this.loginAuditService.getLoginAudits(this.loginAuditResource).pipe(
+            catchError((err) => {
+              console.log(err);
+              this.isLoadingResults = false;
+              return of(null);
+            }),
+          ),
+        ),
+      )
+      .subscribe({
+        next: (res: HttpResponse<any>) => {
+          if (res) {
+            this.rows = res.body;
+            this.totalCount = parseInt(
+              res.headers.get("totalCount") || "0",
+              10,
+            );
+          }
           this.isLoadingResults = false;
-          return of(null);
-        })
-      ))
-    ).subscribe({
-      next: (res: HttpResponse<any>) => {
-        if (res) {
-          this.rows = res.body;
-          this.totalCount = parseInt(res.headers.get('totalCount') || '0', 10);
-        }
-        this.isLoadingResults = false;
-        this.cdr.detectChanges();
-      }
-    });
+          this.cdr.detectChanges();
+        },
+      });
     this.searchSubject.next();
   }
 
@@ -67,7 +84,8 @@ export class LoginAuditComponent implements OnInit {
   }
 
   onPageChange(event: any) {
-    this.loginAuditResource.skip = event.offset * this.loginAuditResource.pageSize;
+    this.loginAuditResource.skip =
+      event.offset * this.loginAuditResource.pageSize;
     this.loadLoginAudits();
   }
 
@@ -85,8 +103,15 @@ export class LoginAuditComponent implements OnInit {
   }
 
   onDateChange(event: any) {
-    this.loginAuditResource.loginTime = event ? new Date(event).toDateString() : "";
+    this.loginAuditResource.loginTime = event
+      ? new Date(event).toDateString()
+      : "";
     this.loginAuditResource.skip = 0;
     this.searchSubject.next();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

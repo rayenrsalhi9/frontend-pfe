@@ -1,6 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Subject, of } from "rxjs";
-import { debounceTime, switchMap, catchError, tap, takeUntil } from "rxjs/operators";
+import {
+  debounceTime,
+  switchMap,
+  catchError,
+  tap,
+  takeUntil,
+} from "rxjs/operators";
 import { ArticleCategoryService } from "@app/shared/services/article-category.service";
 import { ArticleService } from "@app/shared/services/article.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
@@ -18,7 +24,7 @@ import { SecurityService } from "@app/core/security/security.service";
   templateUrl: "./articles-list.component.html",
   styleUrls: ["./articles-list.component.css"],
 })
-export class ArticlesListComponent implements OnInit {
+export class ArticlesListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
 
   rows: any[] = [];
@@ -51,20 +57,24 @@ export class ArticlesListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
 
-    this.searchSubject.pipe(
-      debounceTime(300),
-      tap(() => this.cdr.detectChanges()),
-      switchMap(() => this.articleService.allArticles(this.articleResource).pipe(
-        catchError(err => {
-          console.error(err);
-          return of([]);
-        })
-      )),
-      takeUntil(this.destroy$)
-    ).subscribe((data: any) => {
-      this.rows = data;
-      this.cdr.markForCheck();
-    });
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => this.cdr.detectChanges()),
+        switchMap(() =>
+          this.articleService.allArticles(this.articleResource).pipe(
+            catchError((err) => {
+              console.error(err);
+              return of([]);
+            }),
+          ),
+        ),
+        takeUntil(this.destroy$),
+      )
+      .subscribe((data: any) => {
+        this.rows = data;
+        this.cdr.markForCheck();
+      });
     this.searchSubject.next();
     this.getCategories();
   }
@@ -109,10 +119,6 @@ export class ArticlesListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {}
-
-  updateArticle(data: any) {}
-
   deleteArticle(data: any) {
     this.translate.get("ARTICLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
@@ -128,7 +134,7 @@ export class ArticlesListComponent implements OnInit {
 
       this.bsModalRef.content.onClose.subscribe((result) => {
         if (result) {
-          this.articleService.deleteArticle(data.id).subscribe((data: any) => {
+          this.articleService.deleteArticle(data.id).subscribe(() => {
             this.translate
               .get("ARTICLES.DELETE.TOAST.ARTICLE_DELETED_SUCCESSFULLY")
               .subscribe((translatedMessage: string) => {
@@ -166,5 +172,16 @@ export class ArticlesListComponent implements OnInit {
     }
     this.articleResource.skip = 0;
     this.getArtilces(this.articleResource);
+  }
+
+  hasAnyArticleActions(row: any): boolean {
+    const isOwner = row.createdBy === this.currentUser?.id;
+    const hasViewClaim = this.securityService.hasClaim("ARTICLE_VIEW_ARTICLES");
+    const hasEditClaim = this.securityService.hasClaim("ARTICLE_EDIT_ARTICLE");
+    const hasDeleteClaim = this.securityService.hasClaim(
+      "ARTICLE_DELETE_ARTICLE",
+    );
+
+    return hasViewClaim || (isOwner && (hasEditClaim || hasDeleteClaim));
   }
 }

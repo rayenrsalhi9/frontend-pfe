@@ -77,10 +77,6 @@
         [footerHeight]="60"
         rowHeight="auto"
         [limit]="10"
-        [selected]="selected"
-        [selectionType]="SelectionType.checkbox"
-        (activate)="onActivate($event)"
-        (select)="onSelect($event)"
       >
         <ngx-datatable-column
           [name]="'ARTICLES.LIST.TABLES.PICTURE' | translate"
@@ -124,16 +120,9 @@
           prop="creator"
         >
           <ng-template ngx-datatable-cell-template let-value="value">
-            <div class="d-flex align-items-center">
-              <div
-                class="avatar avatar-sm bg-light-secondary text-secondary mr-2"
-              >
-                {{ value.firstName?.charAt(0) }}{{ value.lastName?.charAt(0) }}
-              </div>
-              <span class="text-dark"
-                >{{ value.firstName }} {{ value.lastName }}</span
-              >
-            </div>
+            <span class="text-dark"
+              >{{ value.firstName }} {{ value.lastName }}</span
+            >
           </ng-template>
         </ngx-datatable-column>
 
@@ -179,6 +168,7 @@
         >
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div
+              *ngIf="hasAnyArticleActions(row)"
               class="btn-group"
               dropdown
               [insideClick]="true"
@@ -200,7 +190,7 @@
                   <i class="feather icon-eye text-primary"></i>
                   <span>{{ "ARTICLES.LIST.BUTTONS.VIEW" | translate }}</span>
                 </button>
-                <ng-container *ngIf="row.createdBy == currentUser.id">
+                <ng-container *ngIf="row.createdBy === currentUser.id">
                   <button
                     class="dropdown-item-modern"
                     *hasClaim="'ARTICLE_EDIT_ARTICLE'"
@@ -214,7 +204,7 @@
                   *ngIf="row.createdBy == currentUser.id"
                   class="dropdown-divider-modern"
                 ></div>
-                <ng-container *ngIf="row.createdBy == currentUser.id">
+                <ng-container *ngIf="row.createdBy === currentUser.id">
                   <button
                     class="dropdown-item-modern text-danger"
                     *hasClaim="'ARTICLE_DELETE_ARTICLE'"

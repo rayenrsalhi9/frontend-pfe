@@ -78,10 +78,7 @@
         rowHeight="auto"
         [limit]="10"
         [loadingIndicator]="isLoadingResults"
-        [selected]="selected"
-        [selectionType]="SelectionType.checkbox"
         (activate)="onActivate($event)"
-        (select)="onSelect($event)"
       >
         <ngx-datatable-column
           [name]="'FORUM.TABLE.TOPIC' | translate"

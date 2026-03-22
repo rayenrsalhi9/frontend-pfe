@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Category } from "@app/shared/enums/category";
 import { DocumentInfo } from "@app/shared/enums/document-info";
@@ -9,14 +9,13 @@ import { CategoryService } from "@app/shared/services/category.service";
 import { CommonService } from "@app/shared/services/common.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
 import { DocumentView } from "@app/shared/enums/document-view";
 import { BasePreviewComponent } from "@app/shared/preview/base-preview/base-preview.component";
 import { DocumentEditComponent } from "../document-edit/document-edit.component";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject, of, Observable } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from "rxjs/operators";
+import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
 import { DocumentOperation } from "@app/shared/enums/document-operation";
 import { ToastrService } from "ngx-toastr";
@@ -27,8 +26,6 @@ import { DocumentSendEmailComponent } from "../document-send-email/document-send
 import { DocumentReminderComponent } from "../document-reminder/document-reminder.component";
 import { DocumentCommentComponent } from "../document-comment/document-comment.component";
 import { DocumentShareComponent } from "../document-share/document-share.component";
-import { PusherService } from "@app/shared/services/pusher.service";
-import { formatDate } from "@angular/common";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.service";
 
@@ -37,7 +34,7 @@ import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.se
   templateUrl: "./document-list.component.html",
   styleUrls: ["./document-list.component.css"],
 })
-export class DocumentListComponent implements OnInit {
+export class DocumentListComponent implements OnInit, OnDestroy {
   documents: DocumentInfo[] = [];
   displayedColumns: string[] = [
     "select",
@@ -70,11 +67,9 @@ export class DocumentListComponent implements OnInit {
     private categoryService: CategoryService,
     public clonerService: ClonerService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
     private overlay: OverlayPanel,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private pusherService: PusherService,
     private translate: TranslateService,
   ) {
     this.documentResource = new DocumentResource();
@@ -84,27 +79,33 @@ export class DocumentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
-    this.searchSubject.pipe(
-      debounceTime(300),
-      tap(() => this.isLoadingResults = true),
-      switchMap(() => this.documentService.getDocuments(this.documentResource).pipe(
-        catchError(err => {
-          console.log(err);
-          this.isLoadingResults = false;
-          return of(null);
-        })
-      ))
-    ).subscribe((res: HttpResponse<any>) => {
-      if (res) {
-        this.rows = res.body;
-      }
-      this.isLoadingResults = false;
-      this.cdr.detectChanges();
-    });
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        tap(() => (this.isLoadingResults = true)),
+        switchMap(() =>
+          this.documentService.getDocuments(this.documentResource).pipe(
+            catchError((err) => {
+              console.error(`Error fetching documents: ${err}`);
+              this.isLoadingResults = false;
+              return of(null);
+            }),
+          ),
+        ),
+      )
+      .subscribe((res: HttpResponse<any>) => {
+        if (res) {
+          this.rows = res.body;
+        }
+        this.isLoadingResults = false;
+        this.cdr.detectChanges();
+      });
     this.searchSubject.next();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.searchSubject.unsubscribe();
+  }
 
   getCategories(): void {
     this.categoryService.getAllCategoriesForDropDown().subscribe((c) => {
@@ -153,7 +154,9 @@ export class DocumentListComponent implements OnInit {
   }
 
   onDateChange(event: any) {
-    this.documentResource.createDate = event ? new Date(event).toDateString() : "";
+    this.documentResource.createDate = event
+      ? new Date(event).toDateString()
+      : "";
     this.documentResource.skip = 0;
     this.searchSubject.next();
   }
@@ -245,7 +248,7 @@ export class DocumentListComponent implements OnInit {
         this.translate
           .get("DOCUMENTS.DOWNLOAD.TOAST.ERROR_WHILE_DOWNLOADING_DOCUMENT")
           .subscribe((translatedMessage: string) => {
-            this.toastr.success(translatedMessage); // Display translated message using Toastr
+            this.toastr.success(translatedMessage);
           });
       },
     );
@@ -375,16 +378,4 @@ export class DocumentListComponent implements OnInit {
   }
 
   onActivate(event) {}
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
-  }
-
-  remove() {
-    this.selected = [];
-  }
 }

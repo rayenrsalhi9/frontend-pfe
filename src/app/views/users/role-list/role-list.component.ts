@@ -14,7 +14,7 @@ import { TranslateService } from "@ngx-translate/core";
   templateUrl: "./role-list.component.html",
   styleUrls: ["./role-list.component.css"],
 })
-export class RoleListComponent implements OnInit {
+export class RoleListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
 
   rows = [];
@@ -39,19 +39,18 @@ export class RoleListComponent implements OnInit {
 
   ngOnInit() {
     this.getRoles();
-    this.searchSubject.pipe(
-      debounceTime(300),
-      takeUntil(this.destroy$)
-    ).subscribe((val: string) => {
-      if (val) {
-        this.rows = this.allRoles.filter((r) =>
-          r.name?.toLowerCase().includes(val)
-        );
-      } else {
-        this.rows = [...this.allRoles];
-      }
-      this.cdr.detectChanges();
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe((val: string) => {
+        if (val) {
+          this.rows = this.allRoles.filter((r) =>
+            r.name?.toLowerCase().includes(val),
+          );
+        } else {
+          this.rows = [...this.allRoles];
+        }
+        this.cdr.detectChanges();
+      });
   }
 
   ngOnDestroy(): void {
@@ -67,7 +66,7 @@ export class RoleListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       (err) => {
-        // TODO: handle error
+        console.error(`Error fetching roles: ${err}`);
       },
     );
   }

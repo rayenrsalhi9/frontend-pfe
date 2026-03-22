@@ -115,13 +115,19 @@
               class="badge"
               [ngClass]="{
                 'badge-soft-success': value?.toLowerCase() === 'success',
-                'badge-soft-danger': value?.toLowerCase() === 'error'
+                'badge-soft-danger': value?.toLowerCase() === 'error',
+                'badge-soft-secondary':
+                  !value ||
+                  (value?.toLowerCase() !== 'success' &&
+                    value?.toLowerCase() !== 'error')
               }"
             >
               {{
                 (value?.toLowerCase() === "error"
                   ? "LOGINS.STATUS.ERROR"
-                  : "LOGINS.STATUS.SUCCESS"
+                  : value?.toLowerCase() === "success"
+                    ? "LOGINS.STATUS.SUCCESS"
+                    : "LOGINS.STATUS.UNKNOWN"
                 ) | translate
               }}
             </span>

@@ -15,55 +15,51 @@
   <div class="bento-item filters-section">
     <div class="filters-grid">
       <div class="filter-group">
-        <label class="filter-label">{{
-          "RESPONSES.FILTERS.SEARCH" | translate
-        }}</label>
         <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
           <input
+            id="search"
             type="text"
             class="form-control"
             [placeholder]="'RESPONSES.FILTERS.SEARCH' | translate"
+            [attr.aria-label]="'RESPONSES.FILTERS.SEARCH' | translate"
             (input)="onSearchChange($event)"
           />
         </div>
       </div>
       <div class="filter-group">
-        <label class="filter-label">{{
-          "RESPONSES.FILTERS.ACTION" | translate
-        }}</label>
         <ng-select
+          id="action"
           class="modern-select"
           [items]="actions"
           bindLabel="name"
           [placeholder]="'RESPONSES.FILTERS.ACTION' | translate"
+          [attr.aria-label]="'RESPONSES.FILTERS.ACTION' | translate"
           (change)="onActionChange($event)"
         >
         </ng-select>
       </div>
       <div class="filter-group">
-        <label class="filter-label">{{
-          "RESPONSES.FILTERS.TYPE" | translate
-        }}</label>
         <ng-select
+          id="type"
           class="modern-select"
           [items]="types"
           bindLabel="name"
           [placeholder]="'RESPONSES.FILTERS.TYPE' | translate"
+          [attr.aria-label]="'RESPONSES.FILTERS.TYPE' | translate"
           (change)="onTypeChange($event)"
         >
         </ng-select>
       </div>
       <div class="filter-group">
-        <label class="filter-label">{{
-          "RESPONSES.FILTERS.DATE" | translate
-        }}</label>
         <div class="input-modern">
           <i class="prefix-icon feather icon-calendar"></i>
           <input
+            id="date"
             type="text"
             class="form-control"
             [placeholder]="'RESPONSES.FILTERS.DATE' | translate"
+            [attr.aria-label]="'RESPONSES.FILTERS.DATE' | translate"
             bsDatepicker
             [bsConfig]="{
               adaptivePosition: true,
@@ -203,20 +199,27 @@
             ngx-datatable-cell-template
             let-value="value"
           >
-            <div *ngIf="value">
+            <div
+              *ngIf="
+                value?.firstName || value?.lastName || value?.userName;
+                else fallbackUser
+              "
+            >
               <div class="font-weight-bold text-dark">
                 {{ value.firstName }} {{ value.lastName }}
               </div>
-              <small class="text-muted">@{{ value.userName }}</small>
+              <small class="text-muted" *ngIf="value?.userName">{{
+                value.userName
+              }}</small>
             </div>
-            <div *ngIf="!value">
+            <ng-template #fallbackUser>
               <div
                 class="avatar avatar-sm bg-light-secondary text-secondary mr-2"
               >
                 {{ row.createdByName?.charAt(0) }}
               </div>
-              <span class="text-dark">{{ row.createdByName }}</span>
-            </div>
+              <span class="text-dark">{{ row.createdByName || "-" }}</span>
+            </ng-template>
           </ng-template>
         </ngx-datatable-column>
 

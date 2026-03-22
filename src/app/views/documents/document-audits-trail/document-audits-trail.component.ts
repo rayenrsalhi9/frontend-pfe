@@ -27,6 +27,7 @@ export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
   rows: DocumentAuditTrail[] = [];
   users: User[] = [];
   categories: Category[] = [];
+  totalCount: number = 0;
 
   selected = [];
 
@@ -42,6 +43,7 @@ export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
   ) {
     this.documentResource = new DocumentResource();
     this.documentResource.orderBy = "createdDate desc";
+    this.documentResource.pageSize = 10;
   }
 
   ngOnInit() {
@@ -64,43 +66,39 @@ export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
     this.nameChange$.complete();
   }
 
-  ngAfterViewInit() {
-    this.cellOverflowVisible();
-  }
-
   loadDocuments(data = this.documentResource) {
-    this.documentAuditTrailService.getDocumentAuditTrials(data).subscribe(
-      (res: HttpResponse<any>) => {
+    this.documentAuditTrailService.getDocumentAuditTrials(data).subscribe({
+      next: (res: HttpResponse<any>) => {
         this.rows = res.body;
+        this.totalCount = parseInt(res.headers.get("totalCount") || "0", 10);
         this.cdr.detectChanges();
-        console.log(this.rows);
       },
-      (err: any) => {
-        // TODO: handle error
+      error: (err: any) => {
+        console.error(`Failed to load documents: ${err}`);
       },
-    );
+    });
   }
 
   getUsers(): void {
-    this.commonService.getUsersForDropdown().subscribe(
-      (data: User[]) => {
+    this.commonService.getUsersForDropdown().subscribe({
+      next: (data: User[]) => {
         this.users = data;
       },
-      (err: CommonError) => {
-        // TODO: handle error
+      error: (err: CommonError) => {
+        console.error(`Failed to load users: ${err}`);
       },
-    );
+    });
   }
 
   getCategories(): void {
-    this.categoryService.getAllCategoriesForDropDown().subscribe(
-      (c) => {
+    this.categoryService.getAllCategoriesForDropDown().subscribe({
+      next: (c) => {
         this.categories = c;
       },
-      (err) => {
-        // TODO: handle error
+      error: (err) => {
+        console.error(`Failed to load categories: ${err}`);
       },
-    );
+    });
   }
 
   onNameChange(event: any) {
@@ -128,22 +126,15 @@ export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
     this.loadDocuments(this.documentResource);
   }
 
-  private cellOverflowVisible() {
-    const cells = document.getElementsByClassName(
-      "datatable-body-cell overflow-visible",
-    );
-
-    for (let i = 0, len = cells.length; i < len; i++) {
-      cells[i].setAttribute("style", "overflow: visible !important");
-    }
-  }
-
   onSelect({ selected }) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
-  onActivate(event) {}
+  onPage(event: any) {
+    this.documentResource.skip = event.offset * event.pageSize;
+    this.loadDocuments(this.documentResource);
+  }
 
   getOperationKey(value: string): string {
     if (!value) return "UNKNOWN";

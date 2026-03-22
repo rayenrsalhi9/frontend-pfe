@@ -9,6 +9,7 @@
         </p>
       </div>
       <button
+        type="button"
         *hasClaim="'ALL_DOCUMENTS_CREATE_DOCUMENT'"
         class="btn-create"
         routerLink="/document/add"
@@ -30,6 +31,7 @@
             class="form-control"
             (input)="onNameChange($event)"
             [placeholder]="'DOCUMENTS.LIST.LABELS.SEARCH' | translate"
+            [attr.aria-label]="'DOCUMENTS.LIST.LABELS.SEARCH' | translate"
           />
         </div>
       </div>
@@ -41,6 +43,7 @@
           bindValue="id"
           [multiple]="false"
           [placeholder]="'DOCUMENTS.LIST.LABELS.CATEGORY' | translate"
+          [attr.aria-label]="'DOCUMENTS.LIST.LABELS.CATEGORY' | translate"
           (change)="onCategoryChange($event)"
         >
         </ng-select>
@@ -54,6 +57,7 @@
             bsDatepicker
             [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
             [placeholder]="'DOCUMENTS.LIST.LABELS.DATE' | translate"
+            [attr.aria-label]="'DOCUMENTS.LIST.LABELS.DATE' | translate"
             (bsValueChange)="onDateChange($event)"
           />
         </div>
@@ -77,11 +81,8 @@
         [footerHeight]="60"
         rowHeight="auto"
         [limit]="10"
-        [selected]="selected"
-        [selectionType]="SelectionType.checkbox"
         [loadingIndicator]="isLoadingResults"
         (activate)="onActivate($event)"
-        (select)="onSelect($event)"
       >
         <ngx-datatable-column
           [name]="'DOCUMENTS.LIST.TABLE.NAME' | translate"
@@ -145,7 +146,13 @@
               [insideClick]="true"
               container="body"
             >
-              <button dropdownToggle type="button" class="btn-action-trigger">
+              <button
+                dropdownToggle
+                type="button"
+                class="btn-action-trigger"
+                aria-haspopup="menu"
+                [attr.aria-label]="'DOCUMENTS.LIST.BUTTONS.ACTIONS' | translate"
+              >
                 <i class="feather icon-more-horizontal"></i>
               </button>
               <div
