@@ -24,7 +24,7 @@
             type="text"
             class="form-control"
             [placeholder]="'RESPONSES.FILTERS.SEARCH' | translate"
-            (keyup)="onSearchChange($event)"
+            (input)="onSearchChange($event)"
           />
         </div>
       </div>
@@ -159,7 +159,12 @@
                 'badge-soft-warning': value?.toLowerCase() === 'reaction'
               }"
             >
-              {{ "RESPONSES.BADGES." + value?.toUpperCase() | translate }}
+              {{
+                (value
+                  ? "RESPONSES.BADGES." + value.toUpperCase()
+                  : "RESPONSES.BADGES.UNKNOWN"
+                ) | translate
+              }}
             </span>
           </ng-template>
         </ngx-datatable-column>

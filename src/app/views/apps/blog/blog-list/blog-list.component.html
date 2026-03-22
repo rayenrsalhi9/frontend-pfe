@@ -12,7 +12,7 @@
       <div class="col-md-4">
         <div class="input-affix">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control"  (keyup)="onNameChange($event)" [placeholder]="'BLOG.TABLE.SEARCH_BY_NAME'| translate">
+          <input type="text" class="form-control"  (input)="onNameChange($event)" [placeholder]="'BLOG.TABLE.SEARCH_BY_NAME'| translate">
         </div>
       </div>
       <div class="col-md-4">

@@ -26,6 +26,7 @@ export class LoginAuditComponent implements OnInit {
   rows: any[] = [];
   totalCount: number = 0;
   searchSubject: Subject<void> = new Subject<void>();
+  Math = Math;
 
   constructor(
     public clonerService: ClonerService,

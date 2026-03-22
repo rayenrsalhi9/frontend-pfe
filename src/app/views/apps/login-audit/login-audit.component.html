@@ -72,7 +72,9 @@
         [loadingIndicator]="isLoadingResults"
         [externalPaging]="true"
         [count]="totalCount"
-        [offset]="loginAuditResource.skip / loginAuditResource.pageSize"
+        [offset]="
+          Math.floor(loginAuditResource.skip / loginAuditResource.pageSize)
+        "
         (page)="onPageChange($event)"
       >
         <ngx-datatable-column

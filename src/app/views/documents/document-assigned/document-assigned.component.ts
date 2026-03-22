@@ -1,5 +1,8 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { DocumentAuditTrail } from '@app/shared/enums/document-audit-trail';
 import { DocumentInfo } from '@app/shared/enums/document-info';
@@ -47,6 +50,8 @@ export class DocumentAssignedComponent implements OnInit {
   categories: Category[] = [];
   allCategories: Category[] = [];
   bsModalRef: BsModalRef;
+  searchSubject: Subject<void> = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private documentAssignedService: DocumentAssignedService,
@@ -67,8 +72,31 @@ export class DocumentAssignedComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadDocuments()
     this.getCategories()
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.isLoadingResults = true),
+      switchMap(() => this.documentAssignedService.getDocuments(this.documentResource).pipe(
+        catchError(err => {
+          console.log(err);
+          this.isLoadingResults = false;
+          return of(null);
+        })
+      )),
+      takeUntil(this.destroy$)
+    ).subscribe((res: HttpResponse<any>) => {
+      if (res) {
+        this.rows = res.body;
+      }
+      this.isLoadingResults = false;
+      this.cdr.detectChanges();
+    });
+    this.searchSubject.next();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addDocument() {
@@ -77,16 +105,8 @@ export class DocumentAssignedComponent implements OnInit {
 
 
   loadDocuments(data = this.documentResource) {
-    this.documentAssignedService.getDocuments(data).subscribe(
-      (res: HttpResponse<any>) => {
-        this.rows = res.body
-        this.isLoadingResults = true
-        this.cdr.detectChanges();
-      },
-      (err: any) => {
-        console.log(err);
-      }
-    )
+    this.documentResource = data;
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {
@@ -99,15 +119,11 @@ export class DocumentAssignedComponent implements OnInit {
     this.loadDocuments(this.documentResource);
   }
 
-  onNameChange(event:any) {
-    let val = event.target.value
-    if (val) {
-      this.documentResource.name = val;
-    } else {
-      this.documentResource.name = '';
-    }
+  onNameChange(event: any) {
+    const val = event.target.value;
+    this.documentResource.name = val ? val : '';
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onTagChange(event:any) {
@@ -382,14 +398,6 @@ export class DocumentAssignedComponent implements OnInit {
   }
 
   onActivate(event) {
-  }
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
   }
 
   remove() {

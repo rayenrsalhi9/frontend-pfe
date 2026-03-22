@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject, of } from "rxjs";
+import { debounceTime, switchMap, catchError, tap, takeUntil } from "rxjs/operators";
 import { ArticleCategoryService } from "@app/shared/services/article-category.service";
 import { ArticleService } from "@app/shared/services/article.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
@@ -27,6 +29,8 @@ export class ArticlesListComponent implements OnInit {
   SelectionType = SelectionType;
   articleResource: ArticleResource;
   bsModalRef: BsModalRef;
+  searchSubject: Subject<void> = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   currentUser: any;
 
@@ -47,8 +51,27 @@ export class ArticlesListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
 
-    this.getArtilces();
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.cdr.detectChanges()),
+      switchMap(() => this.articleService.allArticles(this.articleResource).pipe(
+        catchError(err => {
+          console.error(err);
+          return of([]);
+        })
+      )),
+      takeUntil(this.destroy$)
+    ).subscribe((data: any) => {
+      this.rows = data;
+      this.cdr.markForCheck();
+    });
+    this.searchSubject.next();
     this.getCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getHost() {
@@ -56,10 +79,8 @@ export class ArticlesListComponent implements OnInit {
   }
 
   getArtilces(data = this.articleResource) {
-    this.articleService.allArticles(data).subscribe((data: any) => {
-      this.rows = data;
-      this.cdr.markForCheck();
-    });
+    this.articleResource = data;
+    this.searchSubject.next();
   }
 
   getCategories() {
@@ -121,14 +142,10 @@ export class ArticlesListComponent implements OnInit {
   }
 
   onNameChange(event: any) {
-    let val = event.target.value;
-    if (val) {
-      this.articleResource.name = val;
-    } else {
-      this.articleResource.name = "";
-    }
+    const val = event.target.value;
+    this.articleResource.name = val ? val : "";
     this.articleResource.skip = 0;
-    this.getArtilces(this.articleResource);
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {

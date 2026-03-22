@@ -20,7 +20,7 @@
           <input
             type="text"
             class="form-control"
-            (keyup)="onNameChange($event)"
+            (input)="onNameChange($event)"
             [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate"
             [attr.aria-label]="'AUDIT.LIST.LABELS.SEARCH' | translate"
           />

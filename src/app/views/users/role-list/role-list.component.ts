@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { debounceTime, takeUntil } from "rxjs/operators";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { Role } from "@app/shared/enums/role";
 import { CommonService } from "@app/shared/services/common.service";
@@ -23,6 +25,8 @@ export class RoleListComponent implements OnInit {
   SelectionType = SelectionType;
 
   bsModalRef: BsModalRef;
+  searchSubject: Subject<string> = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private commonService: CommonService,
@@ -35,6 +39,24 @@ export class RoleListComponent implements OnInit {
 
   ngOnInit() {
     this.getRoles();
+    this.searchSubject.pipe(
+      debounceTime(300),
+      takeUntil(this.destroy$)
+    ).subscribe((val: string) => {
+      if (val) {
+        this.rows = this.allRoles.filter((r) =>
+          r.name?.toLowerCase().includes(val)
+        );
+      } else {
+        this.rows = [...this.allRoles];
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getRoles(): void {
@@ -99,25 +121,6 @@ export class RoleListComponent implements OnInit {
 
   onSearchChange(event: any) {
     const val = event.target.value.toLowerCase();
-    if (val) {
-      this.rows = this.allRoles.filter((r) =>
-        r.name?.toLowerCase().includes(val),
-      );
-    } else {
-      this.rows = [...this.allRoles];
-    }
-    this.cdr.detectChanges();
-  }
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
-  }
-
-  remove() {
-    this.selected = [];
+    this.searchSubject.next(val);
   }
 }

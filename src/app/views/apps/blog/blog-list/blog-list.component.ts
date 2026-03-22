@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, of } from 'rxjs';
+import { debounceTime, switchMap, catchError, tap, takeUntil } from 'rxjs/operators';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BlogService } from '../blog.service';
@@ -25,6 +27,8 @@ export class BlogListComponent implements OnInit {
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   bsModalRef: BsModalRef;
+  searchSubject: Subject<void> = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private blogsService:BlogService,
@@ -38,23 +42,36 @@ export class BlogListComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.getAllBlogs()
     this.getBlogsCategories()
+    this.searchSubject.pipe(
+      debounceTime(300),
+      tap(() => this.cdr.detectChanges()),
+      switchMap(() => this.blogsService.allBlogs(this.blogResource).pipe(
+        catchError(err => {
+          console.error(err);
+          return of([]);
+        })
+      )),
+      takeUntil(this.destroy$)
+    ).subscribe((data: any) => {
+      this.rows = data;
+      this.cdr.markForCheck();
+    });
+    this.searchSubject.next();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getHost() {
     return environment.apiUrl
   }
 
-  getAllBlogs (data = this.blogResource) {
-    this.blogsService.allBlogs(data).subscribe(
-      (data:any)=>{
-        console.log(data);
-        this.rows = data
-        this.cdr.markForCheck()
-      }
-    )
-    this.cdr.detectChanges()
+  getAllBlogs(data = this.blogResource) {
+    this.blogResource = data;
+    this.searchSubject.next();
   }
 
   getBlogsCategories() {
@@ -106,14 +123,10 @@ export class BlogListComponent implements OnInit {
   }
 
   onNameChange(event: any) {
-    let val = event.target.value
-    if (val) {
-      this.blogResource.title = val;
-    } else {
-      this.blogResource.title = '';
-    }
+    const val = event.target.value;
+    this.blogResource.title = val ? val : '';
     this.blogResource.skip = 0;
-    this.getAllBlogs(this.blogResource);
+    this.searchSubject.next();
   }
 
   onCategoryChange(event: any) {

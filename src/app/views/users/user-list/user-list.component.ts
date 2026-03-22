@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { debounceTime, takeUntil } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { CommonError } from "@app/core/error-handler/common-error";
 import { User } from "@app/shared/enums/user";
@@ -26,6 +28,8 @@ export class UserListComponent implements OnInit {
   searchTerm: string = "";
 
   bsModalRef: BsModalRef;
+  searchSubject: Subject<string> = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -43,6 +47,19 @@ export class UserListComponent implements OnInit {
 
   ngOnInit() {
     this.getUsers();
+    this.searchSubject.pipe(
+      debounceTime(300),
+      takeUntil(this.destroy$)
+    ).subscribe((val: string) => {
+      this.searchTerm = val;
+      this.applyFilter();
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   deleteUser(user: User) {
@@ -122,9 +139,8 @@ export class UserListComponent implements OnInit {
   }
 
   onSearchChange(event: any) {
-    this.searchTerm = event.target.value.toLowerCase();
-    this.applyFilter();
-    this.cdr.detectChanges();
+    const val = event.target.value.toLowerCase();
+    this.searchSubject.next(val);
   }
 
   private applyFilter() {
@@ -161,14 +177,6 @@ export class UserListComponent implements OnInit {
   }
 
   onActivate(event) {}
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
-  }
 
   remove() {
     this.selected = [];

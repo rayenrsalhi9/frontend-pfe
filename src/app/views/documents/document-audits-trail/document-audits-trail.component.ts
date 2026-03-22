@@ -1,5 +1,8 @@
 import { HttpResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
+
 import { CommonError } from "@app/core/error-handler/common-error";
 import { DocumentResource } from "@app/shared/enums/document-resource";
 import { User } from "@app/shared/enums/user-auth";
@@ -15,7 +18,10 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
   templateUrl: "./document-audits-trail.component.html",
   styleUrls: ["./document-audits-trail.component.css"],
 })
-export class DocumentAuditsTrailComponent implements OnInit {
+export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
+  nameChange$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
+
   showMobilePanel = false;
 
   rows: DocumentAuditTrail[] = [];
@@ -42,6 +48,20 @@ export class DocumentAuditsTrailComponent implements OnInit {
     this.loadDocuments();
     this.getUsers();
     this.getCategories();
+
+    this.nameChange$
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((val) => {
+        this.documentResource.name = val;
+        this.documentResource.skip = 0;
+        this.loadDocuments(this.documentResource);
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.nameChange$.complete();
   }
 
   ngAfterViewInit() {
@@ -80,18 +100,12 @@ export class DocumentAuditsTrailComponent implements OnInit {
       (err) => {
         // TODO: handle error
       },
-  );
+    );
   }
 
   onNameChange(event: any) {
-    let val = event.target.value;
-    if (val) {
-      this.documentResource.name = val;
-    } else {
-      this.documentResource.name = "";
-    }
-    this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    const val = event.target.value;
+    this.nameChange$.next(val || "");
   }
 
   onCategoryChange(event: any) {
@@ -169,17 +183,5 @@ export class DocumentAuditsTrailComponent implements OnInit {
     }
 
     return "badge-soft-secondary";
-  }
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
-  }
-
-  remove() {
-    this.selected = [];
   }
 }
