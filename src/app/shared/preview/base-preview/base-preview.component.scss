@@ -1,22 +1,20 @@
-@import '../../../../assets/styles/color.scss';
+@import "../../../../assets/scss/variables";
 :host ::ng-deep #aligner {
   display: none !important;
   visibility: hidden !important;
 }
 
-
-
 .file-preview-toolbar {
-  top        : 0;
-  left       : 0;
-  display    : flex;
-  width      : 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
   align-items: center;
-  color      : #fff;
-  height     : 60px;
-  padding    : 0 15px;
-  background : #000;
-  z-index    : 10;
+  color: #fff;
+  height: 60px;
+  padding: 0 15px;
+  background: #000;
+  z-index: 10;
 }
 
 .back-arrow {
@@ -29,10 +27,10 @@
 
 .download-button {
   position: absolute;
-  right   : 30px;
+  right: 30px;
 }
 
 .file-name {
-  color      : #fff;
+  color: #fff;
   margin-left: 10px;
 }

@@ -49,39 +49,33 @@
 
     .header-nav-item {
       text-decoration: none;
-      color: $gray-700;
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       position: relative;
-      @include transition(all 0.2s ease);
+      @include transition(var(--transition));
 
-      .header-nav-item-select {
+      .sidenav-toggle-btn {
         display: flex;
         align-items: center;
-        height: 100%;
-      }
-
-      .toggle-wrapper {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        padding: 0 0.75rem;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         cursor: pointer;
         border-radius: 12px;
-        margin: 0.5rem 0;
-        color: rgba($primary, 0.8);
         background: transparent;
         border: none;
-        @include transition(all 0.2s ease);
+        color: var(--text-secondary);
+        @include transition(var(--transition));
 
         &:hover {
-          background: rgba($primary, 0.05);
-          color: $primary;
+          background: var(--primary-glow);
+          color: var(--primary);
         }
       }
 
       .nav-icon {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
       }
     }
 

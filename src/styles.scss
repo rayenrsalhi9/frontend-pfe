@@ -10,6 +10,7 @@
 }
 
 :root {
+  /* Our Theme Variables */
   --primary: #2563eb;
   --primary-glow: rgba(37, 99, 235, 0.15);
   --bg-app: #fafafa;
@@ -22,8 +23,26 @@
   --radius-sm: 8px;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 12px 30px -10px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --empty-table-svg: url("assets/images/empty-table.svg");
+
+  /* Bootstrap Override - Mapping to our Theme */
+  --bs-primary: var(--primary);
+  --bs-primary-rgb: 37, 99, 235;
+  --bs-success: #00c569;
+  --bs-success-rgb: 0, 197, 105;
+  --bs-danger: #ef4444;
+  --bs-danger-rgb: 239, 68, 68;
+  --bs-warning: #f59e0b;
+  --bs-warning-rgb: 245, 158, 11;
+  --bs-info: #0ea5e9;
+  --bs-info-rgb: 14, 165, 233;
+  --bs-light: var(--bg-app);
+  --bs-dark: #1e293b;
+  --bs-body-bg: var(--bg-app);
+  --bs-body-color: var(--text-primary);
+  --bs-border-color: var(--border-color);
 }
 
 /* Modern Bento Container */
@@ -60,6 +79,23 @@
   }
 }
 
+/* Global Section Title */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+}
+
 .btn-create {
   display: inline-flex;
   align-items: center;
@@ -93,6 +129,15 @@
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+  }
 }
 
 /* Filters Section */
@@ -477,6 +522,57 @@
 .sidebar {
   margin-top: 8px;
   border-radius: 0rem 0.5rem 0rem 0rem;
+}
+
+/* Common Layout Utilities */
+.scroll-content {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-inline-end: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 161, 253, 0.4) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(17, 161, 253, 0.4);
+    border: 2.5px solid transparent;
+    background-clip: padding-box;
+    border-radius: 100px;
+
+    &:hover {
+      background-color: rgba(17, 161, 253, 0.7);
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  min-height: 200px;
+
+  i {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 0.875rem;
+    margin: 0;
+    opacity: 0.7;
+  }
 }
 
 /* Better Global Scrollbar Design */

@@ -1,17 +1,5 @@
 :host {
-  --primary: #2563eb;
-  --primary-glow: rgba(37, 99, 235, 0.15);
-  --bg-app: #fafafa;
-  --card-bg: #ffffff;
-  --text-primary: #111111;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
 .forum-view-container {
@@ -70,16 +58,6 @@
 
 .btn-create i {
   font-size: 1.1rem;
-}
-
-/* Bento Item Base */
-.bento-item {
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  transition: var(--transition);
 }
 
 /* Filters Section */
@@ -175,7 +153,10 @@
   transition: var(--transition);
 }
 
-::ng-deep .modern-table.ngx-datatable .datatable-body .datatable-body-row:hover {
+::ng-deep
+  .modern-table.ngx-datatable
+  .datatable-body
+  .datatable-body-row:hover {
   background-color: #f1f5f9;
 }
 
@@ -192,28 +173,6 @@
   color: var(--text-primary);
   font-size: 0.95rem;
   letter-spacing: -0.01em;
-}
-
-.badge-soft-primary {
-  background: var(--primary-glow);
-  color: var(--primary);
-}
-
-.badge-soft-success {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-}
-
-.badge-soft-danger {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-}
-
-.badge {
-  padding: 0.4rem 0.85rem;
-  font-weight: 700;
-  border-radius: 20px;
-  font-size: 0.725rem;
 }
 
 .creator-info {
@@ -235,10 +194,11 @@
   color: #64748b;
   text-transform: uppercase;
   border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.stat-badge, .btn-stat-link {
+.stat-badge,
+.btn-stat-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -267,25 +227,6 @@
 ::ng-deep .modern-table .actions-cell {
   justify-content: center !important;
   overflow: visible !important;
-}
-
-.btn-action-trigger {
-  background: transparent;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
-  transition: var(--transition);
-  cursor: pointer;
-}
-
-.btn-action-trigger:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--text-primary);
 }
 
 /* Custom Checkbox */
@@ -343,7 +284,9 @@
   background: #fff;
   border: none !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
   padding: 0.5rem !important;
   min-width: 180px !important;
   z-index: 1060;

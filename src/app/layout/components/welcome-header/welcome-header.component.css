@@ -1,17 +1,4 @@
 :host {
-  --primary: #2563eb;
-  --primary-glow: rgba(37, 99, 235, 0.15);
-  --bg-app: #fafafa;
-  --card-bg: #ffffff;
-  --text-primary: #111111;
-  --text-secondary: #64748b;
-  --border-color: #f1f5f9;
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
   display: block;
   position: fixed;
   top: 0;
