@@ -122,6 +122,7 @@ export class ArticlesListComponent implements OnInit, OnDestroy {
   deleteArticle(data: any) {
     this.translate.get("ARTICLES.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.TITLE,
           message: translations.MESSAGE,

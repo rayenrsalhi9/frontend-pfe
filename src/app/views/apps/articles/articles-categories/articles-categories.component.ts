@@ -63,6 +63,7 @@ export class ArticlesCategoriesComponent implements OnInit {
   deleteCategory(id: any) {
     this.translate.get("CATEGORY.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.TITLE,
           message: translations.MESSAGE,

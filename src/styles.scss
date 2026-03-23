@@ -28,6 +28,15 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --empty-table-svg: url("assets/images/empty-table.svg");
 
+  --color-bg-danger: #fef2f2;
+  --color-danger: #dc2626;
+  --color-border-danger: rgba(239, 68, 68, 0.1);
+  --color-danger-hover: #b91c1c;
+  --color-danger-shadow: rgba(239, 68, 68, 0.3);
+
+  --color-success: #10b981;
+  --color-muted: #64748b;
+
   /* Bootstrap Override - Mapping to our Theme */
   --bs-primary: var(--primary);
   --bs-primary-rgb: 37, 99, 235;
@@ -728,4 +737,22 @@ html {
   flex-direction: column;
   gap: 12px;
   align-items: flex-end;
+}
+
+/* Custom Confirmation Modal Global Styles */
+.modal-confirm-custom + .modal-backdrop {
+  backdrop-filter: blur(8px) saturate(140%);
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s ease;
+}
+
+.modal-confirm-custom ~ .modal-backdrop {
+  backdrop-filter: none !important;
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.modal-confirm-custom .modal-content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }

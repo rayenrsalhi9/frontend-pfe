@@ -232,6 +232,7 @@ export class ChatComponent implements OnInit {
 
     this.translateService.get('CHAT.DELETE.LABEL').subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.title,
           message: translations.message,

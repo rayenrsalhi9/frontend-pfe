@@ -65,11 +65,11 @@ $theme-colors: (
   "dark": $dark,
 );
 
-// Semantic Theme Variables
+// Semantic Theme Variables - Aliased for consistency
 $color-primary: $primary;
+$background-primary: $primary;
 $color-on-primary: $white;
 $text-on-primary: $white;
-$background-primary: $primary;
 $background-dark: $black;
 
 $min-contrast-ratio: 1.5;

@@ -75,6 +75,7 @@ export class SurveyListComponent implements OnInit {
       .get("SURVEY.DELETE.LABEL")
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+          class: "modal-confirm-custom",
           initialState: {
             title: translations.title,
             message: translations.message,

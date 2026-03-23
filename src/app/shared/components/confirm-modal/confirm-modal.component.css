@@ -120,21 +120,4 @@
   box-shadow: 0 6px 16px var(--color-danger-shadow, rgba(239, 68, 68, 0.3));
 }
 
-/* Scoped backdrop styling for the custom confirmation modal */
-::ng-deep .modal-confirm-custom + .modal-backdrop {
-  backdrop-filter: blur(8px) saturate(140%);
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  transition: all 0.3s ease;
-}
 
-/* Ensure subsequent backdrops don't multiply blur */
-::ng-deep .modal-confirm-custom ~ .modal-backdrop {
-  backdrop-filter: none !important;
-  background-color: rgba(0, 0, 0, 0.2) !important;
-}
-
-::ng-deep .modal-confirm-custom .modal-content {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}

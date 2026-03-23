@@ -64,6 +64,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   deleteUser(user: User) {
     this.translate.get("USERS.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.title,
           message: translations.message,
