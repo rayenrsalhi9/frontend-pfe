@@ -70,6 +70,7 @@ export class BlogCategoryComponent implements OnInit {
 
     this.translateService.get('CATEGORY.DELETE.LABEL').subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.title,
           message: translations.message,

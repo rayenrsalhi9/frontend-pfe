@@ -71,14 +71,14 @@
     flex-direction: column;
     min-height: auto;
   }
-  
+
   .login-form-column {
     flex: none;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
   }
-  
+
   .login-image-column {
     display: none;
   }
@@ -88,7 +88,7 @@
   .login-form-column {
     padding: 2rem;
   }
-  
+
   .login-title {
     font-size: 1.75rem;
   }

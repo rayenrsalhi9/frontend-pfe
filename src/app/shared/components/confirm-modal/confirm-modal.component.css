@@ -1,14 +1,4 @@
 :host {
-  --primary: #2563eb;
-  --danger: #ef4444;
-  --danger-glow: rgba(239, 68, 68, 0.15);
-  --text-primary: #111111;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
   display: block;
   width: 100%;
 }
@@ -18,8 +8,6 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  /* Ensure it fills the modal wrapper if needed, 
-     though usually modal service handles the overlay */
 }
 
 .confirm-modal-box {
@@ -28,15 +16,23 @@
   padding: 2.5rem 2rem;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -6px rgba(0, 0, 0, 0.04);
   text-align: center;
   border: 1px solid var(--border-color);
-  animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: modal-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Illustration / Icon */
@@ -57,9 +53,9 @@
 }
 
 .icon-wrapper.danger {
-  background-color: var(--danger-glow);
-  color: var(--danger);
-  border: 2px solid rgba(239, 68, 68, 0.1);
+  background-color: var(--color-bg-danger, #fef2f2);
+  color: var(--color-danger, #dc2626);
+  border: 2px solid var(--color-border-danger, rgba(239, 68, 68, 0.1));
 }
 
 /* Content */
@@ -113,32 +109,15 @@
 }
 
 .btn-confirm {
-  background: var(--danger);
+  background: var(--color-danger, #dc2626);
   color: #fff;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 .btn-confirm:hover {
-  background: #dc2626;
+  background: var(--color-danger-hover, #b91c1c);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 6px 16px var(--color-danger-shadow, rgba(239, 68, 68, 0.3));
 }
 
-/* Scoped backdrop styling for the custom confirmation modal */
-::ng-deep .modal-confirm-custom + .modal-backdrop {
-    backdrop-filter: blur(8px) saturate(140%);
-    background-color: rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.3s ease;
-}
 
-/* Ensure subsequent backdrops don't multiply blur */
-::ng-deep .modal-confirm-custom ~ .modal-backdrop {
-    backdrop-filter: none !important;
-    background-color: rgba(0, 0, 0, 0.2) !important;
-}
-
-::ng-deep .modal-confirm-custom .modal-content {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}

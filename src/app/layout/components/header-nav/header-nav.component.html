@@ -12,7 +12,7 @@
     <div class="header-nav-item">
       <button
         type="button"
-        class="toggle-wrapper"
+        class="sidenav-toggle-btn"
         [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
         (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
       >
@@ -34,7 +34,7 @@
     <div class="header-nav-item" *ngIf="isMobile">
       <button
         type="button"
-        class="toggle-wrapper"
+        class="sidenav-toggle-btn"
         [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
         (click)="toggleMobileNav()"
       >

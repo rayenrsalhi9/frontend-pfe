@@ -1,15 +1,5 @@
 :host {
-  --primary: #2563eb;
-  --primary-glow: rgba(37, 99, 235, 0.15);
-  --bg-app: #fafafa;
-  --card-bg: #ffffff;
-  --text-primary: #111111;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
 .elegant-modal {
@@ -71,7 +61,8 @@
 }
 
 /* Loading & Empty States */
-.loading-state, .empty-state-modern {
+.loading-state,
+.empty-state-modern {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,7 +72,8 @@
   color: var(--text-secondary);
 }
 
-.loading-state i, .empty-state-modern i {
+.loading-state i,
+.empty-state-modern i {
   font-size: 2rem;
   margin-bottom: 1rem;
   opacity: 0.5;
@@ -182,7 +174,7 @@
   font-size: 0.85rem;
   text-transform: uppercase;
   border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .user-details {
@@ -289,27 +281,4 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border-width: 0;
-}
-
-/* Harmonized Minimal Scrollbar */
-.scroll-content {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.2) transparent;
-}
-
-.scroll-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.scroll-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scroll-content::-webkit-scrollbar-thumb {
-  background-color: rgba(37, 99, 235, 0.2);
-  border-radius: 100px;
-}
-
-.scroll-content::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(37, 99, 235, 0.4);
 }

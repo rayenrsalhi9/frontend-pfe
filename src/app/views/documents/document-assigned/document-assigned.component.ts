@@ -339,6 +339,7 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
   deleteDocument(document: DocumentInfo) {
     this.translate.get("DOCUMENTS.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+        class: "modal-confirm-custom",
         initialState: {
           title: translations.title,
           message: translations.message,
@@ -348,23 +349,23 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
           },
         },
       });
-    });
 
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.documentService.deleteDocument(document.id).subscribe(() => {
-          this.addDocumentTrail(
-            document.id,
-            DocumentOperation.Deleted.toString(),
-          );
-          this.translate
-            .get("DOCUMENTS.DELETE.TOAST.DOCUMENT_DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage); // Display translated message using Toastr
-            });
-          this.loadDocuments();
-        });
-      }
+      this.bsModalRef.content.onClose.subscribe((result) => {
+        if (result) {
+          this.documentService.deleteDocument(document.id).subscribe(() => {
+            this.addDocumentTrail(
+              document.id,
+              DocumentOperation.Deleted.toString(),
+            );
+            this.translate
+              .get("DOCUMENTS.DELETE.TOAST.DOCUMENT_DELETED_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastr.success(translatedMessage); // Display translated message using Toastr
+              });
+            this.loadDocuments();
+          });
+        }
+      });
     });
   }
 

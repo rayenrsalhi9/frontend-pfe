@@ -2,14 +2,24 @@
   .toggle-wrapper {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     border-radius: 50px;
-    padding: 0.5rem;
-    background: rgba($primary, 0.05);
-    border: none;
+    padding: 0.4rem 1rem 0.4rem 0.5rem;
+    background: rgba($primary, 0.02);
+    border: 1px solid rgba($primary, 0.02);
     color: $primary;
-    @include transition(all 0.2s ease);
+    cursor: pointer;
+    font-weight: 600;
+    @include transition(all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+
+    .user-name {
+      font-size: 0.875rem;
+      letter-spacing: -0.01em;
+      margin: 0 0.25rem;
+    }
 
     [dir="rtl"] & {
+      padding: 0.4rem 0.5rem 0.4rem 1rem;
       [avatar] {
         order: 3;
       }
@@ -21,9 +31,12 @@
       }
     }
 
-    &:hover {
-      background: rgba($primary, 0.08);
-      box-shadow: 0 2px 8px rgba($primary, 0.1);
+    &:hover,
+    &:focus-visible {
+      background: rgba($primary, 0.1);
+      border-color: rgba($primary, 0.1);
+      box-shadow: 0 4px 12px rgba($primary, 0.15);
+      transform: translateY(-1px);
     }
   }
   .dropdown-menu {

@@ -1,24 +1,24 @@
 :host {
   --footer-bg-color: #0f172a;
-  --footer-text-color: #94a3b8;
+  --footer-text-color: var(--text-secondary);
   --footer-border-color: rgba(255, 255, 255, 0.05);
   --footer-brand-color: #f8fafc;
   --footer-link-hover-color: #f8fafc;
-  --footer-accent-color: #2563eb;
-  --footer-accent-hover-color: #1d4ed8;
+  --footer-accent-color: var(--primary);
+  --footer-accent-hover-color: var(--primary-hover);
   --footer-input-bg: rgba(30, 41, 59, 0.5);
   --footer-input-border: rgba(255, 255, 255, 0.1);
   --footer-input-focus-bg: rgba(30, 41, 59, 0.8);
-  --footer-input-focus-border: #2563eb;
-  --footer-input-focus-shadow: rgba(37, 99, 235, 0.1);
-  --footer-btn-bg: #2563eb;
-  --footer-btn-hover-bg: #1d4ed8;
+  --footer-input-focus-border: var(--primary);
+  --footer-input-focus-shadow: var(--primary-glow);
+  --footer-btn-bg: var(--primary);
+  --footer-btn-hover-bg: var(--primary-hover);
   --footer-btn-shadow: rgba(37, 99, 235, 0.3);
   --footer-btn-hover-shadow: rgba(37, 99, 235, 0.4);
   --footer-social-bg: rgba(255, 255, 255, 0.03);
   --footer-social-border: rgba(255, 255, 255, 0.05);
-  --footer-social-hover-bg: #2563eb;
-  --footer-social-hover-border: #2563eb;
+  --footer-social-hover-bg: var(--primary);
+  --footer-social-hover-border: var(--primary);
   --footer-social-hover-shadow: rgba(37, 99, 235, 0.2);
 }
 

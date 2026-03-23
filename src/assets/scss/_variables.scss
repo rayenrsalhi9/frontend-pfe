@@ -1,6 +1,11 @@
 @use "sass:math";
 @use "sass:color";
 
+@import "~bootstrap/scss/functions";
+
+$spacer: 1rem !default;
+$grid-gutter-width: 1.5rem !default;
+
 $white: #fff;
 $gray-100: #f3f7f9;
 $gray-200: #ebf3f8;
@@ -12,17 +17,16 @@ $gray-700: #486f88;
 $gray-800: #343a40;
 $gray-900: #00174c;
 $black: #000;
-
-$blue: #11a1fd;
+$blue: #2563eb;
 $indigo: #5a75f9;
 $purple: #6f42c1;
 $pink: #e83e8c;
-$red: #f46363;
-$orange: #ff9842;
+$red: #ef4444;
+$orange: #f59e0b;
 $yellow: #ffc833;
 $green: #00c569;
 $teal: #2ed477;
-$cyan: #5dcebc;
+$cyan: #0ea5e9;
 
 $colors: (
   "blue": $blue,
@@ -59,6 +63,13 @@ $theme-colors: (
   "light": $light,
   "dark": $dark,
 );
+
+// Semantic Theme Variables
+// Note: $background-primary and $text-on-primary are canonical.
+// Previously aliased vars $color-primary and $color-on-primary have been removed.
+$background-primary: $primary;
+$text-on-primary: $white;
+$background-dark: $black;
 
 $min-contrast-ratio: 1.5;
 
@@ -498,7 +509,10 @@ $form-range-thumb-focus-box-shadow:
   0 0 0 1px $body-bg,
   $input-focus-box-shadow;
 $form-range-thumb-focus-box-shadow-width: $input-focus-width; // For focus box shadow issue in Edge
-$form-range-thumb-active-bg: color.adjust($component-active-bg, $lightness: 35%);
+$form-range-thumb-active-bg: color.adjust(
+  $component-active-bg,
+  $lightness: 35%
+);
 $form-range-thumb-disabled-bg: $gray-500;
 $form-range-thumb-transition:
   background-color 0.15s ease-in-out,
