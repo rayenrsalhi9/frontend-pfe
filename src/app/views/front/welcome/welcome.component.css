@@ -141,6 +141,7 @@
 }
 
 .satisfaction-btn.satisfied {
+  --color-on-success: #024023; /* High-contrast darker green text for the hover/focus state */
   border-color: var(--color-success);
   color: var(--color-success);
 }
@@ -148,7 +149,7 @@
 .satisfaction-btn.satisfied:focus,
 .satisfaction-btn.satisfied:focus-visible {
   background: var(--color-success);
-  color: white;
+  color: var(--color-on-success);
   outline: none;
 }
 

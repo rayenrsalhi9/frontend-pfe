@@ -74,16 +74,19 @@ export class UserListComponent implements OnInit, OnDestroy {
           },
         },
       });
-    });
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.userService.deleteUser(user.id).subscribe(() => {
-          this.translate
-            .get("USERS.DELETE.TOAST.USER_DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastrService.success(translatedMessage);
+
+      if (this.bsModalRef && this.bsModalRef.content) {
+        this.bsModalRef.content.onClose.subscribe((result) => {
+          if (result) {
+            this.userService.deleteUser(user.id).subscribe(() => {
+              this.translate
+                .get("USERS.DELETE.TOAST.USER_DELETED_SUCCESSFULLY")
+                .subscribe((translatedMessage: string) => {
+                  this.toastrService.success(translatedMessage);
+                });
+              this.getUsers();
             });
-          this.getUsers();
+          }
         });
       }
     });

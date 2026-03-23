@@ -17,7 +17,6 @@ $gray-700: #486f88;
 $gray-800: #343a40;
 $gray-900: #00174c;
 $black: #000;
-
 $blue: #2563eb;
 $indigo: #5a75f9;
 $purple: #6f42c1;
@@ -65,10 +64,10 @@ $theme-colors: (
   "dark": $dark,
 );
 
-// Semantic Theme Variables - Aliased for consistency
-$color-primary: $primary;
+// Semantic Theme Variables
+// Note: $background-primary and $text-on-primary are canonical.
+// Previously aliased vars $color-primary and $color-on-primary have been removed.
 $background-primary: $primary;
-$color-on-primary: $white;
 $text-on-primary: $white;
 $background-dark: $black;
 
