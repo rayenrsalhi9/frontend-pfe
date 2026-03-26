@@ -6,6 +6,7 @@ import {
   catchError,
   tap,
   takeUntil,
+  first,
 } from "rxjs/operators";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -94,13 +95,18 @@ export class BlogListComponent implements OnInit, OnDestroy {
   }
 
   getBlogsCategories() {
-    this.blogCategoryService.allCategories().subscribe(
-      (data: any) => {
-        this.categories = data;
-        this.cdr.markForCheck();
-      },
-      (error) => {},
-    );
+    this.blogCategoryService
+      .allCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          this.categories = data;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error("Error fetching categories", error);
+        },
+      });
   }
 
   onSelect({ selected }) {
@@ -109,35 +115,42 @@ export class BlogListComponent implements OnInit, OnDestroy {
   }
 
   deleteBlog(data: any) {
-    this.translateService.get("BLOG.DELETE.LABEL").subscribe((translations) => {
-      this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-        class: "modal-confirm-custom",
-        initialState: {
-          title: translations.title,
-          message: translations.message,
-          button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm,
+    this.translateService
+      .get("BLOG.DELETE.LABEL")
+      .pipe(first())
+      .subscribe((translations) => {
+        this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+          class: "modal-confirm-custom",
+          initialState: {
+            title: translations.TITLE,
+            message: translations.MESSAGE,
+            button: {
+              cancel: translations.BUTTON.CANCEL,
+              confirm: translations.BUTTON.CONFIRM,
+            },
           },
-        },
-      });
-    });
-
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.blogsService.deleteBlog(data.id).subscribe((data: any) => {
-          this.translateService
-            .get("BLOG.DELETE.TOAST.DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage);
-            });
-          this.getAllBlogs();
         });
-      }
-    });
-  }
 
-  onActivate(event) {}
+        this.bsModalRef.content.onClose
+          .pipe(first())
+          .subscribe((result: boolean) => {
+            if (result) {
+              this.blogsService
+                .deleteBlog(data.id)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
+                  this.translateService
+                    .get("BLOG.DELETE.TOAST.DELETED_SUCCESSFULLY")
+                    .pipe(first())
+                    .subscribe((translatedMessage: string) => {
+                      this.toastr.success(translatedMessage);
+                    });
+                  this.getAllBlogs();
+                });
+            }
+          });
+      });
+  }
 
   onNameChange(event: any) {
     const val = event.target.value;

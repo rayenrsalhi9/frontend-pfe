@@ -1,18 +1,22 @@
 export const blog = {
   BLOG: {
+    LIST: {
+      TITLE: "Articles de blog",
+      DESCRIPTION: "Gérez vos articles de blog ici.",
+    },
     TABLE: {
       PICTURE: "Image",
       TITLE: "Titre",
       CATEGORY: "Catégorie",
-      CREATED: "Créé",
+      CREATED: "Créé le",
       CREATOR: "Créateur",
       PRIVACY: "Confidentialité",
       ACTIONS: "Actions",
       BANNER: "Bannière",
-      SEARCH_BY_NAME: "Recherche par nom",
-      SEARCH_BY_CATEGORY: "Recherche par catégorie",
-      SEARCH_BY_DATE: "Recherche par date",
-      LOAD_ERROR: "Échec du chargement des blogs. Veuillez réessayer.",
+      SEARCH_BY_NAME: "Rechercher par nom",
+      SEARCH_BY_CATEGORY: "Rechercher par catégorie",
+      SEARCH_BY_DATE: "Rechercher par date",
+      LOAD_ERROR: "Impossible de charger les articles. Veuillez réessayer.",
     },
     PRIVACY: {
       PUBLIC: "Public",
@@ -24,9 +28,9 @@ export const blog = {
     },
     BUTTONS: {
       VIEW: "Voir",
-      ADD: "Ajouter",
+      ADD: "Ajouter un article",
       EDIT: "Modifier",
-      DELETE: "Suprimer",
+      DELETE: "Supprimer",
     },
     ADD: {
       LABELS: {
@@ -48,28 +52,28 @@ export const blog = {
         CHANGE: "Modifier",
       },
       ERROR: {
-        PICTURE: "Une Image est requise",
-        TITLE: "Le titre est obligatoire",
-        SUBTITLE: "Le sous-titre est obligatoire",
-        CATEGORY: "La catégorie est obligatoire",
-        BODY: "Le Contenu est requis",
+        PICTURE: "Une image est requise.",
+        TITLE: "Un titre est requis.",
+        SUBTITLE: "Un sous-titre est requis.",
+        CATEGORY: "Une catégorie est requise.",
+        BODY: "Le contenu est requis.",
       },
       TOAST: {
-        SAVE_SUCCESSFULLY: "",
+        SAVE_SUCCESSFULLY: "Article enregistré avec succès.",
       },
     },
     DELETE: {
       LABEL: {
-        title: "Supprimer le blog",
-        message: "Etes-vous sûr de vouloir supprimer ce blog ?",
-        button: {
-          cancel: "Annuler",
-          confirm: "Confirmer",
+        TITLE: "Supprimer l'article",
+        MESSAGE: "Êtes-vous sûr de vouloir supprimer cet article ?",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Confirmer",
         },
       },
       ERROR: {},
       TOAST: {
-        DELETED_SUCCESSFULLY: "Le blog a été supprimé avec succès",
+        DELETED_SUCCESSFULLY: "Article supprimé avec succès.",
       },
     },
   },

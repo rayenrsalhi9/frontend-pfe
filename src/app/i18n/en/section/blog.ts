@@ -1,10 +1,14 @@
 export const blog = {
   BLOG: {
+    LIST: {
+      TITLE: "Blog Posts",
+      DESCRIPTION: "Manage your blog posts here.",
+    },
     TABLE: {
       PICTURE: "Picture",
       TITLE: "Title",
       CATEGORY: "Category",
-      CREATED: "Cretad by",
+      CREATED: "Created At",
       CREATOR: "Creator",
       PRIVACY: "Privacy",
       ACTIONS: "Actions",
@@ -12,7 +16,7 @@ export const blog = {
       SEARCH_BY_NAME: "Search by name",
       SEARCH_BY_CATEGORY: "Search by category",
       SEARCH_BY_DATE: "Search by date",
-      LOAD_ERROR: "Failed to load blogs. Please try again.",
+      LOAD_ERROR: "Failed to load blog posts. Please try again.",
     },
     PRIVACY: {
       PUBLIC: "Public",
@@ -24,7 +28,7 @@ export const blog = {
     },
     BUTTONS: {
       VIEW: "View",
-      ADD: "Add",
+      ADD: "Add Blog Post",
       EDIT: "Edit",
       DELETE: "Delete",
     },
@@ -37,8 +41,8 @@ export const blog = {
         SUBTITLE: "Subtitle",
         AUDIENCE: "Audience",
         EXPIRATION: "Expiration",
-        STARTDATE: "Start date",
-        ENDDATE: "End date",
+        STARTDATE: "Start Date",
+        ENDDATE: "End Date",
         BODY: "Body",
         BANNER: "Banner",
       },
@@ -48,28 +52,28 @@ export const blog = {
         CHANGE: "Change",
       },
       ERROR: {
-        PICTURE: "Picture is required",
-        TITLE: "Title is required",
-        SUBTITLE: "Subtitle is required",
-        CATEGORY: "Category is required",
-        BODY: "Body is required",
+        PICTURE: "A picture is required.",
+        TITLE: "A title is required.",
+        SUBTITLE: "A subtitle is required.",
+        CATEGORY: "A category is required.",
+        BODY: "The body content is required.",
       },
       TOAST: {
-        SAVE_SUCCESSFULLY: "",
+        SAVE_SUCCESSFULLY: "Blog post saved successfully.",
       },
     },
     DELETE: {
       LABEL: {
-        title: "Delete Blog",
-        message: "Are you sure you want to delete this blog?",
-        button: {
-          cancel: "Cancel",
-          confirm: "Confirm",
+        TITLE: "Delete Blog Post",
+        MESSAGE: "Are you sure you want to delete this blog post?",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Confirm",
         },
       },
       ERROR: {},
       TOAST: {
-        DELETED_SUCCESSFULLY: "The blog has been successfully deleted",
+        DELETED_SUCCESSFULLY: "Blog post deleted successfully.",
       },
     },
   },

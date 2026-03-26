@@ -1,21 +1,20 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { BlogService } from '../blog.service';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { ManageComponent } from './manage/manage.component';
-import { BlogCategoryService } from './blog-category.service';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
+import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
+import { ManageComponent } from "./manage/manage.component";
+import { BlogCategoryService } from "./blog-category.service";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { TranslateService } from "@ngx-translate/core";
+import { Subject } from "rxjs";
+import { takeUntil, first } from "rxjs/operators";
 
 @Component({
-  selector: 'app-blog-category',
-  templateUrl: './blog-category.component.html',
-  styleUrls: ['./blog-category.component.css']
+  selector: "app-blog-category",
+  templateUrl: "./blog-category.component.html",
+  styleUrls: ["./blog-category.component.css"],
 })
-export class BlogCategoryComponent implements OnInit {
-
+export class BlogCategoryComponent implements OnInit, OnDestroy {
   rows: any[] = [];
   selected = [];
 
@@ -23,75 +22,90 @@ export class BlogCategoryComponent implements OnInit {
   SelectionType = SelectionType;
 
   bsModalRef: BsModalRef;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private blogCategoryService: BlogCategoryService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private translateService:TranslateService
-  ) { }
+    private translateService: TranslateService,
+  ) {}
 
   ngOnInit(): void {
-    this.getCategories()
+    this.getCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getCategories() {
     this.blogCategoryService.allCategories().subscribe(
-      (data:any)=>{
-        this.rows = data
-        this.cdr.markForCheck()
+      (data: any) => {
+        this.rows = data;
+        this.cdr.markForCheck();
       },
-      error=>{
-
-      }
-    )
+      (error) => {
+        console.error("Error fetching categories", error);
+      },
+    );
   }
 
   onSelect({ selected }) {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
   }
 
-  onActivate(event) {
-  }
-
-  manageCategory(data:any) {
-
+  manageCategory(data: any) {
     const initialState = {
       data: Object.assign({}, data),
-    }
+    };
 
-    this.modalService.show(ManageComponent,{initialState:initialState}).onHide.subscribe(()=>{
-      this.getCategories()
-    })
+    this.modalService
+      .show(ManageComponent, { initialState })
+      .onHide.pipe(first())
+      .subscribe(() => {
+        this.getCategories();
+      });
   }
 
-  deleteCategory(data:any) {
-
-    this.translateService.get('CATEGORY.DELETE.LABEL').subscribe((translations) => {
-      this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-        class: "modal-confirm-custom",
-        initialState: {
-          title: translations.title,
-          message: translations.message,
-          button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm
-          }
-        }
-      });
-    });
-    this.bsModalRef.content.onClose.subscribe(result => {
-
-      if(result) {
-        this.blogCategoryService.deleteCategory(data.id).subscribe((d) => {
-          this.translateService.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
-            this.toastr.success(translatedMessage); // Display translated message using Toastr
-          });
-          this.getCategories()
+  deleteCategory(data: any) {
+    this.translateService
+      .get("CATEGORY.DELETE.LABEL")
+      .pipe(first())
+      .subscribe((translations) => {
+        this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
+          class: "modal-confirm-custom",
+          initialState: {
+            title: translations.TITLE,
+            message: translations.MESSAGE,
+            button: {
+              cancel: translations.BUTTON.CANCEL,
+              confirm: translations.BUTTON.CONFIRM,
+            },
+          },
         });
-      }
 
-    })
+        this.bsModalRef.content.onClose
+          .pipe(first())
+          .subscribe((result: boolean) => {
+            if (result) {
+              this.blogCategoryService
+                .deleteCategory(data.id)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
+                  this.translateService
+                    .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY")
+                    .pipe(first())
+                    .subscribe((translatedMessage: string) => {
+                      this.toastr.success(translatedMessage);
+                    });
+                  this.getCategories();
+                });
+            }
+          });
+      });
   }
 }

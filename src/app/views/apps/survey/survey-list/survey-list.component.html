@@ -1,121 +1,142 @@
-<div class="card mb-0">
-  <div class="card-body">
-    <div class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button routerLink="/apps/surveys/add" class="btn btn-primary mb-3">
-          <i class="feather icon-plus"></i>
-          <span>{{"SURVEY.BUTTONS.ADD" | translate}}</span>
-        </button>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{ "SURVEY.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "SURVEY.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
+      <button routerLink="/apps/surveys/add" class="btn-create">
+        <i class="feather icon-plus"></i>
+        <span>{{ "SURVEY.BUTTONS.ADD" | translate }}</span>
+      </button>
     </div>
-    <div class="row align-items-center">
-      <div class="col-md-4">
-        <div class="input-affix">
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control"  (input)="onNameChange($event)" [placeholder]="'SURVEY.TABLE.SEARCH_BY_NAME'| translate">
+          <input
+            type="text"
+            class="form-control"
+            (input)="onNameChange($event)"
+            [placeholder]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
+            [attr.aria-label]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
+          />
         </div>
       </div>
-      <div class="col-md-4">
-        <ng-select [multiple]="false" [placeholder]="'SURVEY.TABLE.SEARCH_BY_CATEGORY' | translate" (change)="onCategoryChange($event)">
-          <ng-option *ngFor="let category of categories" [value]="category">{{category}} </ng-option>
-        </ng-select>
-      </div>
-      <div class="col-md-4">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
-          <input type="text" class="form-control" bsDatepicker [bsConfig]="{dateInputFormat: 'DD-MM-YYYY'}" (bsValueChange)="onDateChange($event)" [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE'| translate">
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-calendar"></i>
+          <input
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+            (bsValueChange)="onDateChange($event)"
+            [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
+          />
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <ngx-datatable
-          [messages]="{
-            emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
-            selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
-            totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
-          }"
-          [rows]="rows"
-          [columnMode]="ColumnMode.force"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          rowHeight="auto"
-          [limit]="10"
-          [loadingIndicator]="isLoadingResults"
-          [selected]="selected"
-          [selectionType]="SelectionType.checkbox"
-          (activate)="onActivate($event)"
-          (select)="onSelect($event)"
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="10"
+      >
+        <ngx-datatable-column
+          [name]="'SURVEY.TABLE.TITLE' | translate"
+          prop="title"
         >
-          <ngx-datatable-column [width]="40" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-            [resizeable]="false">
-            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-              let-selectFn="selectFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="allRowsSelected"
-                  (change)="selectFn(!allRowsSelected)" />
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+          >
+            <a [routerLink]="['/apps/survey/detail']" class="text-dark font-weight-bold d-block">
+              {{ value }}
+            </a>
+            <span
+              class="badge badge-pill mt-1"
+              [ngClass]="{
+                'badge-soft-success': row.status === 'Active',
+                'badge-soft-secondary': row.status === 'Inactive'
+              }"
+            >
+              {{ row.status }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'SURVEY.TABLE.CREATED' | translate"
+          prop="createdAt"
+        >
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+            <span class="badge badge-soft-primary">{{ value | utcToLocalTime: "shortDate" }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'SURVEY.TABLE.ACTIONS' | translate"
+          [sortable]="false"
+          cellClass="overflow-visible"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+          >
+            <div
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
+              <button dropdownToggle type="button" class="btn-action-trigger">
+                <i class="feather icon-more-horizontal"></i>
+              </button>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  [routerLink]="'/apps/surveys/edit/' + row.id"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "SURVEY.BUTTONS.EDIT" | translate }}</span>
+                </button>
+                <div class="dropdown-divider-modern"></div>
+                <button
+                  class="dropdown-item-modern text-danger"
+                  (click)="deleteSurvey(row)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "SURVEY.BUTTONS.DELETE" | translate }}</span>
+                </button>
               </div>
-            </ng-template>
-            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
-              let-onCheckboxChangeFn="onCheckboxChangeFn">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="isSelected"
-                  (change)="onCheckboxChangeFn($event)" />
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.TITLE'| translate"  prop="title"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.TYPE'| translate" prop="type"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.CREATOR'| translate" prop="creator">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false">{{value.firstName}} {{value.lastName}}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.TOTALE'| translate" prop="answers">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false" >{{value.length }}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.ANSWERS'| translate" prop="answers">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <ng-container *ngIf="row.type == 'simple'">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                  <span [tooltip]="'SURVEY.CHART.SIMPLE.ZERO_STARS'| translate">{{ getAnswerCount(0, value)}}</span>
-                  <span [tooltip]="'SURVEY.CHART.SIMPLE.ONE_STARS'| translate">{{ getAnswerCount(1, value)}}</span>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="row.type == 'rating'">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                  <span [tooltip]="'SURVEY.CHART.RATING.ONE_STARS'| translate">{{ getAnswerCount(1, value)}}</span>
-                  <span [tooltip]="'SURVEY.CHART.RATING.TWO_STARS'| translate">{{ getAnswerCount(2, value)}}</span>
-                  <span [tooltip]="'SURVEY.CHART.RATING.THREE_STARS'| translate">{{ getAnswerCount(3, value)}}</span>
-                  <span [tooltip]="'SURVEY.CHART.RATING.FOUR_STARS'| translate">{{ getAnswerCount(4, value)}}</span>
-                  <span [tooltip]="'SURVEY.CHART.RATING.FIVE_STARS'| translate">{{ getAnswerCount(5, value)}}</span>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="row.type == 'satisfaction'">
-                <div style="display: flex; align-items: center; gap: 5px;">
-                  <span [tooltip]="('SURVEY.CHART.SATISFACTION.ZERO_STARS'| translate)+' '+((getAnswerCount(0, value) / row.answers.length) * 100)+'%'">{{ getAnswerCount(0, value)}}</span>
-                  <span [tooltip]="('SURVEY.CHART.SATISFACTION.ONE_STARS'| translate)+' '+((getAnswerCount(0, value) / row.answers.length) * 100)+'%'">{{ getAnswerCount(1, value)}}</span>
-                  <span [tooltip]="('SURVEY.CHART.SATISFACTION.TWO_STARS'| translate)+' '+((getAnswerCount(0, value) / row.answers.length) * 100)+'%'">{{ getAnswerCount(2, value)}}</span>
-                </div>
-              </ng-container>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.CREATED'| translate" prop="createdAt">
-            <ng-template ngx-datatable-cell-template let-value="value" aria-hidden="false" >{{value | utcToLocalTime:'shortDate' }}</ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column [name]="'SURVEY.TABLE.ACTIONS'| translate" [sortable]="false" aria-hidden="false" cellClass="overflow-visible">
-            <ng-template let-row="row" ngx-datatable-cell-template let-value="value" aria-hidden="false">
-              <div class="btn-group" dropdown [insideClick]="true">
-                <button dropdownToggle type="button" class="btn">  <i class="feather icon-more-horizontal"></i>  </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" [routerLink]="'/apps/surveys/detail/'+row.id">{{"SURVEY.BUTTONS.VIEW" | translate}}</a></li>
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer" [routerLink]="'/apps/surveys/edit/'+row.id">{{"SURVEY.BUTTONS.EDIT" | translate}}</a></li>
-                  <li role="menuitem"><a class="dropdown-item cursor-pointer"  (click)="deleteSurvey(row)">{{"SURVEY.BUTTONS.DELETE" | translate}}</a>
-                  </li>
-                </ul>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>

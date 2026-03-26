@@ -1,82 +1,87 @@
 export const survey = {
-  "SURVEY": {
-    "TABLE": {
-      "TITLE": "Title",
-      "TYPE": "Type",
-      "CREATOR": "Creator",
-      "TOTALE": "Total",
-      "CREATED": "Created by",
-      "ANSWERS": "Answers",
-      "ACTIONS": "Actions",
-
-      "SEARCH_BY_NAME": "Search by name",
-      "SEARCH_BY_CATEGORY": "Search by type",
-      "SEARCH_BY_DATE": "Search by date",
+  SURVEY: {
+    LIST: {
+      TITLE: "Surveys",
+      DESCRIPTION: "Manage your surveys here.",
     },
-    "BUTTONS": {
-      "VIEW": "View",
-      "ADD": "Add",
-      "EDIT": "Edit",
-      "DELETE": "Delete"
+    TABLE: {
+      TITLE: "Title",
+      DESCRIPTION: "Description",
+      TYPE: "Type",
+      CATEGORY: "Category",
+      CREATOR: "Creator",
+      TOTAL: "Total",
+      CREATED: "Created At",
+      ANSWERS: "Answers",
+      ACTIONS: "Actions",
+      SEARCH_BY_TITLE: "Search by title",
+      SEARCH_BY_CATEGORY: "Search by category",
+      SEARCH_BY_DATE: "Search by date",
     },
-    "ADD": {
-      "LABELS": {
-        "TITLE": "Title",
-        "TYPE": "Type",
-        "PRIVATE": "Private",
-      },
-      "BUTTONS": {
-        "SAVE": "Save",
-        "CANCEL": "Cancel",
-      },
-      "ERROR": {
-        "TITLE": "Title is required",
-        "TYPE": "Type is required",
-      },
-      "TOAST": {
-        "SAVE_SUCCESSFULLY": "",
-      }
+    BUTTONS: {
+      VIEW: "View",
+      ADD: "Add Survey",
+      EDIT: "Edit",
+      DELETE: "Delete",
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "Delete survey",
-        "message": "Are you sure you want to delete this survey?",
-        "button": {
-          "cancel": "Annuler",
-          "confirm": "Confirmer"
-        }
+    ADD: {
+      LABELS: {
+        TITLE: "Title",
+        TYPE: "Type",
+        PRIVATE: "Private",
       },
-      "ERROR": {},
-      "TOAST": {
-        "DELETED_SUCCESSFULLY": "The survey has been successfully deleted"
-      }
-    },
-    "CHART": {
-      "RATING": {
-        "ONE_STARS": "One star",
-        "TWO_STARS": "Two stars",
-        "THREE_STARS": "Three stars",
-        "FOUR_STARS": "Four stars",
-        "FIVE_STARS": "Five stars",
+      BUTTONS: {
+        SAVE: "Save",
+        CANCEL: "Cancel",
       },
-      "SIMPLE": {
-        "ZERO_STARS": "No",
-        "ONE_STARS": "Yes"
+      ERROR: {
+        TITLE: "A title is required.",
+        TYPE: "A type is required.",
       },
-      "SATISFACTION": {
-        "ZERO_STARS": "Not satisfied",
-        "ONE_STARS": "Neutral",
-        "TWO_STARS": "Satisfied",
+      TOAST: {
+        SAVE_SUCCESSFULLY: "Survey saved successfully.",
       },
     },
-    "TOAST": {
-      "SUCCESS":"Thank you for sharing your valuable opinions and thoughts!",
-      "ERROR":"Survey already answered",
+    DELETE: {
+      LABEL: {
+        TITLE: "Delete Survey",
+        MESSAGE: "Are you sure you want to delete this survey?",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Confirm",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Survey deleted successfully.",
+      },
     },
-    "OPTION":{
-      "simple":"Simple",
-      "rating":"Rating",
-      "satisfaction":"Satisfaction"
-    }
-  }
-}
+    CHART: {
+      RATING: {
+        ONE_STARS: "1 Star",
+        TWO_STARS: "2 Stars",
+        THREE_STARS: "3 Stars",
+        FOUR_STARS: "4 Stars",
+        FIVE_STARS: "5 Stars",
+      },
+      SIMPLE: {
+        ZERO_STARS: "No",
+        ONE_STARS: "Yes",
+      },
+      SATISFACTION: {
+        ZERO_STARS: "Unsatisfied",
+        ONE_STARS: "Neutral",
+        TWO_STARS: "Satisfied",
+      },
+    },
+    TOAST: {
+      SUCCESS: "Thank you for sharing your thoughts and feedback!",
+      ERROR: "You have already submitted a response to this survey.",
+    },
+    OPTION: {
+      SIMPLE: "Simple",
+      RATING: "Rating",
+      SATISFACTION: "Satisfaction",
+    },
+  },
+};

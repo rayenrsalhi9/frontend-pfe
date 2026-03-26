@@ -1,83 +1,87 @@
 export const survey = {
-  "SURVEY": {
-    "TABLE": {
-      "TITLE": "العنوان",
-      "TYPE": "أنواع",
-      "CREATOR": "انشأ من قبل",
-      "TOTALE": "المجموع",
-      "CREATED": "تم الإنشاء في",
-      "ANSWERS": "إجابات",
-      "ACTIONS": "أجراءات",
-
-      "SEARCH_BY_NAME": "البحث بالاسم",
-      "SEARCH_BY_CATEGORY": "البحث حسب النوع",
-      "SEARCH_BY_DATE": "البحث بالتاريخ",
+  SURVEY: {
+    LIST: {
+      TITLE: "الاستبيانات",
+      DESCRIPTION: "أدِر استبياناتك من هنا.",
     },
-    "BUTTONS": {
-      "VIEW": "عرض",
-      "ADD": "أضف استبيان",
-      "EDIT": "تعديل",
-      "DELETE": "حذف"
+    TABLE: {
+      TITLE: "العنوان",
+      DESCRIPTION: "الوصف",
+      TYPE: "النوع",
+      CATEGORY: "التصنيف",
+      CREATOR: "المنشئ",
+      TOTAL: "الإجمالي",
+      CREATED: "تاريخ الإنشاء",
+      ANSWERS: "الإجابات",
+      ACTIONS: "الإجراءات",
+      SEARCH_BY_TITLE: "البحث بالعنوان",
+      SEARCH_BY_CATEGORY: "البحث بالتصنيف",
+      SEARCH_BY_DATE: "البحث بالتاريخ",
     },
-    "ADD":{
-      "LABELS":{
-        "TITLE":"عنوان",
-        "TYPE": "النوع",
-        "PRIVATE": "خاص",
-      },
-      "BUTTONS": {
-        "SAVE": "حفظ",
-        "CANCEL": "إلغاء",
-        "CHANGE":"تغيير الصورة",
-      },
-      "ERROR": {
-        "TITLE": "العنوان مطلوب",
-        "TYPE": "النوع مطلوب",
-      },
-      "TOAST": {
-        "SAVE_SUCCESSFULLY": "",
-      }
+    BUTTONS: {
+      VIEW: "عرض",
+      ADD: "إضافة استبيان",
+      EDIT: "تعديل",
+      DELETE: "حذف",
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "حذف الاستبيان",
-        "message": "هل أنت متأكد أنك تريد حذف هذا الاستبيان",
-        "button": {
-          "cancel": "إلغاء",
-          "confirm": "تأكيد"
-        }
+    ADD: {
+      LABELS: {
+        TITLE: "العنوان",
+        TYPE: "النوع",
+        PRIVATE: "خاص",
       },
-      "ERROR": {},
-      "TOAST": {
-        "DELETED_SUCCESSFULLY": "تم حذف الاستبيان بنجاح"
-      }
-    },
-    "CHART": {
-      "RATING": {
-        "ONE_STARS": "نجمة واحدة",
-        "TWO_STARS": "نجمتان",
-        "THREE_STARS": "ثلاث نجوم",
-        "FOUR_STARS": "أربع نجوم",
-        "FIVE_STARS": "خمس نجوم",
+      BUTTONS: {
+        SAVE: "حفظ",
+        CANCEL: "إلغاء",
       },
-      "SIMPLE": {
-        "ZERO_STARS": "لا",
-        "ONE_STARS": "نعم"
+      ERROR: {
+        TITLE: "العنوان مطلوب.",
+        TYPE: "نوع الاستبيان مطلوب.",
       },
-      "SATISFACTION": {
-        "ZERO_STARS": "غير راضٍ",
-        "ONE_STARS": "محايد",
-        "TWO_STARS": "راضي",
+      TOAST: {
+        SAVE_SUCCESSFULLY: "تم حفظ الاستبيان بنجاح.",
       },
     },
-    "TOAST": {
-      "SUCCESS":"شكرًا لك على مشاركة آرائك وأفكارك القيمة!",
-      "ERROR":"تم الرد على الاستبيان",
+    DELETE: {
+      LABEL: {
+        TITLE: "حذف الاستبيان",
+        MESSAGE: "هل أنت متأكد من رغبتك في حذف هذا الاستبيان؟",
+        BUTTON: {
+          CANCEL: "إلغاء",
+          CONFIRM: "تأكيد",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        DELETED_SUCCESSFULLY: "تم حذف الاستبيان بنجاح.",
+      },
     },
-    "OPTION":{
-      "simple":"بسيطة",
-      "rating":"تقييم",
-      "satisfaction":"الرضا"
-    }
-  }
-}
+    CHART: {
+      RATING: {
+        ONE_STARS: "نجمة واحدة",
+        TWO_STARS: "نجمتان",
+        THREE_STARS: "ثلاث نجوم",
+        FOUR_STARS: "أربع نجوم",
+        FIVE_STARS: "خمس نجوم",
+      },
+      SIMPLE: {
+        ZERO_STARS: "لا",
+        ONE_STARS: "نعم",
+      },
+      SATISFACTION: {
+        ZERO_STARS: "غير راضٍ",
+        ONE_STARS: "محايد",
+        TWO_STARS: "راضٍ",
+      },
+    },
+    TOAST: {
+      SUCCESS: "شكراً لمشاركتك آراءك وملاحظاتك القيّمة!",
+      ERROR: "لقد أجبت على هذا الاستبيان مسبقاً.",
+    },
+    OPTION: {
+      SIMPLE: "بسيط",
+      RATING: "تقييم",
+      SATISFACTION: "رضا",
+    },
+  },
+};

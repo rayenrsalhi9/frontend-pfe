@@ -1,16 +1,28 @@
-<div class="card mb-0">
-  <div class="card-body">
-    <div class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button routerLink="/apps/blogs/add" class="btn btn-primary mb-3">
-          <i class="feather icon-plus"></i>
-          <span>{{ "BLOG.BUTTONS.ADD" | translate }}</span>
-        </button>
+<div class="bento-main-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-actions">
+      <div class="header-content">
+        <h1 class="page-title">{{ "BLOG.LIST.TITLE" | translate }}</h1>
+        <p class="page-description">
+          {{ "BLOG.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
+      <button
+        routerLink="/apps/blogs/add"
+        class="btn-create"
+      >
+        <i class="feather icon-plus"></i>
+        <span>{{ "BLOG.BUTTONS.ADD" | translate }}</span>
+      </button>
     </div>
-    <div class="row align-items-center">
-      <div class="col-md-4">
-        <div class="input-affix">
+  </div>
+
+  <!-- Filters Section -->
+  <div class="bento-item filters-section">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <div class="input-modern">
           <i class="prefix-icon feather icon-search"></i>
           <input
             type="text"
@@ -21,8 +33,9 @@
           />
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="filter-group">
         <ng-select
+          class="modern-select"
           [multiple]="false"
           [placeholder]="'BLOG.TABLE.SEARCH_BY_CATEGORY' | translate"
           (change)="onCategoryChange($event)"
@@ -32,9 +45,9 @@
           </ng-option>
         </ng-select>
       </div>
-      <div class="col-md-4">
-        <div class="input-affix">
-          <i class="prefix-icon feather icon-search"></i>
+      <div class="filter-group">
+        <div class="input-modern">
+          <i class="prefix-icon feather icon-calendar"></i>
           <input
             type="text"
             class="form-control"
@@ -46,202 +59,161 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div *ngIf="loadError" class="alert alert-danger mb-3">
-          {{ 'BLOG.TABLE.LOAD_ERROR' | translate }}
-        </div>
-        <ngx-datatable
-          [messages]="{
-            emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
-            selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
-            totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
-          }"
-          [rows]="rows"
-          [columnMode]="ColumnMode.force"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          rowHeight="auto"
-          [limit]="5"
-          [loadingIndicator]="isLoadingResults"
-          [selected]="selected"
-          [selectionType]="SelectionType.checkbox"
-          (activate)="onActivate($event)"
-          (select)="onSelect($event)"
+  </div>
+
+  <!-- Table Section -->
+  <div class="bento-item table-section">
+    <div *ngIf="loadError" class="alert alert-danger mb-3">
+      {{ 'BLOG.TABLE.LOAD_ERROR' | translate }}
+    </div>
+    <div class="modern-table-wrapper">
+      <ngx-datatable
+        class="modern-table"
+        [messages]="{
+          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+        }"
+        [rows]="rows"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="60"
+        [footerHeight]="60"
+        rowHeight="auto"
+        [limit]="10"
+        [loadingIndicator]="isLoadingResults"
+      >
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.PICTURE' | translate"
+          prop="picture"
         >
-          <ngx-datatable-column
-            [width]="40"
-            [sortable]="false"
-            [canAutoResize]="false"
-            [draggable]="false"
-            [resizeable]="false"
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            aria-hidden="false"
           >
-            <ng-template
-              ngx-datatable-header-template
-              let-value="value"
-              let-allRowsSelected="allRowsSelected"
-              let-selectFn="selectFn"
-            >
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  [checked]="allRowsSelected"
-                  (change)="selectFn(!allRowsSelected)"
-                />
-              </div>
-            </ng-template>
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              let-isSelected="isSelected"
-              let-onCheckboxChangeFn="onCheckboxChangeFn"
-            >
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  [checked]="isSelected"
-                  (change)="onCheckboxChangeFn($event)"
-                />
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.PICTURE' | translate"
-            prop="picture"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-            >
+            <div class="article-img-container">
               <img
-                style="
-                  width: 100px;
-                  height: 100px;
-                  object-fit: cover;
-                  border-radius: 10px;
-                "
                 [src]="
                   value ? getHost() + value : '/assets/images/others/bg-4.jpg'
                 "
-                alt=""
+                class="article-img"
+                alt="Blog Thumbnail"
               />
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.TITLE' | translate"
-            prop="title"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-            >
-              <div style="max-height: 95px; overflow: hidden">{{ value }}</div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.CATEGORY' | translate"
-            prop="category"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-              >{{ value.name }}</ng-template
-            >
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.CREATOR' | translate"
-            prop="creator"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-              >{{ value.firstName }} {{ value.lastName }}</ng-template
-            >
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.CREATED' | translate"
-            prop="createdAt"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-              >{{ value | utcToLocalTime: "shortDate" }}</ng-template
-            >
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.PRIVACY' | translate"
-            prop="privacy"
-          >
-            <ng-template
-              let-row="row"
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-            >
-              <span *ngIf="value == 'public'">{{
-                "BLOG.PRIVACY.PUBLIC" | translate
-              }}</span>
-              <span *ngIf="value == 'private'">{{
-                "BLOG.PRIVACY.PRIVATE" | translate
-              }}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.BANNER' | translate"
-            prop="banner"
-          >
-            <ng-template
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
-            >
-              {{ (value ? "BLOG.BANNER.YES" : "BLOG.BANNER.NO") | translate }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            [name]="'BLOG.TABLE.ACTIONS' | translate"
-            [sortable]="false"
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.TITLE' | translate"
+          prop="title"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            let-row="row"
             aria-hidden="false"
-            cellClass="overflow-visible"
           >
-            <ng-template
-              let-row="row"
-              ngx-datatable-cell-template
-              let-value="value"
-              aria-hidden="false"
+            <div class="article-title-cell">
+              <span class="font-weight-bold text-dark d-block">{{ value }}</span>
+              <small class="text-primary">{{ row.category?.name }}</small>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.CREATOR' | translate"
+          prop="creator"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            aria-hidden="false"
+          >
+            <span class="text-dark">{{ value.firstName }} {{ value.lastName }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.CREATED' | translate"
+          prop="createdAt"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            aria-hidden="false"
+          >
+            <span class="badge badge-soft-primary">{{ value | utcToLocalTime: "shortDate" }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.PRIVACY' | translate"
+          prop="privacy"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+            aria-hidden="false"
+          >
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-soft-success': value === 'public',
+                'badge-soft-warning': value === 'private'
+              }"
             >
-              <div class="btn-group" dropdown [insideClick]="true">
-                <button dropdownToggle type="button" class="btn">
-                  <i class="feather icon-more-horizontal"></i>
+              {{
+                (value === "public"
+                  ? "BLOG.PRIVACY.PUBLIC"
+                  : "BLOG.PRIVACY.PRIVATE"
+                ) | translate
+              }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'BLOG.TABLE.ACTIONS' | translate"
+          [sortable]="false"
+          aria-hidden="false"
+          cellClass="overflow-visible"
+        >
+          <ng-template
+            let-row="row"
+            ngx-datatable-cell-template
+            let-value="value"
+            aria-hidden="false"
+          >
+            <div
+              class="btn-group"
+              dropdown
+              [insideClick]="true"
+              container="body"
+            >
+              <button dropdownToggle type="button" class="btn-action-trigger">
+                <i class="feather icon-more-horizontal"></i>
+              </button>
+              <div
+                *dropdownMenu
+                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
+                role="menu"
+              >
+                <button
+                  class="dropdown-item-modern"
+                  [routerLink]="'/apps/blogs/edit/' + row.id"
+                >
+                  <i class="feather icon-edit-2 text-info"></i>
+                  <span>{{ "BLOG.BUTTONS.EDIT" | translate }}</span>
                 </button>
-                <ul *dropdownMenu class="dropdown-menu" role="menu">
-                  <li role="menuitem">
-                    <a
-                      class="dropdown-item cursor-pointer"
-                      [routerLink]="'/apps/blogs/edit/' + row.id"
-                      >{{ "BLOG.BUTTONS.EDIT" | translate }}</a
-                    >
-                  </li>
-                  <li role="menuitem">
-                    <a
-                      class="dropdown-item cursor-pointer"
-                      (click)="deleteBlog(row)"
-                      >{{ "BLOG.BUTTONS.DELETE" | translate }}</a
-                    >
-                  </li>
-                </ul>
+                <div class="dropdown-divider-modern"></div>
+                <button
+                  class="dropdown-item-modern text-danger"
+                  (click)="deleteBlog(row)"
+                >
+                  <i class="feather icon-trash-2"></i>
+                  <span>{{ "BLOG.BUTTONS.DELETE" | translate }}</span>
+                </button>
               </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
 </div>
