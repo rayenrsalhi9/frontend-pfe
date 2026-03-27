@@ -19,7 +19,7 @@ const routes: Routes = [
       import("./user-add/user-add.module").then((m) => m.UserAddModule),
     data: {
       title: "USERS.LIST.BUTTONS.ADD",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -29,7 +29,7 @@ const routes: Routes = [
       import("./user-edit/user-edit.module").then((m) => m.UserEditModule),
     data: {
       title: "USERS.LIST.BUTTONS.EDIT",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -49,7 +49,7 @@ const routes: Routes = [
       import("./role-add/role-add.module").then((m) => m.RoleAddModule),
     data: {
       title: "ROLES.LIST.BUTTONS.ADD",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -59,7 +59,7 @@ const routes: Routes = [
       import("./role-add/role-add.module").then((m) => m.RoleAddModule),
     data: {
       title: "ROLES.LIST.BUTTONS.EDIT",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -69,7 +69,7 @@ const routes: Routes = [
       import("./role-user/role-user.module").then((m) => m.RoleUserModule),
     data: {
       title: "NAV.USERS_ROLES",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },

@@ -25,15 +25,24 @@ export const roles = {
     },
 
     ADD: {
+      TITLE_ADD: "Create Role",
+      TITLE_EDIT: "Edit Role",
+      DESCRIPTION: "Configure role details and assign permissions to control access.",
+      LOADING: "Loading permissions...",
       LABELS: {
         NAME: "Role Name",
+        NAME_PLACEHOLDER: "e.g. Content Editor",
         PERMISSIONS: "Permissions",
+        PERMISSIONS_DESC: "Select the permissions this role should have access to.",
         SELECTALL: "Select All",
+        ROLE_INFO: "Role Details",
+        ROLE_INFO_DESC: "Give this role a clear, descriptive name.",
       },
       BUTTONS: {
-        ADD: "Save",
-        UPDATE: "Update",
+        ADD: "Save Role",
+        UPDATE: "Update Role",
         CANCEL: "Cancel",
+        BACK: "Back to Roles",
       },
       ERRORS: {
         PLEASE_ENTER_ROLE_NAME: "Please enter a role name.",

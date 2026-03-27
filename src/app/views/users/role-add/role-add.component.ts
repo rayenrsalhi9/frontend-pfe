@@ -16,7 +16,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-role-add",
   templateUrl: "./role-add.component.html",
-  styleUrls: ["./role-add.component.css"],
+  styleUrls: ["./role-add.component.scss"],
 })
 export class RoleAddComponent implements OnInit {
   pagesList: any[];
@@ -28,6 +28,7 @@ export class RoleAddComponent implements OnInit {
   @Output() manageUserClaimAction: EventEmitter<User> =
     new EventEmitter<User>();
   step = 0;
+  allSelected = false;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -73,18 +74,23 @@ export class RoleAddComponent implements OnInit {
     });
   }
 
-  setUpData() {
-    this.pages = this.pagesList.map((p: any) => {
-      const pageActions = this.actionsList.filter((c) => c.pageId == p.id);
-      const result = Object.assign({}, p, { pageActions: pageActions });
+  // Names of page groups to exclude from the role editor
+  private readonly EXCLUDED_PAGES = ["News", "Actualités", "الأخبار"];
 
-      return result;
-    });
+  setUpData() {
+    this.pages = this.pagesList
+      .filter((p: any) => !this.EXCLUDED_PAGES.includes(p.name))
+      .map((p: any) => {
+        const pageActions = this.actionsList.filter((c) => c.pageId == p.id);
+        return Object.assign({}, p, { pageActions: pageActions });
+      });
     this.cdr.detectChanges();
   }
 
   selecetAll(event: any) {
-    if (event.checked) {
+    const checked = event?.target?.checked ?? event?.checked ?? false;
+    this.allSelected = checked;
+    if (checked) {
       this.pages.forEach((page) => {
         page.pageActions.forEach((action) => {
           if (!this.checkPermission(action.id)) {
@@ -100,6 +106,18 @@ export class RoleAddComponent implements OnInit {
     } else {
       this.role.roleClaims = [];
     }
+  }
+
+  toggleSelectAll() {
+    this.allSelected = !this.allSelected;
+    this.selecetAll({ target: { checked: this.allSelected } });
+  }
+
+  isPageSelected(page: Page): boolean {
+    return (
+      page.pageActions?.every((action) => this.checkPermission(action.id)) ??
+      false
+    );
   }
 
   onPageSelect(event: any, page: Page) {
