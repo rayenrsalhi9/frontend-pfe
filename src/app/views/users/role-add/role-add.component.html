@@ -1,17 +1,22 @@
-<div class="bento-main-container">
-
+<div class="bento-main-container" *ngIf="role">
   <!-- Header Section -->
   <div class="header-section">
     <div class="header-actions">
       <div class="header-content">
         <h1 class="page-title">
-          {{ role && role.id ? ('ROLES.ADD.TITLE_EDIT' | translate) : ('ROLES.ADD.TITLE_ADD' | translate) }}
+          {{
+            role && role.id
+              ? ("ROLES.ADD.TITLE_EDIT" | translate)
+              : ("ROLES.ADD.TITLE_ADD" | translate)
+          }}
         </h1>
-        <p class="page-description">{{ 'ROLES.ADD.DESCRIPTION' | translate }}</p>
+        <p class="page-description">
+          {{ "ROLES.ADD.DESCRIPTION" | translate }}
+        </p>
       </div>
       <a routerLink="/user/role" class="back-link">
         <i class="feather icon-arrow-left"></i>
-        {{ 'ROLES.ADD.BUTTONS.BACK' | translate }}
+        {{ "ROLES.ADD.BUTTONS.BACK" | translate }}
       </a>
     </div>
   </div>
@@ -22,14 +27,16 @@
       <div>
         <h2 class="section-title">
           <i class="feather icon-tag"></i>
-          {{ 'ROLES.ADD.LABELS.ROLE_INFO' | translate }}
+          {{ "ROLES.ADD.LABELS.ROLE_INFO" | translate }}
         </h2>
-        <p class="section-desc">{{ 'ROLES.ADD.LABELS.ROLE_INFO_DESC' | translate }}</p>
+        <p class="section-desc">
+          {{ "ROLES.ADD.LABELS.ROLE_INFO_DESC" | translate }}
+        </p>
       </div>
     </div>
     <div class="role-name-field">
       <label class="field-label" for="roleName">
-        {{ 'ROLES.ADD.LABELS.NAME' | translate }}
+        {{ "ROLES.ADD.LABELS.NAME" | translate }}
       </label>
       <div class="input-modern">
         <i class="prefix-icon feather icon-shield"></i>
@@ -51,16 +58,23 @@
       <div>
         <h2 class="section-title">
           <i class="feather icon-lock"></i>
-          {{ 'ROLES.ADD.LABELS.PERMISSIONS' | translate }}
+          {{ "ROLES.ADD.LABELS.PERMISSIONS" | translate }}
         </h2>
-        <p class="section-desc">{{ 'ROLES.ADD.LABELS.PERMISSIONS_DESC' | translate }}</p>
+        <p class="section-desc">
+          {{ "ROLES.ADD.LABELS.PERMISSIONS_DESC" | translate }}
+        </p>
       </div>
       <div class="select-all-toggle">
         <label class="toggle-label" for="selectAll">
-          {{ 'ROLES.ADD.LABELS.SELECTALL' | translate }}
+          {{ "ROLES.ADD.LABELS.SELECTALL" | translate }}
         </label>
-        <div class="modern-toggle" (click)="toggleSelectAll()">
-          <input id="selectAll" type="checkbox" [checked]="allSelected" (change)="selecetAll($event)" />
+        <div class="modern-toggle">
+          <input
+            id="selectAll"
+            type="checkbox"
+            [checked]="allSelected"
+            (change)="selecetAll($event)"
+          />
           <span class="toggle-track">
             <span class="toggle-thumb"></span>
           </span>
@@ -110,9 +124,9 @@
   <div class="bento-item loading-card" *ngIf="!pages">
     <div class="loading-inner">
       <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
+        <span class="sr-only">{{ "ROLES.ADD.LOADING" | translate }}</span>
       </div>
-      <p class="loading-text">{{ 'ROLES.ADD.LOADING' | translate }}</p>
+      <p class="loading-text">{{ "ROLES.ADD.LOADING" | translate }}</p>
     </div>
   </div>
 
@@ -120,12 +134,15 @@
   <div class="form-actions">
     <button class="btn-action btn-save" (click)="saveRole()">
       <i class="feather icon-check"></i>
-      {{ role && role.id ? ('ROLES.ADD.BUTTONS.UPDATE' | translate) : ('ROLES.ADD.BUTTONS.ADD' | translate) }}
+      {{
+        role && role.id
+          ? ("ROLES.ADD.BUTTONS.UPDATE" | translate)
+          : ("ROLES.ADD.BUTTONS.ADD" | translate)
+      }}
     </button>
     <button class="btn-action btn-cancel" [routerLink]="['/user/role']">
       <i class="feather icon-x"></i>
-      {{ 'ROLES.ADD.BUTTONS.CANCEL' | translate }}
+      {{ "ROLES.ADD.BUTTONS.CANCEL" | translate }}
     </button>
   </div>
-
 </div>

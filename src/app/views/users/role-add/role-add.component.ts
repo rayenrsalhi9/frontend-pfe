@@ -49,14 +49,15 @@ export class RoleAddComponent implements OnInit {
       if (id) {
         this.roleService.getRole(id).subscribe((data: any) => {
           this.role = data;
+          this.getActionsList();
         });
       } else {
         this.role = {
           roleClaims: [],
           userRoles: [],
         };
+        this.getActionsList();
       }
-      this.getActionsList();
     });
   }
 
@@ -84,6 +85,17 @@ export class RoleAddComponent implements OnInit {
         const pageActions = this.actionsList.filter((c) => c.pageId == p.id);
         return Object.assign({}, p, { pageActions: pageActions });
       });
+
+    if (this.role && this.role.roleClaims) {
+      const validActionIds = new Set();
+      this.pages.forEach((p: any) => {
+        p.pageActions.forEach((a: any) => validActionIds.add(a.id));
+      });
+      this.role.roleClaims = this.role.roleClaims.filter((c) =>
+        validActionIds.has(c.actionId),
+      );
+    }
+    this.syncAllSelected();
     this.cdr.detectChanges();
   }
 
@@ -138,6 +150,7 @@ export class RoleAddComponent implements OnInit {
         (c) => actions.indexOf(c.actionId) < 0,
       );
     }
+    this.syncAllSelected();
   }
 
   onPermissionChange(event: any, page: Page, action: any) {
@@ -157,6 +170,7 @@ export class RoleAddComponent implements OnInit {
         this.role.roleClaims.splice(index, 1);
       }
     }
+    this.syncAllSelected();
   }
 
   checkPermission(actionId: string): boolean {
@@ -168,6 +182,12 @@ export class RoleAddComponent implements OnInit {
     } else {
       return false;
     }
+  }
+
+  syncAllSelected() {
+    this.allSelected =
+      this.pages?.length > 0 &&
+      this.pages.every((page) => this.isPageSelected(page));
   }
 
   saveRole(): void {

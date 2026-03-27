@@ -29,6 +29,13 @@
     background: var(--primary-glow);
     text-decoration: none;
   }
+
+  &:focus-visible {
+    outline: 1px solid var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+    border-color: var(--primary);
+    background: var(--card-bg);
+  }
 }
 
 // ── Role Name Card ────────────────────────────────────────────
@@ -60,6 +67,14 @@
     letter-spacing: 0.06em;
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    &:focus-visible {
+      outline: 1px solid var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      border-color: var(--primary);
+    }
   }
 }
 
@@ -113,6 +128,12 @@
       .toggle-thumb {
         transform: translateX(20px);
       }
+    }
+
+    &:focus-visible ~ .toggle-track {
+      outline: 1px solid var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      border-color: var(--primary);
     }
   }
 
@@ -186,6 +207,12 @@
         display: block;
       }
     }
+
+    &:focus-visible ~ .page-check-indicator {
+      outline: 1px solid var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      border-color: var(--primary);
+    }
   }
 
   .page-check-indicator {
@@ -254,6 +281,12 @@
       &::after {
         display: block;
       }
+    }
+
+    &:focus-visible ~ .action-check-indicator {
+      outline: 1px solid var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      border-color: var(--primary);
     }
   }
 
@@ -343,6 +376,11 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
   }
+
+  &:focus-visible {
+    outline: 1px solid var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow), 0 4px 12px rgba(37, 99, 235, 0.25);
+  }
 }
 
 .btn-cancel {
@@ -355,6 +393,12 @@
     border-color: var(--color-danger);
     background: var(--color-bg-danger);
     transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--color-danger);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+    border-color: var(--color-danger);
   }
 }
 
@@ -381,4 +425,16 @@
       justify-content: center;
     }
   }
+}
+// ── Accessibility Utilities ───────────────────────────────────────
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
