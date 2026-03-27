@@ -29,6 +29,8 @@ export class RoleAddComponent implements OnInit {
     new EventEmitter<User>();
   step = 0;
   allSelected = false;
+  isLoading = false;
+  isEditMode = false;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -46,12 +48,15 @@ export class RoleAddComponent implements OnInit {
   initData() {
     this.activeRoute.paramMap.subscribe(async (params) => {
       let id = params.get("id");
+      this.isLoading = true;
       if (id) {
+        this.isEditMode = true;
         this.roleService.getRole(id).subscribe((data: any) => {
           this.role = data;
           this.getActionsList();
         });
       } else {
+        this.isEditMode = false;
         this.role = {
           roleClaims: [],
           userRoles: [],
@@ -96,6 +101,7 @@ export class RoleAddComponent implements OnInit {
       );
     }
     this.syncAllSelected();
+    this.isLoading = false;
     this.cdr.detectChanges();
   }
 
