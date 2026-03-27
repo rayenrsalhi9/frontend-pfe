@@ -193,6 +193,7 @@
             <div
               class="btn-group"
               dropdown
+              #dropdown="bs-dropdown"
               [insideClick]="true"
               container="body"
             >
@@ -200,6 +201,8 @@
                 dropdownToggle
                 type="button"
                 class="btn-action-trigger"
+                aria-haspopup="true"
+                [attr.aria-expanded]="dropdown.isOpen"
                 [attr.aria-label]="'BLOG.TABLE.ACTIONS' | translate"
               >
                 <i class="feather icon-more-horizontal"></i>
