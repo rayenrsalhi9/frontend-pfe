@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <form [formGroup]="surveyForm">
+    <form [formGroup]="surveyForm" (ngSubmit)="saveSurvey()">
       <div class="row">
         <div class="col-md-12">
           <label class="form-label" for="surveyTitle">{{
@@ -54,7 +54,7 @@
           <div class="row">
             <div class="col-md-12">
               <label class="form-label" for="surveyPrivacy">{{
-                "FORUM.ADD.LABELS.PRIVATE" | translate
+                "SURVEY.ADD.LABELS.PRIVATE" | translate
               }}</label>
               <switch
                 formControlName="private"
@@ -65,13 +65,13 @@
               </switch>
             </div>
             <div *ngIf="surveyForm.get('private').value" class="col-md-12">
-              <label class="form-label" for="articleUsers">Users</label>
+              <label class="form-label" for="articleUsers">{{ 'SURVEY.ADD.LABELS.USERS' | translate }}</label>
               <ng-select
                 formControlName="users"
                 [multiple]="true"
                 id="articleUsers"
               >
-                <ng-option *ngFor="let user of []" [value]="user.id"
+                <ng-option *ngFor="let user of users" [value]="user.id"
                   >{{ user.firstName }} {{ user.lastName }}</ng-option
                 >
               </ng-select>
@@ -99,7 +99,6 @@
       </div>
       <div class="mt-2">
         <button
-          (click)="saveSurvey()"
           style="margin-right: 10px"
           type="submit"
           class="btn btn-success btn-sm m-r-10"

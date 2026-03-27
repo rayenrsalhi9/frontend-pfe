@@ -26,6 +26,7 @@ export const nav = {
     APPS_BLOG: "المدونة",
     APPS_BLOG_LIST: "منشورات المدونة",
     APPS_BLOG_CATEGORY: "تصنيفات المدونة",
+    APPS_BLOG_CATEGORY_DESCRIPTION: "أدِر تصنيفات المدونة من هنا.",
 
     APPS_FORUM: "المنتديات",
     APPS_FORUM_LIST: "قائمة المنتديات",

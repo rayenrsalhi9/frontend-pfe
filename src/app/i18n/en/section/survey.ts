@@ -29,6 +29,7 @@ export const survey = {
         TITLE: "Title",
         TYPE: "Type",
         PRIVATE: "Private",
+        USERS: "Users",
       },
       BUTTONS: {
         SAVE: "Save",

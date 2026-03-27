@@ -29,6 +29,7 @@ export const survey = {
         TITLE: "العنوان",
         TYPE: "النوع",
         PRIVATE: "خاص",
+        USERS: "المستخدمون",
       },
       BUTTONS: {
         SAVE: "حفظ",

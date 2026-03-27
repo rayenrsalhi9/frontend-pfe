@@ -131,10 +131,9 @@ export class BlogListComponent implements OnInit, OnDestroy {
           },
         });
 
-        merge(
-          this.bsModalRef.content.onClose.pipe(first()),
-          this.bsModalRef.onHidden.pipe(first())
-        ).subscribe((result: any) => {
+        merge(this.bsModalRef.content.onClose, this.bsModalRef.onHidden)
+          .pipe(first(), takeUntil(this.destroy$))
+          .subscribe((result: any) => {
             if (result === true) {
               this.blogsService
                 .deleteBlog(data.id)

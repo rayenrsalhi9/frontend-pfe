@@ -26,6 +26,7 @@ export const nav = {
     APPS_BLOG: "Blog",
     APPS_BLOG_LIST: "Blog Posts",
     APPS_BLOG_CATEGORY: "Blog Categories",
+    APPS_BLOG_CATEGORY_DESCRIPTION: "Manage your blog categories here.",
 
     APPS_FORUM: "Forums",
     APPS_FORUM_LIST: "Forum List",
