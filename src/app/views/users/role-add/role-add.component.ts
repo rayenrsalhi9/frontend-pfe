@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   OnInit,
+  OnDestroy,
   Output,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -12,13 +13,15 @@ import { User } from "@app/shared/enums/user-auth";
 import { RoleService } from "@app/shared/services/role.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-role-add",
   templateUrl: "./role-add.component.html",
-  styleUrls: ["./role-add.component.css"],
+  styleUrls: ["./role-add.component.scss"],
 })
-export class RoleAddComponent implements OnInit {
+export class RoleAddComponent implements OnInit, OnDestroy {
   pagesList: any[];
   actionsList: any[];
   pages: Page[];
@@ -28,6 +31,10 @@ export class RoleAddComponent implements OnInit {
   @Output() manageUserClaimAction: EventEmitter<User> =
     new EventEmitter<User>();
   step = 0;
+  allSelected = false;
+  isLoading = false;
+  isEditMode = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -42,49 +49,83 @@ export class RoleAddComponent implements OnInit {
     this.initData();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   initData() {
-    this.activeRoute.paramMap.subscribe(async (params) => {
-      let id = params.get("id");
-      if (id) {
-        this.roleService.getRole(id).subscribe((data: any) => {
-          this.role = data;
-        });
-      } else {
-        this.role = {
-          roleClaims: [],
-          userRoles: [],
-        };
-      }
-      this.getActionsList();
-    });
+    this.activeRoute.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (params) => {
+        let id = params.get("id");
+        this.isLoading = true;
+        if (id) {
+          this.isEditMode = true;
+          this.roleService
+            .getRole(id)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((data: any) => {
+              this.role = data;
+              this.getActionsList();
+            });
+        } else {
+          this.isEditMode = false;
+          this.role = {
+            roleClaims: [],
+            userRoles: [],
+          };
+          this.getActionsList();
+        }
+      });
   }
 
   getActionsList() {
-    this.roleService.getActions().subscribe((data) => {
-      this.actionsList = data;
-      this.getPagesList();
-    });
+    this.roleService
+      .getActions()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.actionsList = data;
+        this.getPagesList();
+      });
   }
 
   getPagesList() {
-    this.roleService.getPages().subscribe((data) => {
-      this.pagesList = data;
-      this.setUpData();
-    });
+    this.roleService
+      .getPages()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.pagesList = data;
+        this.setUpData();
+      });
   }
 
   setUpData() {
-    this.pages = this.pagesList.map((p: any) => {
-      const pageActions = this.actionsList.filter((c) => c.pageId == p.id);
-      const result = Object.assign({}, p, { pageActions: pageActions });
+    this.pages = this.pagesList
+      .filter((p: any) => !p.excludeFromRoleEditor)
+      .map((p: any) => {
+        const pageActions = this.actionsList.filter((c) => c.pageId === p.id);
+        return Object.assign({}, p, { pageActions: pageActions });
+      });
 
-      return result;
-    });
+    if (this.role && this.role.roleClaims) {
+      const validActionIds = new Set();
+      this.pages.forEach((p: any) => {
+        p.pageActions.forEach((a: any) => validActionIds.add(a.id));
+      });
+      this.role.roleClaims = this.role.roleClaims.filter((c) =>
+        validActionIds.has(c.actionId),
+      );
+    }
+    this.syncAllSelected();
+    this.isLoading = false;
     this.cdr.detectChanges();
   }
 
-  selecetAll(event: any) {
-    if (event.checked) {
+  selectAll(event: any) {
+    const checked = event?.target?.checked ?? event?.checked ?? false;
+    this.allSelected = checked;
+    if (checked) {
       this.pages.forEach((page) => {
         page.pageActions.forEach((action) => {
           if (!this.checkPermission(action.id)) {
@@ -100,6 +141,13 @@ export class RoleAddComponent implements OnInit {
     } else {
       this.role.roleClaims = [];
     }
+  }
+
+  isPageSelected(page: Page): boolean {
+    return (
+      page.pageActions?.every((action) => this.checkPermission(action.id)) ??
+      false
+    );
   }
 
   onPageSelect(event: any, page: Page) {
@@ -120,6 +168,7 @@ export class RoleAddComponent implements OnInit {
         (c) => actions.indexOf(c.actionId) < 0,
       );
     }
+    this.syncAllSelected();
   }
 
   onPermissionChange(event: any, page: Page, action: any) {
@@ -139,6 +188,7 @@ export class RoleAddComponent implements OnInit {
         this.role.roleClaims.splice(index, 1);
       }
     }
+    this.syncAllSelected();
   }
 
   checkPermission(actionId: string): boolean {
@@ -152,10 +202,17 @@ export class RoleAddComponent implements OnInit {
     }
   }
 
+  syncAllSelected() {
+    this.allSelected =
+      this.pages?.length > 0 &&
+      this.pages.every((page) => this.isPageSelected(page));
+  }
+
   saveRole(): void {
     if (!this.role.name) {
       this.translate
         .get("ROLES.ADD.ERRORS.PLEASE_ENTER_ROLE_NAME")
+        .pipe(takeUntil(this.destroy$))
         .subscribe((translatedMessage: string) => {
           this.toastrService.error(translatedMessage);
         });
@@ -164,28 +221,37 @@ export class RoleAddComponent implements OnInit {
     if (this.role.roleClaims.length == 0) {
       this.translate
         .get("ROLES.ADD.ERRORS.PLEASE_SELECT_AT_LEAST_ONE_PERMISSION")
+        .pipe(takeUntil(this.destroy$))
         .subscribe((translatedMessage: string) => {
           this.toastrService.error(translatedMessage);
         });
       return;
     }
     if (!this.role.id)
-      this.roleService.addRole(this.role).subscribe(() => {
-        this.translate
-          .get("ROLES.ADD.TOAST.ROLE_SAVED_SUCCESSFULLY")
-          .subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage);
-          });
-        this.router.navigate(["/user/role"]);
-      });
+      this.roleService
+        .addRole(this.role)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.translate
+            .get("ROLES.ADD.TOAST.ROLE_SAVED_SUCCESSFULLY")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.success(translatedMessage);
+            });
+          this.router.navigate(["/user/role"]);
+        });
     else
-      this.roleService.updateRole(this.role).subscribe(() => {
-        this.translate
-          .get("ROLES.ADD.TOAST.ROLE_SAVED_SUCCESSFULLY")
-          .subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage);
-          });
-        this.router.navigate(["/user/role"]);
-      });
+      this.roleService
+        .updateRole(this.role)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.translate
+            .get("ROLES.ADD.TOAST.ROLE_SAVED_SUCCESSFULLY")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.success(translatedMessage);
+            });
+          this.router.navigate(["/user/role"]);
+        });
   }
 }

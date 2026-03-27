@@ -25,15 +25,24 @@ export const roles = {
     },
 
     ADD: {
+      TITLE_ADD: "إنشاء دور",
+      TITLE_EDIT: "تعديل الدور",
+      DESCRIPTION: "قم بضبط تفاصيل الدور وتعيين الصلاحيات للتحكم في الوصول.",
+      LOADING: "جارٍ تحميل الصلاحيات...",
       LABELS: {
         NAME: "اسم الدور",
+        NAME_PLACEHOLDER: "مثال: محرر المحتوى",
         PERMISSIONS: "الصلاحيات",
+        PERMISSIONS_DESC: "اختر الصلاحيات التي يجب أن يمتلكها هذا الدور.",
         SELECTALL: "تحديد الكل",
+        ROLE_INFO: "تفاصيل الدور",
+        ROLE_INFO_DESC: "أعط هذا الدور اسمًا واضحًا ووصفيًا.",
       },
       BUTTONS: {
-        ADD: "حفظ",
-        UPDATE: "تحديث",
+        ADD: "حفظ الدور",
+        UPDATE: "تحديث الدور",
         CANCEL: "إلغاء",
+        BACK: "العودة إلى الأدوار",
       },
       ERRORS: {
         PLEASE_ENTER_ROLE_NAME: "يرجى إدخال اسم الدور.",
