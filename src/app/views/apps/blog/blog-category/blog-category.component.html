@@ -67,6 +67,7 @@
             <div
               class="btn-group"
               dropdown
+              #dropdown="bs-dropdown"
               [insideClick]="true"
               container="body"
             >
@@ -76,7 +77,7 @@
                 class="btn-action-trigger"
                 [attr.aria-label]="'CATEGORY.LIST.TABLE.ACTIONS' | translate"
                 aria-haspopup="true"
-                [attr.aria-expanded]="false"
+                [attr.aria-expanded]="dropdown.isOpen"
               >
                 <i class="feather icon-more-horizontal"></i>
               </button>

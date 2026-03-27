@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
-import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
+import { ColumnMode } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
 import { ManageComponent } from "./manage/manage.component";
@@ -16,10 +16,8 @@ import { takeUntil, first } from "rxjs/operators";
 })
 export class BlogCategoryComponent implements OnInit, OnDestroy {
   rows: any[] = [];
-  selected = [];
 
   ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   bsModalRef: BsModalRef;
   private destroy$ = new Subject<void>();
@@ -53,10 +51,6 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSelect({ selected }) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
 
   manageCategory(data: any) {
     const initialState = {

@@ -1,26 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import {
   HttpClient,
   HttpEvent,
   HttpParams,
   HttpResponse,
-} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { CommonHttpErrorService } from '@app/core/error-handler/common-http-error.service';
-import { CommonError } from '../enums/common-error';
-import { DocumentAuditTrail } from '../enums/document-audit-trail';
-import { Reminder } from '../enums/reminder';
-import { ReminderFrequency, reminderFrequencies } from '../enums/reminder-frequency';
-import { ReminderResourceParameter } from '../enums/reminder-resource-parameter';
-import { Role } from '../enums/role';
-import { User } from '../enums/user-auth';
+} from "@angular/common/http";
+import { Observable, of } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { CommonHttpErrorService } from "@app/core/error-handler/common-http-error.service";
 
-@Injectable({ providedIn: 'root' })
+import { DocumentAuditTrail } from "../enums/document-audit-trail";
+import { Reminder } from "../enums/reminder";
+import {
+  ReminderFrequency,
+  reminderFrequencies,
+} from "../enums/reminder-frequency";
+import { ReminderResourceParameter } from "../enums/reminder-resource-parameter";
+import { Role } from "../enums/role";
+import { User } from "../enums/user-auth";
+import { CommonError } from "../enums/common-error";
+
+@Injectable({ providedIn: "root" })
 export class CommonService {
   constructor(
     private httpClient: HttpClient,
-    private commonHttpErrorService: CommonHttpErrorService
+    private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
   getUsers(): Observable<User[] | CommonError> {
@@ -45,7 +49,7 @@ export class CommonService {
   }
 
   getRolesForDropdown(): Observable<Role[] | CommonError> {
-    const url = 'role-dropdown';
+    const url = "role-dropdown";
     return this.httpClient
       .get<Role[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -66,30 +70,29 @@ export class CommonService {
   }
 
   addDocumentAuditTrail(
-    documentAuditTrail: DocumentAuditTrail
+    documentAuditTrail: DocumentAuditTrail,
   ): Observable<DocumentAuditTrail | CommonError> {
     const url = `documentAuditTrail`;
     return this.httpClient
       .post<DocumentAuditTrail>(url, documentAuditTrail)
       .pipe(catchError(this.commonHttpErrorService.handleError));
-    //return this.httpClient.post<DocumentAuditTrail>('documentAuditTrail',documentAuditTrail);
   }
 
   downloadDocument(
     documentId: string,
-    isVersion: boolean
+    isVersion: boolean,
   ): Observable<HttpEvent<Blob>> {
     const url = `document/${documentId}/download/${isVersion} `;
     return this.httpClient.get(url, {
       reportProgress: true,
-      observe: 'events',
-      responseType: 'blob',
+      observe: "events",
+      responseType: "blob",
     });
   }
 
   isDownloadFlag(
     documentId: string,
-    isPermission: boolean
+    isPermission: boolean,
   ): Observable<boolean> {
     const url = `document/${documentId}/isDownloadFlag/isPermission/${isPermission}`;
     return this.httpClient.get<boolean>(url);
@@ -107,8 +110,8 @@ export class CommonService {
 
   readDocument(
     documentId: string,
-    isVersion: boolean
-  ): Observable<{ [key: string]: string[] } | CommonError> {
+    isVersion: boolean,
+  ): Observable<{ [key: string]: string[] }> {
     const url = `document/${documentId}/readText/${isVersion}`;
     return this.httpClient.get<{ [key: string]: string[] }>(url);
   }
@@ -118,28 +121,28 @@ export class CommonService {
   }
 
   getAllRemindersForCurrentUser(
-    resourceParams: ReminderResourceParameter
+    resourceParams: ReminderResourceParameter,
   ): Observable<HttpResponse<Reminder[]>> {
-    const url = 'reminder/all/currentuser';
+    const url = "reminder/all/currentuser";
     const customParams = new HttpParams()
-      .set('fields', resourceParams.fields ? resourceParams.fields : '')
-      .set('orderBy', resourceParams.orderBy ? resourceParams.orderBy : '')
-      .set('pageSize', resourceParams.pageSize.toString())
-      .set('skip', resourceParams.skip.toString())
+      .set("fields", resourceParams.fields ? resourceParams.fields : "")
+      .set("orderBy", resourceParams.orderBy ? resourceParams.orderBy : "")
+      .set("pageSize", resourceParams.pageSize.toString())
+      .set("skip", resourceParams.skip.toString())
       .set(
-        'searchQuery',
-        resourceParams.searchQuery ? resourceParams.searchQuery : ''
+        "searchQuery",
+        resourceParams.searchQuery ? resourceParams.searchQuery : "",
       )
-      .set('subject', resourceParams.subject ? resourceParams.subject : '')
-      .set('message', resourceParams.message ? resourceParams.message : '')
+      .set("subject", resourceParams.subject ? resourceParams.subject : "")
+      .set("message", resourceParams.message ? resourceParams.message : "")
       .set(
-        'frequency',
-        resourceParams.frequency ? resourceParams.frequency : ''
+        "frequency",
+        resourceParams.frequency ? resourceParams.frequency : "",
       );
 
     return this.httpClient.get<Reminder[]>(url, {
       params: customParams,
-      observe: 'response',
+      observe: "response",
     });
   }
 

@@ -35,6 +35,7 @@
           class="modern-select"
           [multiple]="false"
           [placeholder]="'BLOG.TABLE.SEARCH_BY_CATEGORY' | translate"
+          [attr.aria-label]="'BLOG.TABLE.SEARCH_BY_CATEGORY' | translate"
           (change)="onCategoryChange($event)"
         >
           <ng-option *ngFor="let category of categories" [value]="category.id"
@@ -52,6 +53,7 @@
             [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
             (bsValueChange)="onDateChange($event)"
             [placeholder]="'BLOG.TABLE.SEARCH_BY_DATE' | translate"
+            [attr.aria-label]="'BLOG.TABLE.SEARCH_BY_DATE' | translate"
           />
         </div>
       </div>
@@ -97,7 +99,7 @@
                 class="article-img"
                 [alt]="
                   row?.title
-                    ? (row.title | translate)
+                    ? row.title
                     : ('BLOG.TABLE.PICTURE' | translate)
                 "
               />
