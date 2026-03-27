@@ -7,7 +7,7 @@ import { BlogCategoryService } from "./blog-category.service";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject, merge } from "rxjs";
-import { takeUntil, first } from "rxjs/operators";
+import { takeUntil, first, map } from "rxjs/operators";
 
 @Component({
   selector: "app-blog-category",
@@ -59,7 +59,7 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
 
     this.modalService
       .show(ManageComponent, { initialState })
-      .onHide.pipe(first())
+      .onHide.pipe(first(), takeUntil(this.destroy$))
       .subscribe(() => {
         this.getCategories();
       });
@@ -82,10 +82,13 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
           },
         });
 
-        merge(
-          this.bsModalRef.content.onClose.pipe(first()),
-          this.bsModalRef.onHidden.pipe(first())
-        ).subscribe((result: any) => {
+        const onHidden$ = this.bsModalRef.onHidden.pipe(
+          map(() => false)
+        );
+
+        merge(this.bsModalRef.content.onClose, onHidden$)
+          .pipe(first(), takeUntil(this.destroy$))
+          .subscribe((result: any) => {
             if (result === true) {
               this.blogCategoryService
                 .deleteCategory(data.id)

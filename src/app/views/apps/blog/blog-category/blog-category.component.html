@@ -89,6 +89,7 @@
                 <button
                   class="dropdown-item-modern"
                   (click)="manageCategory(row)"
+                  role="menuitem"
                 >
                   <i class="feather icon-edit-2 text-info"></i>
                   <span>{{ "CATEGORY.LIST.BUTTONS.EDIT" | translate }}</span>
@@ -97,6 +98,7 @@
                 <button
                   class="dropdown-item-modern text-danger"
                   (click)="deleteCategory(row)"
+                  role="menuitem"
                 >
                   <i class="feather icon-trash-2"></i>
                   <span>{{ "CATEGORY.LIST.BUTTONS.DELETE" | translate }}</span>

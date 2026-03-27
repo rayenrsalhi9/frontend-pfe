@@ -62,7 +62,7 @@
 
   <!-- Table Section -->
   <div class="bento-item table-section">
-    <div *ngIf="loadError" class="alert alert-danger mb-3">
+    <div *ngIf="loadError" class="alert alert-danger mb-3" role="alert">
       {{ "BLOG.TABLE.LOAD_ERROR" | translate }}
     </div>
     <div class="modern-table-wrapper">
@@ -133,9 +133,9 @@
             let-value="value"
             aria-hidden="false"
           >
-            <span class="text-dark"
-              >{{ value.firstName }} {{ value.lastName }}</span
-            >
+            <span class="text-dark">
+              {{ (value?.firstName ? value.firstName + ' ' : '') + (value?.lastName || '') || value?.email || ("BLOG.TABLE.UNKNOWN_AUTHOR" | translate) }}
+            </span>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column
@@ -212,6 +212,7 @@
                 <button
                   class="dropdown-item-modern"
                   [routerLink]="'/apps/blogs/edit/' + row.id"
+                  role="menuitem"
                 >
                   <i class="feather icon-edit-2 text-info"></i>
                   <span>{{ "BLOG.BUTTONS.EDIT" | translate }}</span>
@@ -220,6 +221,7 @@
                 <button
                   class="dropdown-item-modern text-danger"
                   (click)="deleteBlog(row)"
+                  role="menuitem"
                 >
                   <i class="feather icon-trash-2"></i>
                   <span>{{ "BLOG.BUTTONS.DELETE" | translate }}</span>
