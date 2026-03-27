@@ -1,83 +1,92 @@
 export const survey = {
-  "SURVEY": {
-    "TABLE": {
-      "TITLE": "Titre",
-      "TYPE": "Type",
-      "CREATOR": "Créateur",
-      "TOTALE": "Totale",
-      "CREATED": "Créé",
-      "ANSWERS": "Réponses",
-      "ACTIONS": "Actions",
-
-
-      "SEARCH_BY_NAME": "Recherche par nom",
-      "SEARCH_BY_CATEGORY": "Recherche par type",
-      "SEARCH_BY_DATE": "Recherche par date",
+  SURVEY: {
+    LIST: {
+      TITLE: "Sondages",
+      DESCRIPTION: "Gérez vos sondages ici.",
     },
-    "BUTTONS": {
-      "VIEW": "Voir",
-      "ADD": "Ajouter",
-      "EDIT": "Modifier",
-      "DELETE": "Suprimer"
+    TABLE: {
+      TITLE: "Titre",
+      DESCRIPTION: "Description",
+      TYPE: "Type",
+      CATEGORY: "Catégorie",
+      CREATOR: "Créateur",
+      TOTAL: "Total",
+      CREATED: "Créé le",
+      ANSWERS: "Réponses",
+      ACTIONS: "Actions",
+      SEARCH_BY_TITLE: "Rechercher par titre",
+      SEARCH_BY_CATEGORY: "Rechercher par catégorie",
+      SEARCH_BY_DATE: "Rechercher par date",
     },
-    "ADD":{
-      "LABELS":{
-        "TITLE":"Titre",
-        "TYPE": "Type",
-        "PRIVATE": "Confidentialité",
-      },
-      "BUTTONS": {
-        "SAVE": "Enregistrer",
-        "CANCEL": "Annuler",
-      },
-      "ERROR": {
-        "TITLE": "Le titre est obligatoire",
-        "TYPE": "Le type est obligatoire",
-      },
-      "TOAST": {
-        "SAVE_SUCCESSFULLY": "",
-      }
+    BUTTONS: {
+      VIEW: "Voir",
+      ADD: "Ajouter un sondage",
+      EDIT: "Modifier",
+      DELETE: "Supprimer",
     },
-    "DELETE": {
-      "LABEL": {
-        "title": "Supprimer l'enquête",
-        "message": "Etes-vous sûr de vouloir supprimer cette enquête ?",
-        "button": {
-          "cancel": "Annuler",
-          "confirm": "Confirmer"
-        }
+    ADD: {
+      LABELS: {
+        TITLE: "Titre",
+        TYPE: "Type",
+        PRIVATE: "Privé",
+        USERS: "Utilisateurs",
       },
-      "ERROR": {},
-      "TOAST": {
-        "DELETED_SUCCESSFULLY": "L'enquête a été supprimé avec succès"
-      }
-    },
-    "CHART": {
-      "RATING": {
-        "ONE_STARS": "Une étoile",
-        "TWO_STARS": "Deux étoiles",
-        "THREE_STARS": "Trois étoiles",
-        "FOUR_STARS": "Quatre étoiles",
-        "FIVE_STARS": "Cinq étoiles",
+      BUTTONS: {
+        SAVE: "Enregistrer",
+        CANCEL: "Annuler",
       },
-      "SIMPLE": {
-        "ZERO_STARS": "Non",
-        "ONE_STARS": "Oui"
+      ERROR: {
+        TITLE: "Un titre est requis.",
+        TYPE: "Un type est requis.",
       },
-      "SATISFACTION": {
-        "ZERO_STARS": "Pas satisfait",
-        "ONE_STARS": "Neutre",
-        "TWO_STARS": "Satisfait",
+      TOAST: {
+        SAVE_SUCCESSFULLY: "Sondage enregistré avec succès.",
       },
     },
-    "TOAST": {
-      "SUCCESS":"Merci d'avoir partagé vos précieux avis et réflexions !",
-      "ERROR":"Enquête déjà répondue",
+    DELETE: {
+      LABEL: {
+        TITLE: "Supprimer le sondage",
+        MESSAGE: "Êtes-vous sûr de vouloir supprimer ce sondage ?",
+        BUTTON: {
+          CANCEL: "Annuler",
+          CONFIRM: "Confirmer",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Sondage supprimé avec succès.",
+      },
     },
-    "OPTION":{
-      "simple":"Simple",
-      "rating":"Note",
-      "satisfaction":"Satisfaction"
-    }
-  }
-}
+    CHART: {
+      RATING: {
+        ONE_STARS: "1 étoile",
+        TWO_STARS: "2 étoiles",
+        THREE_STARS: "3 étoiles",
+        FOUR_STARS: "4 étoiles",
+        FIVE_STARS: "5 étoiles",
+      },
+      SIMPLE: {
+        ZERO_STARS: "Non",
+        ONE_STARS: "Oui",
+      },
+      SATISFACTION: {
+        ZERO_STARS: "Insatisfait",
+        ONE_STARS: "Neutre",
+        TWO_STARS: "Satisfait",
+      },
+    },
+    TOAST: {
+      SUCCESS: "Merci d'avoir partagé vos avis et commentaires !",
+      ERROR: "Vous avez déjà répondu à ce sondage.",
+    },
+    OPTION: {
+      SIMPLE: "Simple",
+      RATING: "Évaluation",
+      SATISFACTION: "Satisfaction",
+    },
+    STATUS: {
+      ACTIVE: "Actif",
+      INACTIVE: "Inactif",
+    },
+  },
+};

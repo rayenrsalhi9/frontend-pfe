@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { SurveyService } from "../survey.service";
@@ -6,7 +6,14 @@ import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/conf
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { Subject, of } from "rxjs";
-import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
+import {
+  debounceTime,
+  switchMap,
+  catchError,
+  tap,
+  takeUntil,
+  first,
+} from "rxjs/operators";
 import { SurveyResource } from "@app/shared/enums/survey-resource";
 
 @Component({
@@ -14,7 +21,7 @@ import { SurveyResource } from "@app/shared/enums/survey-resource";
   templateUrl: "./survey-list.component.html",
   styleUrls: ["./survey-list.component.css"],
 })
-export class SurveyListComponent implements OnInit {
+export class SurveyListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
 
   rows: any[] = [];
@@ -27,6 +34,7 @@ export class SurveyListComponent implements OnInit {
   surveyResource: SurveyResource;
   searchSubject: Subject<void> = new Subject<void>();
   isLoadingResults = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private surveyService: SurveyService,
@@ -46,12 +54,13 @@ export class SurveyListComponent implements OnInit {
         switchMap(() =>
           this.surveyService.allSurveys(this.surveyResource).pipe(
             catchError((err) => {
-              console.log(err);
+              console.error(err);
               this.isLoadingResults = false;
               return of(null);
             }),
           ),
         ),
+        takeUntil(this.destroy$),
       )
       .subscribe((data: any) => {
         if (Array.isArray(data)) {
@@ -65,6 +74,11 @@ export class SurveyListComponent implements OnInit {
     this.searchSubject.next();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getAllSurveys(data = this.surveyResource) {
     this.surveyResource = data;
     this.searchSubject.next();
@@ -73,52 +87,39 @@ export class SurveyListComponent implements OnInit {
   deleteSurvey(data: any) {
     this.translateService
       .get("SURVEY.DELETE.LABEL")
+      .pipe(first())
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
           initialState: {
-            title: translations.title,
-            message: translations.message,
+            title: translations.TITLE,
+            message: translations.MESSAGE,
             button: {
-              cancel: translations.button.cancel,
-              confirm: translations.button.confirm,
+              cancel: translations.BUTTON.CANCEL,
+              confirm: translations.BUTTON.CONFIRM,
             },
           },
         });
+
+        this.bsModalRef.content.onClose
+          .pipe(first())
+          .subscribe((result: boolean) => {
+            if (result) {
+              this.surveyService
+                .deleteSurvey(data.id)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => {
+                  this.translateService
+                    .get("SURVEY.DELETE.TOAST.DELETED_SUCCESSFULLY")
+                    .pipe(first())
+                    .subscribe((translatedMessage: string) => {
+                      this.toastr.success(translatedMessage);
+                    });
+                  this.getAllSurveys();
+                });
+            }
+          });
       });
-
-    this.bsModalRef.content.onClose.subscribe((result) => {
-      if (result) {
-        this.surveyService.deleteSurvey(data.id).subscribe((data: any) => {
-          this.translateService
-            .get("SURVEY.DELETE.TOAST.DELETED_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastr.success(translatedMessage);
-            });
-          this.getAllSurveys();
-        });
-      }
-    });
-
-    /* this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-      initialState: {
-        title: 'Vous étes sur ?',
-        message: 'Vous étes sur de vouloir supprime ce sondage ?',
-        button: { cancel: 'Cancel', confirm: 'confirm' },
-      }
-    })
-
-    this.bsModalRef.content.onClose.subscribe(result => {
-      if (result) {
-
-        this.surveyService.deleteSurvey(data.id).subscribe(
-          (data: any) => {
-            this.getAllSurveys()
-          }
-        )
-
-      }
-    }) */
   }
 
   onSelect({ selected }) {
@@ -129,8 +130,6 @@ export class SurveyListComponent implements OnInit {
   getAnswerCount(value: number, results: any[]) {
     return results.filter((val) => val.answer === value).length;
   }
-
-  onActivate(event) {}
 
   onNameChange(event: any) {
     let val = event.target.value;
