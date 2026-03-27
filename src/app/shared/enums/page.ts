@@ -6,4 +6,5 @@ export interface Page {
     url?: string;
     order?: number;
     pageActions?: Action[];
+    excludeFromRoleEditor?: boolean;
 }
