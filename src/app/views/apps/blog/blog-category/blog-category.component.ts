@@ -6,7 +6,7 @@ import { ManageComponent } from "./manage/manage.component";
 import { BlogCategoryService } from "./blog-category.service";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
-import { Subject } from "rxjs";
+import { Subject, merge } from "rxjs";
 import { takeUntil, first } from "rxjs/operators";
 
 @Component({
@@ -88,10 +88,11 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
           },
         });
 
-        this.bsModalRef.content.onClose
-          .pipe(first())
-          .subscribe((result: boolean) => {
-            if (result) {
+        merge(
+          this.bsModalRef.content.onClose.pipe(first()),
+          this.bsModalRef.onHidden.pipe(first())
+        ).subscribe((result: any) => {
+            if (result === true) {
               this.blogCategoryService
                 .deleteCategory(data.id)
                 .pipe(takeUntil(this.destroy$))

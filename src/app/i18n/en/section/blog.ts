@@ -1,5 +1,8 @@
 export const blog = {
   BLOG: {
+    CATEGORY: {
+      DESCRIPTION: "Manage your blog categories here.",
+    },
     LIST: {
       TITLE: "Blog Posts",
       DESCRIPTION: "Manage your blog posts here.",

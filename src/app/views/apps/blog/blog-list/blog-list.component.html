@@ -8,10 +8,7 @@
           {{ "BLOG.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <button
-        routerLink="/apps/blogs/add"
-        class="btn-create"
-      >
+      <button routerLink="/apps/blogs/add" class="btn-create">
         <i class="feather icon-plus"></i>
         <span>{{ "BLOG.BUTTONS.ADD" | translate }}</span>
       </button>
@@ -64,7 +61,7 @@
   <!-- Table Section -->
   <div class="bento-item table-section">
     <div *ngIf="loadError" class="alert alert-danger mb-3">
-      {{ 'BLOG.TABLE.LOAD_ERROR' | translate }}
+      {{ "BLOG.TABLE.LOAD_ERROR" | translate }}
     </div>
     <div class="modern-table-wrapper">
       <ngx-datatable
@@ -113,7 +110,9 @@
             aria-hidden="false"
           >
             <div class="article-title-cell">
-              <span class="font-weight-bold text-dark d-block">{{ value }}</span>
+              <span class="font-weight-bold text-dark d-block">{{
+                value
+              }}</span>
               <small class="text-primary">{{ row.category?.name }}</small>
             </div>
           </ng-template>
@@ -127,7 +126,9 @@
             let-value="value"
             aria-hidden="false"
           >
-            <span class="text-dark">{{ value.firstName }} {{ value.lastName }}</span>
+            <span class="text-dark"
+              >{{ value.firstName }} {{ value.lastName }}</span
+            >
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column
@@ -139,7 +140,9 @@
             let-value="value"
             aria-hidden="false"
           >
-            <span class="badge badge-soft-primary">{{ value | utcToLocalTime: "shortDate" }}</span>
+            <span class="badge badge-soft-primary">{{
+              value | utcToLocalTime: "shortDate"
+            }}</span>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column

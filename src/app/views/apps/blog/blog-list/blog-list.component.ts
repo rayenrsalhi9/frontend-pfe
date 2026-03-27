@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Subject, of } from "rxjs";
+import { Subject, of, merge } from "rxjs";
 import {
   debounceTime,
   switchMap,
@@ -131,10 +131,11 @@ export class BlogListComponent implements OnInit, OnDestroy {
           },
         });
 
-        this.bsModalRef.content.onClose
-          .pipe(first())
-          .subscribe((result: boolean) => {
-            if (result) {
+        merge(
+          this.bsModalRef.content.onClose.pipe(first()),
+          this.bsModalRef.onHidden.pipe(first())
+        ).subscribe((result: any) => {
+            if (result === true) {
               this.blogsService
                 .deleteBlog(data.id)
                 .pipe(takeUntil(this.destroy$))

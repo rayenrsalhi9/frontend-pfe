@@ -83,5 +83,9 @@ export const survey = {
       RATING: "Rating",
       SATISFACTION: "Satisfaction",
     },
+    STATUS: {
+      ACTIVE: "Active",
+      INACTIVE: "Inactive",
+    },
   },
 };
