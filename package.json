@@ -3,9 +3,9 @@
   "version": "5.0.0",
   "scripts": {
     "ng": "ng",
-    "serve": "ng serve",
-    "start": "ng serve --port 4200 -o",
-    "build": "ng build",
+    "serve": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng serve",
+    "start": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200 -o",
+    "build": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
