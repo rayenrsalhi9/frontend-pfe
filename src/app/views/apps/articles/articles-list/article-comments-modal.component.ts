@@ -15,8 +15,8 @@ export class ArticleCommentsModalComponent
   extends CommentsModalBaseComponent
   implements OnInit, OnDestroy
 {
-  articleId: string;
-  articleTitle: string;
+  articleId!: string;
+  articleTitle!: string;
 
   article: any = null;
   onCommentsChanged?: () => void;
@@ -60,7 +60,7 @@ export class ArticleCommentsModalComponent
           this.loading = false;
           this.cdr.markForCheck();
         },
-        (err) => this.handleError(err, "TABLE_MESSAGE.EMPTY"),
+        (err) => this.handleError(err, "ARTICLES.ERRORS.LOAD_FAILED"),
       );
   }
 
