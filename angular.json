@@ -36,7 +36,8 @@
               "dayjs/plugin/objectSupport",
               "dayjs/plugin/utc",
               "bezier-easing",
-              "@ckeditor/ckeditor5-build-classic"
+              "@ckeditor/ckeditor5-build-classic",
+              "jodit-angular"
             ],
             "assets": [
               "src/favicon.ico",
@@ -46,16 +47,16 @@
                 "input": "node_modules/ngx-extended-pdf-viewer/assets/",
                 "output": "/assets/"
               }
-              ],
-              "styles": [
-                "src/styles.scss",
-                "node_modules/@ctrl/ngx-emoji-mart/picker.css"
-              ],
-              "scripts": [
-                "src/assets/js/prettify.min.js",
-                "src/assets/js/pusher.min.js",
-                "node_modules/apexcharts/dist/apexcharts.min.js"
-              ],
+            ],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css"
+            ],
+            "scripts": [
+              "src/assets/js/prettify.min.js",
+              "src/assets/js/pusher.min.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -118,13 +119,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
             "scripts": []
           }
         },
@@ -136,9 +132,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -154,6 +148,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "espire"
 }
