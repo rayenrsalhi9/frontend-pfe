@@ -16,11 +16,13 @@
   cursor: pointer;
 }
 
-.clickable-badge:hover {
+.clickable-badge:hover,
+.clickable-badge:focus-visible {
   background: #fff;
   border-color: #28a745;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  outline: none;
 }
 
 .comments-count-cell i {

@@ -1,4 +1,4 @@
-<div class="elegant-modal">
+<div class="elegant-modal" [style.--modal-accent-color]="'#28a745'">
   <!-- Modal Header -->
   <div class="modal-header-modern">
     <div class="header-info">
@@ -17,7 +17,7 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-state">
       <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
+        <span class="sr-only">{{ 'loading' | translate }}</span>
       </div>
       <p>{{ 'ARTICLES.MODAL.FETCHING' | translate }}</p>
     </div>
@@ -55,7 +55,7 @@
           <ng-container *ngIf="confirmingDeleteId !== comment.id">
             <div class="comment-header">
               <div class="user-meta">
-                <div class="user-avatar" [style.background-color]="'#28a745'">
+                <div class="user-avatar">
                   {{ (comment?.user?.firstName?.charAt(0) || '') + (comment?.user?.lastName?.charAt(0) || '') }}
                 </div>
                 <div class="user-details">
@@ -69,6 +69,7 @@
                 type="button"
                 class="btn-delete-ghost"
                 [tooltip]="'ARTICLES.MODAL.TOOLTIP_DELETE' | translate"
+                [attr.aria-label]="'ARTICLES.MODAL.TOOLTIP_DELETE' | translate"
                 (click)="deleteComment(comment)"
               >
                 <i class="feather icon-trash-2"></i>

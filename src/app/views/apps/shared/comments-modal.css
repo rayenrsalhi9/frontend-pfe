@@ -1,3 +1,5 @@
+/* Shared Comments Modal Styles */
+
 :host {
   display: block;
 }
@@ -108,7 +110,7 @@
 .stat-group .stat-value {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #4e73df;
+  color: var(--modal-accent-color, var(--primary));
 }
 
 .admin-badge {
@@ -152,7 +154,7 @@
 }
 
 .comment-card-modern:hover:not(.is-confirming) {
-  border-color: #4e73df;
+  border-color: var(--modal-accent-color, var(--primary));
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   transform: translateY(-2px);
 }
@@ -164,10 +166,10 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -256,6 +258,7 @@
   width: 38px;
   height: 38px;
   color: #fff;
+  background-color: var(--modal-accent-color, var(--primary));
   border-radius: 50%;
   display: flex;
   align-items: center;

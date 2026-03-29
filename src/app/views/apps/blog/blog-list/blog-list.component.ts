@@ -181,7 +181,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
   }
 
   openCommentsModal(row: any): void {
-    const modalRef = this.modalService.show(BlogCommentsModalComponent, {
+    this.modalService.show(BlogCommentsModalComponent, {
       class: "modal-lg modal-dialog-centered",
       initialState: {
         blogId: row.id,

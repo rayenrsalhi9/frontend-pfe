@@ -10,6 +10,7 @@ export const blog = {
       CATEGORY: "التصنيف",
       CREATED: "تاريخ الإنشاء",
       CREATOR: "المنشئ",
+      REPLIES: "الردود",
       PRIVACY: "الخصوصية",
       ACTIONS: "الإجراءات",
       BANNER: "البانر",
@@ -31,6 +32,7 @@ export const blog = {
       ADD: "إضافة مقال",
       EDIT: "تعديل",
       DELETE: "حذف",
+      COMMENTS: "التعليقات",
     },
     ADD: {
       LABELS: {

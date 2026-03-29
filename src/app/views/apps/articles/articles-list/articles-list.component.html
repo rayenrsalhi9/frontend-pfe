@@ -137,14 +137,16 @@
             let-row="row"
             aria-hidden="false"
           >
-            <div
+            <button
+              type="button"
               class="comments-count-cell clickable-badge"
               (click)="openCommentsModal(row)"
               [tooltip]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
+              [attr.aria-label]="('ARTICLES.LIST.TABLES.REPLIES' | translate) + ': ' + (value || 0)"
             >
               <i class="feather icon-message-circle mr-1"></i>
               <span class="count">{{ value || 0 }}</span>
-            </div>
+            </button>
           </ng-template>
         </ngx-datatable-column>
 
@@ -215,6 +217,7 @@
                 <div class="dropdown-divider-modern"></div>
                 <button
                   class="dropdown-item-modern"
+                  *hasClaim="'ARTICLE_VIEW_COMMENTS'"
                   (click)="openCommentsModal(row)"
                   role="menuitem"
                 >

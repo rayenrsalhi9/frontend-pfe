@@ -33,5 +33,6 @@ import { QuillModule } from "ngx-quill";
     NgSelectModule,
     BsDatepickerModule,
   ],
+  entryComponents: [BlogCommentsModalComponent],
 })
 export class BlogListModule {}

@@ -149,14 +149,16 @@
             let-row="row"
             aria-hidden="false"
           >
-            <div
+            <button
+              type="button"
               class="comments-count-cell clickable-badge"
               (click)="openCommentsModal(row)"
               [tooltip]="'BLOG.BUTTONS.COMMENTS' | translate"
+              [attr.aria-label]="('BLOG.TABLE.REPLIES' | translate) + ': ' + (value || 0)"
             >
               <i class="feather icon-message-square mr-1"></i>
               <span class="count">{{ value || 0 }}</span>
-            </div>
+            </button>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column

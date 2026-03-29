@@ -9,7 +9,7 @@ import { take, takeUntil } from "rxjs/operators";
 @Component({
   selector: "app-forum-comments-modal",
   templateUrl: "./forum-comments-modal.component.html",
-  styleUrls: ["./forum-comments-modal.component.css"],
+  styleUrls: ["../../shared/comments-modal.css"],
 })
 export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   forumId: string;
@@ -76,8 +76,7 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   }
 
   deleteComment(comment: any): void {
-    if (!this.canDeleteComments) return;
-    if (!comment?.id) return;
+    if (!this.canDeleteComments || !comment?.id) return;
 
     this.confirmingDeleteId = comment.id;
   }
@@ -87,6 +86,7 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   }
 
   confirmDelete(comment: any): void {
+    if (!comment?.id || !this.canDeleteComments) return;
     this.executeDelete(comment);
   }
 

@@ -13,6 +13,7 @@ export const articles = {
         CATEGORY: "الفئة",
         CREATED_BY: "تم الإنشاء بواسطة",
         CREATED_AT: "تاريخ الإنشاء",
+        REPLIES: "الردود",
         PRIVACY: "مستوى الوصول",
         ACTIONS: "الإجراءات",
       },
@@ -25,6 +26,7 @@ export const articles = {
         ADD: "إضافة مقال",
         EDIT: "تعديل",
         DELETE: "حذف",
+        COMMENTS: "التعليقات",
       },
       EMPTY_STATE: {
         TITLE: "لم يتم العثور على مقالات",

@@ -1,52 +1,42 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { ArticleService } from "@app/shared/services/article.service";
-import { Subject } from "rxjs";
-import { take, takeUntil } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
+import { CommentsModalBaseComponent } from "../../shared/comments-modal-base.component";
 
 @Component({
   selector: "app-article-comments-modal",
   templateUrl: "./article-comments-modal.component.html",
-  styleUrls: ["./article-comments-modal.component.css"],
+  styleUrls: ["../../shared/comments-modal.css"],
 })
-export class ArticleCommentsModalComponent implements OnInit, OnDestroy {
+export class ArticleCommentsModalComponent extends CommentsModalBaseComponent implements OnInit, OnDestroy {
   articleId: string;
   articleTitle: string;
 
-  onCommentsChanged?: () => void;
-
-  loading = false;
-  errorMessage: string | null = null;
-
   article: any = null;
-  comments: any[] = [];
-
-  canDeleteComments = false;
-  confirmingDeleteId: string | null = null;
-  private destroy$ = new Subject<void>();
+  onCommentsChanged?: () => void;
 
   constructor(
     public bsModalRef: BsModalRef,
-    private translateService: TranslateService,
+    protected translateService: TranslateService,
     private articleService: ArticleService,
-    private toastr: ToastrService,
-    private cdr: ChangeDetectorRef,
-  ) {}
-
-  ngOnInit(): void {
-    this.loadArticle();
+    protected toastr: ToastrService,
+    protected cdr: ChangeDetectorRef,
+  ) {
+    super(bsModalRef, translateService, toastr, cdr);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  loadArticle(): void {
+  loadData(): void {
     if (!this.articleId) {
-      this.errorMessage = "Article id is missing.";
+      this.translateService
+        .get("ARTICLES.ERRORS.ID_MISSING")
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((msg: string) => {
+          this.errorMessage = msg === "ARTICLES.ERRORS.ID_MISSING" ? "Article ID is missing" : msg;
+          this.cdr.markForCheck();
+        });
       return;
     }
 
@@ -67,66 +57,30 @@ export class ArticleCommentsModalComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.cdr.markForCheck();
         },
-        (err) => {
-          this.loading = false;
-          this.errorMessage = err?.error?.message || "Failed to load comments.";
-          this.cdr.markForCheck();
-        },
+        (err) => this.handleError(err, "TABLE_MESSAGE.EMPTY")
       );
   }
 
-  deleteComment(comment: any): void {
-    if (!this.canDeleteComments) return;
-    if (!comment?.id) return;
-
-    this.confirmingDeleteId = comment.id;
-  }
-
-  cancelDelete(): void {
-    this.confirmingDeleteId = null;
-  }
-
-  confirmDelete(comment: any): void {
-    this.executeDelete(comment);
-  }
-
-  private executeDelete(comment: any): void {
+  protected executeDelete(comment: any): void {
     this.articleService
       .deleteComment(comment.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (resp: any) => {
           if (resp?.success === false) {
-            this.toastr.error(resp?.message || "Failed to delete comment.");
+            this.handleError({ error: { message: resp?.message } }, "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR");
             return;
           }
 
           this.comments = (this.comments || []).filter(
             (c) => c?.id !== comment.id,
           );
-          this.confirmingDeleteId = null;
-
-          if (this.onCommentsChanged) {
-            this.onCommentsChanged();
-          }
-
-          this.translateService
-            .get("ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((msg: string) =>
-              this.toastr.success(msg || "Comment deleted."),
-            );
-
-          this.cdr.markForCheck();
+          this.handleSuccess("ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY", this.onCommentsChanged);
         },
         (err) => {
-          const msg = err?.error?.message || "Failed to delete comment.";
-          this.toastr.error(msg);
-        },
+          const msg = err?.error?.message;
+          this.toastr.error(msg || "Failed to delete comment.");
+        }
       );
-  }
-
-  close(): void {
-    this.bsModalRef.hide();
   }
 }

@@ -33,5 +33,6 @@ import { QuillModule } from "ngx-quill";
     BsDatepickerModule,
     RouterModule.forChild(routes),
   ],
+  entryComponents: [ArticleCommentsModalComponent],
 })
 export class ArticlesListModule {}

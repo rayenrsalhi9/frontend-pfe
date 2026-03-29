@@ -13,6 +13,7 @@ export const articles = {
         CATEGORY: "Catégorie",
         CREATED_BY: "Créé par",
         CREATED_AT: "Créé le",
+        REPLIES: "Réponses",
         PRIVACY: "Visibilité",
         ACTIONS: "Actions",
       },
@@ -25,6 +26,7 @@ export const articles = {
         ADD: "Ajouter un article",
         EDIT: "Modifier",
         DELETE: "Supprimer",
+        COMMENTS: "Commentaires",
       },
       EMPTY_STATE: {
         TITLE: "Aucun article trouvé",
