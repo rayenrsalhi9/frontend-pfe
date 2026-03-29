@@ -13,6 +13,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { BlogService } from "../blog.service";
 import { environment } from "src/environments/environment";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { BlogCommentsModalComponent } from "./blog-comments-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { BlogResource } from "@app/shared/enums/blog-resource";
@@ -177,5 +178,18 @@ export class BlogListComponent implements OnInit, OnDestroy {
     }
     this.blogResource.skip = 0;
     this.getAllBlogs(this.blogResource);
+  }
+
+  openCommentsModal(row: any): void {
+    const modalRef = this.modalService.show(BlogCommentsModalComponent, {
+      class: "modal-lg modal-dialog-centered",
+      initialState: {
+        blogId: row.id,
+        blogTitle: row.title,
+        onCommentsChanged: () => {
+          this.getAllBlogs();
+        },
+      },
+    });
   }
 }

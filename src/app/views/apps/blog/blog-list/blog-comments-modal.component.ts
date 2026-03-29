@@ -2,25 +2,25 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { ForumService } from "../forum.service";
+import { BlogService } from "../blog.service";
 import { Subject } from "rxjs";
 import { take, takeUntil } from "rxjs/operators";
 
 @Component({
-  selector: "app-forum-comments-modal",
-  templateUrl: "./forum-comments-modal.component.html",
-  styleUrls: ["./forum-comments-modal.component.css"],
+  selector: "app-blog-comments-modal",
+  templateUrl: "./blog-comments-modal.component.html",
+  styleUrls: ["./blog-comments-modal.component.css"],
 })
-export class ForumCommentsModalComponent implements OnInit, OnDestroy {
-  forumId: string;
-  forumTitle: string;
+export class BlogCommentsModalComponent implements OnInit, OnDestroy {
+  blogId: string;
+  blogTitle: string;
 
   onCommentsChanged?: () => void;
 
   loading = false;
   errorMessage: string | null = null;
 
-  forum: any = null;
+  blog: any = null;
   comments: any[] = [];
 
   canDeleteComments = false;
@@ -30,13 +30,13 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   constructor(
     public bsModalRef: BsModalRef,
     private translateService: TranslateService,
-    private forumService: ForumService,
+    private blogService: BlogService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.loadForum();
+    this.loadBlog();
   }
 
   ngOnDestroy(): void {
@@ -44,21 +44,21 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  loadForum(): void {
-    if (!this.forumId) {
-      this.errorMessage = "Forum id is missing.";
+  loadBlog(): void {
+    if (!this.blogId) {
+      this.errorMessage = "Blog id is missing.";
       return;
     }
 
     this.loading = true;
     this.errorMessage = null;
 
-    this.forumService
-      .getForum(this.forumId)
+    this.blogService
+      .getBlog(this.blogId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (resp: any) => {
-          this.forum = resp;
+          this.blog = resp;
           this.comments = Array.isArray(resp?.comments) ? resp.comments : [];
           this.canDeleteComments = !!(
             resp?.canDeleteComments ?? resp?.can_delete_comments
@@ -91,7 +91,7 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   }
 
   private executeDelete(comment: any): void {
-    this.forumService
+    this.blogService
       .deleteComment(comment.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -111,7 +111,7 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
           }
 
           this.translateService
-            .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
+            .get("BLOG.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
             .pipe(takeUntil(this.destroy$))
             .subscribe((msg: string) =>
               this.toastr.success(msg || "Comment deleted."),

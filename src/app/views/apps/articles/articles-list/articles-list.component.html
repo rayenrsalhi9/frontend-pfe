@@ -127,6 +127,28 @@
         </ngx-datatable-column>
 
         <ngx-datatable-column
+          [name]="'ARTICLES.LIST.TABLES.REPLIES' | translate"
+          [width]="100"
+          prop="commentsCount"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            let-row="row"
+            aria-hidden="false"
+          >
+            <div
+              class="comments-count-cell clickable-badge"
+              (click)="openCommentsModal(row)"
+              [tooltip]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
+            >
+              <i class="feather icon-message-circle mr-1"></i>
+              <span class="count">{{ value || 0 }}</span>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
           [name]="'ARTICLES.LIST.TABLES.CREATED_AT' | translate"
           prop="createdAt"
         >
@@ -189,6 +211,15 @@
                 >
                   <i class="feather icon-eye text-primary"></i>
                   <span>{{ "ARTICLES.LIST.BUTTONS.VIEW" | translate }}</span>
+                </button>
+                <div class="dropdown-divider-modern"></div>
+                <button
+                  class="dropdown-item-modern"
+                  (click)="openCommentsModal(row)"
+                  role="menuitem"
+                >
+                  <i class="feather icon-message-square text-primary"></i>
+                  <span>{{ "ARTICLES.LIST.BUTTONS.COMMENTS" | translate }}</span>
                 </button>
                 <ng-container *ngIf="row.createdBy === currentUser.id">
                   <button

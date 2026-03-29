@@ -105,10 +105,10 @@
   color: var(--text-secondary);
 }
 
-.stat-value {
+.stat-group .stat-value {
   font-size: 1.15rem;
   font-weight: 800;
-  color: var(--primary);
+  color: #28a745;
 }
 
 .admin-badge {
@@ -152,7 +152,7 @@
 }
 
 .comment-card-modern:hover:not(.is-confirming) {
-  border-color: var(--primary);
+  border-color: #28a745;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   transform: translateY(-2px);
 }
@@ -255,8 +255,7 @@
 .user-avatar {
   width: 38px;
   height: 38px;
-  background: var(--primary-glow);
-  color: var(--primary);
+  color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;

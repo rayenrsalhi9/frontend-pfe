@@ -3,11 +3,11 @@
   <div class="modal-header-modern">
     <div class="header-info">
       <h5 class="modal-title-modern">
-        {{ 'FORUM.MODAL.TITLE' | translate }}
+        {{ 'ARTICLES.MODAL.TITLE' | translate }}
       </h5>
-      <p class="modal-subtitle" *ngIf="forumTitle">{{ forumTitle }}</p>
+      <p class="modal-subtitle" *ngIf="articleTitle">{{ articleTitle }}</p>
     </div>
-    <button type="button" class="btn-close-ghost" [attr.aria-label]="'FORUM.ADD.BUTTONS.CANCEL' | translate" (click)="close()">
+    <button type="button" class="btn-close-ghost" [attr.aria-label]="'ARTICLES.ADD.BUTTONS.CANCEL' | translate" (click)="close()">
       <i class="feather icon-x"></i>
     </button>
   </div>
@@ -19,7 +19,7 @@
       <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
       </div>
-      <p>{{ 'FORUM.MODAL.FETCHING' | translate }}</p>
+      <p>{{ 'ARTICLES.MODAL.FETCHING' | translate }}</p>
     </div>
 
     <!-- Error State -->
@@ -32,20 +32,20 @@
       <!-- Stats Header -->
       <div class="modal-stats-header">
         <div class="stat-group">
-          <span class="stat-label">{{ 'FORUM.MODAL.TOTAL_CONTRIBUTIONS' | translate }}</span>
+          <span class="stat-label">{{ 'ARTICLES.MODAL.TOTAL_CONTRIBUTIONS' | translate }}</span>
           <span class="stat-value">{{ comments?.length ?? 0 }}</span>
         </div>
 
         <div *ngIf="!canDeleteComments" class="admin-badge">
           <i class="feather icon-shield"></i>
-          <span>{{ 'FORUM.MODAL.ADMIN_ONLY' | translate }}</span>
+          <span>{{ 'ARTICLES.MODAL.ADMIN_ONLY' | translate }}</span>
         </div>
       </div>
 
       <!-- Empty State -->
       <div *ngIf="(comments?.length ?? 0) === 0" class="empty-state-modern">
         <i class="feather icon-message-square"></i>
-        <p>{{ 'FORUM.MODAL.EMPTY_STATE' | translate }}</p>
+        <p>{{ 'ARTICLES.MODAL.EMPTY_STATE' | translate }}</p>
       </div>
 
       <!-- Comments List -->
@@ -55,7 +55,7 @@
           <ng-container *ngIf="confirmingDeleteId !== comment.id">
             <div class="comment-header">
               <div class="user-meta">
-                <div class="user-avatar">
+                <div class="user-avatar" [style.background-color]="'#28a745'">
                   {{ (comment?.user?.firstName?.charAt(0) || '') + (comment?.user?.lastName?.charAt(0) || '') }}
                 </div>
                 <div class="user-details">
@@ -68,7 +68,7 @@
                 *ngIf="canDeleteComments"
                 type="button"
                 class="btn-delete-ghost"
-                [tooltip]="'FORUM.MODAL.TOOLTIP_DELETE' | translate"
+                [tooltip]="'ARTICLES.MODAL.TOOLTIP_DELETE' | translate"
                 (click)="deleteComment(comment)"
               >
                 <i class="feather icon-trash-2"></i>
@@ -84,12 +84,12 @@
           <div *ngIf="confirmingDeleteId === comment.id" class="inline-confirmation">
             <div class="confirmation-message">
               <i class="feather icon-alert-triangle text-danger"></i>
-              <span>{{ 'FORUM.DELETE_COMMENT.TITLE' | translate }}</span>
+              <span>{{ 'ARTICLES.DELETE_COMMENT.TITLE' | translate }}</span>
             </div>
             <div class="confirmation-actions">
-              <button class="btn-inline-cancel" (click)="cancelDelete()">{{ 'FORUM.DELETE_COMMENT.BUTTON.CANCEL' | translate }}</button>
+              <button class="btn-inline-cancel" (click)="cancelDelete()">{{ 'ARTICLES.DELETE_COMMENT.BUTTON.CANCEL' | translate }}</button>
               <button class="btn-inline-confirm" (click)="confirmDelete(comment)">
-                <i class="feather icon-trash-2"></i> {{ 'FORUM.DELETE_COMMENT.BUTTON.CONFIRM' | translate }}
+                <i class="feather icon-trash-2"></i> {{ 'ARTICLES.DELETE_COMMENT.BUTTON.CONFIRM' | translate }}
               </button>
             </div>
           </div>
@@ -100,6 +100,6 @@
 
   <!-- Modal Footer -->
   <div class="modal-footer-modern">
-    <button type="button" class="btn-dismiss" (click)="close()">{{ 'FORUM.MODAL.BUTTON_DISMISS' | translate }}</button>
+    <button type="button" class="btn-dismiss" (click)="close()">{{ 'ARTICLES.MODAL.BUTTON_DISMISS' | translate }}</button>
   </div>
 </div>

@@ -51,14 +51,10 @@ export const forum = {
     },
 
     DELETE_COMMENT: {
-      LABEL: {
-        TITLE: "Delete Comment",
-        MESSAGE:
-          "Are you sure you want to delete this comment? This action cannot be undone.",
-        BUTTON: {
-          CANCEL: "Cancel",
-          CONFIRM: "Delete",
-        },
+      TITLE: "Are you sure you want to delete this comment? This action cannot be undone.",
+      BUTTON: {
+        CANCEL: "Cancel",
+        CONFIRM: "Delete",
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "Comment deleted successfully",

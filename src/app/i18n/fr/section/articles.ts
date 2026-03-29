@@ -72,6 +72,29 @@ export const articles = {
         ARTICLE_DELETED_SUCCESSFULLY: "Article supprimé avec succès.",
       },
     },
+
+    DELETE_COMMENT: {
+      TITLE:
+        "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+      BUTTON: {
+        CANCEL: "Annuler",
+        CONFIRM: "Supprimer",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Commentaire supprimé avec succès",
+        DELETED_ERROR: "Échec de la suppression du commentaire",
+      },
+    },
+
+    MODAL: {
+      TITLE: "Commentaires de l'Article",
+      FETCHING: "Récupération de la conversation...",
+      TOTAL_CONTRIBUTIONS: "Total des contributions",
+      ADMIN_ONLY: "Contrôle Super Admin uniquement",
+      EMPTY_STATE: "Aucun commentaire n'a encore été partagé ici.",
+      TOOLTIP_DELETE: "Supprimer le commentaire",
+      BUTTON_DISMISS: "Fermer",
+    },
     CATEGORIES: {
       TITLE: "Catégories d’articles",
       DESCRIPTION:

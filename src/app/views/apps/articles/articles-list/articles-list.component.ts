@@ -13,6 +13,7 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
 import { ArticlesViewsComponent } from "../articles-views/articles-views.component";
+import { ArticleCommentsModalComponent } from "./article-comments-modal.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { environment } from "src/environments/environment";
 import { ArticleResource } from "@app/shared/enums/article-resource";
@@ -184,5 +185,18 @@ export class ArticlesListComponent implements OnInit, OnDestroy {
     );
 
     return hasViewClaim || (isOwner && (hasEditClaim || hasDeleteClaim));
+  }
+
+  openCommentsModal(row: any): void {
+    const modalRef = this.modalService.show(ArticleCommentsModalComponent, {
+      class: "modal-lg modal-dialog-centered",
+      initialState: {
+        articleId: row.id,
+        articleTitle: row.title,
+        onCommentsChanged: () => {
+          this.getArtilces();
+        },
+      },
+    });
   }
 }

@@ -76,5 +76,27 @@ export const blog = {
         DELETED_SUCCESSFULLY: "تم حذف المقالة بنجاح.",
       },
     },
+
+    DELETE_COMMENT: {
+      TITLE: "هل أنت متأكد من رغبتك في حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+      BUTTON: {
+        CANCEL: "إلغاء",
+        CONFIRM: "حذف",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "تم حذف التعليق بنجاح",
+        DELETED_ERROR: "فشل حذف التعليق",
+      },
+    },
+
+    MODAL: {
+      TITLE: "تعليقات المدونة",
+      FETCHING: "جارٍ جلب المحادثة...",
+      TOTAL_CONTRIBUTIONS: "إجمالي المساهمات",
+      ADMIN_ONLY: "تحكم المشرف المتميز فقط",
+      EMPTY_STATE: "لم يتم مشاركة أي تعليقات هنا بعد.",
+      TOOLTIP_DELETE: "حذف التعليق",
+      BUTTON_DISMISS: "إغلاق",
+    },
   },
 };

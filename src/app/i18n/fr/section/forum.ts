@@ -51,14 +51,11 @@ export const forum = {
     },
 
     DELETE_COMMENT: {
-      LABEL: {
-        TITLE: "Supprimer le commentaire",
-        MESSAGE:
-          "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
-        BUTTON: {
-          CANCEL: "Annuler",
-          CONFIRM: "Supprimer",
-        },
+      TITLE:
+        "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+      BUTTON: {
+        CANCEL: "Annuler",
+        CONFIRM: "Supprimer",
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "Commentaire supprimé avec succès",
