@@ -96,28 +96,27 @@ export class ForumCommentsModalComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (resp: any) => {
-          if (resp?.success === false) {
-            this.toastr.error(resp?.message || "Failed to delete comment.");
-            return;
-          }
-
-          this.comments = (this.comments || []).filter(
-            (c) => c?.id !== comment.id,
-          );
-          this.confirmingDeleteId = null;
-
-          if (this.onCommentsChanged) {
-            this.onCommentsChanged();
-          }
-
-          this.translateService
-            .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((msg: string) =>
-              this.toastr.success(msg || "Comment deleted."),
+          if (resp?.success === true) {
+            this.comments = (this.comments || []).filter(
+              (c) => c?.id !== comment.id,
             );
+            this.confirmingDeleteId = null;
 
-          this.cdr.markForCheck();
+            if (this.onCommentsChanged) {
+              this.onCommentsChanged();
+            }
+
+            this.translateService
+              .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((msg: string) =>
+                this.toastr.success(msg || "Comment deleted."),
+              );
+
+            this.cdr.markForCheck();
+          } else {
+            this.toastr.error(resp?.message || "Failed to delete comment.");
+          }
         },
         (err) => {
           const msg = err?.error?.message || "Failed to delete comment.";

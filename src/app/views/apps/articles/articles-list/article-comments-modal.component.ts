@@ -70,21 +70,20 @@ export class ArticleCommentsModalComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (resp: any) => {
-          if (resp?.success === false) {
+          if (resp?.success === true) {
+            this.comments = (this.comments || []).filter(
+              (c) => c?.id !== comment.id,
+            );
+            this.handleSuccess(
+              "ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
+              this.onCommentsChanged,
+            );
+          } else {
             this.handleError(
               { error: { message: resp?.message } },
               "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
             );
-            return;
           }
-
-          this.comments = (this.comments || []).filter(
-            (c) => c?.id !== comment.id,
-          );
-          this.handleSuccess(
-            "ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
-            this.onCommentsChanged,
-          );
         },
         (err) => {
           this.handleError(err, "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR");

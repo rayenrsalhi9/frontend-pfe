@@ -91,21 +91,20 @@ export class BlogCommentsModalComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         (resp: any) => {
-          if (resp?.success === false) {
+          if (resp?.success === true) {
+            this.comments = (this.comments || []).filter(
+              (c) => c?.id !== comment.id,
+            );
+            this.handleSuccess(
+              "BLOG.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
+              this.onCommentsChanged,
+            );
+          } else {
             this.handleError(
               { error: { message: resp?.message } },
               "BLOG.DELETE_COMMENT.TOAST.DELETED_ERROR",
             );
-            return;
           }
-
-          this.comments = (this.comments || []).filter(
-            (c) => c?.id !== comment.id,
-          );
-          this.handleSuccess(
-            "BLOG.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
-            this.onCommentsChanged,
-          );
         },
         (err) => {
           this.handleError(err, "BLOG.DELETE_COMMENT.TOAST.DELETED_ERROR");
