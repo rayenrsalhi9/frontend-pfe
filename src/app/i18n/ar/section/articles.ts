@@ -54,6 +54,7 @@ export const articles = {
         DESCRIPTION_IS_REQUIRED: "الوصف المختصر مطلوب.",
         BODY_IS_REQUIRED: "المحتوى مطلوب.",
         PICTURE_IS_REQUIRED: "الصورة مطلوبة.",
+        ID_MISSING: "معرف المقال مفقود.",
       },
       TOAST: {
         ADDED_SUCCESS: "تم إنشاء المقال بنجاح.",

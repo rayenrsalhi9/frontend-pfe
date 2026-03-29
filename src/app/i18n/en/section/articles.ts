@@ -54,6 +54,7 @@ export const articles = {
         DESCRIPTION_IS_REQUIRED: "Short description is required.",
         BODY_IS_REQUIRED: "Content is required.",
         PICTURE_IS_REQUIRED: "Image is required.",
+        ID_MISSING: "Article ID is missing.",
       },
       TOAST: {
         ADDED_SUCCESS: "Article created successfully.",

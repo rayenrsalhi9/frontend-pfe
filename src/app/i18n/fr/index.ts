@@ -25,6 +25,7 @@ import { sign } from "./section/sign";
 import { table } from "./table";
 import { footer } from "./section/footer";
 import { reminder } from "./reminder";
+import { shared } from "./section/shared";
 
 export const fr_FR = {
   ...reminder,
@@ -54,4 +55,5 @@ export const fr_FR = {
   ...sign,
   ...forum,
   ...languages,
+  ...shared,
 };

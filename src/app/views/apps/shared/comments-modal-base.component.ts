@@ -19,7 +19,7 @@ export abstract class CommentsModalBaseComponent implements OnInit, OnDestroy {
     public bsModalRef: BsModalRef,
     protected translateService: TranslateService,
     protected toastr: ToastrService,
-    protected cdr: ChangeDetectorRef
+    protected cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -59,22 +59,33 @@ export abstract class CommentsModalBaseComponent implements OnInit, OnDestroy {
     this.loading = false;
     const msg = err?.error?.message;
     if (msg) {
-      if (typeof msg === 'string') {
-        this.errorMessage = msg;
-      }
+      this.errorMessage = typeof msg === "string" ? msg : String(msg);
     } else {
       this.translateService
         .get(fallbackKey)
         .pipe(takeUntil(this.destroy$))
         .subscribe((translated: string) => {
-          this.errorMessage = translated === fallbackKey ? 'An error occurred' : translated;
-          this.cdr.markForCheck();
+          if (translated === fallbackKey) {
+            this.translateService
+              .get("SHARED.ERRORS.DEFAULT")
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((def: string) => {
+                this.errorMessage = def;
+                this.cdr.markForCheck();
+              });
+          } else {
+            this.errorMessage = translated;
+            this.cdr.markForCheck();
+          }
         });
     }
     this.cdr.markForCheck();
   }
 
-  protected handleSuccess(msgKey: string, onCommentsChanged?: () => void): void {
+  protected handleSuccess(
+    msgKey: string,
+    onCommentsChanged?: () => void,
+  ): void {
     this.confirmingDeleteId = null;
     if (onCommentsChanged) {
       onCommentsChanged();

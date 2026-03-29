@@ -6,16 +6,39 @@ import { BlogService } from "../blog.service";
 import { takeUntil } from "rxjs/operators";
 import { CommentsModalBaseComponent } from "../../shared/comments-modal-base.component";
 
+export interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    picture?: string;
+  };
+}
+
+export interface BlogResponse {
+  id: string;
+  title: string;
+  comments?: Comment[];
+  canDeleteComments?: boolean;
+  can_delete_comments?: boolean;
+}
+
 @Component({
   selector: "app-blog-comments-modal",
   templateUrl: "./blog-comments-modal.component.html",
   styleUrls: ["../../shared/comments-modal.css"],
 })
-export class BlogCommentsModalComponent extends CommentsModalBaseComponent implements OnInit, OnDestroy {
+export class BlogCommentsModalComponent
+  extends CommentsModalBaseComponent
+  implements OnInit, OnDestroy
+{
   blogId: string;
   blogTitle: string;
 
-  blog: any = null;
+  blog: BlogResponse | null = null;
   onCommentsChanged?: () => void;
 
   constructor(
@@ -34,7 +57,7 @@ export class BlogCommentsModalComponent extends CommentsModalBaseComponent imple
         .get("BLOG.ERRORS.ID_MISSING")
         .pipe(takeUntil(this.destroy$))
         .subscribe((msg: string) => {
-          this.errorMessage = msg === "BLOG.ERRORS.ID_MISSING" ? "Blog ID is missing" : msg;
+          this.errorMessage = msg;
           this.cdr.markForCheck();
         });
       return;
@@ -47,7 +70,8 @@ export class BlogCommentsModalComponent extends CommentsModalBaseComponent imple
       .getBlog(this.blogId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
-        (resp: any) => {
+        (data: any) => {
+          const resp = data as BlogResponse;
           this.blog = resp;
           this.comments = Array.isArray(resp?.comments) ? resp.comments : [];
           this.canDeleteComments = !!(
@@ -57,7 +81,7 @@ export class BlogCommentsModalComponent extends CommentsModalBaseComponent imple
           this.loading = false;
           this.cdr.markForCheck();
         },
-        (err) => this.handleError(err, "BLOG.TABLE.LOAD_ERROR")
+        (err) => this.handleError(err, "BLOG.TABLE.LOAD_ERROR"),
       );
   }
 
@@ -68,19 +92,24 @@ export class BlogCommentsModalComponent extends CommentsModalBaseComponent imple
       .subscribe(
         (resp: any) => {
           if (resp?.success === false) {
-             this.handleError({ error: { message: resp?.message } }, "BLOG.DELETE_COMMENT.TOAST.DELETED_ERROR");
+            this.handleError(
+              { error: { message: resp?.message } },
+              "BLOG.DELETE_COMMENT.TOAST.DELETED_ERROR",
+            );
             return;
           }
 
           this.comments = (this.comments || []).filter(
             (c) => c?.id !== comment.id,
           );
-          this.handleSuccess("BLOG.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY", this.onCommentsChanged);
+          this.handleSuccess(
+            "BLOG.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
+            this.onCommentsChanged,
+          );
         },
         (err) => {
-          const msg = err?.error?.message;
-          this.toastr.error(msg || "Failed to delete comment.");
-        }
+          this.handleError(err, "BLOG.DELETE_COMMENT.TOAST.DELETED_ERROR");
+        },
       );
   }
 }

@@ -60,6 +60,9 @@ export const blog = {
         CATEGORY: "التصنيف مطلوب.",
         BODY: "المحتوى مطلوب.",
       },
+      ERRORS: {
+        ID_MISSING: "معرف المدونة مفقود.",
+      },
       TOAST: {
         SAVE_SUCCESSFULLY: "تم حفظ المقالة بنجاح.",
       },

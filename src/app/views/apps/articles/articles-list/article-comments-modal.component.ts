@@ -11,7 +11,10 @@ import { CommentsModalBaseComponent } from "../../shared/comments-modal-base.com
   templateUrl: "./article-comments-modal.component.html",
   styleUrls: ["../../shared/comments-modal.css"],
 })
-export class ArticleCommentsModalComponent extends CommentsModalBaseComponent implements OnInit, OnDestroy {
+export class ArticleCommentsModalComponent
+  extends CommentsModalBaseComponent
+  implements OnInit, OnDestroy
+{
   articleId: string;
   articleTitle: string;
 
@@ -34,7 +37,7 @@ export class ArticleCommentsModalComponent extends CommentsModalBaseComponent im
         .get("ARTICLES.ERRORS.ID_MISSING")
         .pipe(takeUntil(this.destroy$))
         .subscribe((msg: string) => {
-          this.errorMessage = msg === "ARTICLES.ERRORS.ID_MISSING" ? "Article ID is missing" : msg;
+          this.errorMessage = msg;
           this.cdr.markForCheck();
         });
       return;
@@ -57,7 +60,7 @@ export class ArticleCommentsModalComponent extends CommentsModalBaseComponent im
           this.loading = false;
           this.cdr.markForCheck();
         },
-        (err) => this.handleError(err, "TABLE_MESSAGE.EMPTY")
+        (err) => this.handleError(err, "TABLE_MESSAGE.EMPTY"),
       );
   }
 
@@ -68,19 +71,24 @@ export class ArticleCommentsModalComponent extends CommentsModalBaseComponent im
       .subscribe(
         (resp: any) => {
           if (resp?.success === false) {
-            this.handleError({ error: { message: resp?.message } }, "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR");
+            this.handleError(
+              { error: { message: resp?.message } },
+              "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
+            );
             return;
           }
 
           this.comments = (this.comments || []).filter(
             (c) => c?.id !== comment.id,
           );
-          this.handleSuccess("ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY", this.onCommentsChanged);
+          this.handleSuccess(
+            "ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
+            this.onCommentsChanged,
+          );
         },
         (err) => {
-          const msg = err?.error?.message;
-          this.toastr.error(msg || "Failed to delete comment.");
-        }
+          this.handleError(err, "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR");
+        },
       );
   }
 }

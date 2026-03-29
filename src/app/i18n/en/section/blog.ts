@@ -63,6 +63,9 @@ export const blog = {
         CATEGORY: "A category is required.",
         BODY: "The body content is required.",
       },
+      ERRORS: {
+        ID_MISSING: "Blog ID is missing.",
+      },
       TOAST: {
         SAVE_SUCCESSFULLY: "Blog post saved successfully.",
       },

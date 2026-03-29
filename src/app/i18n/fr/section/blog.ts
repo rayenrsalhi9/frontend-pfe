@@ -58,6 +58,9 @@ export const blog = {
         CATEGORY: "Une catégorie est requise.",
         BODY: "Le contenu est requis.",
       },
+      ERRORS: {
+        ID_MISSING: "L'identifiant du blog est manquant.",
+      },
       TOAST: {
         SAVE_SUCCESSFULLY: "Article enregistré avec succès.",
       },
