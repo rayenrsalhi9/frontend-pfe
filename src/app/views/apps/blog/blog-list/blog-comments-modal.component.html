@@ -1,13 +1,13 @@
-<div class="elegant-modal" [style.--modal-accent-color]="'var(--primary)'">
+<div class="elegant-modal" [style.--modal-accent-color]="'#4e73df'">
   <!-- Modal Header -->
   <div class="modal-header-modern">
     <div class="header-info">
       <h5 class="modal-title-modern">
-        {{ 'FORUM.MODAL.TITLE' | translate }}
+        {{ 'BLOG.MODAL.TITLE' | translate }}
       </h5>
-      <p class="modal-subtitle" *ngIf="forumTitle">{{ forumTitle }}</p>
+      <p class="modal-subtitle" *ngIf="blogTitle">{{ blogTitle }}</p>
     </div>
-    <button type="button" class="btn-close-ghost" [attr.aria-label]="'FORUM.ADD.BUTTONS.CANCEL' | translate" (click)="close()">
+    <button type="button" class="btn-close-ghost" [attr.aria-label]="'BLOG.ADD.BUTTONS.CANCEL' | translate" (click)="close()">
       <i class="feather icon-x"></i>
     </button>
   </div>
@@ -19,7 +19,7 @@
       <div class="spinner-border text-primary" role="status">
         <span class="sr-only">{{ 'loading' | translate }}</span>
       </div>
-      <p>{{ 'FORUM.MODAL.FETCHING' | translate }}</p>
+      <p>{{ 'BLOG.MODAL.FETCHING' | translate }}</p>
     </div>
 
     <!-- Error State -->
@@ -32,20 +32,20 @@
       <!-- Stats Header -->
       <div class="modal-stats-header">
         <div class="stat-group">
-          <span class="stat-label">{{ 'FORUM.MODAL.TOTAL_CONTRIBUTIONS' | translate }}</span>
+          <span class="stat-label">{{ 'BLOG.MODAL.TOTAL_CONTRIBUTIONS' | translate }}</span>
           <span class="stat-value">{{ comments?.length ?? 0 }}</span>
         </div>
 
         <div *ngIf="!canDeleteComments" class="admin-badge">
           <i class="feather icon-shield"></i>
-          <span>{{ 'FORUM.MODAL.ADMIN_ONLY' | translate }}</span>
+          <span>{{ 'BLOG.MODAL.ADMIN_ONLY' | translate }}</span>
         </div>
       </div>
 
       <!-- Empty State -->
       <div *ngIf="(comments?.length ?? 0) === 0" class="empty-state-modern">
         <i class="feather icon-message-square"></i>
-        <p>{{ 'FORUM.MODAL.EMPTY_STATE' | translate }}</p>
+        <p>{{ 'BLOG.MODAL.EMPTY_STATE' | translate }}</p>
       </div>
 
       <!-- Comments List -->
@@ -68,8 +68,8 @@
                 *ngIf="canDeleteComments"
                 type="button"
                 class="btn-delete-ghost"
-                [tooltip]="'FORUM.MODAL.TOOLTIP_DELETE' | translate"
-                [attr.aria-label]="'FORUM.MODAL.TOOLTIP_DELETE' | translate"
+                [tooltip]="'BLOG.MODAL.TOOLTIP_DELETE' | translate"
+                [attr.aria-label]="'BLOG.MODAL.TOOLTIP_DELETE' | translate"
                 (click)="deleteComment(comment)"
               >
                 <i class="feather icon-trash-2"></i>
@@ -85,12 +85,12 @@
           <div *ngIf="confirmingDeleteId === comment.id" class="inline-confirmation">
             <div class="confirmation-message">
               <i class="feather icon-alert-triangle text-danger"></i>
-              <span>{{ 'FORUM.DELETE_COMMENT.TITLE' | translate }}</span>
+              <span>{{ 'BLOG.DELETE_COMMENT.TITLE' | translate }}</span>
             </div>
             <div class="confirmation-actions">
-              <button class="btn-inline-cancel" (click)="cancelDelete()">{{ 'FORUM.DELETE_COMMENT.BUTTON.CANCEL' | translate }}</button>
+              <button class="btn-inline-cancel" (click)="cancelDelete()">{{ 'BLOG.DELETE_COMMENT.BUTTON.CANCEL' | translate }}</button>
               <button class="btn-inline-confirm" (click)="confirmDelete(comment)">
-                <i class="feather icon-trash-2"></i> {{ 'FORUM.DELETE_COMMENT.BUTTON.CONFIRM' | translate }}
+                <i class="feather icon-trash-2"></i> {{ 'BLOG.DELETE_COMMENT.BUTTON.CONFIRM' | translate }}
               </button>
             </div>
           </div>
@@ -101,6 +101,6 @@
 
   <!-- Modal Footer -->
   <div class="modal-footer-modern">
-    <button type="button" class="btn-dismiss" (click)="close()">{{ 'FORUM.MODAL.BUTTON_DISMISS' | translate }}</button>
+    <button type="button" class="btn-dismiss" (click)="close()">{{ 'BLOG.MODAL.BUTTON_DISMISS' | translate }}</button>
   </div>
 </div>

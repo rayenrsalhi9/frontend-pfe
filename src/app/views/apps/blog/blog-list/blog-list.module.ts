@@ -1,25 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { BlogListRoutingModule } from './blog-list-routing.module';
-import { BlogListComponent } from './blog-list.component';
-import { AvatarModule } from '@app/shared/components/avatar/avatar.module';
-import { ColumnPanelModule } from '@app/shared/components/column-panel/column-panel.module';
-import { DropdownModule } from '@app/shared/components/dropdown/dropdown.module';
-import { SharedModule } from '@app/shared/shared.module';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { RatingModule } from 'ngx-bootstrap/rating';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { QuillModule } from 'ngx-quill';
-
+import { BlogListRoutingModule } from "./blog-list-routing.module";
+import { BlogListComponent } from "./blog-list.component";
+import { BlogCommentsModalComponent } from "./blog-comments-modal.component";
+import { AvatarModule } from "@app/shared/components/avatar/avatar.module";
+import { ColumnPanelModule } from "@app/shared/components/column-panel/column-panel.module";
+import { DropdownModule } from "@app/shared/components/dropdown/dropdown.module";
+import { SharedModule } from "@app/shared/shared.module";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { RatingModule } from "ngx-bootstrap/rating";
+import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
+import { QuillModule } from "ngx-quill";
 
 @NgModule({
-  declarations: [
-    BlogListComponent
-  ],
+  declarations: [BlogListComponent, BlogCommentsModalComponent],
   imports: [
     CommonModule,
     BlogListRoutingModule,
@@ -34,6 +32,7 @@ import { QuillModule } from 'ngx-quill';
     QuillModule.forRoot(),
     NgSelectModule,
     BsDatepickerModule,
-  ]
+  ],
+  entryComponents: [BlogCommentsModalComponent],
 })
-export class BlogListModule { }
+export class BlogListModule {}

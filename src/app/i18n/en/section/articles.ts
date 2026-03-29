@@ -11,6 +11,7 @@ export const articles = {
         PICTURE: "Cover Image",
         TITLE: "Title",
         CATEGORY: "Category",
+        REPLIES: "Replies",
         CREATED_BY: "Created By",
         CREATED_AT: "Created At",
         PRIVACY: "Visibility",
@@ -25,6 +26,7 @@ export const articles = {
         ADD: "Add Article",
         EDIT: "Edit",
         DELETE: "Delete",
+        COMMENTS: "Comments",
       },
       EMPTY_STATE: {
         TITLE: "No articles found",
@@ -52,6 +54,7 @@ export const articles = {
         DESCRIPTION_IS_REQUIRED: "Short description is required.",
         BODY_IS_REQUIRED: "Content is required.",
         PICTURE_IS_REQUIRED: "Image is required.",
+        ID_MISSING: "Article ID is missing.",
       },
       TOAST: {
         ADDED_SUCCESS: "Article created successfully.",
@@ -76,6 +79,26 @@ export const articles = {
       TITLE: "Article Categories",
       DESCRIPTION:
         "Organize articles into categories so users can find relevant content more easily.",
+    },
+    DELETE_COMMENT: {
+      TITLE: "Are you sure you want to delete this comment? This action cannot be undone.",
+      BUTTON: {
+        CANCEL: "Cancel",
+        CONFIRM: "Delete",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Comment deleted successfully",
+        DELETED_ERROR: "Failed to delete comment",
+      },
+    },
+    MODAL: {
+      TITLE: "Article Comments",
+      FETCHING: "Fetching conversation...",
+      TOTAL_CONTRIBUTIONS: "Total Contributions",
+      ADMIN_ONLY: "Super Admin Control Only",
+      EMPTY_STATE: "No comments have been shared here yet.",
+      TOOLTIP_DELETE: "Delete Comment",
+      BUTTON_DISMISS: "Dismiss",
     },
   },
 };

@@ -1,0 +1,31 @@
+.comments-count-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  background: #f1f5f9;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+
+.clickable-badge {
+  cursor: pointer;
+}
+
+.clickable-badge:hover,
+.clickable-badge:focus-visible {
+  background: #fff;
+  border-color: #28a745;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  outline: none;
+}
+
+.comments-count-cell i {
+  color: #28a745;
+  font-size: 1rem;
+}

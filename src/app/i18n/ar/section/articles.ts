@@ -13,6 +13,7 @@ export const articles = {
         CATEGORY: "الفئة",
         CREATED_BY: "تم الإنشاء بواسطة",
         CREATED_AT: "تاريخ الإنشاء",
+        REPLIES: "الردود",
         PRIVACY: "مستوى الوصول",
         ACTIONS: "الإجراءات",
       },
@@ -25,6 +26,7 @@ export const articles = {
         ADD: "إضافة مقال",
         EDIT: "تعديل",
         DELETE: "حذف",
+        COMMENTS: "التعليقات",
       },
       EMPTY_STATE: {
         TITLE: "لم يتم العثور على مقالات",
@@ -52,6 +54,7 @@ export const articles = {
         DESCRIPTION_IS_REQUIRED: "الوصف المختصر مطلوب.",
         BODY_IS_REQUIRED: "المحتوى مطلوب.",
         PICTURE_IS_REQUIRED: "الصورة مطلوبة.",
+        ID_MISSING: "معرف المقال مفقود.",
       },
       TOAST: {
         ADDED_SUCCESS: "تم إنشاء المقال بنجاح.",
@@ -72,6 +75,29 @@ export const articles = {
         ARTICLE_DELETED_SUCCESSFULLY: "تم حذف المقال بنجاح.",
       },
     },
+
+    DELETE_COMMENT: {
+      TITLE: "هل أنت متأكد من رغبتك في حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+      BUTTON: {
+        CANCEL: "إلغاء",
+        CONFIRM: "حذف",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "تم حذف التعليق بنجاح",
+        DELETED_ERROR: "فشل حذف التعليق",
+      },
+    },
+
+    MODAL: {
+      TITLE: "تعليقات المقال",
+      FETCHING: "جارٍ جلب المحادثة...",
+      TOTAL_CONTRIBUTIONS: "إجمالي المساهمات",
+      ADMIN_ONLY: "تحكم المشرف المتميز فقط",
+      EMPTY_STATE: "لم يتم مشاركة أي تعليقات هنا بعد.",
+      TOOLTIP_DELETE: "حذف التعليق",
+      BUTTON_DISMISS: "إغلاق",
+    },
+
     CATEGORIES: {
       TITLE: "فئات المقالات",
       DESCRIPTION:

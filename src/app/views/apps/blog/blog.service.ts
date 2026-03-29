@@ -61,5 +61,11 @@ export class BlogService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  deleteComment(id: any): Observable<any[] | CommonError> {
+    const url = `blogs/comments/delete/${id}`;
+    return this.httpClient
+      .delete<any[]>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
 
 }

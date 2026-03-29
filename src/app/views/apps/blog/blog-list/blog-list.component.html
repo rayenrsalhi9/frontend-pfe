@@ -139,6 +139,29 @@
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column
+          [name]="'BLOG.TABLE.REPLIES' | translate"
+          [maxWidth]="100"
+          prop="commentsCount"
+        >
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            let-row="row"
+            aria-hidden="false"
+          >
+            <button
+              type="button"
+              class="comments-count-cell clickable-badge"
+              (click)="openCommentsModal(row)"
+              [tooltip]="'BLOG.BUTTONS.COMMENTS' | translate"
+              [attr.aria-label]="('BLOG.TABLE.REPLIES' | translate) + ': ' + (value || 0)"
+            >
+              <i class="feather icon-message-square mr-1"></i>
+              <span class="count">{{ value || 0 }}</span>
+            </button>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
           [name]="'BLOG.TABLE.CREATED' | translate"
           prop="createdAt"
         >
@@ -219,6 +242,15 @@
                 >
                   <i class="feather icon-edit-2 text-info"></i>
                   <span>{{ "BLOG.BUTTONS.EDIT" | translate }}</span>
+                </button>
+                <div class="dropdown-divider-modern"></div>
+                <button
+                  class="dropdown-item-modern"
+                  (click)="openCommentsModal(row)"
+                  role="menuitem"
+                >
+                  <i class="feather icon-message-square text-primary"></i>
+                  <span>{{ "BLOG.BUTTONS.COMMENTS" | translate }}</span>
                 </button>
                 <div class="dropdown-divider-modern"></div>
                 <button

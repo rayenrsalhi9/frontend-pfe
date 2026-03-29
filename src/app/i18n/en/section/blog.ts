@@ -11,6 +11,7 @@ export const blog = {
       PICTURE: "Picture",
       TITLE: "Title",
       CATEGORY: "Category",
+      REPLIES: "Replies",
       CREATED: "Created At",
       CREATOR: "Creator",
       PRIVACY: "Privacy",
@@ -34,6 +35,7 @@ export const blog = {
       ADD: "Add Blog Post",
       EDIT: "Edit",
       DELETE: "Delete",
+      COMMENTS: "Comments",
     },
     ADD: {
       LABELS: {
@@ -61,6 +63,9 @@ export const blog = {
         CATEGORY: "A category is required.",
         BODY: "The body content is required.",
       },
+      ERRORS: {
+        ID_MISSING: "Blog ID is missing.",
+      },
       TOAST: {
         SAVE_SUCCESSFULLY: "Blog post saved successfully.",
       },
@@ -78,6 +83,28 @@ export const blog = {
       TOAST: {
         DELETED_SUCCESSFULLY: "Blog post deleted successfully.",
       },
+    },
+
+    DELETE_COMMENT: {
+      TITLE: "Are you sure you want to delete this comment? This action cannot be undone.",
+      BUTTON: {
+        CANCEL: "Cancel",
+        CONFIRM: "Delete",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Comment deleted successfully",
+        DELETED_ERROR: "Failed to delete comment",
+      },
+    },
+
+    MODAL: {
+      TITLE: "Blog Comments",
+      FETCHING: "Fetching conversation...",
+      TOTAL_CONTRIBUTIONS: "Total Contributions",
+      ADMIN_ONLY: "Super Admin Control Only",
+      EMPTY_STATE: "No comments have been shared here yet.",
+      TOOLTIP_DELETE: "Delete Comment",
+      BUTTON_DISMISS: "Dismiss",
     },
   },
 };

@@ -58,6 +58,9 @@ export const blog = {
         CATEGORY: "Une catégorie est requise.",
         BODY: "Le contenu est requis.",
       },
+      ERRORS: {
+        ID_MISSING: "L'identifiant du blog est manquant.",
+      },
       TOAST: {
         SAVE_SUCCESSFULLY: "Article enregistré avec succès.",
       },
@@ -75,6 +78,29 @@ export const blog = {
       TOAST: {
         DELETED_SUCCESSFULLY: "Article supprimé avec succès.",
       },
+    },
+
+    DELETE_COMMENT: {
+      TITLE:
+        "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+      BUTTON: {
+        CANCEL: "Annuler",
+        CONFIRM: "Supprimer",
+      },
+      TOAST: {
+        DELETED_SUCCESSFULLY: "Commentaire supprimé avec succès",
+        DELETED_ERROR: "Échec de la suppression du commentaire",
+      },
+    },
+
+    MODAL: {
+      TITLE: "Commentaires du Blog",
+      FETCHING: "Récupération de la conversation...",
+      TOTAL_CONTRIBUTIONS: "Total des contributions",
+      ADMIN_ONLY: "Contrôle Super Admin uniquement",
+      EMPTY_STATE: "Aucun commentaire n'a encore été partagé ici.",
+      TOOLTIP_DELETE: "Supprimer le commentaire",
+      BUTTON_DISMISS: "Fermer",
     },
   },
 };

@@ -51,14 +51,10 @@ export const forum = {
     },
 
     DELETE_COMMENT: {
-      LABEL: {
-        TITLE: "حذف التعليق",
-        MESSAGE:
-          "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
-        BUTTON: {
-          CANCEL: "إلغاء",
-          CONFIRM: "حذف",
-        },
+      TITLE: "هل أنت متأكد من رغبتك في حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+      BUTTON: {
+        CANCEL: "إلغاء",
+        CONFIRM: "حذف",
       },
       TOAST: {
         DELETED_SUCCESSFULLY: "تم حذف التعليق بنجاح",

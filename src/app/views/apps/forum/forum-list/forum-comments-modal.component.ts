@@ -1,17 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { ForumService } from "../forum.service";
-import { take } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { take, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-forum-comments-modal",
   templateUrl: "./forum-comments-modal.component.html",
-  styleUrls: ["./forum-comments-modal.component.css"],
+  styleUrls: ["../../shared/comments-modal.css"],
 })
-export class ForumCommentsModalComponent implements OnInit {
+export class ForumCommentsModalComponent implements OnInit, OnDestroy {
   forumId: string;
   forumTitle: string;
 
@@ -24,10 +24,11 @@ export class ForumCommentsModalComponent implements OnInit {
   comments: any[] = [];
 
   canDeleteComments = false;
+  confirmingDeleteId: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     public bsModalRef: BsModalRef,
-    private modalService: BsModalService,
     private translateService: TranslateService,
     private forumService: ForumService,
     private toastr: ToastrService,
@@ -36,6 +37,11 @@ export class ForumCommentsModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadForum();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadForum(): void {
@@ -47,84 +53,76 @@ export class ForumCommentsModalComponent implements OnInit {
     this.loading = true;
     this.errorMessage = null;
 
-    this.forumService.getForum(this.forumId).subscribe(
-      (resp: any) => {
-        this.forum = resp;
-        this.comments = Array.isArray(resp?.comments) ? resp.comments : [];
-        this.canDeleteComments = !!(
-          resp?.canDeleteComments ?? resp?.can_delete_comments
-        );
+    this.forumService
+      .getForum(this.forumId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (resp: any) => {
+          this.forum = resp;
+          this.comments = Array.isArray(resp?.comments) ? resp.comments : [];
+          this.canDeleteComments = !!(
+            resp?.canDeleteComments ?? resp?.can_delete_comments
+          );
 
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      (err) => {
-        this.loading = false;
-        this.errorMessage = err?.error?.message || "Failed to load comments.";
-        this.cdr.markForCheck();
-      },
-    );
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        (err) => {
+          this.loading = false;
+          this.errorMessage = err?.error?.message || "Failed to load comments.";
+          this.cdr.markForCheck();
+        },
+      );
   }
 
   deleteComment(comment: any): void {
-    if (!this.canDeleteComments) return;
-    if (!comment?.id) return;
+    if (!this.canDeleteComments || !comment?.id) return;
 
-    this.translateService
-      .get("FORUM.DELETE_COMMENT.LABEL")
-      .pipe(take(1))
-      .subscribe((translations) => {
-        const confirmModalRef = this.modalService.show(ConfirmModalComponent, {
-          class: "modal-confirm-custom",
-          initialState: {
-            title: translations.TITLE,
-            message: translations.MESSAGE,
-            button: {
-              cancel: translations.BUTTON.CANCEL,
-              confirm: translations.BUTTON.CONFIRM,
-            },
-          },
-        });
+    this.confirmingDeleteId = comment.id;
+  }
 
-        confirmModalRef.content.onClose
-          .pipe(take(1))
-          .subscribe((result: boolean) => {
-            if (result) {
-              this.executeDelete(comment);
-            }
-          });
-      });
+  cancelDelete(): void {
+    this.confirmingDeleteId = null;
+  }
+
+  confirmDelete(comment: any): void {
+    if (!comment?.id || !this.canDeleteComments) return;
+    this.executeDelete(comment);
   }
 
   private executeDelete(comment: any): void {
-    this.forumService.deleteComment(comment.id).subscribe(
-      (resp: any) => {
-        if (resp?.success === false) {
-          this.toastr.error(resp?.message || "Failed to delete comment.");
-          return;
-        }
+    this.forumService
+      .deleteComment(comment.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (resp: any) => {
+          if (resp?.success === true) {
+            this.comments = (this.comments || []).filter(
+              (c) => c?.id !== comment.id,
+            );
+            this.confirmingDeleteId = null;
 
-        this.comments = (this.comments || []).filter(
-          (c) => c?.id !== comment.id,
-        );
+            if (this.onCommentsChanged) {
+              this.onCommentsChanged();
+            }
 
-        if (this.onCommentsChanged) {
-          this.onCommentsChanged();
-        }
+            this.translateService
+              .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((msg: string) =>
+                this.toastr.success(msg || "Comment deleted."),
+              );
 
-        this.translateService
-          .get("FORUM.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY")
-          .subscribe((msg: string) =>
-            this.toastr.success(msg || "Comment deleted."),
-          );
-
-        this.cdr.markForCheck();
-      },
-      (err) => {
-        const msg = err?.error?.message || "Failed to delete comment.";
-        this.toastr.error(msg);
-      },
-    );
+            this.cdr.markForCheck();
+          } else {
+            this.toastr.error(resp?.message || "Failed to delete comment.");
+          }
+        },
+        (err) => {
+          const msg = err?.error?.message || "Failed to delete comment.";
+          this.toastr.error(msg);
+        },
+      );
   }
 
   close(): void {
