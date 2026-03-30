@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { BlogService } from "@app/views/apps/blog/blog.service";
@@ -35,16 +35,17 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.activeRoute.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async (params) => {
-        let id = params.get("id");
-        if (id) {
-          this.blogService.getBlog(id).subscribe((data: any) => {
-            this.blog = data;
-            this.cdr.markForCheck();
-          });
-        }
+      .pipe(
+        takeUntil(this.destroy$),
+        map((params) => params.get("id")),
+        filter((id) => !!id),
+        switchMap((id) => this.blogService.getBlog(id)),
+      )
+      .subscribe((data: any) => {
+        this.blog = data;
+        this.cdr.markForCheck();
       });
+
     this.getUserInfo();
   }
 
@@ -54,13 +55,12 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo() {
-    const guestUser = localStorage.getItem("guestUser");
     const currentUser = localStorage.getItem("currentUser");
+    const guestUser = localStorage.getItem("guestUser");
 
     if (currentUser) {
       this.user = JSON.parse(currentUser).user;
-    }
-    if (guestUser) {
+    } else if (guestUser) {
       this.user = JSON.parse(guestUser);
     }
   }
@@ -87,6 +87,10 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   }
 
   copyLink() {
+    if (!navigator.clipboard) {
+      this.toastr.error("Could not copy link — please copy manually");
+      return;
+    }
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
@@ -94,6 +98,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
       })
       .catch((err) => {
         console.error("Could not copy text: ", err);
+        this.toastr.error("Could not copy link — please copy manually");
       });
   }
 
@@ -104,7 +109,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
     ) {
       this.blogService.reactionBlog(this.blog.id, { type: reaction }).subscribe(
         (data: any) => {
-          console.log(data);
           this.blog.reactionsUp = data.reactionsUp;
           this.blog.reactionsDown = data.reactionsDown;
         },
@@ -113,7 +117,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
         },
       );
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
   }
@@ -127,7 +130,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
         .commentBlog(this.blog.id, { comment: this.comment })
         .subscribe(
           (data: any) => {
-            console.log(data);
             this.blog.comments = data.comments;
             this.comment = "";
             this.cdr.markForCheck();
@@ -137,7 +139,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
           },
         );
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
   }

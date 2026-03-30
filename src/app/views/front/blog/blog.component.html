@@ -11,7 +11,7 @@
           {{ "PREVIEW.BLOG.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat">
+      <div class="header-stat" *ngIf="blogs !== null">
         <span class="stat-pill">
           <i class="feather icon-layers"></i>
           {{ blogs.length }} {{ "PREVIEW.BLOG.TABLE.POSTS" | translate }}
@@ -23,13 +23,13 @@
   <!-- Blog Cards Grid -->
   <div class="list-page-body">
     <!-- Empty State -->
-    <div class="empty-state-card" *ngIf="blogs.length === 0">
+    <div class="empty-state-card" *ngIf="blogs !== null && blogs.length === 0">
       <i class="feather icon-book-open"></i>
       <h3>{{ "PREVIEW.BLOG.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
     <!-- Card grid -->
-    <div class="blog-grid" *ngIf="blogs.length > 0">
+    <div class="blog-grid" *ngIf="blogs !== null && blogs.length > 0">
       <a
         *ngFor="let blog of blogs"
         class="blog-card"
@@ -56,13 +56,24 @@
           <p class="blog-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
           <div class="blog-footer">
             <div class="blog-footer-stats">
-              <span class="blog-comments" [title]="'PREVIEW.WIDGETS.COMMENTS' | translate">
+              <span
+                class="blog-comments"
+                [title]="'PREVIEW.WIDGETS.COMMENTS' | translate"
+              >
                 <i class="feather icon-message-square"></i>
                 {{ blog.commentsCount || blog.comments?.length || 0 }}
               </span>
-              <span class="blog-reactions" [title]="'PREVIEW.WIDGETS.LIKES' | translate">
+              <span
+                class="blog-reactions"
+                [title]="'PREVIEW.WIDGETS.LIKES' | translate"
+              >
                 <i class="feather icon-thumbs-up"></i>
-                {{ blog.reactionsCount || blog.reactionsUpCount || blog.reactionsUp?.length || 0 }}
+                {{
+                  blog.reactionsCount ||
+                    blog.reactionsUpCount ||
+                    blog.reactionsUp?.length ||
+                    0
+                }}
               </span>
             </div>
             <span class="blog-cta">

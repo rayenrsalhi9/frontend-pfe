@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
@@ -16,7 +16,7 @@ import { environment } from "src/environments/environment";
 })
 export class ArticlePreviewComponent implements OnInit, OnDestroy {
   article: any = {};
-  comment: any;
+  comment: string = "";
   user: any;
   private destroy$ = new Subject<void>();
 
@@ -35,16 +35,17 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.activeRoute.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async (params) => {
-        let id = params.get("id");
-        if (id) {
-          this.articleService.getArticle(id).subscribe((data: any) => {
-            this.article = data;
-            this.cdr.markForCheck();
-          });
-        }
+      .pipe(
+        takeUntil(this.destroy$),
+        map((params) => params.get("id")),
+        filter((id) => !!id),
+        switchMap((id) => this.articleService.getArticle(id)),
+      )
+      .subscribe((data: any) => {
+        this.article = data;
+        this.cdr.markForCheck();
       });
+
     this.getUserInfo();
   }
 
@@ -54,24 +55,26 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo() {
-    const guestUser = localStorage.getItem("guestUser");
     const currentUser = localStorage.getItem("currentUser");
+    const guestUser = localStorage.getItem("guestUser");
 
     if (currentUser) {
       this.user = JSON.parse(currentUser).user;
-    }
-    if (guestUser) {
+    } else if (guestUser) {
       this.user = JSON.parse(guestUser);
     }
   }
 
   addComment() {
+    const text = (this.comment || "").trim();
+    if (!text) return;
+
     if (
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
     ) {
       this.articleService
-        .addComment(this.article.id, { comment: this.comment })
+        .addComment(this.article.id, { comment: text })
         .subscribe(
           (data: any) => {
             this.article.comments = data.comments;
@@ -125,6 +128,10 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
   }
 
   copyLink() {
+    if (!navigator.clipboard) {
+      this.toastr.error("Could not copy link — please copy manually");
+      return;
+    }
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
@@ -132,6 +139,7 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
       })
       .catch((err) => {
         console.error("Could not copy text: ", err);
+        this.toastr.error("Could not copy link — please copy manually");
       });
   }
 }

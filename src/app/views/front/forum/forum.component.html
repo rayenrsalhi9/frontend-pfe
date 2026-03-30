@@ -11,7 +11,7 @@
           {{ "PREVIEW.FORUM.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat">
+      <div class="header-stat" *ngIf="rows !== null">
         <span class="stat-pill">
           <i class="feather icon-layers"></i>
           {{ rows.length }} {{ "PREVIEW.FORUM.TABLE.TOPIC" | translate }}
@@ -23,13 +23,13 @@
   <!-- Forum Thread List -->
   <div class="list-page-body">
     <!-- Empty State -->
-    <div class="empty-state-card" *ngIf="rows.length === 0">
+    <div class="empty-state-card" *ngIf="rows !== null && rows.length === 0">
       <i class="feather icon-message-square"></i>
       <h3>{{ "PREVIEW.FORUM.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
     <!-- Thread rows -->
-    <div class="thread-list" *ngIf="rows.length > 0">
+    <div class="forum-table-container" *ngIf="rows !== null && rows.length > 0">
       <a
         *ngFor="let row of rows"
         class="thread-card"
@@ -68,15 +68,13 @@
 
         <!-- Thread stats -->
         <div class="thread-stats">
-          <div class="stat-item">
+          <div class="stat-item" [title]="'PREVIEW.FORUM.TABLE.REPLIES' | translate">
             <i class="feather icon-message-square"></i>
             <span>{{ row.comments?.length || 0 }}</span>
-            <label>{{ "PREVIEW.FORUM.TABLE.REPLIES" | translate }}</label>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" [title]="'PREVIEW.FORUM.TABLE.REACTIONS' | translate">
             <i class="feather icon-heart"></i>
             <span>{{ row.reactions?.length || 0 }}</span>
-            <label>{{ "PREVIEW.FORUM.TABLE.REACTIONS" | translate }}</label>
           </div>
         </div>
 

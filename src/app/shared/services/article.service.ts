@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { CommonHttpErrorService } from "@app/core/error-handler/common-http-error.service";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { CommonError } from "../enums/common-error";
+import { CommonError } from "@app/core/error-handler/common-error";
 
 @Injectable({ providedIn: "root" })
 export class ArticleService {

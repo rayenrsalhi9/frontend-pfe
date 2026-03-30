@@ -84,7 +84,6 @@
           <span class="comment-pill">
             <i class="feather icon-message-square"></i>
             {{ forum.comments?.length || 0 }}
-            {{ "PREVIEW.FORUM.COMMENT.REPLIES" | translate }}
           </span>
         </div>
       </div>
@@ -95,7 +94,6 @@
           <span class="comments-title">{{
             "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate
           }}</span>
-          <span class="count-badge">{{ forum.comments?.length || 0 }}</span>
         </div>
 
         <!-- Add comment form -->
@@ -115,18 +113,8 @@
           </button>
         </div>
 
-        <div
-          class="empty-state"
-          *ngIf="forum?.closed"
-          style="
-            padding: 1.5rem;
-            color: var(--text-secondary);
-            text-align: center;
-            border-bottom: 0.5px solid var(--border-color);
-            font-size: 14px;
-          "
-        >
-          <i class="feather icon-lock" style="margin-right: 6px"></i>
+        <div class="closed-notice" *ngIf="forum?.closed">
+          <i class="feather icon-lock"></i>
           <span>{{ "PREVIEW.FORUM.PREVIEW.CLOSED_NOTICE" | translate }}</span>
         </div>
 
@@ -137,7 +125,7 @@
               <i class="feather icon-user"></i>
             </div>
             <div class="cm-body">
-              <div class="cm-header" style="justify-content: space-between">
+              <div class="cm-header cm-header-flex">
                 <div>
                   <span class="cm-name"
                     >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
@@ -152,51 +140,20 @@
                   *ngIf="canDeleteComment(c)"
                   dropdown
                   [insideClick]="true"
-                  style="position: relative"
                 >
                   <button
                     dropdownToggle
                     type="button"
                     class="comment-menu-btn"
-                    style="
-                      background: none;
-                      border: none;
-                      cursor: pointer;
-                      color: var(--text-secondary);
-                    "
                     [title]="'PREVIEW.ACTIONS.MORE' | translate"
                   >
                     <i class="feather icon-more-horizontal"></i>
                   </button>
-                  <ul
-                    *dropdownMenu
-                    class="comment-dropdown"
-                    style="
-                      position: absolute;
-                      right: 0;
-                      background: var(--card-bg);
-                      border: 1px solid var(--border-color);
-                      border-radius: var(--radius-sm);
-                      padding: 0.5rem;
-                      list-style: none;
-                      min-width: 150px;
-                      z-index: 10;
-                    "
-                  >
+                  <ul *dropdownMenu class="comment-dropdown">
                     <li>
                       <button
                         class="comment-dropdown-item danger"
                         (click)="deleteComment(c.id)"
-                        style="
-                          background: none;
-                          padding: 10px;
-                          border: none;
-                          color: #dc2626;
-                          cursor: pointer;
-                          width: 100%;
-                          text-align: left;
-                          font-size: 13px;
-                        "
                       >
                         <i class="feather icon-trash-2"></i>
                         {{ "PREVIEW.FORUM.COMMENT.DELETE" | translate }}

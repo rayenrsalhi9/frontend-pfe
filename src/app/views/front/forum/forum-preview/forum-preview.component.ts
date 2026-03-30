@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject, of } from "rxjs";
+import { takeUntil, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-forum-preview",
@@ -28,18 +29,23 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
   ) {}
 
+  getHost() {
+    return environment.apiUrl;
+  }
+
   ngOnInit(): void {
     this.activeRoute.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(async (params) => {
-        let id = params.get("id");
-        if (id) {
-          this.forumService.getForum(id).subscribe((data: any) => {
-            this.forum = data;
-            this.cdr.markForCheck();
-          });
-        }
+      .pipe(
+        takeUntil(this.destroy$),
+        map((params) => params.get("id")),
+        filter((id) => !!id),
+        switchMap((id) => this.forumService.getForum(id)),
+      )
+      .subscribe((data: any) => {
+        this.forum = data;
+        this.cdr.markForCheck();
       });
+
     this.getUserInfo();
   }
 
@@ -49,18 +55,14 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   }
 
   getUserInfo() {
-    const guestUser = localStorage.getItem("guestUser");
-    console.log(guestUser);
-
     const currentUser = localStorage.getItem("currentUser");
+    const guestUser = localStorage.getItem("guestUser");
 
     if (currentUser) {
       this.user = JSON.parse(currentUser).user;
-    }
-    if (guestUser) {
+    } else if (guestUser) {
       this.user = JSON.parse(guestUser);
     }
-    console.log(this.user);
   }
 
   addReaction(reaction) {
@@ -81,7 +83,6 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
           },
         );
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
   }
@@ -105,7 +106,6 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
           },
         );
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
   }

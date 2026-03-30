@@ -85,7 +85,6 @@
           <span class="comment-pill">
             <i class="feather icon-message-square"></i>
             {{ article.comments?.length || 0 }}
-            {{ "PREVIEW.FORUM.COMMENT.REPLIES" | translate }}
           </span>
         </div>
       </div>
@@ -96,7 +95,6 @@
           <span class="comments-title">{{
             "PREVIEW.ARTICLE.PREVIEW.COMMENTS" | translate
           }}</span>
-          <span class="count-badge">{{ article.comments?.length || 0 }}</span>
         </div>
 
         <!-- Add comment form -->
@@ -108,8 +106,9 @@
             class="comment-input"
             [(ngModel)]="comment"
             id="articleComment"
+            aria-label="Add a comment"
             rows="2"
-            [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
+            [placeholder]="'PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT' | translate"
           ></textarea>
           <button class="send-btn" (click)="addComment()" type="button">
             {{ "PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT" | translate }}
@@ -184,7 +183,7 @@
                         "
                       >
                         <i class="feather icon-trash-2"></i>
-                        {{ "PREVIEW.FORUM.COMMENT.DELETE" | translate }}
+                        {{ "PREVIEW.ARTICLE.COMMENT.DELETE" | translate }}
                       </button>
                     </li>
                   </ul>

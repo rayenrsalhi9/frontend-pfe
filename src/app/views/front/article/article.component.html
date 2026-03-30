@@ -11,7 +11,7 @@
           {{ "PREVIEW.ARTICLE.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat">
+      <div class="header-stat" *ngIf="articles !== null">
         <span class="stat-pill">
           <i class="feather icon-layers"></i>
           {{ articles.length }} {{ "PREVIEW.ARTICLE.TABLE.POSTS" | translate }}
@@ -23,13 +23,16 @@
   <!-- Articles Grid -->
   <div class="list-page-body">
     <!-- Empty State -->
-    <div class="empty-state-card" *ngIf="articles.length === 0">
+    <div
+      class="empty-state-card"
+      *ngIf="articles !== null && articles.length === 0"
+    >
       <i class="feather icon-file-text"></i>
       <h3>{{ "PREVIEW.ARTICLE.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
     <!-- Article card grid -->
-    <div class="articles-grid" *ngIf="articles.length > 0">
+    <div class="articles-grid" *ngIf="articles !== null && articles.length > 0">
       <a
         *ngFor="let article of articles"
         class="article-card"
@@ -38,9 +41,14 @@
         role="link"
       >
         <!-- Cover image -->
-        <div class="article-cover">
+        <div class="article-cover" *ngIf="article.picture">
           <img
-            [src]="getHost() + article.picture"
+            [src]="
+              article.picture.startsWith('data:') ||
+              article.picture.startsWith('http')
+                ? article.picture
+                : getHost() + article.picture
+            "
             [alt]="article.title"
             class="cover-img"
           />

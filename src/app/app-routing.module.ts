@@ -57,7 +57,6 @@ const appRoutes: Routes = [
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: "enabled",
       scrollPositionRestoration: "enabled",
-      relativeLinkResolution: "legacy",
     }),
   ],
   exports: [RouterModule],
