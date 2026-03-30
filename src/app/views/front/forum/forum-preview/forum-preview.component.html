@@ -1,84 +1,265 @@
-<div class="forum-preview">
-  <div class="preview-wrapper">
-    <div class="card">
-      <div class="card-header">
-        <h4>{{forum.title}}</h4>
+<div class="blog-page" *ngIf="forum?.id">
+  <!-- Hero -->
+  <div class="hero">
+    <!-- No cover image for forums currently, so just show body directly -->
+    <div class="hero-body">
+      <div class="meta-row">
+        <span class="badge badge-forum">
+          <i class="feather icon-message-circle"></i>
+          {{ "PREVIEW.FORUM.LABEL" | translate }}
+        </span>
+        <span class="badge badge-cat">
+          <i
+            class="feather"
+            [class.icon-lock]="forum?.closed"
+            [class.icon-unlock]="!forum?.closed"
+          ></i>
+          {{
+            forum?.closed
+              ? ("PREVIEW.FORUM.STATUS.CLOSED" | translate)
+              : ("PREVIEW.FORUM.STATUS.OPEN" | translate)
+          }}
+        </span>
       </div>
-      <div class="card-body">
-        <div class="content" [innerHTML]="forum.content | safeHtml"></div>
-      </div>
-      <div class="card-footer">
-        <div class="footer-actions">
-          <ul class="actions-list">
-            <li class="action-item" (click)="addReaction('up')">
-              <i class="feather icon-arrow-up"></i>
-              <span>{{forum.reactionsUp.length}}</span>
-            </li>
-            <li class="action-item" (click)="addReaction('down')">
-              <i class="feather icon-arrow-down"></i>
-              <span>{{forum.reactionsDown.length}}</span>
-            </li>
-            <li class="action-item" (click)="addReaction('heart')">
-              <i class="feather icon-heart"></i>
-              <span>{{forum.reactionsHeart.length}}</span>
-            </li>
-            <li class="action-item">
-              <i class="feather icon-message-square"></i>
-              <span>{{forum.comments.length}}</span>
-            </li>
-          </ul>
+      <h1 class="hero-title">{{ forum.title }}</h1>
+      <p class="hero-subtitle" *ngIf="forum.subtitle">{{ forum.subtitle }}</p>
+      <div class="author-row">
+        <div class="avatar-circle">
+          <i class="feather icon-user"></i>
         </div>
-        <div class="footer-comment mt-2">
-
-          <div class="row"  *ngIf="!forum?.closed">
-            <div class="col-md-12">
-              <label class="form-label" for="blogComment">{{'FORUM.COMMENT.TITLE_COMMENT'| translate}}</label>
-              <textarea class="form-control" [(ngModel)]="comment" id="blogComment" cols="30" rows="2"
-                [placeholder]="'FORUM.COMMENT.ADD_COMMENT'| translate"></textarea>
-            </div>
+        <div>
+          <div class="author-name">
+            {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
           </div>
-
-          <div class="row mt-3 justify-content-end"  *ngIf="!forum?.closed">
-            <div class="col-auto">
-              <button (click)="addComment()" style="margin-right: 10px;" type="submit"
-                class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i>{{'FORUM.COMMENT.ADD_COMMENT'| translate}}</button>
-            </div>
-          </div>
-
-          <div class="comments">
-            <ng-container *ngFor="let comment of forum.comments">
-              <div class="media" style="position: relative;">
-                <div class="media-left">
-                  <img class="media-object" src="/assets/images/avatars/thumb-16.jpg" alt="">
-                </div>
-                <div class="media-body">
-                  <div class="media-heading">
-                    <h5>{{comment.user.firstName}} {{comment.user.lastName}}</h5>
-                    <span class="time">{{comment.createdAt | utcToLocalTime:'shortDate' }}</span>
-                  </div>
-                  <div class="comment">
-                    <!-- Three-dot menu for comment actions -->
-                    <div class="comment-actions" *ngIf="canDeleteComment(comment)" dropdown [insideClick]="true">
-                      <button dropdownToggle type="button" class="btn btn-sm btn-link comment-menu-btn">
-                        <i class="feather icon-more-horizontal"></i>
-                      </button>
-                      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
-                        <li>
-                          <a class="dropdown-item text-danger" (click)="deleteComment(comment.id)">
-                            <i class="feather icon-trash"></i> Delete Comment
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <p>{{comment.comment}}</p>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
+          <div class="author-date">
+            {{ forum.createdAt | utcToLocalTime: "mediumDate" }}
           </div>
         </div>
       </div>
     </div>
+  </div>
 
+  <!-- Two-column layout -->
+  <div class="layout">
+    <!-- Main column -->
+    <div class="main-col">
+      <!-- Article body -->
+      <div class="card article-card">
+        <div
+          class="article-body rich-content"
+          [innerHTML]="forum.content | safeHtml"
+        ></div>
+
+        <!-- Reactions -->
+        <div class="reactions">
+          <div class="rxn-group">
+            <button
+              class="rxn-btn"
+              [class.active-up]="hasReacted('up')"
+              (click)="addReaction('up')"
+              [title]="'PREVIEW.FORUM.REACTIONS.UP' | translate"
+            >
+              <i class="feather icon-thumbs-up"></i>
+              {{ forum.reactionsUp?.length || 0 }}
+            </button>
+            <button
+              class="rxn-btn"
+              [class.active-down]="hasReacted('down')"
+              (click)="addReaction('down')"
+              [title]="'PREVIEW.FORUM.REACTIONS.DOWN' | translate"
+            >
+              <i class="feather icon-thumbs-down"></i>
+              {{ forum.reactionsDown?.length || 0 }}
+            </button>
+            <button
+              class="rxn-btn"
+              [class.active-heart]="hasReacted('heart')"
+              (click)="addReaction('heart')"
+              [title]="'PREVIEW.FORUM.REACTIONS.HEART' | translate"
+            >
+              <i class="feather icon-heart"></i>
+              {{ forum.reactionsHeart?.length || 0 }}
+            </button>
+          </div>
+          <span class="comment-pill">
+            <i class="feather icon-message-square"></i>
+            {{ forum.comments?.length || 0 }}
+            {{ "PREVIEW.FORUM.COMMENT.REPLIES" | translate }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="card comments-card">
+        <div class="comments-header">
+          <span class="comments-title">{{
+            "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate
+          }}</span>
+          <span class="count-badge">{{ forum.comments?.length || 0 }}</span>
+        </div>
+
+        <!-- Add comment form -->
+        <div class="comment-form" *ngIf="!forum?.closed">
+          <div class="avatar-circle sm">
+            <i class="feather icon-user"></i>
+          </div>
+          <textarea
+            class="comment-input"
+            [(ngModel)]="comment"
+            id="forumComment"
+            rows="2"
+            [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
+          ></textarea>
+          <button class="send-btn" (click)="addComment()" type="button">
+            {{ "PREVIEW.FORUM.PREVIEW.ADD_COMMENT" | translate }}
+          </button>
+        </div>
+
+        <div
+          class="empty-state"
+          *ngIf="forum?.closed"
+          style="
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-bottom: 0.5px solid var(--border-color);
+            font-size: 14px;
+          "
+        >
+          <i class="feather icon-lock" style="margin-right: 6px"></i>
+          <span>{{ "PREVIEW.FORUM.PREVIEW.CLOSED_NOTICE" | translate }}</span>
+        </div>
+
+        <!-- Comments list -->
+        <div class="comments-list" *ngIf="forum.comments?.length > 0">
+          <div class="comment-item" *ngFor="let c of forum.comments">
+            <div class="cm-avatar">
+              <i class="feather icon-user"></i>
+            </div>
+            <div class="cm-body">
+              <div class="cm-header" style="justify-content: space-between">
+                <div>
+                  <span class="cm-name"
+                    >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
+                  >
+                  <span class="cm-time">{{
+                    c.createdAt | utcToLocalTime: "mediumDate"
+                  }}</span>
+                </div>
+                <!-- Delete menu -->
+                <div
+                  class="comment-menu"
+                  *ngIf="canDeleteComment(c)"
+                  dropdown
+                  [insideClick]="true"
+                  style="position: relative"
+                >
+                  <button
+                    dropdownToggle
+                    type="button"
+                    class="comment-menu-btn"
+                    style="
+                      background: none;
+                      border: none;
+                      cursor: pointer;
+                      color: var(--text-secondary);
+                    "
+                    [title]="'PREVIEW.ACTIONS.MORE' | translate"
+                  >
+                    <i class="feather icon-more-horizontal"></i>
+                  </button>
+                  <ul
+                    *dropdownMenu
+                    class="comment-dropdown"
+                    style="
+                      position: absolute;
+                      right: 0;
+                      background: var(--card-bg);
+                      border: 1px solid var(--border-color);
+                      border-radius: var(--radius-sm);
+                      padding: 0.5rem;
+                      list-style: none;
+                      min-width: 150px;
+                      z-index: 10;
+                    "
+                  >
+                    <li>
+                      <button
+                        class="comment-dropdown-item danger"
+                        (click)="deleteComment(c.id)"
+                        style="
+                          background: none;
+                          padding: 10px;
+                          border: none;
+                          color: #dc2626;
+                          cursor: pointer;
+                          width: 100%;
+                          text-align: left;
+                          font-size: 13px;
+                        "
+                      >
+                        <i class="feather icon-trash-2"></i>
+                        {{ "PREVIEW.FORUM.COMMENT.DELETE" | translate }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <p class="cm-text">{{ c.comment }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="!forum.comments?.length">
+          {{ "PREVIEW.FORUM.PREVIEW.NO_COMMENTS" | translate }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Stats -->
+      <div class="card widget-card">
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.STATS" | translate }}
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-val">{{ forum.reactionsUp?.length || 0 }}</div>
+            <div class="stat-lbl">
+              {{ "PREVIEW.WIDGETS.LIKES" | translate }}
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">{{ forum.comments?.length || 0 }}</div>
+            <div class="stat-lbl">
+              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <div class="card widget-card">
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.SHARE" | translate }}
+        </div>
+        <button class="share-btn" (click)="copyLink()" type="button">
+          <i class="feather icon-link"></i>
+          {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Loading skeleton -->
+<div class="preview-loading" *ngIf="!forum?.id">
+  <div class="skeleton-hero"></div>
+  <div class="skeleton-body">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line medium"></div>
+    <div class="skeleton-line short"></div>
   </div>
 </div>

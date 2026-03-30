@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-//  Forum Preview — redesigned
+//  Article Preview — redesigned
 // ─────────────────────────────────────────────
 
 .blog-page {
@@ -20,8 +20,12 @@
 
 .cover-image {
   width: 100%;
-  height: 320px;
+  height: 350px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-app);
 
   .cover-img {
     width: 100%;
@@ -64,9 +68,9 @@
   padding: 4px 10px;
   border-radius: 20px;
 
-  &.badge-forum {
-    background: rgba(16, 185, 129, 0.12);
-    color: #047857;
+  &.badge-article {
+    background: rgba(14, 165, 233, 0.12);
+    color: #0284c7;
   }
 
   &.badge-cat {
@@ -248,12 +252,6 @@
     background: rgba(34, 197, 94, 0.08);
     border-color: rgba(34, 197, 94, 0.35);
     color: #16a34a;
-  }
-
-  &.active-heart {
-    background: rgba(236, 72, 153, 0.08);
-    border-color: rgba(236, 72, 153, 0.3);
-    color: #db2777;
   }
 
   &.active-down {

@@ -1,62 +1,92 @@
-<div class="forum-page">
-  <div class="forum-wrapper">
-    <!-- <div class="forum-header">
-      <div class="header-actions">
-        <div class="row">
-          <div class="col-md-3">
-            <ng-select [multiple]="false" [placeholder]="'Search by category'" (change)="onCategoryChange($event)">
-              <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}} </ng-option>
-            </ng-select>
+<div class="list-page">
+  <!-- Page Header -->
+  <div class="list-page-header">
+    <div class="list-page-header-inner">
+      <div class="header-text">
+        <h1 class="list-page-title">
+          <i class="feather icon-message-circle"></i>
+          {{ "PREVIEW.FORUM.LIST.TITLE" | translate }}
+        </h1>
+        <p class="list-page-desc">
+          {{ "PREVIEW.FORUM.LIST.DESCRIPTION" | translate }}
+        </p>
+      </div>
+      <div class="header-stat">
+        <span class="stat-pill">
+          <i class="feather icon-layers"></i>
+          {{ rows.length }} {{ "PREVIEW.FORUM.TABLE.TOPIC" | translate }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forum Thread List -->
+  <div class="list-page-body">
+    <!-- Empty State -->
+    <div class="empty-state-card" *ngIf="rows.length === 0">
+      <i class="feather icon-message-square"></i>
+      <h3>{{ "PREVIEW.FORUM.LIST.NO_RESULTS" | translate }}</h3>
+    </div>
+
+    <!-- Thread rows -->
+    <div class="thread-list" *ngIf="rows.length > 0">
+      <a
+        *ngFor="let row of rows"
+        class="thread-card"
+        [routerLink]="'/forum/' + row.id"
+        tabindex="0"
+        role="link"
+      >
+        <!-- Thread icon / avatar -->
+        <div class="thread-icon" [class.closed]="row.closed">
+          <i
+            class="feather"
+            [class.icon-lock]="row.closed"
+            [class.icon-message-square]="!row.closed"
+          ></i>
+        </div>
+
+        <!-- Thread main info -->
+        <div class="thread-info">
+          <div class="thread-top">
+            <span class="thread-title">{{ row.title }}</span>
+            <span class="thread-status closed-badge" *ngIf="row.closed">
+              {{ "PREVIEW.FORUM.STATUS.CLOSED" | translate }}
+            </span>
           </div>
-          <div class="col-md-3">
-            <ng-select [multiple]="false" [placeholder]="'Search by tags'" (change)="onCategoryChange($event)">
-              <ng-option *ngFor="let tag of tags" [value]="category.id">{{category.name}} </ng-option>
-            </ng-select>
-          </div>
-          <div class="col-md-3">
-            <ng-select [multiple]="false" [placeholder]="'Search by status'" (change)="onCategoryChange($event)">
-              <ng-option *ngFor="let tag of status" [value]="category.id">{{category.name}} </ng-option>
-            </ng-select>
-          </div>
-          <div class="col-md-3">
-            <ng-select [multiple]="false" [placeholder]="'Sort by'" (change)="onCategoryChange($event)">
-              <ng-option *ngFor="let tag of sort" [value]="category.id">{{category.name}} </ng-option>
-            </ng-select>
+          <div class="thread-meta">
+            <span class="meta-item category-chip">
+              <i class="feather icon-tag"></i>
+              {{ row.category?.name }}
+            </span>
+            <span class="meta-item">
+              <i class="feather icon-calendar"></i>
+              {{ row.createdAt | utcToLocalTime: "mediumDate" }}
+            </span>
           </div>
         </div>
-      </div>
-    </div> -->
-    <div class="forum-body mt-2">
-      <div class="card">
-        <div class="card-body">
-          <div class="table-content">
-            <div class="table-wrapper">
-              <table class="table">
-                <thead class="table-header">
-                  <tr>
-                    <th>{{'FORUM.TABLE.TOPIC' | translate}}</th>
-                    <th>{{'FORUM.TABLE.CATEGORY' | translate}}</th>
-                    <th>{{'FORUM.TABLE.REPLIES' | translate}}</th>
-                    <th>{{'FORUM.TABLE.REACTIONS' | translate}}</th>
-                    <th>{{'FORUM.TABLE.ACTIVITY' | translate}}</th>
-                  </tr>
-                </thead>
-                <tbody class="table-body">
-                  <ng-container *ngFor="let row of rows; let i = index">
-                    <tr [routerLink]="'/forum/'+row.id" [class]="'table-row '+((i%2 == 0)?'odd':'even')">
-                      <td>{{row.title}}</td>
-                      <td>{{row.category.name}}</td>
-                      <td>{{row.comments.length}}</td>
-                      <td>{{row.reactions.length}}</td>
-                      <td>{{row.createdAt | utcToLocalTime:'shortDate' }}</td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </table>
-            </div>
+
+        <!-- Thread stats -->
+        <div class="thread-stats">
+          <div class="stat-item">
+            <i class="feather icon-message-square"></i>
+            <span>{{ row.comments?.length || 0 }}</span>
+            <label>{{ "PREVIEW.FORUM.TABLE.REPLIES" | translate }}</label>
+          </div>
+          <div class="stat-item">
+            <i class="feather icon-heart"></i>
+            <span>{{ row.reactions?.length || 0 }}</span>
+            <label>{{ "PREVIEW.FORUM.TABLE.REACTIONS" | translate }}</label>
           </div>
         </div>
-      </div>
+
+        <div class="thread-chevron">
+          <span class="thread-cta">{{
+            "PREVIEW.FORUM.LIST.VIEW_THREAD" | translate
+          }}</span>
+          <i class="feather icon-chevron-right"></i>
+        </div>
+      </a>
     </div>
   </div>
 </div>

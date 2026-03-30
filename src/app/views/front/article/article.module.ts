@@ -7,6 +7,8 @@ import { ArticlePreviewComponent } from './article-preview/article-preview.compo
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared/shared.module';
 import { QuillModule } from 'ngx-quill';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 @NgModule({
@@ -20,6 +22,8 @@ import { QuillModule } from 'ngx-quill';
     FormsModule,
     QuillModule.forRoot(),
     SharedModule,
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot(),
   ]
 })
 export class ArticleModule { }

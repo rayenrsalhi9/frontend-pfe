@@ -6,9 +6,10 @@ export const nav = {
 
     HOME: "Home",
     FORUM: "Forums",
-    BLOG: "Blog",
+    BLOG: "Blogs",
+    ARTICLE: "Articles",
     CONNEXION: "Sign In",
-    INSCRIPTION: "Create Account",
+    INSCRIPTION: "Sign Up",
 
     DASHBOARD: "Dashboard",
     DASHBOARD_DEFAULT: "Overview",
@@ -20,20 +21,20 @@ export const nav = {
     APPS_LOGINS: "Login Audit",
     APPS_RESPONSES_AUDITS: "Response Audit",
     APPS_ARTICLE: "Articles",
-    APPS_ARTICLE_LIST: "Article List",
-    APPS_ARTICLE_CATEGORY: "Article Categories",
+    APPS_ARTICLE_LIST: "Articles List",
+    APPS_ARTICLE_CATEGORY: "Articles Categories",
 
-    APPS_BLOG: "Blog",
-    APPS_BLOG_LIST: "Blog Posts",
-    APPS_BLOG_CATEGORY: "Blog Categories",
+    APPS_BLOG: "Blogs",
+    APPS_BLOG_LIST: "Blogs Posts",
+    APPS_BLOG_CATEGORY: "Blogs Categories",
     APPS_BLOG_CATEGORY_DESCRIPTION: "Manage your blog categories here.",
 
     APPS_FORUM: "Forums",
-    APPS_FORUM_LIST: "Forum List",
-    APPS_FORUM_CATEGORY: "Forum Categories",
+    APPS_FORUM_LIST: "Forums List",
+    APPS_FORUM_CATEGORY: "Forums Categories",
 
     APPS_SURVEY: "Surveys",
-    APPS_SURVEY_LIST: "Survey List",
+    APPS_SURVEY_LIST: "Surveys List",
 
     DOCUMENT: "Documents",
     DOCUMENT_ALL: "All Documents",
@@ -42,8 +43,8 @@ export const nav = {
     DOCUMENT_AUDIT_TRAIL: "Document Audit Trail",
 
     USERS: "Users & Roles",
-    USERS_LIST: "User List",
+    USERS_LIST: "Users List",
     USERS_ROLES_LIST: "Roles",
-    USERS_ROLES: "User Roles",
+    USERS_ROLES: "Users Roles",
   },
 };
