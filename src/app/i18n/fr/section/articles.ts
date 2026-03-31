@@ -88,6 +88,11 @@ export const articles = {
         DELETED_ERROR: "Échec de la suppression du commentaire",
       },
     },
+    COPY_LINK: {
+      SUCCESS: "Lien copié dans le presse-papiers",
+      UNSUPPORTED:
+        "Impossible de copier le lien — veuillez copier manuellement",
+    },
 
     MODAL: {
       TITLE: "Commentaires de l'Article",

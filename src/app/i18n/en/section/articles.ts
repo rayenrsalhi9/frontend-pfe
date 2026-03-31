@@ -81,7 +81,8 @@ export const articles = {
         "Organize articles into categories so users can find relevant content more easily.",
     },
     DELETE_COMMENT: {
-      TITLE: "Are you sure you want to delete this comment? This action cannot be undone.",
+      TITLE:
+        "Are you sure you want to delete this comment? This action cannot be undone.",
       BUTTON: {
         CANCEL: "Cancel",
         CONFIRM: "Delete",
@@ -90,6 +91,10 @@ export const articles = {
         DELETED_SUCCESSFULLY: "Comment deleted successfully",
         DELETED_ERROR: "Failed to delete comment",
       },
+    },
+    COPY_LINK: {
+      SUCCESS: "Link copied to clipboard",
+      UNSUPPORTED: "Could not copy link — please copy manually",
     },
     MODAL: {
       TITLE: "Article Comments",

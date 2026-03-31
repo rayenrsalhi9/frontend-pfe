@@ -97,14 +97,14 @@
                 [title]="'PREVIEW.WIDGETS.COMMENTS' | translate"
               >
                 <i class="feather icon-message-square"></i>
-                {{ blog.commentsCount || blog.comments?.length || 0 }}
+                {{ blog.commentsCount ?? blog.comments?.length ?? 0 }}
               </span>
               <span
                 class="blog-reactions"
                 [title]="'PREVIEW.WIDGETS.LIKES' | translate"
               >
                 <i class="feather icon-thumbs-up"></i>
-                {{ blog.reactionsUpCount || blog.reactionsUp?.length || 0 }}
+                {{ blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0 }}
               </span>
             </div>
             <span class="blog-cta">

@@ -53,7 +53,7 @@
             </span>
           </div>
           <div class="thread-meta">
-            <span class="meta-item category-chip">
+            <span class="meta-item category-chip" *ngIf="row.category?.name">
               <i class="feather icon-tag"></i>
               {{ row.category?.name }}
             </span>

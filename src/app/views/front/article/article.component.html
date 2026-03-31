@@ -98,7 +98,7 @@
           <div class="article-footer">
             <span class="article-comments">
               <i class="feather icon-message-square"></i>
-              {{ article.commentsCount || article.comments?.length || 0 }}
+              {{ article.commentsCount ?? article.comments?.length ?? 0 }}
             </span>
             <span class="article-cta">
               {{ "PREVIEW.ARTICLE.LIST.READ_MORE" | translate }}

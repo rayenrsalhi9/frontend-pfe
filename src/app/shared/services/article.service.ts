@@ -19,31 +19,31 @@ export class ArticleService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getArticle(id: any): Observable<any[] | CommonError> {
+  getArticle(id: any): Observable<any | CommonError> {
     const url = `articles/get/${id}`;
     return this.httpClient
-      .get<any[]>(url)
+      .get<any>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  addArticle(data: any): Observable<any[] | CommonError> {
+  addArticle(data: any): Observable<any | CommonError> {
     const url = `articles/create`;
     return this.httpClient
-      .post<any[]>(url, data)
+      .post<any>(url, data)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  updateArticle(id: any, data: any): Observable<any[] | CommonError> {
+  updateArticle(id: any, data: any): Observable<any | CommonError> {
     const url = `articles/update/${id}`;
     return this.httpClient
-      .put<any[]>(url, data)
+      .put<any>(url, data)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteArticle(id: any): Observable<any[] | CommonError> {
+  deleteArticle(id: any): Observable<any | CommonError> {
     const url = `articles/delete/${id}`;
     return this.httpClient
-      .delete<any[]>(url)
+      .delete<any>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 

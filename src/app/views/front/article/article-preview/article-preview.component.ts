@@ -120,7 +120,11 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
     ) {
-      if (confirm(this.translate.instant("article.deleteComment.confirm"))) {
+      if (
+        confirm(
+          this.translate.instant("ARTICLES.DELETE_COMMENT.BUTTON.CONFIRM"),
+        )
+      ) {
         this.articleService.deleteComment(id).subscribe({
           next: (response: any) => {
             if (response?.success === true) {
@@ -129,19 +133,25 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
               );
               this.cdr.markForCheck();
               this.toastr.success(
-                this.translate.instant("article.deleteComment.success"),
+                this.translate.instant(
+                  "ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
+                ),
               );
             } else {
               this.toastr.error(
                 response?.message ||
-                  this.translate.instant("article.deleteComment.failure"),
+                  this.translate.instant(
+                    "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
+                  ),
               );
             }
           },
           error: (error: any) => {
             console.error("Delete comment error:", error);
             this.toastr.error(
-              this.translate.instant("article.deleteComment.failure"),
+              this.translate.instant(
+                "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
+              ),
             );
           },
         });

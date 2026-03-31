@@ -5,6 +5,10 @@
   color: #0284c7;
 }
 
+.cm-header--spaced {
+  justify-content: space-between;
+}
+
 /* Accessibility: Shimmer animation reduction */
 @media (prefers-reduced-motion: reduce) {
   .preview-loading {

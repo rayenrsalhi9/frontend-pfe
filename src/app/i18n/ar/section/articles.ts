@@ -77,7 +77,8 @@ export const articles = {
     },
 
     DELETE_COMMENT: {
-      TITLE: "هل أنت متأكد من رغبتك في حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+      TITLE:
+        "هل أنت متأكد من رغبتك في حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
       BUTTON: {
         CANCEL: "إلغاء",
         CONFIRM: "حذف",
@@ -86,6 +87,10 @@ export const articles = {
         DELETED_SUCCESSFULLY: "تم حذف التعليق بنجاح",
         DELETED_ERROR: "فشل حذف التعليق",
       },
+    },
+    COPY_LINK: {
+      SUCCESS: "تم نسخ الرابط إلى الحافظة",
+      UNSUPPORTED: "تعذر نسخ الرابط - يرجى النسخ يدويًا",
     },
 
     MODAL: {
