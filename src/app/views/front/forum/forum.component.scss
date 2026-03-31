@@ -31,7 +31,8 @@
   color: inherit;
   transition: var(--transition);
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     border-color: #8b5cf6;
     box-shadow: var(--shadow-md);
     transform: translateX(4px);

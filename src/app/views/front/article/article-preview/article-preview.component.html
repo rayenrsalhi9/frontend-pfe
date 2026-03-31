@@ -106,9 +106,11 @@
             class="comment-input"
             [(ngModel)]="comment"
             id="articleComment"
-            aria-label="Add a comment"
+            [attr.aria-label]="
+              'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate
+            "
             rows="2"
-            [placeholder]="'PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT' | translate"
+            [placeholder]="'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate"
           ></textarea>
           <button class="send-btn" (click)="addComment()" type="button">
             {{ "PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT" | translate }}

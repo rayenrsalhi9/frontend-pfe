@@ -33,8 +33,8 @@ export class ForumComponent implements OnInit {
         console.log(error);
       },
     );
-    this.cdr.detectChanges();
   }
 
+  // TODO: handle category change
   onCategoryChange(data: any) {}
 }

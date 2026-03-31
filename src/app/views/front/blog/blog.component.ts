@@ -23,7 +23,15 @@ export class BlogComponent implements OnInit {
   getBlogs() {
     this.blogService.allBlogs().subscribe({
       next: (data: any) => {
-        this.blogs = data;
+        if (Array.isArray(data)) {
+          this.blogs = data;
+        } else {
+          console.error(
+            "Error/Invalid data format during blogs retrieval:",
+            data,
+          );
+          this.blogs = [];
+        }
         this.cdr.markForCheck();
       },
       error: (error) => {

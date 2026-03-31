@@ -13,38 +13,27 @@ export const preview = {
 
     FORUM: {
       LABEL: "Forum",
-
-      STATUS: {
-        OPEN: "Open",
-        CLOSED: "Closed",
-      },
-
+      STATUS: { OPEN: "Open", CLOSED: "Closed" },
       TABLE: {
         TOPIC: "Topics",
+        POSTS: "Posts",
         REPLIES: "Replies",
         REACTIONS: "Reactions",
       },
-
-      REACTIONS: {
-        UP: "Upvote",
-        DOWN: "Downvote",
-        HEART: "Like",
-      },
-
+      REACTIONS: { UP: "Upvote", DOWN: "Downvote", HEART: "Like" },
       COMMENT: {
         REPLIES: "Replies",
         ADD_COMMENT: "Write your reply here...",
         DELETE: "Delete comment",
       },
-
       LIST: {
         TITLE: "Community Forum",
         DESCRIPTION:
           "Engage with others in meaningful discussions and collaborative problem-solving.",
         VIEW_THREAD: "View Discussion",
+        READ_MORE: "Read More",
         NO_RESULTS: "No active discussions found.",
       },
-
       PREVIEW: {
         AUTHOR: "Topic started by",
         COMMENTS: "Discussion Thread",
@@ -57,52 +46,65 @@ export const preview = {
 
     BLOG: {
       LABEL: "Blog",
-
-      REACTIONS: {
-        UP: "Like",
-        DOWN: "Dislike",
+      STATUS: { OPEN: "Open", CLOSED: "Closed" },
+      TABLE: {
+        TOPIC: "Topics",
+        POSTS: "Posts",
+        REPLIES: "Replies",
+        REACTIONS: "Reactions",
       },
-
+      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love" },
+      COMMENT: {
+        REPLIES: "Comments",
+        ADD_COMMENT: "Write your reply here...",
+        DELETE: "Delete comment",
+      },
       LIST: {
         TITLE: "Creative Corner",
         DESCRIPTION:
           "Dive into stories, experiences, and deep-dives shared by our community.",
+        VIEW_THREAD: "View Post",
         READ_MORE: "Read More",
         NO_RESULTS: "No blog posts yet. Check back soon!",
       },
-
-      TABLE: {
-        POSTS: "Posts",
-      },
-
       PREVIEW: {
         AUTHOR: "Written by",
         COMMENTS: "Community Responses",
         ADD_COMMENT: "Leave a Response",
         NO_COMMENTS: "No responses yet — be the first to leave one!",
+        CLOSED_NOTICE: "Comments are disabled for this post.",
       },
     },
 
     ARTICLE: {
       LABEL: "Article",
-
+      STATUS: { OPEN: "Open", CLOSED: "Closed" },
+      TABLE: {
+        TOPIC: "Topics",
+        POSTS: "Articles",
+        REPLIES: "Comments",
+        REACTIONS: "Reactions",
+      },
+      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love" },
+      COMMENT: {
+        REPLIES: "Comments",
+        ADD_COMMENT: "Write your comment here...",
+        DELETE: "Delete comment",
+      },
       LIST: {
         TITLE: "Latest Insights",
         DESCRIPTION:
           "Explore our collection of articles, news, and organizational updates.",
+        VIEW_THREAD: "View Article",
         READ_MORE: "Read Full Article",
         NO_RESULTS: "No articles found.",
       },
-
-      TABLE: {
-        POSTS: "Articles",
-      },
-
       PREVIEW: {
         AUTHOR: "Written by",
         COMMENTS: "Member Comments",
         ADD_COMMENT: "Add Comment",
         NO_COMMENTS: "Be the first to comment on this article.",
+        CLOSED_NOTICE: "Comments are disabled for this article.",
       },
     },
   },

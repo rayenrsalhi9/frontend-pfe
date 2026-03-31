@@ -40,10 +40,48 @@
         <!-- Cover image -->
         <div class="blog-cover">
           <img
-            [src]="getHost() + blog.picture"
+            *ngIf="blog.picture"
+            [src]="
+              blog.picture.startsWith('data:') ||
+              blog.picture.startsWith('http')
+                ? blog.picture
+                : getHost() + blog.picture
+            "
             [alt]="blog.title"
             class="cover-img"
           />
+          <div class="cover-placeholder" *ngIf="!blog.picture">
+            <svg
+              width="80"
+              height="60"
+              viewBox="0 0 80 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="2"
+                y="2"
+                width="76"
+                height="56"
+                rx="4"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <circle
+                cx="22"
+                cy="20"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M2 42 L20 26 L34 38 L50 22 L78 46"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
           <div class="cover-overlay"></div>
           <span class="cover-category" *ngIf="blog.category?.name">
             {{ blog.category.name }}

@@ -36,10 +36,10 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activeRoute.paramMap
       .pipe(
-        takeUntil(this.destroy$),
         map((params) => params.get("id")),
         filter((id) => !!id),
         switchMap((id) => this.forumService.getForum(id)),
+        takeUntil(this.destroy$),
       )
       .subscribe((data: any) => {
         this.forum = data;
@@ -58,10 +58,29 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
     const currentUser = localStorage.getItem("currentUser");
     const guestUser = localStorage.getItem("guestUser");
 
+    let parsedCurrentUser: any = null;
+    let parsedGuestUser: any = null;
+
     if (currentUser) {
-      this.user = JSON.parse(currentUser).user;
-    } else if (guestUser) {
-      this.user = JSON.parse(guestUser);
+      try {
+        parsedCurrentUser = JSON.parse(currentUser);
+      } catch (e) {
+        console.error("Invalid currentUser JSON", e);
+      }
+    }
+
+    if (guestUser) {
+      try {
+        parsedGuestUser = JSON.parse(guestUser);
+      } catch (e) {
+        console.error("Invalid guestUser JSON", e);
+      }
+    }
+
+    if (parsedCurrentUser?.user) {
+      this.user = parsedCurrentUser.user;
+    } else if (parsedGuestUser) {
+      this.user = parsedGuestUser;
     }
   }
 
@@ -149,7 +168,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
     if (!this.user) return false;
 
     // User can delete their own comments
-    if (comment.user.email === this.user.email) {
+    if (comment.user?.email === this.user.email) {
       return true;
     }
 
@@ -181,6 +200,10 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   }
 
   copyLink() {
+    if (!(navigator.clipboard && navigator.clipboard.writeText)) {
+      this.toastr.error("Could not copy link — please copy manually");
+      return;
+    }
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
@@ -188,6 +211,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
       })
       .catch((err) => {
         console.error("Could not copy text: ", err);
+        this.toastr.error("Could not copy link — please copy manually");
       });
   }
 }

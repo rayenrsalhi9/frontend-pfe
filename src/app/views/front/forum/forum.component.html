@@ -68,13 +68,19 @@
 
         <!-- Thread stats -->
         <div class="thread-stats">
-          <div class="stat-item" [title]="'PREVIEW.FORUM.TABLE.REPLIES' | translate">
+          <div
+            class="stat-item"
+            [title]="'PREVIEW.FORUM.TABLE.REPLIES' | translate"
+          >
             <i class="feather icon-message-square"></i>
-            <span>{{ row.comments?.length || 0 }}</span>
+            <span>{{ row.commentsCount ?? row.comments?.length ?? 0 }}</span>
           </div>
-          <div class="stat-item" [title]="'PREVIEW.FORUM.TABLE.REACTIONS' | translate">
+          <div
+            class="stat-item"
+            [title]="'PREVIEW.FORUM.TABLE.REACTIONS' | translate"
+          >
             <i class="feather icon-heart"></i>
-            <span>{{ row.reactions?.length || 0 }}</span>
+            <span>{{ row.reactionsCount ?? row.reactions?.length ?? 0 }}</span>
           </div>
         </div>
 

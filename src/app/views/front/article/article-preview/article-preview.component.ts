@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subject } from "rxjs";
-import { takeUntil, switchMap, map, filter } from "rxjs/operators";
+import { Subject, EMPTY } from "rxjs";
+import { takeUntil, switchMap, map, filter, catchError } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -27,6 +28,7 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private modalService: BsModalService,
     private toastr: ToastrService,
+    private translate: TranslateService,
   ) {}
 
   getHost() {
@@ -39,7 +41,9 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((params) => params.get("id")),
         filter((id) => !!id),
-        switchMap((id) => this.articleService.getArticle(id)),
+        switchMap((id) =>
+          this.articleService.getArticle(id).pipe(catchError(() => EMPTY)),
+        ),
       )
       .subscribe((data: any) => {
         this.article = data;
@@ -58,10 +62,29 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
     const currentUser = localStorage.getItem("currentUser");
     const guestUser = localStorage.getItem("guestUser");
 
+    let parsedCurrentUser: any = null;
+    let parsedGuestUser: any = null;
+
     if (currentUser) {
-      this.user = JSON.parse(currentUser).user;
-    } else if (guestUser) {
-      this.user = JSON.parse(guestUser);
+      try {
+        parsedCurrentUser = JSON.parse(currentUser);
+      } catch (e) {
+        console.error("Invalid currentUser JSON", e);
+      }
+    }
+
+    if (guestUser) {
+      try {
+        parsedGuestUser = JSON.parse(guestUser);
+      } catch (e) {
+        console.error("Invalid guestUser JSON", e);
+      }
+    }
+
+    if (parsedCurrentUser?.user) {
+      this.user = parsedCurrentUser.user;
+    } else if (parsedGuestUser) {
+      this.user = parsedGuestUser;
     }
   }
 
@@ -95,7 +118,7 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
     ) {
-      if (confirm("Are you sure you want to delete this comment?")) {
+      if (confirm(this.translate.instant("article.deleteComment.confirm"))) {
         this.articleService.deleteComment(id).subscribe(
           (response: any) => {
             if (response?.success === true) {
@@ -103,16 +126,21 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
                 (comment: any) => comment.id !== id,
               );
               this.cdr.markForCheck();
-              this.toastr.success("Comment deleted successfully");
+              this.toastr.success(
+                this.translate.instant("article.deleteComment.success"),
+              );
             } else {
               this.toastr.error(
-                response?.message || "Failed to delete comment",
+                response?.message ||
+                  this.translate.instant("article.deleteComment.failure"),
               );
             }
           },
           (error: any) => {
             console.error("Delete comment error:", error);
-            this.toastr.error("An error occurred while deleting the comment");
+            this.toastr.error(
+              this.translate.instant("article.deleteComment.failure"),
+            );
           },
         );
       }
@@ -128,18 +156,20 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
   }
 
   copyLink() {
-    if (!navigator.clipboard) {
-      this.toastr.error("Could not copy link — please copy manually");
+    if (!(navigator.clipboard && navigator.clipboard.writeText)) {
+      this.toastr.error(this.translate.instant("article.copyLink.unsupported"));
       return;
     }
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
-        this.toastr.success("Link copied to clipboard");
+        this.toastr.success(this.translate.instant("article.copyLink.success"));
       })
       .catch((err) => {
         console.error("Could not copy text: ", err);
-        this.toastr.error("Could not copy link — please copy manually");
+        this.toastr.error(
+          this.translate.instant("article.copyLink.unsupported"),
+        );
       });
   }
 }

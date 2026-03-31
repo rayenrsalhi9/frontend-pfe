@@ -107,6 +107,7 @@
             id="forumComment"
             rows="2"
             [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
+            [attr.aria-label]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
           ></textarea>
           <button class="send-btn" (click)="addComment()" type="button">
             {{ "PREVIEW.FORUM.PREVIEW.ADD_COMMENT" | translate }}

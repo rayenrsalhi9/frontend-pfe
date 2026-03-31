@@ -37,8 +37,6 @@
         *ngFor="let article of articles"
         class="article-card"
         [routerLink]="'/article/' + article.id"
-        tabindex="0"
-        role="link"
       >
         <!-- Cover image -->
         <div class="article-cover" *ngIf="article.picture">

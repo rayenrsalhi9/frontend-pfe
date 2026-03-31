@@ -13,37 +13,26 @@ export const preview = {
 
     FORUM: {
       LABEL: "المنتدى",
-
-      STATUS: {
-        OPEN: "مفتوح",
-        CLOSED: "مغلق",
-      },
-
+      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
       TABLE: {
         TOPIC: "المواضيع",
+        POSTS: "المنشورات",
         REPLIES: "الردود",
         REACTIONS: "التفاعلات",
       },
-
-      REACTIONS: {
-        UP: "تصويت إيجابي",
-        DOWN: "تصويت سلبي",
-        HEART: "إعجاب",
-      },
-
+      REACTIONS: { UP: "تصويت إيجابي", DOWN: "تصويت سلبي", HEART: "إعجاب" },
       COMMENT: {
         REPLIES: "الردود",
         ADD_COMMENT: "اكتب ردك هنا...",
         DELETE: "حذف التعليق",
       },
-
       LIST: {
         TITLE: "منتدى المجتمع",
         DESCRIPTION: "شارك الآخرين في نقاشات هادفة وحل المشكلات بشكل تعاوني.",
         VIEW_THREAD: "عرض النقاش",
+        READ_MORE: "اقرأ المزيد",
         NO_RESULTS: "لم يتم العثور على نقاشات نشطة.",
       },
-
       PREVIEW: {
         AUTHOR: "بدأ الموضوع بواسطة",
         COMMENTS: "خيط النقاش",
@@ -55,52 +44,65 @@ export const preview = {
 
     BLOG: {
       LABEL: "المدونة",
-
-      REACTIONS: {
-        UP: "إعجاب",
-        DOWN: "عدم إعجاب",
+      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
+      TABLE: {
+        TOPIC: "المواضيع",
+        POSTS: "المنشورات",
+        REPLIES: "الردود",
+        REACTIONS: "التفاعلات",
       },
-
+      REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
+      COMMENT: {
+        REPLIES: "التعليقات",
+        ADD_COMMENT: "اكتب تعليقك هنا...",
+        DELETE: "حذف التعليق",
+      },
       LIST: {
         TITLE: "الركن الإبداعي",
         DESCRIPTION:
           "اغمر نفسك في القصص والتجارب والمحتوى المعمّق الذي يشاركه مجتمعنا.",
+        VIEW_THREAD: "عرض المنشور",
         READ_MORE: "اقرأ المزيد",
         NO_RESULTS: "لا توجد منشورات في المدونة حتى الآن. تحقق لاحقًا!",
       },
-
-      TABLE: {
-        POSTS: "المنشورات",
-      },
-
       PREVIEW: {
         AUTHOR: "بقلم",
         COMMENTS: "ردود المجتمع",
         ADD_COMMENT: "اترك ردًا",
         NO_COMMENTS: "لا توجد ردود بعد — كن أول من يترك ردًا!",
+        CLOSED_NOTICE: "التعليقات مغلقة لهذا المنشور.",
       },
     },
 
     ARTICLE: {
       LABEL: "مقالة",
-
+      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
+      TABLE: {
+        TOPIC: "المواضيع",
+        POSTS: "المقالات",
+        REPLIES: "التعليقات",
+        REACTIONS: "التفاعلات",
+      },
+      REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
+      COMMENT: {
+        REPLIES: "التعليقات",
+        ADD_COMMENT: "أضف تعليقًا هنا...",
+        DELETE: "حذف التعليق",
+      },
       LIST: {
         TITLE: "أحدث المستجدات",
         DESCRIPTION:
           "استعرض مجموعتنا من المقالات والأخبار والتحديثات المؤسسية.",
+        VIEW_THREAD: "عرض المقالة",
         READ_MORE: "قراءة المقالة كاملة",
         NO_RESULTS: "لم يتم العثور على مقالات.",
       },
-
-      TABLE: {
-        POSTS: "المقالات",
-      },
-
       PREVIEW: {
         AUTHOR: "بقلم",
         COMMENTS: "تعليقات الأعضاء",
         ADD_COMMENT: "أضف تعليقًا",
         NO_COMMENTS: "كن أول من يعلّق على هذه المقالة.",
+        CLOSED_NOTICE: "التعليقات مغلقة لهذه المقالة.",
       },
     },
   },
