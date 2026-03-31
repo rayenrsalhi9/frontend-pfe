@@ -33,7 +33,7 @@
       <a
         *ngFor="let blog of blogs"
         class="blog-card"
-        [routerLink]="'/blog/' + blog.id"
+        [routerLink]="['/blog', blog.id]"
       >
         <!-- Cover image -->
         <div class="blog-cover">
@@ -95,6 +95,7 @@
               <span
                 class="blog-comments"
                 [title]="'PREVIEW.WIDGETS.COMMENTS' | translate"
+                [attr.aria-label]="('PREVIEW.WIDGETS.COMMENTS' | translate) + ': ' + (blog.commentsCount ?? blog.comments?.length ?? 0)"
               >
                 <i class="feather icon-message-square"></i>
                 {{ blog.commentsCount ?? blog.comments?.length ?? 0 }}
@@ -102,6 +103,7 @@
               <span
                 class="blog-reactions"
                 [title]="'PREVIEW.WIDGETS.LIKES' | translate"
+                [attr.aria-label]="('PREVIEW.WIDGETS.LIKES' | translate) + ': ' + (blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0)"
               >
                 <i class="feather icon-thumbs-up"></i>
                 {{ blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0 }}

@@ -31,7 +31,7 @@
     <!-- Thread rows -->
     <div class="forum-table-container" *ngIf="rows !== null && rows.length > 0">
       <a
-        *ngFor="let row of rows"
+        *ngFor="let row of rows; trackBy: trackByThreadId"
         class="thread-card"
         [routerLink]="'/forum/' + row.id"
       >
@@ -69,6 +69,7 @@
           <div
             class="stat-item"
             [title]="'PREVIEW.FORUM.TABLE.REPLIES' | translate"
+            [attr.aria-label]="('PREVIEW.FORUM.TABLE.REPLIES' | translate) + ': ' + (row.commentsCount ?? row.comments?.length ?? 0)"
           >
             <i class="feather icon-message-square"></i>
             <span>{{ row.commentsCount ?? row.comments?.length ?? 0 }}</span>
@@ -76,6 +77,7 @@
           <div
             class="stat-item"
             [title]="'PREVIEW.FORUM.TABLE.REACTIONS' | translate"
+            [attr.aria-label]="('PREVIEW.FORUM.TABLE.REACTIONS' | translate) + ': ' + (row.reactionsCount ?? row.reactions?.length ?? 0)"
           >
             <i class="feather icon-heart"></i>
             <span>{{ row.reactionsCount ?? row.reactions?.length ?? 0 }}</span>

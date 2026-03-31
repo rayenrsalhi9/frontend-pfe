@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ForumService } from "@app/views/apps/forum/forum.service";
+import { ForumThread } from "./forum-thread.interface";
 
 @Component({
   selector: "app-forum",
@@ -7,7 +8,7 @@ import { ForumService } from "@app/views/apps/forum/forum.service";
   styleUrls: ["./forum.component.scss"],
 })
 export class ForumComponent implements OnInit {
-  rows: any[] | null = null;
+  rows: ForumThread[] | null = null;
 
   categories = [];
   tags = [];
@@ -37,4 +38,8 @@ export class ForumComponent implements OnInit {
 
   // TODO: handle category change
   onCategoryChange(data: any) {}
+
+  trackByThreadId(index: number, row: ForumThread) {
+    return row.id;
+  }
 }

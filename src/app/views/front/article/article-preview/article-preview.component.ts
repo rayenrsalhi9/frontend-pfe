@@ -169,18 +169,22 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
 
   copyLink() {
     if (!(navigator.clipboard && navigator.clipboard.writeText)) {
-      this.toastr.error(this.translate.instant("article.copyLink.unsupported"));
+      this.toastr.error(
+        this.translate.instant("ARTICLES.COPY_LINK.UNSUPPORTED"),
+      );
       return;
     }
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
-        this.toastr.success(this.translate.instant("article.copyLink.success"));
+        this.toastr.success(
+          this.translate.instant("ARTICLES.COPY_LINK.SUCCESS"),
+        );
       })
       .catch((err) => {
         console.error("Could not copy text: ", err);
         this.toastr.error(
-          this.translate.instant("article.copyLink.unsupported"),
+          this.translate.instant("ARTICLES.COPY_LINK.UNSUPPORTED"),
         );
       });
   }
