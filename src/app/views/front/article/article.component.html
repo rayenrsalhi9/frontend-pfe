@@ -1,32 +1,112 @@
-<div class="blog-page">
-    <div class="blog-wrapper">
-  
-      <div class="blog-body mt-2">
-        <div class="card" style="background: none; box-shadow: none;" >
-          <div class="card-body" style="background: none; box-shadow: none;" >
-  
-            <div class="row">
-              <ng-container *ngFor="let article of articles; let i = index">
-                <div class="col-md-4 mb-4">
-                  <div class="post-card"  [routerLink]="'/article/'+article.id">
-                    <div class="post-header" >
-                      <img [src]="getHost()+article.picture" alt="" class="header-img">
-                    </div>
-                    <div class="post-body" style="padding: 5px;">
-                      <div class="post-category">{{article.category.name}}</div>
-                      <h4 class="post-title">{{article.title}}</h4>
-                      <p class="post-description">{{article.subtitle}}</p>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-  
-            </div>
-  
-          </div>
-        </div>
+<div class="list-page">
+  <!-- Page Header -->
+  <div class="list-page-header">
+    <div class="list-page-header-inner">
+      <div class="header-text">
+        <h1 class="list-page-title">
+          <i class="feather icon-file-text"></i>
+          {{ "PREVIEW.ARTICLE.LIST.TITLE" | translate }}
+        </h1>
+        <p class="list-page-desc">
+          {{ "PREVIEW.ARTICLE.LIST.DESCRIPTION" | translate }}
+        </p>
       </div>
-  
+      <div class="header-stat" *ngIf="articles !== null">
+        <span class="stat-pill">
+          <i class="feather icon-layers"></i>
+          {{ articles.length }} {{ "PREVIEW.ARTICLE.TABLE.POSTS" | translate }}
+        </span>
+      </div>
     </div>
   </div>
-  
+
+  <!-- Articles Grid -->
+  <div class="list-page-body">
+    <!-- Empty State -->
+    <div
+      class="empty-state-card"
+      *ngIf="articles !== null && articles.length === 0"
+    >
+      <i class="feather icon-file-text"></i>
+      <h3>{{ "PREVIEW.ARTICLE.LIST.NO_RESULTS" | translate }}</h3>
+    </div>
+
+    <!-- Article card grid -->
+    <div class="articles-grid" *ngIf="articles !== null && articles.length > 0">
+      <a
+        *ngFor="let article of articles"
+        class="article-card"
+        [routerLink]="'/article/' + article.id"
+      >
+        <!-- Cover image -->
+        <div class="article-cover">
+          <img
+            *ngIf="article.picture"
+            [src]="
+              article.picture.startsWith('data:') ||
+              article.picture.startsWith('http')
+                ? article.picture
+                : getHost() + article.picture
+            "
+            [alt]="article.title"
+            class="cover-img"
+          />
+          <div class="cover-placeholder" *ngIf="!article.picture">
+            <svg
+              width="80"
+              height="60"
+              viewBox="0 0 80 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="2"
+                y="2"
+                width="76"
+                height="56"
+                rx="4"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <circle
+                cx="22"
+                cy="20"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M2 42 L20 26 L34 38 L50 22 L78 46"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="cover-overlay"></div>
+          <span class="cover-category" *ngIf="article.category?.name">
+            {{ article.category.name }}
+          </span>
+        </div>
+
+        <!-- Card body -->
+        <div class="article-card-body">
+          <h2 class="article-title">{{ article.title }}</h2>
+          <p class="article-subtitle" *ngIf="article.subtitle">
+            {{ article.subtitle }}
+          </p>
+          <div class="article-footer">
+            <span class="article-comments">
+              <i class="feather icon-message-square"></i>
+              {{ article.commentsCount ?? article.comments?.length ?? 0 }}
+            </span>
+            <span class="article-cta">
+              {{ "PREVIEW.ARTICLE.LIST.READ_MORE" | translate }}
+              <i class="feather icon-arrow-right"></i>
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

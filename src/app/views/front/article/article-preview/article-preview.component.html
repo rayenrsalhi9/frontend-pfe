@@ -1,1 +1,215 @@
-<p>article-preview works!</p>
+<div class="blog-page" *ngIf="article?.id">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="cover-image" *ngIf="article.picture">
+      <img
+        [src]="
+          article.picture.startsWith('data:') ||
+          article.picture.startsWith('http')
+            ? article.picture
+            : getHost() + article.picture
+        "
+        [alt]="article.title"
+        class="cover-img"
+      />
+    </div>
+    <div class="cover-placeholder" *ngIf="!article.picture">
+      <svg
+        width="80"
+        height="60"
+        viewBox="0 0 80 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          x="2"
+          y="2"
+          width="76"
+          height="56"
+          rx="4"
+          stroke="currentColor"
+          stroke-width="2"
+        />
+        <circle cx="22" cy="20" r="7" stroke="currentColor" stroke-width="2" />
+        <path
+          d="M2 42 L20 26 L34 38 L50 22 L78 46"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <div class="hero-body">
+      <div class="meta-row">
+        <span class="badge badge-article">
+          {{ "PREVIEW.ARTICLE.LABEL" | translate }}
+        </span>
+        <span class="badge badge-cat" *ngIf="article.category?.name">
+          {{ article.category.name }}
+        </span>
+      </div>
+      <h1 class="hero-title">{{ article.title }}</h1>
+      <p class="hero-subtitle" *ngIf="article.subtitle">
+        {{ article.subtitle }}
+      </p>
+      <div class="author-row">
+        <div class="avatar-circle">
+          <i class="feather icon-user"></i>
+        </div>
+        <div>
+          <div class="author-name">
+            {{ article.creator?.firstName }} {{ article.creator?.lastName }}
+          </div>
+          <div class="author-date">
+            {{ article.createdAt | utcToLocalTime: "mediumDate" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column layout -->
+  <div class="layout">
+    <!-- Main column -->
+    <div class="main-col">
+      <!-- Article body -->
+      <div class="card article-card">
+        <div
+          class="article-body rich-content"
+          [innerHTML]="article.longText ?? '' | safeHtml"
+        ></div>
+
+        <!-- Reactions (simplified for article) -->
+        <div class="reactions">
+          <div class="rxn-group"></div>
+          <span class="comment-pill">
+            <i class="feather icon-message-square"></i>
+            {{ article.comments?.length || 0 }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="card comments-card">
+        <div class="comments-header">
+          <span class="comments-title">{{
+            "PREVIEW.ARTICLE.PREVIEW.COMMENTS" | translate
+          }}</span>
+        </div>
+
+        <!-- Add comment form -->
+        <div class="comment-form">
+          <div class="avatar-circle sm">
+            <i class="feather icon-user"></i>
+          </div>
+          <textarea
+            class="comment-input"
+            [(ngModel)]="comment"
+            id="articleComment"
+            [attr.aria-label]="
+              'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate
+            "
+            rows="2"
+            [placeholder]="'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate"
+          ></textarea>
+          <button class="send-btn" (click)="addComment()" type="button">
+            {{ "PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT" | translate }}
+          </button>
+        </div>
+
+        <!-- Comments list -->
+        <div class="comments-list" *ngIf="article.comments?.length > 0">
+          <div class="comment-item" *ngFor="let c of article.comments">
+            <div class="cm-avatar">
+              <i class="feather icon-user"></i>
+            </div>
+            <div class="cm-body">
+              <div class="cm-header cm-header--spaced">
+                <div>
+                  <span class="cm-name"
+                    >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
+                  >
+                  <span class="cm-time">{{
+                    c.createdAt | utcToLocalTime: "mediumDate"
+                  }}</span>
+                </div>
+                <!-- Delete menu -->
+                <div
+                  class="comment-menu"
+                  *ngIf="canDeleteComment(c)"
+                  dropdown
+                  [insideClick]="true"
+                >
+                  <button
+                    dropdownToggle
+                    type="button"
+                    class="comment-menu-btn"
+                    [title]="'PREVIEW.ACTIONS.MORE' | translate"
+                  >
+                    <i class="feather icon-more-horizontal"></i>
+                  </button>
+                  <ul *dropdownMenu class="comment-dropdown">
+                    <li>
+                      <button
+                        class="comment-dropdown-item danger"
+                        (click)="deleteComment(c.id)"
+                      >
+                        <i class="feather icon-trash-2"></i>
+                        {{ "PREVIEW.ARTICLE.COMMENT.DELETE" | translate }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <p class="cm-text">{{ c.comment }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="!article.comments?.length">
+          {{ "PREVIEW.ARTICLE.PREVIEW.NO_COMMENTS" | translate }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Stats -->
+      <div class="card widget-card">
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.STATS" | translate }}
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-val">{{ article.comments?.length || 0 }}</div>
+            <div class="stat-lbl">
+              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <div class="card widget-card">
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.SHARE" | translate }}
+        </div>
+        <button class="share-btn" (click)="copyLink()" type="button">
+          <i class="feather icon-link"></i>
+          {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Loading skeleton -->
+<div class="preview-loading" *ngIf="!article?.id">
+  <div class="skeleton-hero"></div>
+  <div class="skeleton-body">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line medium"></div>
+    <div class="skeleton-line short"></div>
+  </div>
+</div>

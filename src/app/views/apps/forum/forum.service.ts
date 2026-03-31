@@ -4,6 +4,7 @@ import { CommonError } from "@app/core/error-handler/common-error";
 import { CommonHttpErrorService } from "@app/core/error-handler/common-http-error.service";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { ForumThread } from "@app/views/front/forum/forum-thread.interface";
 
 @Injectable({ providedIn: "root" })
 export class ForumService {
@@ -12,10 +13,10 @@ export class ForumService {
     private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
-  allForums(params = {}): Observable<any[] | CommonError> {
+  allForums(params = {}): Observable<ForumThread[] | CommonError> {
     const url = `forums`;
     return this.httpClient
-      .get<any[]>(url, { params: params })
+      .get<ForumThread[]>(url, { params: params })
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 

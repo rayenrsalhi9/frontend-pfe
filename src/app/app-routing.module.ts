@@ -30,6 +30,13 @@ const appRoutes: Routes = [
         loadChildren: () =>
           import("./views/front/forum/forum.module").then((m) => m.ForumModule),
       },
+      {
+        path: "article",
+        loadChildren: () =>
+          import("./views/front/article/article.module").then(
+            (m) => m.ArticleModule,
+          ),
+      },
     ],
   },
   {
@@ -50,7 +57,6 @@ const appRoutes: Routes = [
       preloadingStrategy: PreloadAllModules,
       anchorScrolling: "enabled",
       scrollPositionRestoration: "enabled",
-      relativeLinkResolution: "legacy",
     }),
   ],
   exports: [RouterModule],

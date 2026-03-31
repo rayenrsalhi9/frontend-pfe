@@ -26,6 +26,7 @@ import { footer } from "./section/footer";
 import { table } from "./table";
 import { reminder } from "./reminder";
 import { shared } from "./section/shared";
+import { preview } from "./section/preview";
 
 export const en_US = {
   ...reminder,
@@ -56,4 +57,5 @@ export const en_US = {
   ...forum,
   ...languages,
   ...shared,
+  ...preview,
 };

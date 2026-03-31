@@ -29,6 +29,11 @@
               "NAV.BLOG" | translate
             }}</a>
           </li>
+          <li>
+            <a class="nav-link" routerLink="/article" routerLinkActive="active">{{
+              "NAV.ARTICLE" | translate
+            }}</a>
+          </li>
           <li *ngIf="vm.auth">
             <a
               class="nav-link"
@@ -119,6 +124,17 @@
             >
               <i class="feather icon-edit-3"></i>
               {{ "NAV.BLOG" | translate }}
+            </a>
+          </li>
+          <li>
+            <a
+              class="mobile-nav-link"
+              routerLink="/article"
+              (click)="toggleMenu()"
+              routerLinkActive="active"
+            >
+              <i class="feather icon-file-text"></i>
+              {{ "NAV.ARTICLE" | translate }}
             </a>
           </li>
           <li *ngIf="vm.auth">

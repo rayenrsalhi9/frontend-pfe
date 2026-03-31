@@ -1,0 +1,22 @@
+@import "../../../../shared/styles/preview-page";
+
+.badge-article {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0284c7;
+}
+
+.cm-header--spaced {
+  justify-content: space-between;
+}
+
+/* Accessibility: Shimmer animation reduction */
+@media (prefers-reduced-motion: reduce) {
+  .preview-loading {
+    .skeleton-hero,
+    .skeleton-line {
+      animation: none !important;
+      background: var(--bg-app) !important;
+      border: 1px solid var(--border-color);
+    }
+  }
+}

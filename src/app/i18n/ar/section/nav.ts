@@ -7,6 +7,7 @@ export const nav = {
     HOME: "الرئيسية",
     FORUM: "المنتديات",
     BLOG: "المدونة",
+    ARTICLE: "المقالات",
     CONNEXION: "تسجيل الدخول",
     INSCRIPTION: "إنشاء حساب",
 
