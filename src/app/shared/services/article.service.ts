@@ -47,17 +47,17 @@ export class ArticleService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  addComment(id: any, data: any): Observable<any[] | CommonError> {
+  addComment(id: any, data: any): Observable<any | CommonError> {
     const url = `articles/comments/${id}`;
     return this.httpClient
-      .post<any[]>(url, data)
+      .post<any>(url, data)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteComment(id: any): Observable<any[] | CommonError> {
+  deleteComment(id: any): Observable<any | CommonError> {
     const url = `articles/comments/delete/${id}`;
     return this.httpClient
-      .delete<any[]>(url)
+      .delete<any>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 }

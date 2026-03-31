@@ -45,9 +45,11 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
           this.articleService.getArticle(id).pipe(catchError(() => EMPTY)),
         ),
       )
-      .subscribe((data: any) => {
-        this.article = data;
-        this.cdr.markForCheck();
+      .subscribe({
+        next: (data: any) => {
+          this.article = data;
+          this.cdr.markForCheck();
+        },
       });
 
     this.getUserInfo();
@@ -98,16 +100,16 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
     ) {
       this.articleService
         .addComment(this.article.id, { comment: text })
-        .subscribe(
-          (data: any) => {
+        .subscribe({
+          next: (data: any) => {
             this.article.comments = data.comments;
             this.comment = "";
             this.cdr.markForCheck();
           },
-          (error: any) => {
+          error: (error: any) => {
             console.error(error);
           },
-        );
+        });
     } else {
       this.modalService.show(SusbcribeModalComponent);
     }
@@ -119,8 +121,8 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
       this.securityService.isUserAuthenticate()
     ) {
       if (confirm(this.translate.instant("article.deleteComment.confirm"))) {
-        this.articleService.deleteComment(id).subscribe(
-          (response: any) => {
+        this.articleService.deleteComment(id).subscribe({
+          next: (response: any) => {
             if (response?.success === true) {
               this.article.comments = this.article.comments.filter(
                 (comment: any) => comment.id !== id,
@@ -136,13 +138,13 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
               );
             }
           },
-          (error: any) => {
+          error: (error: any) => {
             console.error("Delete comment error:", error);
             this.toastr.error(
               this.translate.instant("article.deleteComment.failure"),
             );
           },
-        );
+        });
       }
     } else {
       this.modalService.show(SusbcribeModalComponent);

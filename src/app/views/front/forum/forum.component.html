@@ -34,8 +34,6 @@
         *ngFor="let row of rows"
         class="thread-card"
         [routerLink]="'/forum/' + row.id"
-        tabindex="0"
-        role="link"
       >
         <!-- Thread icon / avatar -->
         <div class="thread-icon" [class.closed]="row.closed">

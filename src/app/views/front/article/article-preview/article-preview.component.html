@@ -76,7 +76,7 @@
       <div class="card article-card">
         <div
           class="article-body rich-content"
-          [innerHTML]="article.longText | safeHtml"
+          [innerHTML]="article.longText ?? '' | safeHtml"
         ></div>
 
         <!-- Reactions (simplified for article) -->
@@ -139,50 +139,20 @@
                   *ngIf="canDeleteComment(c)"
                   dropdown
                   [insideClick]="true"
-                  style="position: relative"
                 >
                   <button
                     dropdownToggle
                     type="button"
                     class="comment-menu-btn"
-                    style="
-                      background: none;
-                      border: none;
-                      cursor: pointer;
-                      color: var(--text-secondary);
-                    "
                     [title]="'PREVIEW.ACTIONS.MORE' | translate"
                   >
                     <i class="feather icon-more-horizontal"></i>
                   </button>
-                  <ul
-                    *dropdownMenu
-                    class="comment-dropdown"
-                    style="
-                      position: absolute;
-                      right: 0;
-                      background: var(--card-bg);
-                      border: 1px solid var(--border-color);
-                      border-radius: var(--radius-sm);
-                      padding: 0.5rem;
-                      list-style: none;
-                      min-width: 150px;
-                      z-index: 10;
-                    "
-                  >
+                  <ul *dropdownMenu class="comment-dropdown">
                     <li>
                       <button
                         class="comment-dropdown-item danger"
                         (click)="deleteComment(c.id)"
-                        style="
-                          background: none;
-                          border: none;
-                          color: #dc2626;
-                          cursor: pointer;
-                          width: 100%;
-                          text-align: left;
-                          font-size: 13px;
-                        "
                       >
                         <i class="feather icon-trash-2"></i>
                         {{ "PREVIEW.ARTICLE.COMMENT.DELETE" | translate }}
