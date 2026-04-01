@@ -22,7 +22,7 @@ const routes: Routes = [
       ),
     data: {
       title: "ARTICLES.LIST.BUTTONS.ADD",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -34,7 +34,7 @@ const routes: Routes = [
       ),
     data: {
       title: "ARTICLES.LIST.BUTTONS.EDIT",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },

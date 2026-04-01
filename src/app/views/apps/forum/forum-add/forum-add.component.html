@@ -1,77 +1,233 @@
-<div class="card">
-  <div class="card-body">
-    <form [formGroup]="forumForm">
-      <div class="row">
-        <div class="col-md-12">
-          <label class="form-label" for="articleName">{{"FORUM.ADD.LABELS.TITLE" | translate}}</label>
-          <input formControlName="title" class="form-control" id="articleName">
-          <div *ngIf="forumForm.get('title').touched && forumForm.get('title')?.errors">
-            <div class="text-danger" *ngIf="forumForm.get('title').errors?.['required']">
-              {{'BLOG.ADD.ERROR.TITLE' | translate}}
+<div class="add-form-page" *ngIf="!isLoading">
+  <div class="add-form-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">{{ "ADD.FORUM.TITLE" | translate }}</h1>
+      <p class="page-sub">{{ "ADD.FORUM.DESCRIPTION" | translate }}</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <form [formGroup]="forumForm" class="form-body">
+        <!-- ── Basic Info ─────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
+          </div>
+
+          <!-- Title -->
+          <div class="field">
+            <label class="field-label" for="title">
+              {{ "ADD.FORUM.LABELS.TITLE" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="field-input"
+              [class.has-error]="isTitleInvalid"
+              [placeholder]="'ADD.FORUM.PLACEHOLDERS.TITLE' | translate"
+            />
+            <div class="field-error" *ngIf="isTitleInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ titleErrorMessage | translate }}
+            </div>
+          </div>
+
+          <!-- Category + Subcategory -->
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="category">
+                {{ "ADD.FORUM.LABELS.CATEGORY" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <ng-select
+                id="category"
+                formControlName="category"
+                [class.has-error]="isCategoryInvalid"
+                [placeholder]="
+                  'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
+                "
+                [searchable]="false"
+              >
+                <ng-option
+                  *ngFor="let category of categories"
+                  [value]="category.id"
+                >
+                  {{ category.name }}
+                </ng-option>
+              </ng-select>
+              <div class="field-error" *ngIf="isCategoryInvalid">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                {{ categoryErrorMessage | translate }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="subCategory">
+                {{ "ADD.FORUM.LABELS.SUBCATEGORY" | translate }}
+                <span class="optional-mark">{{
+                  "ADD.SHARED.LABELS.OPTIONAL" | translate
+                }}</span>
+              </label>
+              <ng-select
+                id="subCategory"
+                formControlName="subCategory"
+                [placeholder]="
+                  'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
+                "
+                [searchable]="false"
+              >
+                <ng-option *ngFor="let sub of subCategories" [value]="sub.id">
+                  {{ sub.name }}
+                </ng-option>
+              </ng-select>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <label class="form-label" for="articleCategory">{{"FORUM.ADD.LABELS.CATEGORY" | translate}}</label>
-          <ng-select formControlName="category" [multiple]="false" id="articleCategory">
-            <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ng-option>
-          </ng-select>
-          <div *ngIf="forumForm.get('category').touched && forumForm.get('category')?.errors">
-            <div class="text-danger" *ngIf="forumForm.get('category').errors?.['required']">
-              {{'BLOG.ADD.ERROR.CATEGORY' | translate}}
+
+        <!-- ── Tags ──────────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.FORUM.LABELS.TAGS" | translate }}
+          </div>
+
+          <div class="field">
+            <ng-select
+              id="tags"
+              formControlName="tags"
+              [multiple]="true"
+              [addTag]="true"
+              [placeholder]="'ADD.FORUM.PLACEHOLDERS.TAGS' | translate"
+            ></ng-select>
+            <p class="field-hint">{{ "ADD.FORUM.HINTS.TAGS" | translate }}</p>
+          </div>
+        </div>
+
+        <!-- ── Content ───────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.FORUM.LABELS.CONTENT" | translate }}
+          </div>
+
+          <div class="field">
+            <div class="quill-wrap" [class.has-error]="isContentInvalid">
+              <quill-editor
+                formControlName="content"
+                [placeholder]="'ADD.FORUM.PLACEHOLDERS.CONTENT' | translate"
+                [styles]="{ minHeight: '200px' }"
+              ></quill-editor>
+            </div>
+            <div class="field-error" *ngIf="isContentInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ contentErrorMessage | translate }}
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-6">
-          <label class="form-label" for="articleCategory">Sub category</label>
-          <ng-select formControlName="subCategory" [multiple]="false" id="articleCategory">
-            <ng-option *ngFor="let category of []" [value]="category.id">{{category.name}}</ng-option>
-          </ng-select>
-          <div *ngIf="forumForm.get('subCategory').touched && forumForm.get('subCategory')?.errors">
-            <div class="text-danger" *ngIf="forumForm.get('subCategory').errors?.['required']">
-              Sub category is required
-            </div>
+
+        <!-- ── Settings ──────────────────────────── -->
+        <div class="form-section last">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
           </div>
-        </div> -->
-        <div class="col-md-12">
-          <label class="form-label" for="forumTags">{{"FORUM.ADD.LABELS.TAGS" | translate}}</label>
-          <ng-select formControlName="tags" [multiple]="true" [addTag]="true" id="forumTags">
-          </ng-select>
-          <div *ngIf="forumForm.get('tags').touched && forumForm.get('tags')?.errors">
-            <div class="text-danger" *ngIf="forumForm.get('tags').errors?.['required']">
-              {{'BLOG.ADD.ERROR.TAGS' | translate}}
+
+          <div class="field">
+            <div class="toggle-row">
+              <label class="toggle-track" for="private">
+                <input
+                  type="checkbox"
+                  id="private"
+                  formControlName="private"
+                  class="toggle-input"
+                />
+                <span class="toggle-thumb"></span>
+              </label>
+              <div class="toggle-info">
+                <div class="toggle-title">
+                  {{ "ADD.FORUM.LABELS.PRIVATE" | translate }}
+                </div>
+                <div class="toggle-desc">
+                  {{ "ADD.FORUM.HINTS.PRIVATE" | translate }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-12" style="min-height: 50px; height: fit-content;">
-          <label class="form-label" for="articleBody">{{"FORUM.ADD.LABELS.CONTENT" | translate}}</label>
-          <quill-editor formControlName="content" id="articleBody"></quill-editor>
-          <div *ngIf="forumForm.get('content').touched && forumForm.get('body')?.errors">
-            <div class="text-danger" *ngIf="forumForm.get('content').errors?.['required']">
-              {{'BLOG.ADD.ERROR.CONTENT' | translate}}
-            </div>
-          </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <span class="footer-note">
+          {{ "ADD.FORUM.HINTS.REQUIRED_FIELDS" | translate }}
+        </span>
+        <div class="footer-actions">
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+            {{ "ADD.FORUM.BUTTONS.CANCEL" | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSubmit()"
+            [disabled]="forumForm.invalid || isLoading"
+          >
+            {{ "ADD.FORUM.BUTTONS.SAVE" | translate }}
+          </button>
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-md-12">
-          <label class="form-label" for="articlePrivacy">{{"FORUM.ADD.LABELS.PRIVATE" | translate}}</label>
-          <switch formControlName="private" style="margin-left: 5px;" id="articlePrivacy" [inline]="true">
-          </switch>
-        </div>
-        <!-- <div *ngIf="forumForm.get('private').value" class="col-md-12">
-          <label class="form-label" for="articleUsers">Users</label>
-          <ng-select formControlName="users" [multiple]="true" id="articleUsers">
-            <ng-option *ngFor="let user of []" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
-          </ng-select>
-        </div> -->
-      </div>
-      <div class="mt-2">
-        <button (click)="forumSave()" style="margin-right: 10px;" type="submit"
-          class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{"FORUM.ADD.BUTTONS.SAVE" | translate}}</button>
-        <button type="button" class="btn btn-danger btn-sm" routerLink="/apps/forums"> <i
-            class="fas fa-times-circle"></i>{{"FORUM.ADD.BUTTONS.CANCEL" | translate}}</button>
-      </div>
-    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading skeleton -->
+<div class="add-form-skeleton" *ngIf="isLoading">
+  <div class="skeleton-title"></div>
+  <div class="skeleton-card">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line medium"></div>
+    <div class="skeleton-line short"></div>
   </div>
 </div>

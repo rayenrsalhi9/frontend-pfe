@@ -27,6 +27,7 @@ import { footer } from "./section/footer";
 import { reminder } from "./reminder";
 import { shared } from "./section/shared";
 import { preview } from "./section/preview";
+import { add } from "./section/add";
 
 export const ar_AR = {
   ...reminder,
@@ -58,4 +59,5 @@ export const ar_AR = {
   ...languages,
   ...shared,
   ...preview,
+  ...add,
 };

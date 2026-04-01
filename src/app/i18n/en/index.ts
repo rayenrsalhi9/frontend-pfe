@@ -27,6 +27,7 @@ import { table } from "./table";
 import { reminder } from "./reminder";
 import { shared } from "./section/shared";
 import { preview } from "./section/preview";
+import { add } from "./section/add";
 
 export const en_US = {
   ...reminder,
@@ -58,4 +59,5 @@ export const en_US = {
   ...languages,
   ...shared,
   ...preview,
+  ...add,
 };
