@@ -279,14 +279,16 @@
                   id="expiration"
                   formControlName="expiration"
                   class="toggle-input"
+                  [attr.aria-labelledby]="'expiration-title'"
+                  [attr.aria-describedby]="'expiration-desc'"
                 />
                 <span class="toggle-thumb"></span>
               </label>
               <div class="toggle-info">
-                <div class="toggle-title">
+                <div class="toggle-title" id="expiration-title">
                   {{ "ADD.BLOG.LABELS.EXPIRATION" | translate }}
                 </div>
-                <div class="toggle-desc">
+                <div class="toggle-desc" id="expiration-desc">
                   {{ "ADD.BLOG.HINTS.EXPIRATION" | translate }}
                 </div>
               </div>
@@ -372,14 +374,16 @@
                   id="banner"
                   formControlName="banner"
                   class="toggle-input"
+                  [attr.aria-labelledby]="'banner-title'"
+                  [attr.aria-describedby]="'banner-desc'"
                 />
                 <span class="toggle-thumb"></span>
               </label>
               <div class="toggle-info">
-                <div class="toggle-title">
+                <div class="toggle-title" id="banner-title">
                   {{ "ADD.BLOG.LABELS.BANNER" | translate }}
                 </div>
-                <div class="toggle-desc">
+                <div class="toggle-desc" id="banner-desc">
                   {{ "ADD.BLOG.HINTS.BANNER" | translate }}
                 </div>
               </div>
@@ -395,14 +399,16 @@
                   id="private"
                   formControlName="private"
                   class="toggle-input"
+                  [attr.aria-labelledby]="'private-title'"
+                  [attr.aria-describedby]="'private-desc'"
                 />
                 <span class="toggle-thumb"></span>
               </label>
               <div class="toggle-info">
-                <div class="toggle-title">
+                <div class="toggle-title" id="private-title">
                   {{ "ADD.BLOG.LABELS.PRIVATE" | translate }}
                 </div>
-                <div class="toggle-desc">
+                <div class="toggle-desc" id="private-desc">
                   {{ "ADD.BLOG.HINTS.PRIVATE" | translate }}
                 </div>
               </div>

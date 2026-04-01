@@ -206,12 +206,20 @@ export const add = {
       BUTTONS: {
         SAVE: "تحديث",
       },
+      TOAST: {
+        SUCCESS: "تم تحديث الموضوع بنجاح",
+        ERROR: "فشل تحديث الموضوع",
+      },
     },
     BLOG: {
       TITLE: "تعديل المقال",
       DESCRIPTION: "قم بتحديث المقال والإعدادات.",
       BUTTONS: {
         SAVE: "تحديث",
+      },
+      TOAST: {
+        SUCCESS: "تم تحديث المقال بنجاح",
+        ERROR: "فشل تحديث المقال",
       },
     },
     ARTICLE: {
@@ -220,6 +228,10 @@ export const add = {
       BUTTONS: {
         UPDATE: "تحديث",
         SAVE: "تحديث",
+      },
+      TOAST: {
+        SUCCESS: "تم تحديث المقال بنجاح",
+        ERROR: "فشل تحديث المقال",
       },
     },
   },

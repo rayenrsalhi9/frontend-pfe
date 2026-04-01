@@ -71,6 +71,7 @@
                   'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
                 "
                 [searchable]="false"
+                [labelForId]="'category'"
               >
                 <ng-option
                   *ngFor="let category of categories"
@@ -112,6 +113,7 @@
                   'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
                 "
                 [searchable]="false"
+                [labelForId]="'subCategory'"
               >
                 <ng-option *ngFor="let sub of subCategories" [value]="sub.id">
                   {{ sub.name }}
@@ -129,12 +131,16 @@
           </div>
 
           <div class="field">
+            <label class="field-label" for="tags">
+              {{ "ADD.FORUM.LABELS.TAGS" | translate }}
+            </label>
             <ng-select
               id="tags"
               formControlName="tags"
               [multiple]="true"
               [addTag]="true"
               [placeholder]="'ADD.FORUM.PLACEHOLDERS.TAGS' | translate"
+              [labelForId]="'tags'"
             ></ng-select>
             <p class="field-hint">{{ "ADD.FORUM.HINTS.TAGS" | translate }}</p>
           </div>

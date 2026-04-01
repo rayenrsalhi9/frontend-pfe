@@ -208,12 +208,20 @@ export const add = {
       BUTTONS: {
         SAVE: "Update thread",
       },
+      TOAST: {
+        SUCCESS: "Thread updated successfully",
+        ERROR: "Failed to update thread",
+      },
     },
     BLOG: {
       TITLE: "Edit blog post",
       DESCRIPTION: "Update your blog post and settings.",
       BUTTONS: {
         SAVE: "Update post",
+      },
+      TOAST: {
+        SUCCESS: "Blog post updated successfully",
+        ERROR: "Failed to update blog post",
       },
     },
     ARTICLE: {
@@ -222,6 +230,10 @@ export const add = {
       BUTTONS: {
         UPDATE: "Update article",
         SAVE: "Update article",
+      },
+      TOAST: {
+        SUCCESS: "Article updated successfully",
+        ERROR: "Failed to update article",
       },
     },
   },

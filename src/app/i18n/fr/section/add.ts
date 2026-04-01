@@ -215,12 +215,20 @@ export const add = {
       BUTTONS: {
         SAVE: "Mettre à jour",
       },
+      TOAST: {
+        SUCCESS: "Sujet mis à jour avec succès",
+        ERROR: "Échec de la mise à jour du sujet",
+      },
     },
     BLOG: {
       TITLE: "Modifier l’article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
       BUTTONS: {
         SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Blog mis à jour avec succès",
+        ERROR: "Échec de la mise à jour du blog",
       },
     },
     ARTICLE: {
@@ -229,6 +237,10 @@ export const add = {
       BUTTONS: {
         UPDATE: "Mettre à jour",
         SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Article mis à jour avec succès",
+        ERROR: "Échec de la mise jour de l’article",
       },
     },
   },
