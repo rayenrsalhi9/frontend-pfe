@@ -22,6 +22,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
+import { CommonService } from "src/app/shared/services/common.service";
+import { SecurityService } from "@app/core/security/security.service";
 
 // Custom date range validator
 export const dateRangeValidator: ValidatorFn = (
@@ -53,6 +55,8 @@ export class BlogAddComponent implements OnInit, OnDestroy {
   newPicture: SafeUrl;
   minDate = new Date();
   categories: any[] = [];
+  users: any[] = [];
+  currentUser: any;
   isLoading = false;
   isEdit = false;
   blogId: any;
@@ -67,13 +71,17 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     private blogCategoryService: BlogCategoryService,
     private toastrService: ToastrService,
     private translate: TranslateService,
+    private commonService: CommonService,
+    private securityService: SecurityService,
     private sanitizer: DomSanitizer,
     private activeRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.securityService.getUserDetail().user;
     this.initializeForm();
     this.loadCategories();
+    this.loadUsers();
     this.checkEditMode();
   }
 
@@ -149,6 +157,27 @@ export class BlogAddComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error("Error loading categories:", error);
+          this.translate
+            .get("ADD.SHARED.ERRORS.NETWORK_ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.toastrService.error(message);
+            });
+        },
+      });
+  }
+
+  private loadUsers(): void {
+    this.commonService
+      .getUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.filter((user: any) => user.id !== this.currentUser.id);
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error("Error loading users:", error);
           this.translate
             .get("ADD.SHARED.ERRORS.NETWORK_ERROR")
             .pipe(takeUntil(this.destroy$))

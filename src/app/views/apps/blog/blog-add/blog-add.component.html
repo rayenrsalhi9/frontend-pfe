@@ -408,6 +408,29 @@
               </div>
             </div>
           </div>
+
+          <!-- Allowed users (shown when private) -->
+          <div class="field" *ngIf="blogForm.get('private')?.value">
+            <label class="field-label" for="users">
+              {{ "ADD.BLOG.LABELS.USERS" | translate }}
+              <span class="optional-mark">{{
+                "ADD.SHARED.LABELS.OPTIONAL" | translate
+              }}</span>
+            </label>
+            <ng-select
+              id="users"
+              formControlName="users"
+              [multiple]="true"
+              [placeholder]="'ADD.BLOG.PLACEHOLDERS.USERS' | translate"
+            >
+              <ng-option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </ng-option>
+            </ng-select>
+            <p class="field-hint">
+              {{ "ADD.BLOG.HINTS.USERS" | translate }}
+            </p>
+          </div>
         </div>
       </form>
 

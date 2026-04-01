@@ -60,6 +60,7 @@ export const add = {
         ENDDATE: "End date",
         BANNER: "Show as banner",
         PRIVATE: "Private post",
+        USERS: "Allowed users",
       },
       PLACEHOLDERS: {
         PICTURE: "Upload a cover image",
@@ -67,12 +68,14 @@ export const add = {
         SUBTITLE: "A short description shown in previews…",
         TAGS: "Add a tag and press Enter…",
         BODY: "Write your post content here…",
+        USERS: "Search for users…",
       },
       HINTS: {
         EXPIRATION: "Set a date range during which this post will be visible.",
         BANNER: "Display this post as a featured banner on the home page.",
         PRIVATE: "Only you and invited members will be able to see this post.",
         REQUIRED_FIELDS: "Fields marked * are required",
+        USERS: "Leave empty to allow all invited members to read this post.",
       },
       BUTTONS: {
         SAVE: "Publish post",

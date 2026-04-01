@@ -190,14 +190,16 @@
                   id="private"
                   formControlName="private"
                   class="toggle-input"
+                  [attr.aria-labelledby]="'private-title'"
+                  [attr.aria-describedby]="'private-desc'"
                 />
                 <span class="toggle-thumb"></span>
               </label>
               <div class="toggle-info">
-                <div class="toggle-title">
+                <div class="toggle-title" id="private-title">
                   {{ "ADD.FORUM.LABELS.PRIVATE" | translate }}
                 </div>
-                <div class="toggle-desc">
+                <div class="toggle-desc" id="private-desc">
                   {{ "ADD.FORUM.HINTS.PRIVATE" | translate }}
                 </div>
               </div>
