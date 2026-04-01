@@ -1,96 +1,328 @@
-<div class="card">
-  <div class="card-body">
-    <form [formGroup]="articleForm">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="row">
-            <div class="col-md-12">
-              <label class="form-label" for="articleName">{{'ARTICLES.ADD.LABEL.TITLE' | translate}}</label>
-              <input formControlName="title" class="form-control" id="articleName">
-              <div *ngIf="articleForm.get('title').touched && articleForm.get('title')?.errors">
-                <div class="text-danger" *ngIf="articleForm.get('title').errors?.['required']">
-                  {{'ARTICLES.ADD.ERRORS.TITLE_IS_REQUIRED' | translate}}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <label class="form-label" for="articleCategory">{{'ARTICLES.ADD.LABEL.CATEGORY' | translate}}</label>
-              <ng-select formControlName="category" [multiple]="false" id="articleCategory">
-                <ng-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ng-option>
-              </ng-select>
-              <div *ngIf="articleForm.get('category').touched && articleForm.get('category')?.errors">
-                <div class="text-danger" *ngIf="articleForm.get('category').errors?.['required']">
-                  {{'ARTICLES.ADD.ERRORS.CATEGORY_IS_REQUIRED' | translate}}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <label class="form-label" for="articleShortDescription">{{'ARTICLES.ADD.LABEL.DESCRIPTION' | translate}}</label>
-              <textarea formControlName="description" type="text" class="form-control"
-                id="articleShortDescription"></textarea>
-              <div *ngIf="articleForm.get('description').touched && articleForm.get('description')?.errors">
-                <div class="text-danger" *ngIf="articleForm.get('description').errors?.['required']">
-                  {{'ARTICLES.ADD.ERRORS.DESCRIPTION_IS_REQUIRED' | translate}}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12" style="min-height: 50px; height: fit-content;">
-              <label class="form-label" for="articleBody">{{'ARTICLES.ADD.LABEL.BODY' | translate}}</label>
+<div class="add-form-page">
+  <div class="add-form-container">
+    <div class="page-header">
+      <h1 class="page-title">
+        {{ (isEdit ? "EDIT.ARTICLE.TITLE" : "ADD.ARTICLE.TITLE") | translate }}
+      </h1>
+      <p class="page-sub">
+        {{
+          (isEdit ? "EDIT.ARTICLE.DESCRIPTION" : "ADD.ARTICLE.DESCRIPTION")
+            | translate
+        }}
+      </p>
+    </div>
 
-              <!-- <div formControlName="body" style="height: 400px;" id="editor-container"></div> -->
-
-              <!-- <quill-editor style="height: 400px;" formControlName="body" id="articleBody"></quill-editor> -->
-              <quill-editor formControlName="body" id="articleBody"></quill-editor>
-
-
-              <div *ngIf="articleForm.get('body').touched && articleForm.get('body')?.errors">
-                <div class="text-danger" *ngIf="articleForm.get('body').errors?.['required']">
-                  {{'ARTICLES.ADD.ERRORS.BODY_IS_REQUIRED' | translate}}
-                </div>
-              </div>
-            </div>
+    <div class="form-card">
+      <form [formGroup]="articleForm" class="form-body">
+        <!-- ── Cover image ─────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.ARTICLE.LABELS.PICTURE" | translate }}
           </div>
-          <div class="row mt-2">
-            <div class="col-md-12">
-              <label class="form-label" for="articlePrivacy">{{'ARTICLES.ADD.LABEL.PRIVATE' | translate}}</label>
-              <switch formControlName="private" style="margin-left: 5px;" id="articlePrivacy" [inline]="true">
-              </switch>
+
+          <div
+            class="image-upload-zone"
+            [class.has-image]="picture"
+            [class.has-error]="isPictureInvalid"
+          >
+            <img
+              *ngIf="picture"
+              [src]="picture"
+              [alt]="'ADD.ARTICLE.PLACEHOLDERS.PICTURE' | translate"
+              class="upload-preview-img"
+            />
+            <div class="upload-placeholder" *ngIf="!picture">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              <span>{{ "ADD.ARTICLE.PLACEHOLDERS.PICTURE" | translate }}</span>
             </div>
-            <div *ngIf="articleForm.get('private').value" class="col-md-12">
-              <label class="form-label" for="articleUsers">{{'ARTICLES.ADD.LABEL.USERS' | translate}}</label>
-              <ng-select formControlName="users" [multiple]="true" id="articleUsers">
-                <ng-option *ngFor="let user of users" [value]="user.id">{{user.firstName}} {{user.lastName}}</ng-option>
-              </ng-select>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <label class="mb-2" for="">{{'ARTICLES.ADD.LABEL.PICTURE' | translate}}</label>
-          <div class="rounded overflow-hidden">
-            <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file" name="Profile Photo"
-              fxFlex="30">
-            <img *ngIf="picture && !newPicture" style="width: 100%;" class="full-width company-logo" [src]="picture" />
-            <img *ngIf="!picture || picture && newPicture" style="width: 100%;" class="full-width company-logo"
-              [src]="newPicture?newPicture:'/assets/images/others/bg-4.jpg'" />
-            <div *ngIf="articleForm.get('picture').touched && articleForm.get('picture')?.errors">
-              <div class="text-danger" *ngIf="articleForm.get('picture').errors?.['required']">
-                {{'ARTICLES.ADD.ERRORS.PICTURE_IS_REQUIRED' | translate}}
-              </div>
-            </div>
-            <div class="mt-2">
-              <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
-                <i class="far fa-image"></i> {{'ARTICLES.ADD.LABEL.CHANGE_PICTURE' | translate}}
+            <div class="upload-actions">
+              <input
+                type="file"
+                id="picture"
+                #fileInput
+                (change)="onFileSelect($event)"
+                accept="image/*"
+                class="upload-input"
+                tabindex="-1"
+              />
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm"
+                (click)="fileInput.click()"
+                [attr.aria-label]="
+                  (picture
+                    ? 'ADD.ARTICLE.BUTTONS.CHANGE_IMAGE'
+                    : 'ADD.ARTICLE.BUTTONS.UPLOAD_IMAGE'
+                  ) | translate
+                "
+              >
+                {{
+                  (picture
+                    ? "ADD.ARTICLE.BUTTONS.CHANGE_IMAGE"
+                    : "ADD.ARTICLE.BUTTONS.UPLOAD_IMAGE"
+                  ) | translate
+                }}
               </button>
             </div>
           </div>
+          <div class="field-error" *ngIf="isPictureInvalid">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ pictureErrorMessage | translate }}
+          </div>
+        </div>
+
+        <!-- ── Basic info ──────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="title">
+              {{ "ADD.ARTICLE.LABELS.TITLE" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="field-input"
+              [class.has-error]="isTitleInvalid"
+              [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.TITLE' | translate"
+            />
+            <div class="field-error" *ngIf="isTitleInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ titleErrorMessage | translate }}
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="category">
+              {{ "ADD.ARTICLE.LABELS.CATEGORY" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <ng-select
+              id="category"
+              formControlName="category"
+              [class.has-error]="isCategoryInvalid"
+              [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
+              [searchable]="false"
+            >
+              <ng-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+              >
+                {{ category.name }}
+              </ng-option>
+            </ng-select>
+            <div class="field-error" *ngIf="isCategoryInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ categoryErrorMessage | translate }}
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="description">
+              {{ "ADD.ARTICLE.LABELS.DESCRIPTION" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="field-input"
+              [class.has-error]="isDescriptionInvalid"
+              rows="3"
+              [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.DESCRIPTION' | translate"
+            ></textarea>
+            <div class="field-error" *ngIf="isDescriptionInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ descriptionErrorMessage | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Content ────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.ARTICLE.LABELS.BODY" | translate }}
+          </div>
+
+          <div class="field">
+            <div class="quill-wrap" [class.has-error]="isBodyInvalid">
+              <quill-editor
+                formControlName="body"
+                [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.BODY' | translate"
+                [styles]="{ minHeight: '280px' }"
+              ></quill-editor>
+            </div>
+            <div class="field-error" *ngIf="isBodyInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ bodyErrorMessage | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Settings ───────────────────────── -->
+        <div class="form-section last">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
+          </div>
+
+          <!-- Private toggle -->
+          <div class="field">
+            <div class="toggle-row">
+              <label class="toggle-track" for="private">
+                <input
+                  type="checkbox"
+                  id="private"
+                  formControlName="private"
+                  class="toggle-input"
+                  [attr.aria-labelledby]="'private-title'"
+                  [attr.aria-describedby]="'private-desc'"
+                />
+                <span class="toggle-thumb"></span>
+              </label>
+              <div class="toggle-info">
+                <div class="toggle-title" id="private-title">
+                  {{ "ADD.ARTICLE.LABELS.PRIVATE" | translate }}
+                </div>
+                <div class="toggle-desc" id="private-desc">
+                  {{ "ADD.ARTICLE.HINTS.PRIVATE" | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Allowed users (shown when private) -->
+          <div class="field" *ngIf="articleForm.get('private')?.value">
+            <label class="field-label" for="users">
+              {{ "ADD.ARTICLE.LABELS.USERS" | translate }}
+              <span class="optional-mark">{{
+                "ADD.SHARED.LABELS.OPTIONAL" | translate
+              }}</span>
+            </label>
+            <ng-select
+              id="users"
+              formControlName="users"
+              [multiple]="true"
+              [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.USERS' | translate"
+            >
+              <ng-option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </ng-option>
+            </ng-select>
+            <p class="field-hint">
+              {{ "ADD.ARTICLE.HINTS.USERS" | translate }}
+            </p>
+          </div>
+        </div>
+      </form>
+
+      <div class="form-footer">
+        <span class="footer-note">{{
+          "ADD.ARTICLE.HINTS.REQUIRED_FIELDS" | translate
+        }}</span>
+        <div class="footer-actions">
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+            {{ "ADD.ARTICLE.BUTTONS.CANCEL" | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSubmit()"
+            [disabled]="articleForm.invalid || isLoading"
+          >
+            {{
+              (isEdit
+                ? "EDIT.ARTICLE.BUTTONS.UPDATE"
+                : "ADD.ARTICLE.BUTTONS.SAVE"
+              ) | translate
+            }}
+          </button>
         </div>
       </div>
-      <div class="mt-2">
-        <button (click)="saveArticle()" style="margin-right: 10px;" type="submit"
-          class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i>{{'ARTICLES.ADD.BUTTONS.SAVE' | translate}}</button>
-        <button type="button" class="btn btn-danger btn-sm" routerLink="/apps/news"> <i
-            class="fas fa-times-circle"></i>{{'ARTICLES.ADD.BUTTONS.CANCEL' | translate}}</button>
-      </div>
-    </form>
+    </div>
   </div>
 </div>

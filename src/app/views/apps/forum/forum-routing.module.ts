@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: "edit/:id",
     loadChildren: () =>
-      import("./forum-edit/forum-edit.module").then((m) => m.ForumEditModule),
+      import("./forum-add/forum-add.module").then((m) => m.ForumAddModule),
     data: {
       title: "FORUM.BUTTONS.EDIT",
       hidePageHeader: true,

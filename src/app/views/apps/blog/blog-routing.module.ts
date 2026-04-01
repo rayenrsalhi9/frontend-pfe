@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: "edit/:id",
     loadChildren: () =>
-      import("./blog-edit/blog-edit.module").then((m) => m.BlogEditModule),
+      import("./blog-add/blog-add.module").then((m) => m.BlogAddModule),
     data: {
       title: "BLOG.BUTTONS.EDIT",
       hidePageHeader: true,
