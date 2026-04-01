@@ -64,7 +64,6 @@
                 <span class="required-mark">*</span>
               </label>
               <ng-select
-                id="category"
                 formControlName="category"
                 [class.has-error]="isCategoryInvalid"
                 [placeholder]="
@@ -107,7 +106,6 @@
                 }}</span>
               </label>
               <ng-select
-                id="subCategory"
                 formControlName="subCategory"
                 [placeholder]="
                   'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
@@ -135,7 +133,6 @@
               {{ "ADD.FORUM.LABELS.TAGS" | translate }}
             </label>
             <ng-select
-              id="tags"
               formControlName="tags"
               [multiple]="true"
               [addTag]="true"
@@ -227,7 +224,7 @@
             type="button"
             class="btn btn-primary"
             (click)="onSubmit()"
-            [disabled]="forumForm.invalid || isLoading"
+            [disabled]="isLoading"
           >
             {{ (isEdit ? "EDIT.FORUM.BUTTONS.SAVE" : "ADD.FORUM.BUTTONS.SAVE") | translate }}
           </button>

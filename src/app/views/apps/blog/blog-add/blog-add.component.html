@@ -1,3 +1,20 @@
+<ng-template #errorIcon>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+</ng-template>
+
 <div class="add-form-page">
   <div class="add-form-container">
     <div class="page-header">
@@ -80,20 +97,7 @@
             </div>
           </div>
           <div class="field-error" *ngIf="isPictureInvalid">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
+            <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
             {{ pictureErrorMessage | translate }}
           </div>
         </div>
@@ -119,20 +123,7 @@
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.TITLE' | translate"
             />
             <div class="field-error" *ngIf="isTitleInvalid">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ titleErrorMessage | translate }}
             </div>
           </div>
@@ -151,20 +142,7 @@
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.SUBTITLE' | translate"
             ></textarea>
             <div class="field-error" *ngIf="isSubtitleInvalid">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ subtitleErrorMessage | translate }}
             </div>
           </div>
@@ -192,20 +170,7 @@
                 </ng-option>
               </ng-select>
               <div class="field-error" *ngIf="isCategoryInvalid">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ categoryErrorMessage | translate }}
               </div>
             </div>
@@ -244,20 +209,7 @@
               ></quill-editor>
             </div>
             <div class="field-error" *ngIf="isBodyInvalid">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ bodyErrorMessage | translate }}
             </div>
           </div>
