@@ -4,7 +4,12 @@
       <h1 class="page-title">
         {{ (isEdit ? "EDIT.ARTICLE.TITLE" : "ADD.ARTICLE.TITLE") | translate }}
       </h1>
-      <p class="page-sub">{{ "ADD.ARTICLE.DESCRIPTION" | translate }}</p>
+      <p class="page-sub">
+        {{
+          (isEdit ? "EDIT.ARTICLE.DESCRIPTION" : "ADD.ARTICLE.DESCRIPTION")
+            | translate
+        }}
+      </p>
     </div>
 
     <div class="form-card">
@@ -48,18 +53,27 @@
               <input
                 type="file"
                 id="picture"
+                #fileInput
                 (change)="onFileSelect($event)"
                 accept="image/*"
                 class="upload-input"
+                tabindex="-1"
               />
-              <label for="picture" class="btn btn-ghost btn-sm">
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm"
+                (click)="fileInput.click()"
+                [attr.aria-label]="
+                  (picture ? 'Change image' : 'Upload image') | translate
+                "
+              >
                 {{
                   (picture
                     ? "ADD.ARTICLE.BUTTONS.CHANGE_IMAGE"
                     : "ADD.ARTICLE.BUTTONS.UPLOAD_IMAGE"
                   ) | translate
                 }}
-              </label>
+              </button>
             </div>
           </div>
           <div class="field-error" *ngIf="isPictureInvalid">

@@ -69,8 +69,10 @@ export const add = {
         BODY: "Rédigez le contenu de votre article ici…",
       },
       HINTS: {
-        EXPIRATION: "Définissez une période pendant laquelle cet article sera visible.",
-        BANNER: "Affichez cet article comme bannière en vedette sur la page d'accueil.",
+        EXPIRATION:
+          "Définissez une période pendant laquelle cet article sera visible.",
+        BANNER:
+          "Affichez cet article comme bannière en vedette sur la page d'accueil.",
         PRIVATE: "Seuls vous et les membres invités pourront voir cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
       },
@@ -97,8 +99,10 @@ export const add = {
       VALIDATION: {
         TITLE_MIN_LENGTH: "Le titre doit contenir au moins 5 caractères",
         TITLE_MAX_LENGTH: "Le titre ne peut pas dépasser 200 caractères",
-        SUBTITLE_MIN_LENGTH: "Le sous-titre doit contenir au moins 10 caractères",
-        SUBTITLE_MAX_LENGTH: "Le sous-titre ne peut pas dépasser 300 caractères",
+        SUBTITLE_MIN_LENGTH:
+          "Le sous-titre doit contenir au moins 10 caractères",
+        SUBTITLE_MAX_LENGTH:
+          "Le sous-titre ne peut pas dépasser 300 caractères",
         BODY_MIN_LENGTH: "Le contenu doit contenir au moins 50 caractères",
         IMAGE_TOO_LARGE: "La taille de l'image doit être inférieure à 5 Mo",
       },
@@ -106,7 +110,8 @@ export const add = {
 
     ARTICLE: {
       TITLE: "Nouvel article",
-      DESCRIPTION: "Créez un article d'actualité ou une annonce pour votre communauté.",
+      DESCRIPTION:
+        "Créez un article d'actualité ou une annonce pour votre communauté.",
       LABELS: {
         PICTURE: "Image de couverture",
         TITLE: "Titre",
@@ -126,7 +131,8 @@ export const add = {
       HINTS: {
         PRIVATE:
           "Seuls vous et les utilisateurs que vous sélectionnez pourront voir cet article.",
-        USERS: "Laissez vide pour permettre à tous les membres invités de lire cet article.",
+        USERS:
+          "Laissez vide pour permettre à tous les membres invités de lire cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
       },
       BUTTONS: {
@@ -152,8 +158,10 @@ export const add = {
       VALIDATION: {
         TITLE_MIN_LENGTH: "Le titre doit contenir au moins 5 caractères",
         TITLE_MAX_LENGTH: "Le titre ne peut pas dépasser 200 caractères",
-        DESCRIPTION_MIN_LENGTH: "La description doit contenir au moins 20 caractères",
-        DESCRIPTION_MAX_LENGTH: "La description ne peut pas dépasser 500 caractères",
+        DESCRIPTION_MIN_LENGTH:
+          "La description doit contenir au moins 20 caractères",
+        DESCRIPTION_MAX_LENGTH:
+          "La description ne peut pas dépasser 500 caractères",
         BODY_MIN_LENGTH: "Le contenu doit contenir au moins 50 caractères",
         IMAGE_TOO_LARGE: "La taille de l'image doit être inférieure à 5 Mo",
       },
@@ -199,8 +207,17 @@ export const add = {
   },
 
   EDIT: {
+    FORUM: {
+      TITLE: "Modifier le fil de discussion",
+      DESCRIPTION: "Mettez à jour votre fil de discussion et ses paramètres.",
+    },
+    BLOG: {
+      TITLE: "Modifier l'article de blog",
+      DESCRIPTION: "Mettez à jour votre article de blog et ses paramètres.",
+    },
     ARTICLE: {
       TITLE: "Modifier l'article",
+      DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
       BUTTONS: {
         UPDATE: "Mettre à jour l'article",
       },

@@ -1,8 +1,8 @@
 <div class="add-form-page">
   <div class="add-form-container">
     <div class="page-header">
-      <h1 class="page-title">{{ "ADD.BLOG.TITLE" | translate }}</h1>
-      <p class="page-sub">{{ "ADD.BLOG.DESCRIPTION" | translate }}</p>
+      <h1 class="page-title">{{ (isEdit ? "EDIT.BLOG.TITLE" : "ADD.BLOG.TITLE") | translate }}</h1>
+      <p class="page-sub">{{ (isEdit ? "EDIT.BLOG.DESCRIPTION" : "ADD.BLOG.DESCRIPTION") | translate }}</p>
     </div>
 
     <div class="form-card">
@@ -46,18 +46,27 @@
               <input
                 type="file"
                 id="picture"
+                #fileInput
                 (change)="onFileSelect($event)"
                 accept="image/*"
                 class="upload-input"
+                tabindex="-1"
               />
-              <label for="picture" class="btn btn-ghost btn-sm">
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm"
+                (click)="fileInput.click()"
+                [attr.aria-label]="
+                  (newPicture ? 'Change image' : 'Upload image') | translate
+                "
+              >
                 {{
                   (newPicture
                     ? "ADD.BLOG.BUTTONS.CHANGE_IMAGE"
                     : "ADD.BLOG.BUTTONS.UPLOAD_IMAGE"
                   ) | translate
                 }}
-              </label>
+              </button>
             </div>
           </div>
           <div class="field-error" *ngIf="isPictureInvalid">
@@ -321,7 +330,10 @@
                 [class.has-error]="isEndDateInvalid"
                 [min]="blogForm.get('startDate')?.value"
               />
-              <div class="field-error" *ngIf="isEndDateInvalid">
+              <div
+                class="field-error"
+                *ngIf="isEndDateInvalid || isDateInvalid"
+              >
                 <svg
                   width="12"
                   height="12"

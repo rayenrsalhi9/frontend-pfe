@@ -2,8 +2,7 @@ export const add = {
   ADD: {
     FORUM: {
       TITLE: "موضوع منتدى جديد",
-      DESCRIPTION:
-        "ابدأ نقاشًا، اطرح سؤالاً، أو شارك شيئًا مع المجتمع.",
+      DESCRIPTION: "ابدأ نقاشًا، اطرح سؤالاً، أو شارك شيئًا مع المجتمع.",
       LABELS: {
         TITLE: "العنوان",
         CATEGORY: "الفئة",
@@ -199,8 +198,17 @@ export const add = {
   },
 
   EDIT: {
+    FORUM: {
+      TITLE: "تعديل موضوع المنتدى",
+      DESCRIPTION: "حدّث موضوع المنتدى وإعداداتك.",
+    },
+    BLOG: {
+      TITLE: "تعديل مقالة المدونة",
+      DESCRIPTION: "حدّث مقالة المدونة وإعداداتك.",
+    },
     ARTICLE: {
       TITLE: "تعديل المقالة",
+      DESCRIPTION: "حدّث مقالتك وإعداداتك.",
       BUTTONS: {
         UPDATE: "تحديث المقالة",
       },

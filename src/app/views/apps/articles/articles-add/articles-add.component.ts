@@ -1,6 +1,12 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  SecurityContext,
+} from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DomSanitizer, SafeUrl, SafeHtml } from "@angular/platform-browser";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ArticleCategoryService } from "@app/shared/services/article-category.service";
 import { ArticleService } from "@app/shared/services/article.service";
@@ -10,6 +16,7 @@ import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-articles-add",
@@ -114,7 +121,6 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
             users: data.users
               .filter((usr: any) => usr.user.id !== this.currentUser.id)
               .map((usr: any) => usr.user.id),
-            picture: null,
           });
 
           this.picture = data.picture
@@ -122,6 +128,12 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
               ? data.picture
               : this.getHost() + data.picture
             : null;
+
+          // Remove required validator for picture in edit mode since we already have an image
+          if (this.picture) {
+            this.articleForm.get("picture")?.clearValidators();
+            this.articleForm.get("picture")?.updateValueAndValidity();
+          }
 
           this.cdr.markForCheck();
         },
@@ -183,8 +195,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
   }
 
   getHost(): string {
-    // This should be imported from environment, but keeping original logic
-    return "http://localhost:3000/"; // Replace with environment.apiUrl
+    return environment.apiUrl || "http://localhost:3000/";
   }
 
   onFileSelect(event: Event): void {
@@ -197,7 +208,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     const mimeType = file.type;
 
     // Validate file type
-    if (!mimeType.match(/image\/*/)) {
+    if (!mimeType.startsWith("image/")) {
       this.translate
         .get("ADD.ARTICLE.ERRORS.IMAGE_INVALID")
         .pipe(takeUntil(this.destroy$))
@@ -232,8 +243,8 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
-  sanitizeContent(content: string): SafeHtml {
-    return this.sanitizer.sanitize(1, content) || "";
+  private sanitizeContent(content: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, content) || "";
   }
 
   onSubmit(): void {

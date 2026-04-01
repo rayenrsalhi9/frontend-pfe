@@ -2,8 +2,15 @@
   <div class="add-form-container">
     <!-- Page Header -->
     <div class="page-header">
-      <h1 class="page-title">{{ "ADD.FORUM.TITLE" | translate }}</h1>
-      <p class="page-sub">{{ "ADD.FORUM.DESCRIPTION" | translate }}</p>
+      <h1 class="page-title">
+        {{ (isEdit ? "EDIT.FORUM.TITLE" : "ADD.FORUM.TITLE") | translate }}
+      </h1>
+      <p class="page-sub">
+        {{
+          (isEdit ? "EDIT.FORUM.DESCRIPTION" : "ADD.FORUM.DESCRIPTION")
+            | translate
+        }}
+      </p>
     </div>
 
     <!-- Form Card -->

@@ -1,13 +1,46 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DomSanitizer, SafeUrl, SafeHtml } from "@angular/platform-browser";
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  SecurityContext,
+} from "@angular/core";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
+} from "@angular/forms";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { BlogService } from "../blog.service";
 import { BlogCategoryService } from "../blog-category/blog-category.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { environment } from "src/environments/environment";
+
+// Custom date range validator
+export const dateRangeValidator: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  const expiration = control.get("expiration")?.value;
+  if (!expiration) {
+    return null; // No validation needed if expiration is disabled
+  }
+
+  const startDate = control.get("startDate")?.value;
+  const endDate = control.get("endDate")?.value;
+
+  if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
+    return { dateInvalid: true };
+  }
+
+  return null;
+};
 
 @Component({
   selector: "app-blog-add",
@@ -21,6 +54,8 @@ export class BlogAddComponent implements OnInit, OnDestroy {
   minDate = new Date();
   categories: any[] = [];
   isLoading = false;
+  isEdit = false;
+  blogId: any;
 
   private destroy$ = new Subject<void>();
 
@@ -33,11 +68,13 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private translate: TranslateService,
     private sanitizer: DomSanitizer,
+    private activeRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadCategories();
+    this.checkEditMode();
   }
 
   ngOnDestroy(): void {
@@ -46,34 +83,37 @@ export class BlogAddComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
-    this.blogForm = this.fb.group({
-      title: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(200),
+    this.blogForm = this.fb.group(
+      {
+        title: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(200),
+          ],
         ],
-      ],
-      subtitle: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(300),
+        subtitle: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(10),
+            Validators.maxLength(300),
+          ],
         ],
-      ],
-      body: ["", [Validators.required, Validators.minLength(50)]],
-      category: ["", [Validators.required]],
-      private: [false],
-      tags: [[]],
-      users: [[]],
-      expiration: [false],
-      banner: [false],
-      startDate: [""],
-      endDate: [""],
-      picture: ["", [Validators.required]],
-    });
+        body: ["", [Validators.required, Validators.minLength(50)]],
+        category: ["", [Validators.required]],
+        private: [false],
+        tags: [[]],
+        users: [[]],
+        expiration: [false],
+        banner: [false],
+        startDate: [""],
+        endDate: [""],
+        picture: ["", [Validators.required]],
+      },
+      { validators: dateRangeValidator },
+    );
 
     // Add date validation when expiration is enabled
     this.blogForm
@@ -129,7 +169,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     const mimeType = file.type;
 
     // Validate file type
-    if (!mimeType.match(/image\/*/)) {
+    if (!mimeType.startsWith("image/")) {
       this.translate
         .get("ADD.BLOG.ERRORS.IMAGE_INVALID")
         .pipe(takeUntil(this.destroy$))
@@ -163,8 +203,8 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
-  sanitizeContent(content: string): SafeHtml {
-    return this.sanitizer.sanitize(1, content) || "";
+  private sanitizeContent(content: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, content) || "";
   }
 
   onSubmit(): void {
@@ -179,25 +219,17 @@ export class BlogAddComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Validate date range if expiration is enabled
-    if (this.blogForm.get("expiration")?.value) {
-      const startDate = this.blogForm.get("startDate")?.value;
-      const endDate = this.blogForm.get("endDate")?.value;
-
-      if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
-        this.translate
-          .get("ADD.BLOG.ERRORS.DATE_INVALID")
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((message) => {
-            this.toastrService.error(message);
-          });
-        return;
-      }
-    }
-
     this.isLoading = true;
     const formData = this.prepareFormData();
 
+    if (this.isEdit) {
+      this.updateBlog(formData);
+    } else {
+      this.createBlog(formData);
+    }
+  }
+
+  private createBlog(formData: any): void {
     this.blogService
       .addBlog(formData)
       .pipe(takeUntil(this.destroy$))
@@ -225,6 +257,34 @@ export class BlogAddComponent implements OnInit, OnDestroy {
       });
   }
 
+  private updateBlog(formData: any): void {
+    this.blogService
+      .updateBlog(this.blogId, formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.translate
+            .get("EDIT.BLOG.TOAST.SUCCESS")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.toastrService.success(message);
+            });
+          this.router.navigate(["/apps/blogs"]);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error("Error updating blog:", error);
+          this.translate
+            .get("EDIT.BLOG.TOAST.ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.toastrService.error(message);
+            });
+        },
+      });
+  }
+
   private prepareFormData(): any {
     const formValue = this.blogForm.value;
 
@@ -237,14 +297,27 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     if (formValue.tags && formValue.tags.length > 0) {
       formValue.tags = formValue.tags
         .map((tag) => (typeof tag === "string" ? tag.trim() : tag))
-        .filter((tag) => tag && tag.length > 0);
+        .filter((tag) => {
+          if (typeof tag === "string") {
+            return tag.trim().length > 0;
+          }
+          // Keep valid objects (assuming they represent valid tag objects)
+          return tag && typeof tag === "object";
+        });
     }
 
     // Process users
     if (formValue.users && formValue.users.length > 0) {
-      formValue.users = formValue.users.filter(
-        (user) => user && user.length > 0,
-      );
+      formValue.users = formValue.users.filter((user) => {
+        if (typeof user === "string") {
+          return user.length > 0;
+        }
+        if (typeof user === "number") {
+          return true; // Numeric IDs are valid
+        }
+        // Keep valid objects (assuming they represent valid user objects)
+        return user && typeof user === "object";
+      });
     }
 
     return formValue;
@@ -252,6 +325,72 @@ export class BlogAddComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.router.navigate(["/apps/blogs"]);
+  }
+
+  private checkEditMode(): void {
+    this.activeRoute.paramMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        const id = params.get("id");
+        if (id) {
+          this.isEdit = true;
+          this.blogId = id;
+          this.loadBlog(id);
+        }
+      });
+  }
+
+  private loadBlog(id: string): void {
+    this.isLoading = true;
+    this.blogService
+      .getBlog(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          this.isLoading = false;
+          this.blogForm.patchValue({
+            title: data.title,
+            subtitle: data.subtitle,
+            category: data.category.id,
+            banner: data.banner,
+            expiration: data.expiration,
+            startDate: data.endDate ? new Date(data.startDate) : null,
+            endDate: data.endDate ? new Date(data.endDate) : null,
+            body: data.body,
+            tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
+            private: data.privacy === "private",
+            picture: null,
+          });
+
+          this.picture = data.picture
+            ? data.picture.startsWith("data:image")
+              ? data.picture
+              : this.getHost() + data.picture
+            : null;
+
+          // Remove required validator for picture in edit mode since we already have an image
+          if (this.picture) {
+            this.blogForm.get("picture")?.clearValidators();
+            this.blogForm.get("picture")?.updateValueAndValidity();
+          }
+
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error("Error loading blog:", error);
+          this.translate
+            .get("ADD.SHARED.ERRORS.NETWORK_ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.toastrService.error(message);
+            });
+        },
+      });
+  }
+
+  private getHost(): string {
+    return environment.apiUrl || "http://localhost:3000/";
   }
 
   // Getters for form controls
@@ -307,6 +446,10 @@ export class BlogAddComponent implements OnInit, OnDestroy {
   get isPictureInvalid(): boolean {
     const control = this.pictureControl;
     return !!(control && control.invalid && control.dirty);
+  }
+
+  get isDateInvalid(): boolean {
+    return !!this.blogForm.errors?.["dateInvalid"];
   }
 
   get isStartDateInvalid(): boolean {
