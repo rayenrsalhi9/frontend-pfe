@@ -202,16 +202,23 @@ export const add = {
     FORUM: {
       TITLE: "Edit forum thread",
       DESCRIPTION: "Update your forum thread and settings.",
+      BUTTONS: {
+        SAVE: "Update thread",
+      },
     },
     BLOG: {
       TITLE: "Edit blog post",
       DESCRIPTION: "Update your blog post and settings.",
+      BUTTONS: {
+        SAVE: "Update post",
+      },
     },
     ARTICLE: {
       TITLE: "Edit article",
       DESCRIPTION: "Update your article and settings.",
       BUTTONS: {
         UPDATE: "Update article",
+        SAVE: "Update article",
       },
     },
   },

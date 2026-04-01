@@ -210,16 +210,23 @@ export const add = {
     FORUM: {
       TITLE: "Modifier le fil de discussion",
       DESCRIPTION: "Mettez à jour votre fil de discussion et ses paramètres.",
+      BUTTONS: {
+        SAVE: "Mettre à jour le fil",
+      },
     },
     BLOG: {
       TITLE: "Modifier l'article de blog",
       DESCRIPTION: "Mettez à jour votre article de blog et ses paramètres.",
+      BUTTONS: {
+        SAVE: "Mettre à jour l'article",
+      },
     },
     ARTICLE: {
       TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
       BUTTONS: {
         UPDATE: "Mettre à jour l'article",
+        SAVE: "Mettre à jour l'article",
       },
     },
   },

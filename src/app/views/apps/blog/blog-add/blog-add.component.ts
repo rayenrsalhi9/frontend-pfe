@@ -354,8 +354,12 @@ export class BlogAddComponent implements OnInit, OnDestroy {
             category: data.category.id,
             banner: data.banner,
             expiration: data.expiration,
-            startDate: data.endDate ? new Date(data.startDate) : null,
-            endDate: data.endDate ? new Date(data.endDate) : null,
+            startDate: data.startDate
+              ? new Date(data.startDate).toISOString().slice(0, 10)
+              : null,
+            endDate: data.endDate
+              ? new Date(data.endDate).toISOString().slice(0, 10)
+              : null,
             body: data.body,
             tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
@@ -367,6 +371,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
               ? data.picture
               : this.getHost() + data.picture
             : null;
+          this.newPicture = this.picture; // Set newPicture for template preview
 
           // Remove required validator for picture in edit mode since we already have an image
           if (this.picture) {
@@ -425,27 +430,27 @@ export class BlogAddComponent implements OnInit, OnDestroy {
   // Validation getters
   get isTitleInvalid(): boolean {
     const control = this.titleControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isSubtitleInvalid(): boolean {
     const control = this.subtitleControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isBodyInvalid(): boolean {
     const control = this.bodyControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isCategoryInvalid(): boolean {
     const control = this.categoryControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isPictureInvalid(): boolean {
     const control = this.pictureControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isDateInvalid(): boolean {
@@ -454,12 +459,12 @@ export class BlogAddComponent implements OnInit, OnDestroy {
 
   get isStartDateInvalid(): boolean {
     const control = this.startDateControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isEndDateInvalid(): boolean {
     const control = this.endDateControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   // Error message getters

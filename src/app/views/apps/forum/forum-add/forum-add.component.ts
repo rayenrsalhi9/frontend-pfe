@@ -103,6 +103,16 @@ export class ForumAddComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           this.categories = data;
+
+          // Re-derive subcategories if a category is already selected
+          const currentCategoryId = this.forumForm.get("category")?.value;
+          if (currentCategoryId) {
+            const selectedCategory = this.categories.find(
+              (cat) => cat.id === currentCategoryId,
+            );
+            this.subCategories = selectedCategory?.subCategories || [];
+          }
+
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -207,10 +217,19 @@ export class ForumAddComponent implements OnInit, OnDestroy {
       formValue.content = this.sanitizeContent(formValue.content);
     }
 
-    // Process tags - ensure they're strings and remove empty ones
+    // Process tags - normalize both strings and objects, remove empty ones
     if (formValue.tags && formValue.tags.length > 0) {
       formValue.tags = formValue.tags
-        .map((tag) => (typeof tag === "string" ? tag.trim() : tag))
+        .map((tag) => {
+          if (typeof tag === "string") {
+            return tag.trim();
+          } else if (tag && tag.label) {
+            return tag.label.trim();
+          } else if (tag && tag.metatag) {
+            return tag.metatag.trim();
+          }
+          return null;
+        })
         .filter((tag) => tag && tag.length > 0);
     }
 
@@ -249,6 +268,7 @@ export class ForumAddComponent implements OnInit, OnDestroy {
             closed: data.closed,
             tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
+            subCategory: data.subCategory?.id || data.subCategoryId || null,
           });
 
           // Load subcategories for the selected category

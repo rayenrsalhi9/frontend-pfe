@@ -375,27 +375,27 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
   // Validation getters
   get isTitleInvalid(): boolean {
     const control = this.titleControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isCategoryInvalid(): boolean {
     const control = this.categoryControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isDescriptionInvalid(): boolean {
     const control = this.descriptionControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isBodyInvalid(): boolean {
     const control = this.bodyControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   get isPictureInvalid(): boolean {
     const control = this.pictureControl;
-    return !!(control && control.invalid && control.dirty);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   // Error message getters

@@ -29,7 +29,7 @@
             <img
               *ngIf="picture"
               [src]="picture"
-              alt="Article cover"
+              [alt]="'ADD.ARTICLE.PLACEHOLDERS.PICTURE' | translate"
               class="upload-preview-img"
             />
             <div class="upload-placeholder" *ngIf="!picture">
@@ -64,7 +64,10 @@
                 class="btn btn-ghost btn-sm"
                 (click)="fileInput.click()"
                 [attr.aria-label]="
-                  (picture ? 'Change image' : 'Upload image') | translate
+                  (picture
+                    ? 'ADD.ARTICLE.BUTTONS.CHANGE_IMAGE'
+                    : 'ADD.ARTICLE.BUTTONS.UPLOAD_IMAGE'
+                  ) | translate
                 "
               >
                 {{

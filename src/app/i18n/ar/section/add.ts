@@ -201,16 +201,23 @@ export const add = {
     FORUM: {
       TITLE: "تعديل موضوع المنتدى",
       DESCRIPTION: "حدّث موضوع المنتدى وإعداداتك.",
+      BUTTONS: {
+        SAVE: "تحديث الموضوع",
+      },
     },
     BLOG: {
       TITLE: "تعديل مقالة المدونة",
       DESCRIPTION: "حدّث مقالة المدونة وإعداداتك.",
+      BUTTONS: {
+        SAVE: "تحديث المقالة",
+      },
     },
     ARTICLE: {
       TITLE: "تعديل المقالة",
       DESCRIPTION: "حدّث مقالتك وإعداداتك.",
       BUTTONS: {
         UPDATE: "تحديث المقالة",
+        SAVE: "تحديث المقالة",
       },
     },
   },

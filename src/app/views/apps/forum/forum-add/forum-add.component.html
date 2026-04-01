@@ -221,7 +221,7 @@
             (click)="onSubmit()"
             [disabled]="forumForm.invalid || isLoading"
           >
-            {{ "ADD.FORUM.BUTTONS.SAVE" | translate }}
+            {{ (isEdit ? "EDIT.FORUM.BUTTONS.SAVE" : "ADD.FORUM.BUTTONS.SAVE") | translate }}
           </button>
         </div>
       </div>
