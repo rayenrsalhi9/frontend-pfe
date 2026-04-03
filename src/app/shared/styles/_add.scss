@@ -356,18 +356,6 @@
         background: transparent !important;
         color: var(--color-tag-hover, #0c447c) !important;
       }
-    }
-
-    .ng-value-icon {
-      color: #185fa5 !important;
-      font-size: 0.7rem;
-      padding: 0 !important;
-      order: 1;
-
-      &:hover {
-        background: transparent !important;
-        color: #0c447c !important;
-      }
 
       &.left {
         display: none !important;

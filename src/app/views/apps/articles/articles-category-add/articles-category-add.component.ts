@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { BsModalRef } from "ngx-bootstrap/modal";
-import { ArticleCategoryService } from "@app/shared/services/article-category.service";
+import { ArticleCategoryService, CategoryDto } from "@app/shared/services/article-category.service";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
@@ -17,7 +17,7 @@ export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
   isEdit = false;
   isLoading = false;
   isSubmitted = false;
-  data: any;
+  data: CategoryDto | null;
   private destroy$ = new Subject<void>();
 
   constructor(
