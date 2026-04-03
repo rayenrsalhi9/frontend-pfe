@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: "user-edit/:id",
     loadChildren: () =>
-      import("./user-edit/user-edit.module").then((m) => m.UserEditModule),
+      import("./user-add/user-add.module").then((m) => m.UserAddModule),
     data: {
       title: "USERS.LIST.BUTTONS.EDIT",
       hidePageHeader: true,

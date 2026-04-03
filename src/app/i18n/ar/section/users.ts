@@ -10,7 +10,6 @@ export const users = {
         MOBILE: "رقم الهاتف المحمول",
         PHONE: "رقم الهاتف",
         DIRECTION: "الإدارة",
-        MATRICULE: "الرقم الوظيفي",
         ACTION: "الإجراءات",
       },
       BUTTONS: {
@@ -33,8 +32,7 @@ export const users = {
         PASSWORD: "كلمة المرور",
         CONFPASSWORD: "تأكيد كلمة المرور",
         ROLES: "أدوار المستخدم",
-        MATRICULE: "المعرّف الوظيفي",
-        DIRECTION: "القسم",
+        DIRECTION: "الإدارة",
       },
 
       BUTTONS: {
@@ -53,8 +51,7 @@ export const users = {
           "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
         CONFIRM_PASSWORD_IS_REQUIRED: "تأكيد كلمة المرور مطلوب",
         PASSWORDS_DO_NOT_MATCH: "كلمتا المرور غير متطابقتين",
-        DIRECTION_IS_REQUIRED: "القسم مطلوب",
-        MATRICULE_IS_REQUIRED: "المعرّف الوظيفي مطلوب",
+        DIRECTION_IS_REQUIRED: "الإدارة مطلوبة",
       },
 
       TOAST: {
