@@ -162,6 +162,64 @@ export const add = {
       },
     },
 
+    SURVEY: {
+      TITLE: "New survey",
+      DESCRIPTION: "Create a survey to gather feedback or opinions.",
+      LABELS: {
+        TITLE: "Title",
+        TYPE: "Type",
+        PRIVATE: "Private survey",
+        USERS: "Allowed users",
+      },
+      PLACEHOLDERS: {
+        TITLE: "What is this survey about?",
+        USERS: "Search for users…",
+      },
+      HINTS: {
+        PRIVATE:
+          "Only invited members will be able to see and respond to this survey.",
+        REQUIRED_FIELDS: "Fields marked * are required",
+      },
+      BUTTONS: {
+        SAVE: "Create survey",
+        CANCEL: "Cancel",
+      },
+      ERRORS: {
+        TITLE_REQUIRED: "Title is required",
+        TYPE_REQUIRED: "Survey type is required",
+        SAVE_FAILED: "Failed to create survey",
+      },
+      TOAST: {
+        SUCCESS: "Survey created successfully",
+        ERROR: "Failed to create survey",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "New category",
+      DESCRIPTION: "Create a new category to organize your content.",
+      LABELS: {
+        NAME: "Category name",
+        DESCRIPTION: "Description",
+      },
+      PLACEHOLDERS: {
+        NAME: "Enter category name…",
+        DESCRIPTION: "Describe this category…",
+      },
+      BUTTONS: {
+        SAVE: "Save category",
+        CANCEL: "Cancel",
+      },
+      ERRORS: {
+        NAME_REQUIRED: "Category name is required",
+        SAVE_FAILED: "Failed to save category",
+      },
+      TOAST: {
+        SUCCESS: "Category saved successfully",
+        ERROR: "Failed to save category",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "Loading…",
@@ -234,6 +292,30 @@ export const add = {
       TOAST: {
         SUCCESS: "Article updated successfully",
         ERROR: "Failed to update article",
+      },
+    },
+
+    SURVEY: {
+      TITLE: "Edit survey",
+      DESCRIPTION: "Update your survey settings and participants.",
+      BUTTONS: {
+        SAVE: "Update survey",
+      },
+      TOAST: {
+        SUCCESS: "Survey updated successfully",
+        ERROR: "Failed to update survey",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "Edit category",
+      DESCRIPTION: "Update your category name and description.",
+      BUTTONS: {
+        SAVE: "Update category",
+      },
+      TOAST: {
+        SUCCESS: "Category updated successfully",
+        ERROR: "Failed to update category",
       },
     },
   },

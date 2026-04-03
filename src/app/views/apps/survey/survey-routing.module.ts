@@ -29,9 +29,7 @@ const routes: Routes = [
   {
     path: "edit/:id",
     loadChildren: () =>
-      import("./survey-edit/survey-edit.module").then(
-        (m) => m.SurveyEditModule,
-      ),
+      import("./survey-add/survey-add.module").then((m) => m.SurveyAddModule),
     data: {
       title: "SURVEY.BUTTONS.EDIT",
       hidePageHeader: true,

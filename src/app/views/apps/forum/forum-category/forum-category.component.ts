@@ -48,7 +48,10 @@ export class ForumCategoryComponent implements OnInit {
     };
 
     this.modalService
-      .show(ManageComponent, { initialState: initialState })
+      .show(ManageComponent, {
+        class: "modal-md modal-dialog-centered",
+        initialState: initialState,
+      })
       .onHide.subscribe(() => {
         this.getCategories();
       });

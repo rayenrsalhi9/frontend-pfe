@@ -49,12 +49,14 @@ export class ArticlesCategoriesComponent implements OnInit {
 
   manageCategory(data: any) {
     const initialState = {
-      width: "350px",
       data: Object.assign({}, data),
     };
 
     this.modalService
-      .show(ArticlesCategoryAddComponent, { initialState: initialState })
+      .show(ArticlesCategoryAddComponent, {
+        class: "modal-md modal-dialog-centered",
+        initialState: initialState,
+      })
       .onHide.subscribe(() => {
         this.getCategories();
       });
