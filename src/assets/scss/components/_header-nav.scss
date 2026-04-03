@@ -1,7 +1,7 @@
 .header-nav {
-  background: $white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  background: var(--card-bg);
+  border-bottom: 0.5px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
   position: fixed;
   top: 0;
   right: 0;
@@ -10,7 +10,7 @@
   display: flex;
   height: $header-nav-height;
   padding: 0.5rem 0;
-  @include transition(all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.2s ease;
 
   &.layout-vertical {
     @include screen-laptop-only {
@@ -41,8 +41,8 @@
     .header-nav-left,
     .header-nav-right {
       list-style-type: none;
-      padding-left: 0px;
-      margin-bottom: 0px;
+      padding-left: 0;
+      margin-bottom: 0;
       align-items: stretch;
       display: flex;
     }
@@ -53,29 +53,39 @@
       display: flex;
       align-items: center;
       position: relative;
-      @include transition(var(--transition));
+      transition: color 0.15s;
 
       .sidenav-toggle-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         cursor: pointer;
-        border-radius: 12px;
+        border-radius: var(--radius-md);
         background: transparent;
         border: none;
-        color: inherit;
-        @include transition(var(--transition));
+        color: var(--text-primary);
+        transition:
+          background 0.15s,
+          color 0.15s;
+
+        i {
+          color: var(--text-primary);
+        }
 
         &:hover {
           background: var(--primary-glow);
           color: var(--primary);
+
+          i {
+            color: var(--primary);
+          }
         }
       }
 
       .nav-icon {
-        font-size: 1.2rem;
+        font-size: $font-size-body-lg + 0.125rem;
       }
     }
 
@@ -101,7 +111,7 @@
   &.header-text-light {
     .header-nav-wrap {
       .header-nav-item {
-        color: $white;
+        color: var(--card-bg);
       }
     }
   }

@@ -1,31 +1,39 @@
-<div class="welcome-container">
-  <div class="bento-grid">
-    <!-- Blogs Section -->
-    <div class="bento-item item-blogs">
-      <div class="section-header">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="section-title m-0">
-            <i class="feather icon-book-open"></i>
-            {{ "WELCOME.LATEST_BLOGS" | translate }}
-          </h3>
-          <a
-            routerLink="/blog"
-            class="badge badge-primary text-decoration-none"
-          >
-            {{ "WELCOME.SEE_ALL_BLOGS" | translate }}
-            <i class="feather icon-arrow-right ml-1"></i>
-          </a>
-        </div>
-        <p>
-          {{ "WELCOME.LATEST_BLOGS_DESC" | translate }}
-        </p>
+<ng-container *ngIf="{ auth: isAuthenticated$ | async, user: userName$ | async } as vm">
+<div class="welcome-page">
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ "WELCOME.HERO_TITLE" | translate }}
+        <span *ngIf="vm.user" class="user-greeting">{{ vm.user }}</span>
+      </h1>
+      <p class="hero-subtitle">{{ "WELCOME.HERO_SUBTITLE" | translate }}</p>
+      <div class="hero-actions" *ngIf="!vm.auth">
+        <a routerLink="/login" class="btn-hero-primary">
+          {{ "WELCOME.GET_STARTED" | translate }}
+          <i class="feather icon-arrow-right"></i>
+        </a>
       </div>
+    </div>
+  </section>
 
-      <div class="scroll-content">
-        <div *ngIf="latestBlogs?.length > 0; else noBlogs">
+  <section class="content-sections">
+    <!-- Blogs Section -->
+    <div class="content-card card-blogs">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="feather icon-book-open"></i>
+          {{ "WELCOME.LATEST_BLOGS" | translate }}
+        </h2>
+        <a routerLink="/blog" class="card-link">
+          {{ "WELCOME.SEE_ALL" | translate }}
+          <i class="feather icon-arrow-right"></i>
+        </a>
+      </div>
+      <div class="card-body">
+        <div *ngIf="latestBlogs?.length > 0; else noBlogs" class="items-list">
           <a
-            *ngFor="let blog of latestBlogs | slice: 0 : 5"
-            class="content-card"
+            *ngFor="let blog of latestBlogs | slice: 0 : 3"
+            class="item-entry"
             [routerLink]="['/blog', blog.id]"
           >
             <img
@@ -34,20 +42,20 @@
                   ? getHost() + blog.picture
                   : '/assets/images/others/bg-4.jpg'
               "
-              class="thumbnail"
+              class="item-thumb"
               alt="blog"
             />
-            <div class="card-info">
-              <h4 class="card-title">{{ blog?.title }}</h4>
-              <p class="card-meta">
-                {{ blog?.createdAt | utcToLocalTime: "shortDate" }} •
-                {{ blog?.category?.name }}
-              </p>
+            <div class="item-content">
+              <h3 class="item-title">{{ blog?.title }}</h3>
+              <span class="item-meta">
+                {{ blog?.createdAt | utcToLocalTime: "shortDate" }}
+              </span>
             </div>
           </a>
         </div>
         <ng-template #noBlogs>
           <div class="empty-state">
+            <i class="feather icon-book-open"></i>
             <p>{{ "WELCOME.NO_BLOGS" | translate }}</p>
           </div>
         </ng-template>
@@ -55,32 +63,22 @@
     </div>
 
     <!-- Articles Section -->
-    <div class="bento-item item-articles">
-      <div class="section-header">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="section-title m-0">
-            <i class="feather icon-file-text"></i>
-            {{ "WELCOME.LATEST_ARTICLES" | translate }}
-          </h3>
-          <a
-            routerLink="/article"
-            class="badge badge-primary text-decoration-none"
-            *ngIf="articles?.length > 0"
-          >
-            {{ "WELCOME.SEE_ALL_ARTICLES" | translate }}
-            <i class="feather icon-arrow-right ml-1"></i>
-          </a>
-        </div>
-        <p>
-          {{ "WELCOME.LATEST_ARTICLES_DESC" | translate }}
-        </p>
+    <div class="content-card card-articles">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="feather icon-file-text"></i>
+          {{ "WELCOME.LATEST_ARTICLES" | translate }}
+        </h2>
+        <a routerLink="/article" class="card-link" *ngIf="articles?.length > 0">
+          {{ "WELCOME.SEE_ALL" | translate }}
+          <i class="feather icon-arrow-right"></i>
+        </a>
       </div>
-
-      <div class="scroll-content">
-        <div *ngIf="articles?.length > 0; else noArticles">
+      <div class="card-body">
+        <div *ngIf="articles?.length > 0; else noArticles" class="items-list">
           <a
-            *ngFor="let article of articles | slice: 0 : 5"
-            class="content-card"
+            *ngFor="let article of articles | slice: 0 : 3"
+            class="item-entry"
             [routerLink]="['/article', article.id]"
           >
             <img
@@ -91,125 +89,119 @@
                     ? getHost() + article.files[0].path
                     : '/assets/images/others/bg-4.jpg'
               "
-              class="thumbnail"
+              class="item-thumb"
               alt="article"
             />
-            <div class="card-info">
-              <h4 class="card-title">{{ article?.title }}</h4>
-              <p class="card-meta">
-                {{ "WELCOME.POSTED_ON" | translate }}
+            <div class="item-content">
+              <h3 class="item-title">{{ article?.title }}</h3>
+              <span class="item-meta">
                 {{ article?.createdAt | utcToLocalTime: "shortDate" }}
-              </p>
+              </span>
             </div>
           </a>
         </div>
         <ng-template #noArticles>
           <div class="empty-state">
+            <i class="feather icon-file-text"></i>
             <p>{{ "WELCOME.NO_ARTICLES" | translate }}</p>
           </div>
         </ng-template>
       </div>
     </div>
 
-    <!-- Survey Section -->
-    <div class="bento-item item-survey survey-card">
-      <div class="section-header">
-        <h3 class="section-title">
-          <i class="feather icon-bar-chart-2"></i>
-          {{ "WELCOME.SURVEY" | translate }}
-        </h3>
-      </div>
-
-      <div *ngIf="survey; else noSurvey" class="survey-content">
-        <p class="survey-question">"{{ survey?.title }}"</p>
-
-        <div class="survey-btns">
-          <ng-container *ngIf="survey?.type == 'simple'">
-            <button (click)="surveyAnswer(1)" class="btn-minimal">
-              {{ "BUTTONS.YES" | translate }}
-            </button>
-            <button (click)="surveyAnswer(0)" class="btn-minimal">
-              {{ "BUTTONS.NO" | translate }}
-            </button>
-          </ng-container>
-
-          <ng-container *ngIf="survey?.type == 'rating'">
-            <rating [max]="5"
-            [(ngModel)]="selectedRating"
-            (ngModelChange)="surveyAnswer($event)"></rating>
-          </ng-container>
-
-          <ng-container *ngIf="survey?.type == 'satisfaction'">
-            <button
-              (click)="surveyAnswer(0)"
-              class="btn-minimal satisfaction-btn satisfied"
-            >
-              {{ "BUTTONS.SATISFIED" | translate }}
-            </button>
-            <button
-              (click)="surveyAnswer(1)"
-              class="btn-minimal satisfaction-btn neutral"
-            >
-              {{ "BUTTONS.NEUTRAL" | translate }}
-            </button>
-            <button
-              (click)="surveyAnswer(2)"
-              class="btn-minimal satisfaction-btn not-satisfied"
-            >
-              {{ "BUTTONS.NOT_SATISFIED" | translate }}
-            </button>
-          </ng-container>
-        </div>
-      </div>
-      <ng-template #noSurvey>
-        <div class="empty-state">
-          <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
-        </div>
-      </ng-template>
-    </div>
-
     <!-- Forum Section -->
-    <div class="bento-item item-forum">
-      <div class="section-header">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="section-title m-0">
-            <i class="feather icon-message-circle"></i>
-            {{ "WELCOME.LATEST_FORUMS" | translate }}
-          </h3>
-          <a
-            routerLink="/forum"
-            class="badge badge-primary text-decoration-none"
-          >
-            {{ "WELCOME.SEE_ALL_FORUMS" | translate }}
-            <i class="feather icon-arrow-right ml-1"></i>
-          </a>
-        </div>
-        <p>
-          {{ "WELCOME.LATEST_FORUMS_DESC" | translate }}
-        </p>
+    <div class="content-card card-forum">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="feather icon-message-circle"></i>
+          {{ "WELCOME.LATEST_FORUMS" | translate }}
+        </h2>
+        <a routerLink="/forum" class="card-link">
+          {{ "WELCOME.SEE_ALL" | translate }}
+          <i class="feather icon-arrow-right"></i>
+        </a>
       </div>
-
-      <div class="scroll-content">
-        <div *ngIf="latestForums?.length > 0; else noForums">
+      <div class="card-body">
+        <div *ngIf="latestForums?.length > 0; else noForums" class="items-list">
           <a
-            *ngFor="let forum of latestForums | slice: 0 : 5"
-            class="content-card"
+            *ngFor="let forum of latestForums | slice: 0 : 3"
+            class="item-entry simple"
             [routerLink]="['/forum', forum.id]"
           >
-            <div class="card-info">
-              <h4 class="card-title">{{ forum?.title }}</h4>
-              <p class="card-meta">
+            <div class="item-content">
+              <h3 class="item-title">{{ forum?.title }}</h3>
+              <span class="item-meta">
                 {{ "WELCOME.BY" | translate }} {{ forum?.creator?.firstName }}
-              </p>
+              </span>
             </div>
           </a>
         </div>
         <ng-template #noForums>
           <div class="empty-state">
+            <i class="feather icon-message-circle"></i>
             <p>{{ "WELCOME.NO_FORUMS" | translate }}</p>
           </div>
         </ng-template>
       </div>
     </div>
-  </div>
+
+    <!-- Survey Section -->
+    <div class="content-card card-survey">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="feather icon-bar-chart-2"></i>
+          {{ "WELCOME.SURVEY" | translate }}
+        </h2>
+      </div>
+      <div class="card-body survey-body">
+        <div *ngIf="survey; else noSurvey" class="survey-content">
+          <p class="survey-question">"{{ survey?.title }}"</p>
+          <div class="survey-actions">
+            <ng-container *ngIf="survey?.type == 'simple'">
+              <button (click)="surveyAnswer(1)" class="btn-survey">
+                {{ "BUTTONS.YES" | translate }}
+              </button>
+              <button (click)="surveyAnswer(0)" class="btn-survey">
+                {{ "BUTTONS.NO" | translate }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="survey?.type == 'rating'">
+              <rating
+                [max]="5"
+                [(ngModel)]="selectedRating"
+                (ngModelChange)="surveyAnswer($event)"
+              ></rating>
+            </ng-container>
+            <ng-container *ngIf="survey?.type == 'satisfaction'">
+              <button
+                (click)="surveyAnswer(0)"
+                class="btn-survey satisfied"
+              >
+                {{ "BUTTONS.SATISFIED" | translate }}
+              </button>
+              <button
+                (click)="surveyAnswer(1)"
+                class="btn-survey neutral"
+              >
+                {{ "BUTTONS.NEUTRAL" | translate }}
+              </button>
+              <button
+                (click)="surveyAnswer(2)"
+                class="btn-survey unsatisfied"
+              >
+                {{ "BUTTONS.NOT_SATISFIED" | translate }}
+              </button>
+            </ng-container>
+          </div>
+        </div>
+        <ng-template #noSurvey>
+          <div class="empty-state">
+            <i class="feather icon-bar-chart-2"></i>
+            <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </section>
 </div>
+</ng-container>

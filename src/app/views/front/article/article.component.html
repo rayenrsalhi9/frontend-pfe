@@ -1,45 +1,40 @@
-<div class="list-page">
+<div class="content-page">
   <!-- Page Header -->
-  <div class="list-page-header">
-    <div class="list-page-header-inner">
-      <div class="header-text">
-        <h1 class="list-page-title">
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="header-content">
+        <h1 class="page-title">
           <i class="feather icon-file-text"></i>
           {{ "PREVIEW.ARTICLE.LIST.TITLE" | translate }}
         </h1>
-        <p class="list-page-desc">
+        <p class="page-description">
           {{ "PREVIEW.ARTICLE.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat" *ngIf="articles !== null">
-        <span class="stat-pill">
-          <i class="feather icon-layers"></i>
-          {{ articles.length }} {{ "PREVIEW.ARTICLE.TABLE.POSTS" | translate }}
-        </span>
+      <div class="header-badge" *ngIf="articles !== null">
+        <i class="feather icon-layers"></i>
+        {{ articles.length }} {{ "PREVIEW.ARTICLE.TABLE.POSTS" | translate }}
       </div>
     </div>
-  </div>
+  </header>
 
   <!-- Articles Grid -->
-  <div class="list-page-body">
+  <main class="content-body">
     <!-- Empty State -->
-    <div
-      class="empty-state-card"
-      *ngIf="articles !== null && articles.length === 0"
-    >
+    <div class="empty-state" *ngIf="articles !== null && articles.length === 0">
       <i class="feather icon-file-text"></i>
       <h3>{{ "PREVIEW.ARTICLE.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
-    <!-- Article card grid -->
-    <div class="articles-grid" *ngIf="articles !== null && articles.length > 0">
+    <!-- Cards Grid -->
+    <div class="cards-grid" *ngIf="articles !== null && articles.length > 0">
       <a
         *ngFor="let article of articles"
-        class="article-card"
+        class="card-item"
         [routerLink]="'/article/' + article.id"
       >
-        <!-- Cover image -->
-        <div class="article-cover">
+        <!-- Cover -->
+        <div class="card-cover">
           <img
             *ngIf="article.picture"
             [src]="
@@ -52,55 +47,29 @@
             class="cover-img"
           />
           <div class="cover-placeholder" *ngIf="!article.picture">
-            <svg
-              width="80"
-              height="60"
-              viewBox="0 0 80 60"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="2"
-                y="2"
-                width="76"
-                height="56"
-                rx="4"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <circle
-                cx="22"
-                cy="20"
-                r="7"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path
-                d="M2 42 L20 26 L34 38 L50 22 L78 46"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <i class="feather icon-image"></i>
           </div>
-          <div class="cover-overlay"></div>
-          <span class="cover-category" *ngIf="article.category?.name">
+          <span class="category-badge" *ngIf="article.category?.name">
             {{ article.category.name }}
           </span>
         </div>
 
-        <!-- Card body -->
-        <div class="article-card-body">
-          <h2 class="article-title">{{ article.title }}</h2>
-          <p class="article-subtitle" *ngIf="article.subtitle">
+        <!-- Body -->
+        <div class="card-body">
+          <h2 class="card-title">{{ article.title }}</h2>
+          <p class="card-subtitle" *ngIf="article.subtitle">
             {{ article.subtitle }}
           </p>
-          <div class="article-footer">
-            <span class="article-comments">
-              <i class="feather icon-message-square"></i>
-              {{ article.commentsCount ?? article.comments?.length ?? 0 }}
-            </span>
-            <span class="article-cta">
+          
+          <!-- Footer -->
+          <div class="card-footer">
+            <div class="card-stats">
+              <span class="stat-item">
+                <i class="feather icon-message-square"></i>
+                {{ article.commentsCount ?? article.comments?.length ?? 0 }}
+              </span>
+            </div>
+            <span class="read-more">
               {{ "PREVIEW.ARTICLE.LIST.READ_MORE" | translate }}
               <i class="feather icon-arrow-right"></i>
             </span>
@@ -108,5 +77,5 @@
         </div>
       </a>
     </div>
-  </div>
+  </main>
 </div>

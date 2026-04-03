@@ -1,7 +1,7 @@
 <div class="ged-side-nav-shell">
   <a routerLink="/" class="ged-brand-card" aria-label="GED home">
     <div class="ged-brand-inner">
-      <i class="las la-file-alt ged-brand-icon" aria-hidden="true"></i>
+      <i class="feather ged-brand-icon icon-file-text"></i>
       <span class="ged-brand-text">GED</span>
     </div>
   </a>
@@ -11,9 +11,7 @@
   </div>
 
   <button type="button" class="ged-logout-btn" (click)="logout()">
-    <i class="feather icon-log-out ged-logout-icon" aria-hidden="true"></i>
-    <span class="ged-logout-label">{{
-      "DROPDOWN_PROFILE.LOGOUT" | translate
-    }}</span>
+    <i class="feather ged-logout-icon icon-log-out"></i>
+    <span class="ged-logout-label">{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
   </button>
 </div>

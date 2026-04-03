@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
@@ -27,6 +29,8 @@ export class WelcomeComponent implements OnInit {
   errorMessage: string = "";
   bsModalRef: BsModalRef;
   selectedRating: number = 0;
+  isAuthenticated$: Observable<boolean | null>;
+  userName$: Observable<string | null>;
 
   constructor(
     private blogService: BlogService,
@@ -42,6 +46,23 @@ export class WelcomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth === undefined) return null;
+        if (auth === null) return false;
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
+    );
+
+    this.userName$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth && auth?.user?.userName) {
+          return auth.user.firstName || auth.user.userName;
+        }
+        return null;
+      }),
+    );
+
     this.getBannerBlogs();
     this.getLatestBlogs();
     this.getLastForums();

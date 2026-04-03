@@ -1,51 +1,16 @@
-<div class="blog-page" *ngIf="blog?.id">
+<div class="preview-page" *ngIf="blog?.id">
   <!-- Hero -->
   <div class="hero">
     <div class="cover-image" *ngIf="blog.picture">
-      <img
-        [src]="
-          blog.picture.startsWith('data:') || blog.picture.startsWith('http')
-            ? blog.picture
-            : getHost() + blog.picture
-        "
-        [alt]="blog.title"
-        class="cover-img"
-      />
+      <img [src]="blog.picture.startsWith('data:') || blog.picture.startsWith('http') ? blog.picture : getHost() + blog.picture" [alt]="blog.title" class="cover-img" />
     </div>
     <div class="cover-placeholder" *ngIf="!blog.picture">
-      <svg
-        width="80"
-        height="60"
-        viewBox="0 0 80 60"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect
-          x="2"
-          y="2"
-          width="76"
-          height="56"
-          rx="4"
-          stroke="currentColor"
-          stroke-width="2"
-        />
-        <circle cx="22" cy="20" r="7" stroke="currentColor" stroke-width="2" />
-        <path
-          d="M2 42 L20 26 L34 38 L50 22 L78 46"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <i class="feather icon-image"></i>
     </div>
     <div class="hero-body">
       <div class="meta-row">
-        <span class="badge badge-amber">
-          {{ "PREVIEW.BLOG.LABEL" | translate }}
-        </span>
-        <span class="badge badge-cat" *ngIf="blog.category?.name">
-          {{ blog.category.name }}
-        </span>
+        <span class="badge badge-blog">{{ "PREVIEW.BLOG.LABEL" | translate }}</span>
+        <span class="badge badge-cat" *ngIf="blog.category?.name">{{ blog.category.name }}</span>
       </div>
       <h1 class="hero-title">{{ blog.title }}</h1>
       <p class="hero-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
@@ -53,47 +18,30 @@
         <div class="avatar-circle">
           <i class="feather icon-user"></i>
         </div>
-        <div>
-          <div class="author-name">
-            {{ blog.creator?.firstName }} {{ blog.creator?.lastName }}
-          </div>
-          <div class="author-date">
-            {{ blog.createdAt | utcToLocalTime: "mediumDate" }}
-          </div>
+        <div class="author-info">
+          <div class="author-name">{{ blog.creator?.firstName }} {{ blog.creator?.lastName }}</div>
+          <div class="author-date">{{ blog.createdAt | utcToLocalTime: "mediumDate" }}</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Two-column layout -->
-  <div class="layout">
+  <div class="preview-layout">
     <!-- Main column -->
     <div class="main-col">
       <!-- Article body -->
-      <div class="card article-card">
-        <div
-          class="article-body rich-content"
-          [innerHTML]="blog.body | safeHtml"
-        ></div>
+      <div class="preview-card article-body">
+        <div class="rich-content" [innerHTML]="blog.body | safeHtml"></div>
 
         <!-- Reactions -->
         <div class="reactions">
           <div class="rxn-group">
-            <button
-              class="rxn-btn"
-              [class.active-up]="hasReacted('up')"
-              (click)="addReaction('up')"
-              [title]="'PREVIEW.BLOG.REACTIONS.UP' | translate"
-            >
+            <button class="rxn-btn" [class.active-up]="hasReacted('up')" (click)="addReaction('up')" [title]="'PREVIEW.BLOG.REACTIONS.UP' | translate">
               <i class="feather icon-thumbs-up"></i>
               {{ blog.reactionsUp?.length || 0 }}
             </button>
-            <button
-              class="rxn-btn"
-              [class.active-down]="hasReacted('down')"
-              (click)="addReaction('down')"
-              [title]="'PREVIEW.BLOG.REACTIONS.DOWN' | translate"
-            >
+            <button class="rxn-btn" [class.active-down]="hasReacted('down')" (click)="addReaction('down')" [title]="'PREVIEW.BLOG.REACTIONS.DOWN' | translate">
               <i class="feather icon-thumbs-down"></i>
               {{ blog.reactionsDown?.length || 0 }}
             </button>
@@ -106,11 +54,9 @@
       </div>
 
       <!-- Comments -->
-      <div class="card comments-card">
+      <div class="preview-card comments-card">
         <div class="comments-header">
-          <span class="comments-title">{{
-            "PREVIEW.BLOG.PREVIEW.COMMENTS" | translate
-          }}</span>
+          <span class="comments-title">{{ "PREVIEW.BLOG.PREVIEW.COMMENTS" | translate }}</span>
         </div>
 
         <!-- Add comment form -->
@@ -118,17 +64,8 @@
           <div class="avatar-circle sm">
             <i class="feather icon-user"></i>
           </div>
-          <textarea
-            class="comment-input"
-            [(ngModel)]="comment"
-            id="blogComment"
-            rows="2"
-            [placeholder]="'PREVIEW.BLOG.COMMENT.ADD_COMMENT' | translate"
-            [attr.aria-label]="'PREVIEW.BLOG.COMMENT.ADD_COMMENT' | translate"
-          ></textarea>
-          <button class="send-btn" (click)="addComment()" type="button">
-            {{ "PREVIEW.BLOG.PREVIEW.ADD_COMMENT" | translate }}
-          </button>
+          <textarea class="comment-input" [(ngModel)]="comment" id="blogComment" rows="2" [placeholder]="'PREVIEW.BLOG.COMMENT.ADD_COMMENT' | translate" [attr.aria-label]="'PREVIEW.BLOG.COMMENT.ADD_COMMENT' | translate"></textarea>
+          <button class="send-btn" (click)="addComment()" type="button">{{ "PREVIEW.BLOG.PREVIEW.ADD_COMMENT" | translate }}</button>
         </div>
 
         <!-- Comments list -->
@@ -139,12 +76,8 @@
             </div>
             <div class="cm-body">
               <div class="cm-header">
-                <span class="cm-name"
-                  >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
-                >
-                <span class="cm-time">{{
-                  c.createdAt | utcToLocalTime: "mediumDate"
-                }}</span>
+                <span class="cm-name">{{ c.user?.firstName }} {{ c.user?.lastName }}</span>
+                <span class="cm-time">{{ c.createdAt | utcToLocalTime: "mediumDate" }}</span>
               </div>
               <p class="cm-text">{{ c.comment }}</p>
             </div>
@@ -152,40 +85,30 @@
         </div>
 
         <!-- Empty state -->
-        <div class="empty-state" *ngIf="!blog.comments?.length">
-          {{ "PREVIEW.BLOG.PREVIEW.NO_COMMENTS" | translate }}
-        </div>
+        <div class="empty-state" *ngIf="!blog.comments?.length">{{ "PREVIEW.BLOG.PREVIEW.NO_COMMENTS" | translate }}</div>
       </div>
     </div>
 
     <!-- Sidebar -->
     <aside class="sidebar">
       <!-- Stats -->
-      <div class="card widget-card">
-        <div class="widget-title">
-          {{ "PREVIEW.WIDGETS.STATS" | translate }}
-        </div>
+      <div class="preview-card widget-card">
+        <div class="widget-title">{{ "PREVIEW.WIDGETS.STATS" | translate }}</div>
         <div class="stat-row">
           <div class="stat-item">
             <div class="stat-val">{{ blog.reactionsUp?.length || 0 }}</div>
-            <div class="stat-lbl">
-              {{ "PREVIEW.WIDGETS.LIKES" | translate }}
-            </div>
+            <div class="stat-lbl">{{ "PREVIEW.WIDGETS.LIKES" | translate }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-val">{{ blog.comments?.length || 0 }}</div>
-            <div class="stat-lbl">
-              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
-            </div>
+            <div class="stat-lbl">{{ "PREVIEW.WIDGETS.COMMENTS" | translate }}</div>
           </div>
         </div>
       </div>
 
       <!-- Share -->
-      <div class="card widget-card">
-        <div class="widget-title">
-          {{ "PREVIEW.WIDGETS.SHARE" | translate }}
-        </div>
+      <div class="preview-card widget-card">
+        <div class="widget-title">{{ "PREVIEW.WIDGETS.SHARE" | translate }}</div>
         <button class="share-btn" (click)="copyLink()" type="button">
           <i class="feather icon-link"></i>
           {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}

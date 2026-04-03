@@ -1,96 +1,80 @@
-<div class="list-page">
+<div class="forum-page">
   <!-- Page Header -->
-  <div class="list-page-header">
-    <div class="list-page-header-inner">
-      <div class="header-text">
-        <h1 class="list-page-title">
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="header-content">
+        <h1 class="page-title">
           <i class="feather icon-message-circle"></i>
           {{ "PREVIEW.FORUM.LIST.TITLE" | translate }}
         </h1>
-        <p class="list-page-desc">
+        <p class="page-description">
           {{ "PREVIEW.FORUM.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat" *ngIf="rows !== null">
-        <span class="stat-pill">
-          <i class="feather icon-layers"></i>
-          {{ rows.length }} {{ "PREVIEW.FORUM.TABLE.TOPIC" | translate }}
-        </span>
+      <div class="header-badge" *ngIf="rows !== null">
+        <i class="feather icon-layers"></i>
+        {{ rows.length }} {{ "PREVIEW.FORUM.TABLE.TOPIC" | translate }}
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Forum Thread List -->
-  <div class="list-page-body">
+  <!-- Forum Threads -->
+  <main class="forum-content">
     <!-- Empty State -->
-    <div class="empty-state-card" *ngIf="rows !== null && rows.length === 0">
+    <div class="empty-state" *ngIf="rows !== null && rows.length === 0">
       <i class="feather icon-message-square"></i>
       <h3>{{ "PREVIEW.FORUM.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
-    <!-- Thread rows -->
-    <div class="forum-table-container" *ngIf="rows !== null && rows.length > 0">
+    <!-- Thread List -->
+    <div class="threads-list" *ngIf="rows !== null && rows.length > 0">
       <a
         *ngFor="let row of rows; trackBy: trackByThreadId"
-        class="thread-card"
+        class="thread-item"
         [routerLink]="'/forum/' + row.id"
       >
-        <!-- Thread icon / avatar -->
-        <div class="thread-icon" [class.closed]="row.closed">
+        <div class="thread-avatar" [class.locked]="row.closed">
           <i
             class="feather"
             [class.icon-lock]="row.closed"
-            [class.icon-message-square]="!row.closed"
+            [class.icon-message-circle]="!row.closed"
           ></i>
         </div>
 
-        <!-- Thread main info -->
-        <div class="thread-info">
-          <div class="thread-top">
-            <span class="thread-title">{{ row.title }}</span>
-            <span class="thread-status closed-badge" *ngIf="row.closed">
+        <div class="thread-main">
+          <div class="thread-header">
+            <h2 class="thread-title">{{ row.title }}</h2>
+            <span class="status-badge" *ngIf="row.closed">
               {{ "PREVIEW.FORUM.STATUS.CLOSED" | translate }}
             </span>
           </div>
           <div class="thread-meta">
-            <span class="meta-item category-chip" *ngIf="row.category?.name">
+            <span class="meta-tag" *ngIf="row.category?.name">
               <i class="feather icon-tag"></i>
               {{ row.category?.name }}
             </span>
-            <span class="meta-item">
-              <i class="feather icon-calendar"></i>
+            <span class="meta-date">
+              <i class="feather icon-clock"></i>
               {{ row.createdAt | utcToLocalTime: "mediumDate" }}
             </span>
           </div>
         </div>
 
-        <!-- Thread stats -->
         <div class="thread-stats">
-          <div
-            class="stat-item"
-            [title]="'PREVIEW.FORUM.TABLE.REPLIES' | translate"
-            [attr.aria-label]="('PREVIEW.FORUM.TABLE.REPLIES' | translate) + ': ' + (row.commentsCount ?? row.comments?.length ?? 0)"
-          >
+          <div class="stat-badge-item">
             <i class="feather icon-message-square"></i>
             <span>{{ row.commentsCount ?? row.comments?.length ?? 0 }}</span>
           </div>
-          <div
-            class="stat-item"
-            [title]="'PREVIEW.FORUM.TABLE.REACTIONS' | translate"
-            [attr.aria-label]="('PREVIEW.FORUM.TABLE.REACTIONS' | translate) + ': ' + (row.reactionsCount ?? row.reactions?.length ?? 0)"
-          >
+          <div class="stat-badge-item">
             <i class="feather icon-heart"></i>
             <span>{{ row.reactionsCount ?? row.reactions?.length ?? 0 }}</span>
           </div>
         </div>
 
-        <div class="thread-chevron">
-          <span class="thread-cta">{{
-            "PREVIEW.FORUM.LIST.VIEW_THREAD" | translate
-          }}</span>
-          <i class="feather icon-chevron-right"></i>
+        <div class="thread-action">
+          <i class="feather icon-arrow-right"></i>
         </div>
       </a>
     </div>
-  </div>
+  </main>
 </div>

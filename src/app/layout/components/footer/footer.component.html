@@ -1,77 +1,46 @@
-<!-- Site footer -->
-<footer class="site-footer">
+<footer class="app-footer">
   <div class="footer-container">
-    <!-- Top section: Logo and Newsletter -->
-    <div class="footer-top">
-      <a class="footer-brand" routerLink="/">
-        <div class="brand-identity">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <a routerLink="/" class="footer-logo">
           <logo></logo>
-          <h2 class="brand-title">{{ "FOOTER.BRAND_TITLE" | translate }}</h2>
+        </a>
+        <p class="footer-desc">{{ "FOOTER.DESC" | translate }}</p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="col-title">{{ "FOOTER.LINKS" | translate }}</h4>
+        <ul class="footer-links">
+          <li><a routerLink="/" class="footer-link">{{ "NAV.HOME" | translate }}</a></li>
+          <li><a routerLink="/forum" class="footer-link">{{ "NAV.FORUM" | translate }}</a></li>
+          <li><a routerLink="/blog" class="footer-link">{{ "NAV.BLOG" | translate }}</a></li>
+          <li><a routerLink="/article" class="footer-link">{{ "NAV.ARTICLE" | translate }}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-social-col">
+        <h4 class="col-title">{{ "FOOTER.CONNECT" | translate }}</h4>
+        <div class="social-links">
+          <a href="javascript:void(0)" class="social-btn" aria-label="Twitter">
+            <i class="feather icon-twitter"></i>
+          </a>
+          <a href="javascript:void(0)" class="social-btn" aria-label="Website">
+            <i class="feather icon-globe"></i>
+          </a>
+          <a href="javascript:void(0)" class="social-btn" aria-label="Facebook">
+            <i class="feather icon-facebook"></i>
+          </a>
+          <a href="javascript:void(0)" class="social-btn" aria-label="LinkedIn">
+            <i class="feather icon-linkedin"></i>
+          </a>
         </div>
-        <p class="brand-description">
-          {{ "FOOTER.BRAND_DESCRIPTION" | translate }}
-        </p>
-      </a>
-      <div class="footer-membership">
-        <p class="membership-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</p>
-        <p class="membership-description">
-          {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}
-        </p>
-        <form
-          class="membership-form"
-          (ngSubmit)="onRequestMembership(emailInput.value)"
-        >
-          <label for="footer-membership-input" class="sr-only">{{
-            "FOOTER.EMAIL_PLACEHOLDER" | translate
-          }}</label>
-          <input
-            #emailInput
-            id="footer-membership-input"
-            type="email"
-            [placeholder]="'FOOTER.EMAIL_PLACEHOLDER' | translate"
-            class="membership-input"
-            required
-          />
-          <button type="submit" class="membership-btn">
-            {{ "FOOTER.REQUEST_MEMBERSHIP" | translate }}
-          </button>
-        </form>
       </div>
     </div>
 
-    <!-- Navigation Links -->
-    <div class="footer-nav">
-      <a routerLink="/" class="footer-nav-link">{{ "NAV.HOME" | translate }}</a>
-      <a routerLink="/forum" class="footer-nav-link">{{
-        "NAV.FORUM" | translate
-      }}</a>
-      <a routerLink="/blog" class="footer-nav-link">{{
-        "NAV.BLOG" | translate
-      }}</a>
-    </div>
-
-    <hr class="footer-divider" />
-
-    <!-- Bottom Section: Copyright and Socials -->
-    <div class="footer-bottom">
-      <p class="footer-copyright">
-        &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}.
-        {{ "FOOTER.COPYRIGHT" | translate }}
+    <div class="footer-bar">
+      <p class="copyright">
+        &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}. {{ "FOOTER.RIGHTS" | translate }}
       </p>
-      <div class="footer-social">
-        <a href="javascript:void(0)" class="social-icon" aria-label="Twitter">
-          <i class="feather icon-twitter"></i>
-        </a>
-        <a href="javascript:void(0)" class="social-icon" aria-label="Website">
-          <i class="feather icon-globe"></i>
-        </a>
-        <a href="javascript:void(0)" class="social-icon" aria-label="Facebook">
-          <i class="feather icon-facebook"></i>
-        </a>
-        <a href="javascript:void(0)" class="social-icon" aria-label="LinkedIn">
-          <i class="feather icon-linkedin"></i>
-        </a>
-      </div>
     </div>
   </div>
 </footer>

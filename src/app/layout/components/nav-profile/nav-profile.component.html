@@ -7,24 +7,24 @@
     (click)="navProfile.toggle($event)"
   >
     <avatar
-      [size]="35"
+      [size]="32"
       [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
     ></avatar>
     <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-    <i class="feather icon-chevron-down opacity-50"></i>
+    <i class="feather icon-chevron-down"></i>
   </button>
   <dropdown-menu #navProfile alignment="right">
     <div class="nav-profile-header">
       <div class="d-flex align-items-center gap-3">
         <avatar
-          [size]="45"
+          [size]="40"
           [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
         ></avatar>
         <div class="d-flex flex-column">
-          <span class="fw-bold text-dark font-size-base line-height-1 mb-1"
+          <span class="profile-name"
             >{{ user.firstName }} {{ user.lastName }}</span
           >
-          <span class="font-size-sm text-muted">{{ user.email }}</span>
+          <span class="profile-email">{{ user.email }}</span>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@
         (click)="logout()"
         dropdownItem
       >
-        <i class="feather icon-power"></i>
+        <i class="feather icon-log-out"></i>
         <span>{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
       </button>
     </div>

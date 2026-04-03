@@ -6,26 +6,26 @@
     z-index: 998;
     display: flex;
     height: $header-navbar-height;
-    background-color: $white;
+    background-color: var(--card-bg);
 
     &.nav-menu-dark {
-        background-color: $side-nav-dark;
+        background-color: var(--text-primary);
 
         .nav-menu {
             &.nav-menu-horizontal {
 
                 >.nav-menu-item {
-                    color: rgba($white, 0.65);
+                    color: rgba(var(--card-bg), 0.65);
 
                     i {
-                        color: rgba($white, 0.65);
+                        color: rgba(var(--card-bg), 0.65);
                     }
 
                     &:hover {
-                        color: $white;
+                        color: var(--card-bg);
 
                         i {
-                            color: $white;
+                            color: var(--card-bg);
                         }
                     }
                 }
@@ -33,17 +33,17 @@
                 > nav-submenu {
                     > .nav-submenu {
                         > .nav-submenu-title {
-                            color: rgba($white, 0.65);
+                            color: rgba(var(--card-bg), 0.65);
 
                             i {
-                                color: rgba($white, 0.65);
+                                color: rgba(var(--card-bg), 0.65);
                             }
 
                             &:hover {
-                                color: $white;
+                                color: var(--card-bg);
         
                                 i {
-                                    color: $white;
+                                    color: var(--card-bg);
                                 }
                             }
                         }
@@ -54,6 +54,6 @@
     }
 
     &.nav-menu-light {
-        background-color: $white;
+        background-color: var(--card-bg);
     }
 }
