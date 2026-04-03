@@ -14,11 +14,11 @@
 }
 
 .welcome-header.is-scrolled {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--header-scrolled-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom-color: rgba(226, 232, 240, 0.5);
-  box-shadow: var(--shadow-sm);
+  border-bottom-color: var(--header-scrolled-border);
+  box-shadow: var(--header-scrolled-shadow);
 }
 
 .header-inner {
@@ -314,5 +314,4 @@
 
 .w-100 {
   width: 100%;
-  justify-content: center;
 }

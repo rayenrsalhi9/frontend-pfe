@@ -6,6 +6,44 @@
   width: auto;
 }
 
+:host-context(.header-nav-item) {
+  display: flex;
+  align-items: center;
+  height: $header-nav-height;
+
+  .language-selector {
+    align-items: center;
+  }
+
+  .trigger-btn {
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+
+    &:hover {
+      background: var(--primary-glow);
+      border-color: transparent;
+    }
+  }
+
+  .language-menu {
+    top: $header-nav-height;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px) scale(0.95);
+
+    &.is-open {
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    &.is-dropup {
+      top: auto;
+      bottom: $header-nav-height;
+      transform-origin: bottom;
+    }
+  }
+}
+
 .language-selector {
   position: relative;
   display: inline-block;
@@ -45,7 +83,7 @@
 
 .language-menu {
   position: absolute;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
   right: 0;
   min-width: 140px;
   background: var(--card-bg);
@@ -55,7 +93,7 @@
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px) scale(0.95);
+  transform: translateY(-8px) scale(0.95);
   transition: all 0.15s ease;
   z-index: 1000;
   display: flex;
@@ -66,6 +104,20 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
+  }
+
+  &.is-dropup {
+    top: auto;
+    bottom: calc(100% + 8px);
+    transform-origin: bottom;
+  }
+
+  &.is-dropright {
+    left: calc(100% + 8px);
+    right: auto;
+    top: auto;
+    bottom: 0;
+    transform-origin: left;
   }
 }
 

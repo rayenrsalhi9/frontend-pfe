@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, Inject, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { Blog } from "@app/shared/models/blog.model";
 import { environment } from "src/environments/environment";
@@ -10,11 +11,17 @@ import { environment } from "src/environments/environment";
 })
 export class BlogComponent implements OnInit {
   blogs: Blog[] | null = null;
+  isRtl = false;
 
   constructor(
     private blogService: BlogService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isRtl = document.dir === "rtl";
+    }
+  }
 
   ngOnInit(): void {
     this.getBlogs();

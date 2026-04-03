@@ -16,7 +16,7 @@
   <div
     id="language-menu"
     class="language-menu"
-    [class.is-open]="isMenuOpen"
+    [ngClass]="{'is-open': isMenuOpen, 'is-dropup': dropDirection==='dropup', 'is-dropright': dropDirection==='dropright'}"
     role="listbox"
     aria-label="Language selector"
   >

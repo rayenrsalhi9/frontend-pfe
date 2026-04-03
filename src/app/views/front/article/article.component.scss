@@ -39,6 +39,11 @@
   transform: translateX(4px);
 }
 
+:dir(rtl) .card-item:hover .read-more i,
+[dir="rtl"] .card-item:hover .read-more i {
+  transform: translateX(-4px);
+}
+
 /* ──────────────────────────────
    CARD COVER
 ───────────────────────────── */

@@ -16,6 +16,12 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
+.floating-i18n-widget nav-i18n .language-menu {
+  top: auto;
+  bottom: calc(100% + 8px);
+  transform-origin: bottom;
+}
+
 /* Reset/Adjust internal nav-i18n styles */
 .floating-i18n-widget ::ng-deep nav-i18n.header-nav-item {
   padding: 0 !important;

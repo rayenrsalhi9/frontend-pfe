@@ -29,7 +29,7 @@
             <ng-container *ngTemplateOutlet="iconTemplate; context: { item: item, level: level }"></ng-container>
           </span>
           <span class="ged-nav-label">{{ (item.translateKey | translate) || item.title }}</span>
-          <i class="feather ged-nav-chevron" [class.icon-chevron-right]="!isExpanded(item)" [class.icon-chevron-down]="isExpanded(item)"></i>
+          <i class="feather ged-nav-chevron" [ngClass]="{'icon-chevron-left': !isExpanded(item) && isRtl, 'icon-chevron-right': !isExpanded(item) && !isRtl, 'icon-chevron-down': isExpanded(item)}"></i>
         </button>
         <div class="ged-nav-children" *ngIf="isExpanded(item)">
           <ng-container *ngFor="let child of getVisibleChildren(item); trackBy: trackByKey">

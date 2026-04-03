@@ -1,59 +1,58 @@
 .header-navbar {
-    position: fixed;
-    top: $header-nav-height;
-    right: 0;
-    width: 100%;
-    z-index: 998;
-    display: flex;
-    height: $header-navbar-height;
-    background-color: var(--card-bg);
+  position: fixed;
+  top: $header-nav-height;
+  right: 0;
+  width: 100%;
+  z-index: 998;
+  display: flex;
+  height: $header-navbar-height;
+  background-color: var(--card-bg);
 
-    &.nav-menu-dark {
-        background-color: var(--text-primary);
+  &.nav-menu-dark {
+    background-color: var(--text-primary);
 
-        .nav-menu {
-            &.nav-menu-horizontal {
+    .nav-menu {
+      &.nav-menu-horizontal {
+        > .nav-menu-item {
+          color: color-mix(in srgb, var(--card-bg) 65%, transparent);
 
-                >.nav-menu-item {
-                    color: rgba(var(--card-bg), 0.65);
+          i {
+            color: color-mix(in srgb, var(--card-bg) 65%, transparent);
+          }
 
-                    i {
-                        color: rgba(var(--card-bg), 0.65);
-                    }
+          &:hover {
+            color: var(--card-bg);
 
-                    &:hover {
-                        color: var(--card-bg);
-
-                        i {
-                            color: var(--card-bg);
-                        }
-                    }
-                }
-
-                > nav-submenu {
-                    > .nav-submenu {
-                        > .nav-submenu-title {
-                            color: rgba(var(--card-bg), 0.65);
-
-                            i {
-                                color: rgba(var(--card-bg), 0.65);
-                            }
-
-                            &:hover {
-                                color: var(--card-bg);
-        
-                                i {
-                                    color: var(--card-bg);
-                                }
-                            }
-                        }
-                    }
-                }
+            i {
+              color: var(--card-bg);
             }
+          }
         }
-    }
 
-    &.nav-menu-light {
-        background-color: var(--card-bg);
+        > nav-submenu {
+          > .nav-submenu {
+            > .nav-submenu-title {
+              color: color-mix(in srgb, var(--card-bg) 65%, transparent);
+
+              i {
+                color: color-mix(in srgb, var(--card-bg) 65%, transparent);
+              }
+
+              &:hover {
+                color: var(--card-bg);
+
+                i {
+                  color: var(--card-bg);
+                }
+              }
+            }
+          }
+        }
+      }
     }
+  }
+
+  &.nav-menu-light {
+    background-color: var(--card-bg);
+  }
 }

@@ -11,26 +11,47 @@
       <div class="footer-links-col">
         <h4 class="col-title">{{ "FOOTER.LINKS" | translate }}</h4>
         <ul class="footer-links">
-          <li><a routerLink="/" class="footer-link">{{ "NAV.HOME" | translate }}</a></li>
-          <li><a routerLink="/forum" class="footer-link">{{ "NAV.FORUM" | translate }}</a></li>
-          <li><a routerLink="/blog" class="footer-link">{{ "NAV.BLOG" | translate }}</a></li>
-          <li><a routerLink="/article" class="footer-link">{{ "NAV.ARTICLE" | translate }}</a></li>
+          <li>
+            <a routerLink="/" class="footer-link">{{
+              "NAV.HOME" | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/forum" class="footer-link">{{
+              "NAV.FORUM" | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/blog" class="footer-link">{{
+              "NAV.BLOG" | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/article" class="footer-link">{{
+              "NAV.ARTICLE" | translate
+            }}</a>
+          </li>
         </ul>
       </div>
 
       <div class="footer-social-col">
         <h4 class="col-title">{{ "FOOTER.CONNECT" | translate }}</h4>
         <div class="social-links">
-          <a href="javascript:void(0)" class="social-btn" aria-label="Twitter">
+          <a href="https://x.com" class="social-btn" aria-label="Twitter">
             <i class="feather icon-twitter"></i>
           </a>
-          <a href="javascript:void(0)" class="social-btn" aria-label="Website">
-            <i class="feather icon-globe"></i>
-          </a>
-          <a href="javascript:void(0)" class="social-btn" aria-label="Facebook">
+          <a
+            href="https://facebook.com"
+            class="social-btn"
+            aria-label="Facebook"
+          >
             <i class="feather icon-facebook"></i>
           </a>
-          <a href="javascript:void(0)" class="social-btn" aria-label="LinkedIn">
+          <a
+            href="https://linkedin.com"
+            class="social-btn"
+            aria-label="LinkedIn"
+          >
             <i class="feather icon-linkedin"></i>
           </a>
         </div>
@@ -39,7 +60,8 @@
 
     <div class="footer-bar">
       <p class="copyright">
-        &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}. {{ "FOOTER.RIGHTS" | translate }}
+        &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}.
+        {{ "FOOTER.RIGHTS" | translate }}
       </p>
     </div>
   </div>

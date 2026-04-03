@@ -13,19 +13,34 @@
               routerLink="/"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
-            >{{ "NAV.HOME" | translate }}</a>
+              >{{ "NAV.HOME" | translate }}</a
+            >
           </li>
           <li>
-            <a class="nav-item" routerLink="/forum" routerLinkActive="active">{{ "NAV.FORUM" | translate }}</a>
+            <a class="nav-item" routerLink="/forum" routerLinkActive="active">{{
+              "NAV.FORUM" | translate
+            }}</a>
           </li>
           <li>
-            <a class="nav-item" routerLink="/blog" routerLinkActive="active">{{ "NAV.BLOG" | translate }}</a>
+            <a class="nav-item" routerLink="/blog" routerLinkActive="active">{{
+              "NAV.BLOG" | translate
+            }}</a>
           </li>
           <li>
-            <a class="nav-item" routerLink="/article" routerLinkActive="active">{{ "NAV.ARTICLE" | translate }}</a>
+            <a
+              class="nav-item"
+              routerLink="/article"
+              routerLinkActive="active"
+              >{{ "NAV.ARTICLE" | translate }}</a
+            >
           </li>
           <li *ngIf="vm.auth">
-            <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">{{ "NAV.DASHBOARD" | translate }}</a>
+            <a
+              class="nav-item"
+              routerLink="/dashboard"
+              routerLinkActive="active"
+              >{{ "NAV.DASHBOARD" | translate }}</a
+            >
           </li>
         </ul>
       </nav>
@@ -46,6 +61,8 @@
           class="mobile-menu-btn"
           (click)="toggleMenu()"
           [class.is-open]="isMenuOpen"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-controls="mobile-drawer"
           aria-label="Toggle menu"
         >
           <span class="hamburger">
@@ -58,14 +75,31 @@
     </div>
   </header>
 
-  <div class="mobile-overlay" [class.is-visible]="isMenuOpen" (click)="toggleMenu()"></div>
-  
-  <aside class="mobile-drawer" [class.is-open]="isMenuOpen">
+  <div
+    class="mobile-overlay"
+    [class.is-visible]="isMenuOpen"
+    (click)="toggleMenu()"
+  ></div>
+
+  <aside
+    id="mobile-drawer"
+    class="mobile-drawer"
+    [class.is-open]="isMenuOpen"
+    [attr.aria-hidden]="!isMenuOpen"
+    [inert]="!isMenuOpen"
+  >
     <div class="drawer-header">
       <a class="logo-link" routerLink="/" (click)="toggleMenu()">
         <logo></logo>
       </a>
-      <button type="button" class="close-btn" (click)="toggleMenu()" aria-label="Close menu">
+      <button
+        type="button"
+        class="close-btn"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-controls="mobile-drawer"
+        aria-label="Close menu"
+      >
         <i class="feather icon-x"></i>
       </button>
     </div>
@@ -85,25 +119,45 @@
           </a>
         </li>
         <li>
-          <a class="drawer-item" routerLink="/forum" (click)="toggleMenu()" routerLinkActive="active">
+          <a
+            class="drawer-item"
+            routerLink="/forum"
+            (click)="toggleMenu()"
+            routerLinkActive="active"
+          >
             <i class="feather icon-message-square"></i>
             {{ "NAV.FORUM" | translate }}
           </a>
         </li>
         <li>
-          <a class="drawer-item" routerLink="/blog" (click)="toggleMenu()" routerLinkActive="active">
+          <a
+            class="drawer-item"
+            routerLink="/blog"
+            (click)="toggleMenu()"
+            routerLinkActive="active"
+          >
             <i class="feather icon-edit-3"></i>
             {{ "NAV.BLOG" | translate }}
           </a>
         </li>
         <li>
-          <a class="drawer-item" routerLink="/article" (click)="toggleMenu()" routerLinkActive="active">
+          <a
+            class="drawer-item"
+            routerLink="/article"
+            (click)="toggleMenu()"
+            routerLinkActive="active"
+          >
             <i class="feather icon-file-text"></i>
             {{ "NAV.ARTICLE" | translate }}
           </a>
         </li>
         <li *ngIf="vm.auth">
-          <a class="drawer-item" routerLink="/dashboard" (click)="toggleMenu()" routerLinkActive="active">
+          <a
+            class="drawer-item"
+            routerLink="/dashboard"
+            (click)="toggleMenu()"
+            routerLinkActive="active"
+          >
             <i class="feather icon-grid"></i>
             {{ "NAV.DASHBOARD" | translate }}
           </a>

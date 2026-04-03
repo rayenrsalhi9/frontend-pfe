@@ -13,7 +13,7 @@
       </div>
       <div class="header-badge" *ngIf="rows !== null">
         <i class="feather icon-layers"></i>
-        {{ rows.length }} {{ "PREVIEW.FORUM.TABLE.TOPIC" | translate }}
+        {{ "PREVIEW.FORUM.TABLE.TOPIC_COUNT" | translate:{count: rows.length} }}
       </div>
     </div>
   </header>
@@ -61,18 +61,18 @@
         </div>
 
         <div class="thread-stats">
-          <div class="stat-badge-item">
-            <i class="feather icon-message-square"></i>
+          <div class="stat-badge-item" aria-label="{{ 'PREVIEW.WIDGETS.COMMENTS' | translate }}: {{ row.commentsCount ?? row.comments?.length ?? 0 }}">
+            <i class="feather icon-message-square" aria-hidden="true"></i>
             <span>{{ row.commentsCount ?? row.comments?.length ?? 0 }}</span>
           </div>
-          <div class="stat-badge-item">
-            <i class="feather icon-heart"></i>
+          <div class="stat-badge-item" aria-label="{{ 'PREVIEW.WIDGETS.LIKES' | translate }}: {{ row.reactionsCount ?? row.reactions?.length ?? 0 }}">
+            <i class="feather icon-heart" aria-hidden="true"></i>
             <span>{{ row.reactionsCount ?? row.reactions?.length ?? 0 }}</span>
           </div>
         </div>
 
         <div class="thread-action">
-          <i class="feather icon-arrow-right"></i>
+          <i class="feather" [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"></i>
         </div>
       </a>
     </div>

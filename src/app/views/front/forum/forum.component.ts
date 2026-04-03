@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, Inject, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { ForumThread } from "./forum-thread.interface";
 
@@ -9,6 +10,7 @@ import { ForumThread } from "./forum-thread.interface";
 })
 export class ForumComponent implements OnInit {
   rows: ForumThread[] | null = null;
+  isRtl = false;
 
   categories = [];
   tags = [];
@@ -18,7 +20,12 @@ export class ForumComponent implements OnInit {
   constructor(
     private forumService: ForumService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isRtl = document.dir === "rtl";
+    }
+  }
 
   ngOnInit(): void {
     this.getAllForums();

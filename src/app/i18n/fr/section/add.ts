@@ -276,6 +276,9 @@ export const add = {
         SUCCESS: "Utilisateur créé avec succès",
         ERROR: "Échec de la création de l'utilisateur",
       },
+      VALIDATION: {
+        PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+      },
     },
 
     SHARED: {

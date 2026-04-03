@@ -21,7 +21,6 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./welcome.component.css"],
 })
 export class WelcomeComponent implements OnInit {
-  banners = [];
   latestBlogs = [];
   latestForums = [];
   articles: any[] = [];
@@ -63,7 +62,6 @@ export class WelcomeComponent implements OnInit {
       }),
     );
 
-    this.getBannerBlogs();
     this.getLatestBlogs();
     this.getLastForums();
     this.getLatestSurvey();
@@ -72,7 +70,7 @@ export class WelcomeComponent implements OnInit {
 
   loadPublicArticles(): void {
     this.userService.getArticles().subscribe(
-      (data) => {
+      (data: any) => {
         this.articles = data;
       },
       (error) => {
@@ -94,15 +92,6 @@ export class WelcomeComponent implements OnInit {
   }
   getHost() {
     return environment.apiUrl;
-  }
-
-  getBannerBlogs() {
-    this.blogService
-      .allBlogs({ banner: 1, limit: 5 })
-      .subscribe((data: any) => {
-        this.banners = data;
-        this.cdr.markForCheck();
-      });
   }
 
   getLatestBlogs() {

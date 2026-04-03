@@ -249,7 +249,7 @@ export const add = {
         CANCEL: "إلغاء",
       },
       ERRORS: {
-        DIRECTION_REQUIRED: "الاتجاه مطلوب",
+        DIRECTION_REQUIRED: "الإدارة مطلوبة",
         FIRST_NAME_REQUIRED: "الاسم الأول مطلوب",
         LAST_NAME_REQUIRED: "اسم العائلة مطلوب",
         MOBILE_REQUIRED: "الهاتف مطلوب",
@@ -265,6 +265,9 @@ export const add = {
       TOAST: {
         SUCCESS: "تم إنشاء المستخدم بنجاح",
         ERROR: "فشل إنشاء المستخدم",
+      },
+      VALIDATION: {
+        PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
       },
     },
 

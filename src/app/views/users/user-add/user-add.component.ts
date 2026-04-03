@@ -17,7 +17,6 @@ import { TranslateService } from "@ngx-translate/core";
 export class UserAddComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   roleList: Role[] = [];
-  selectedRoles: Role[] = [];
   isLoading = false;
   isEdit = false;
   userId: string | null = null;
@@ -53,10 +52,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
         id: [""],
         firstName: ["", [Validators.required]],
         lastName: ["", [Validators.required]],
-        email: [
-          { value: "", disabled: this.isEdit },
-          [Validators.required, Validators.email],
-        ],
+        email: ["", [Validators.required, Validators.email]],
         phoneNumber: ["", [Validators.required]],
         direction: [""],
         roles: [[]],
@@ -64,12 +60,12 @@ export class UserAddComponent implements OnInit, OnDestroy {
         confirmPassword: [""],
       },
       {
-        validator: this.checkPasswords,
+        validator: UserAddComponent.checkPasswords,
       },
     );
   }
 
-  private checkPasswords(group: FormGroup): { notSame: boolean } | null {
+  private static checkPasswords(group: FormGroup): { notSame: boolean } | null {
     const pass = group.get("password")?.value;
     const confirmPass = group.get("confirmPassword")?.value;
     return pass === confirmPass ? null : { notSame: true };
@@ -83,6 +79,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
         if (id) {
           this.isEdit = true;
           this.userId = id;
+          this.userForm.get("email")?.disable();
           this.loadUser(id);
         } else {
           this.addPasswordValidators();
@@ -108,7 +105,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           this.isLoading = false;
           const roleIds = data.userRoles?.map((ur: any) => ur.roleId) || [];
-          const roles = data.userRoles?.map((ur: any) => ur.role) || [];
           this.userForm.patchValue({
             id: data.id,
             firstName: data.firstName,
@@ -118,18 +114,12 @@ export class UserAddComponent implements OnInit, OnDestroy {
             direction: data.direction,
             roles: roleIds,
           });
-          this.selectedRoles = roles;
           this.cdr.markForCheck();
         },
         error: (error) => {
           this.isLoading = false;
           console.error("Error loading user:", error);
-          this.translate
-            .get("ADD.SHARED.ERRORS.NETWORK_ERROR")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.error(message);
-            });
+          this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
         },
       });
   }
@@ -146,18 +136,9 @@ export class UserAddComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error("Error loading roles:", error);
           this.roleList = [];
-          this.translate
-            .get("ADD.SHARED.ERRORS.NETWORK_ERROR")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.error(message);
-            });
+          this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
         },
       });
-  }
-
-  selectRole(event: any): void {
-    this.selectedRoles = event || [];
   }
 
   onSubmit(): void {
@@ -165,12 +146,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
 
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      this.translate
-        .get("ADD.SHARED.ERRORS.VALIDATION_ERROR")
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((message) => {
-          this.toastrService.warning(message);
-        });
+      this.toastrService.warning(this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"));
       return;
     }
 
@@ -191,23 +167,13 @@ export class UserAddComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.isLoading = false;
-          this.translate
-            .get("ADD.USER.TOAST.SUCCESS")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.success(message);
-            });
+          this.toastrService.success(this.translate.instant("ADD.USER.TOAST.SUCCESS"));
           this.router.navigate(["/user/list"]);
         },
         error: (error) => {
           this.isLoading = false;
           console.error("Error creating user:", error);
-          this.translate
-            .get("ADD.USER.TOAST.ERROR")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.error(message);
-            });
+          this.toastrService.error(this.translate.instant("ADD.USER.TOAST.ERROR"));
         },
       });
   }
@@ -219,40 +185,31 @@ export class UserAddComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.isLoading = false;
-          this.translate
-            .get("EDIT.USER.TOAST.SUCCESS")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.success(message);
-            });
+          this.toastrService.success(this.translate.instant("EDIT.USER.TOAST.SUCCESS"));
           this.router.navigate(["/user/list"]);
         },
         error: (error) => {
           this.isLoading = false;
           console.error("Error updating user:", error);
-          this.translate
-            .get("EDIT.USER.TOAST.ERROR")
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((message) => {
-              this.toastrService.error(message);
-            });
+          this.toastrService.error(this.translate.instant("EDIT.USER.TOAST.ERROR"));
         },
       });
   }
 
   private prepareFormData(): any {
     const formValue = this.userForm.getRawValue();
+    const normalizedEmail = (formValue.email ?? "").trim().toLowerCase();
 
     return {
-      id: formValue.id,
-      firstName: formValue.firstName?.trim(),
-      lastName: formValue.lastName?.trim(),
-      email: formValue.email?.trim().toLowerCase(),
-      phoneNumber: formValue.phoneNumber?.trim(),
-      password: formValue.password || undefined,
-      userName: formValue.email?.trim().toLowerCase(),
-      direction: formValue.direction?.trim(),
-      roleIds: formValue.roles,
+      id: (formValue.id ?? "").trim(),
+      firstName: (formValue.firstName ?? "").trim(),
+      lastName: (formValue.lastName ?? "").trim(),
+      email: normalizedEmail,
+      phoneNumber: (formValue.phoneNumber ?? "").trim(),
+      password: formValue.password ? formValue.password : null,
+      userName: normalizedEmail,
+      direction: (formValue.direction ?? "").trim(),
+      roleIds: formValue.roles ?? [],
     };
   }
 

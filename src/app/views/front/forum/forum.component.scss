@@ -48,7 +48,7 @@
   transform: translateX(4px);
 }
 
-.thread-item:hover .thread-avatar {
+.thread-item:hover .thread-avatar:not(.locked) {
   background: var(--primary);
   color: #fff;
 }
@@ -70,6 +70,11 @@
 .thread-avatar.locked {
   background: rgba(239, 68, 68, 0.1);
   color: var(--color-danger);
+}
+
+.thread-item:hover .thread-avatar.locked {
+  background: var(--color-danger);
+  color: #fff;
 }
 
 .thread-main {

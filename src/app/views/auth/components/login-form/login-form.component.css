@@ -8,7 +8,7 @@
 
 .form-label {
   display: block;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
@@ -23,10 +23,13 @@
   border-radius: var(--radius-md);
   background: var(--bg-app);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
   display: block;
 }
 
@@ -113,7 +116,7 @@
   width: 100%;
   padding: 12px 18px;
   border-radius: var(--radius-md);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
@@ -145,8 +148,27 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 .forgot-password-link {
@@ -160,72 +182,6 @@
 .forgot-password-link:hover {
   color: var(--text-primary);
   text-decoration: underline;
-}
-
-.third-party-login {
-  margin-top: 1.5rem;
-}
-
-.modern-divider {
-  text-align: center;
-  position: relative;
-  margin: 1.5rem 0;
-}
-
-.modern-divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 0.5px;
-  background-color: var(--border-color);
-  z-index: 1;
-}
-
-.modern-divider .divider-text {
-  background-color: var(--card-bg);
-  padding: 0 1rem;
-  position: relative;
-  z-index: 2;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.third-party-buttons {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-}
-
-.third-party-btn {
-  flex: 1;
-  padding: 10px 12px;
-  border: 0.5px solid var(--border-color);
-  background-color: var(--card-bg);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-}
-
-.third-party-btn:hover {
-  background: var(--bg-app);
-  border-color: var(--text-secondary);
-}
-
-.third-party-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--primary-glow);
-}
-
-.third-party-btn img {
-  max-width: 20px;
-  height: auto;
 }
 
 .alert {

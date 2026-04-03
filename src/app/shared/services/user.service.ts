@@ -80,8 +80,10 @@ export class UserService {
       .put<any>(url, user)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
-  getArticles(): Observable<ArticleResource[]> {
+  getArticles(): Observable<ArticleResource[] | CommonError> {
     const url = `public-articles`;
-    return this.httpClient.get<ArticleResource[]>(url);
+    return this.httpClient
+      .get<ArticleResource[]>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 }

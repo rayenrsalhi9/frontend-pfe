@@ -16,6 +16,7 @@ export const preview = {
       STATUS: { OPEN: "Ouvert", CLOSED: "Fermé" },
       TABLE: {
         TOPIC: "Sujets",
+        TOPIC_COUNT: "{{ count }} Sujets",
         POSTS: "Publications",
         REPLIES: "Réponses",
         REACTIONS: "Réactions",
@@ -51,6 +52,7 @@ export const preview = {
       TABLE: {
         TOPIC: "Sujets",
         POSTS: "Publications",
+        POSTS_COUNT: "{{ count }} Publications",
         REPLIES: "Réponses",
         REACTIONS: "Réactions",
       },

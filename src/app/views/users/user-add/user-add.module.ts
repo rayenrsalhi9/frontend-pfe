@@ -23,12 +23,12 @@ import { QuillModule } from "ngx-quill";
     AvatarModule,
     DropdownModule,
     ColumnPanelModule,
-    BsDropdownModule.forRoot(),
+    BsDropdownModule,
     NgxDatatableModule,
     NgSelectModule,
     RatingModule,
     PerfectScrollbarModule,
-    QuillModule.forRoot(),
+    QuillModule,
   ],
 })
 export class UserAddModule {}

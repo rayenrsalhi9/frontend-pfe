@@ -111,7 +111,7 @@
   &.header-text-light {
     .header-nav-wrap {
       .header-nav-item {
-        color: var(--card-bg);
+        color: var(--text-inverse, var(--card-bg));
       }
     }
   }

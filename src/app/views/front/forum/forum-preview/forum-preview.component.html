@@ -8,8 +8,16 @@
           {{ "PREVIEW.FORUM.LABEL" | translate }}
         </span>
         <span class="badge badge-cat">
-          <i class="feather" [class.icon-lock]="forum?.closed" [class.icon-unlock]="!forum?.closed"></i>
-          {{ forum?.closed ? ("PREVIEW.FORUM.STATUS.CLOSED" | translate) : ("PREVIEW.FORUM.STATUS.OPEN" | translate) }}
+          <i
+            class="feather"
+            [class.icon-lock]="forum?.closed"
+            [class.icon-unlock]="!forum?.closed"
+          ></i>
+          {{
+            forum?.closed
+              ? ("PREVIEW.FORUM.STATUS.CLOSED" | translate)
+              : ("PREVIEW.FORUM.STATUS.OPEN" | translate)
+          }}
         </span>
       </div>
       <h1 class="hero-title">{{ forum.title }}</h1>
@@ -19,8 +27,12 @@
           <i class="feather icon-user"></i>
         </div>
         <div class="author-info">
-          <div class="author-name">{{ forum.creator?.firstName }} {{ forum.creator?.lastName }}</div>
-          <div class="author-date">{{ forum.createdAt | utcToLocalTime: "mediumDate" }}</div>
+          <div class="author-name">
+            {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
+          </div>
+          <div class="author-date">
+            {{ forum.createdAt | utcToLocalTime: "mediumDate" }}
+          </div>
         </div>
       </div>
     </div>
@@ -37,15 +49,45 @@
         <!-- Reactions -->
         <div class="reactions">
           <div class="rxn-group">
-            <button class="rxn-btn" [class.active-up]="hasReacted('up')" (click)="addReaction('up')" [title]="'PREVIEW.FORUM.REACTIONS.UP' | translate">
+            <button
+              class="rxn-btn"
+              [class.active-up]="hasReacted('up')"
+              (click)="addReaction('up')"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.UP' | translate) +
+                ' ' +
+                (forum.reactionsUp?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('up')"
+            >
               <i class="feather icon-thumbs-up"></i>
               {{ forum.reactionsUp?.length || 0 }}
             </button>
-            <button class="rxn-btn" [class.active-down]="hasReacted('down')" (click)="addReaction('down')" [title]="'PREVIEW.FORUM.REACTIONS.DOWN' | translate">
+            <button
+              class="rxn-btn"
+              [class.active-down]="hasReacted('down')"
+              (click)="addReaction('down')"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.DOWN' | translate) +
+                ' ' +
+                (forum.reactionsDown?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('down')"
+            >
               <i class="feather icon-thumbs-down"></i>
               {{ forum.reactionsDown?.length || 0 }}
             </button>
-            <button class="rxn-btn" [class.active-heart]="hasReacted('heart')" (click)="addReaction('heart')" [title]="'PREVIEW.FORUM.REACTIONS.HEART' | translate">
+            <button
+              class="rxn-btn"
+              [class.active-heart]="hasReacted('heart')"
+              (click)="addReaction('heart')"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.HEART' | translate) +
+                ' ' +
+                (forum.reactionsHeart?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('heart')"
+            >
               <i class="feather icon-heart"></i>
               {{ forum.reactionsHeart?.length || 0 }}
             </button>
@@ -60,7 +102,9 @@
       <!-- Comments -->
       <div class="preview-card comments-card">
         <div class="comments-header">
-          <span class="comments-title">{{ "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate }}</span>
+          <span class="comments-title">{{
+            "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate
+          }}</span>
         </div>
 
         <!-- Add comment form -->
@@ -68,8 +112,17 @@
           <div class="avatar-circle sm">
             <i class="feather icon-user"></i>
           </div>
-          <textarea class="comment-input" [(ngModel)]="comment" id="forumComment" rows="2" [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate" [attr.aria-label]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"></textarea>
-          <button class="send-btn" (click)="addComment()" type="button">{{ "PREVIEW.FORUM.PREVIEW.ADD_COMMENT" | translate }}</button>
+          <textarea
+            class="comment-input"
+            [(ngModel)]="comment"
+            id="forumComment"
+            rows="2"
+            [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
+            [attr.aria-label]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
+          ></textarea>
+          <button class="send-btn" (click)="addComment()" type="button">
+            {{ "PREVIEW.FORUM.PREVIEW.ADD_COMMENT" | translate }}
+          </button>
         </div>
 
         <div class="closed-notice" *ngIf="forum?.closed">
@@ -86,17 +139,34 @@
             <div class="cm-body">
               <div class="cm-header cm-header--spaced">
                 <div>
-                  <span class="cm-name">{{ c.user?.firstName }} {{ c.user?.lastName }}</span>
-                  <span class="cm-time">{{ c.createdAt | utcToLocalTime: "mediumDate" }}</span>
+                  <span class="cm-name"
+                    >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
+                  >
+                  <span class="cm-time">{{
+                    c.createdAt | utcToLocalTime: "mediumDate"
+                  }}</span>
                 </div>
                 <!-- Delete menu -->
-                <div class="comment-menu" *ngIf="canDeleteComment(c)" dropdown [insideClick]="true">
-                  <button dropdownToggle type="button" class="comment-menu-btn" [title]="'PREVIEW.ACTIONS.MORE' | translate">
+                <div
+                  class="comment-menu"
+                  *ngIf="canDeleteComment(c)"
+                  dropdown
+                  [insideClick]="true"
+                >
+                  <button
+                    dropdownToggle
+                    type="button"
+                    class="comment-menu-btn"
+                    [title]="'PREVIEW.ACTIONS.MORE' | translate"
+                  >
                     <i class="feather icon-more-horizontal"></i>
                   </button>
                   <ul *dropdownMenu class="comment-dropdown">
                     <li>
-                      <button class="comment-dropdown-item danger" (click)="deleteComment(c.id)">
+                      <button
+                        class="comment-dropdown-item danger"
+                        (click)="deleteComment(c.id)"
+                      >
                         <i class="feather icon-trash-2"></i>
                         {{ "PREVIEW.FORUM.COMMENT.DELETE" | translate }}
                       </button>
@@ -110,7 +180,9 @@
         </div>
 
         <!-- Empty state -->
-        <div class="empty-state" *ngIf="!forum.comments?.length">{{ "PREVIEW.FORUM.PREVIEW.NO_COMMENTS" | translate }}</div>
+        <div class="empty-state" *ngIf="!forum.comments?.length">
+          {{ "PREVIEW.FORUM.PREVIEW.NO_COMMENTS" | translate }}
+        </div>
       </div>
     </div>
 
@@ -118,22 +190,30 @@
     <aside class="sidebar">
       <!-- Stats -->
       <div class="preview-card widget-card">
-        <div class="widget-title">{{ "PREVIEW.WIDGETS.STATS" | translate }}</div>
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.STATS" | translate }}
+        </div>
         <div class="stat-row">
           <div class="stat-item">
             <div class="stat-val">{{ forum.reactionsUp?.length || 0 }}</div>
-            <div class="stat-lbl">{{ "PREVIEW.WIDGETS.LIKES" | translate }}</div>
+            <div class="stat-lbl">
+              {{ "PREVIEW.WIDGETS.LIKES" | translate }}
+            </div>
           </div>
           <div class="stat-item">
             <div class="stat-val">{{ forum.comments?.length || 0 }}</div>
-            <div class="stat-lbl">{{ "PREVIEW.WIDGETS.COMMENTS" | translate }}</div>
+            <div class="stat-lbl">
+              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Share -->
       <div class="preview-card widget-card">
-        <div class="widget-title">{{ "PREVIEW.WIDGETS.SHARE" | translate }}</div>
+        <div class="widget-title">
+          {{ "PREVIEW.WIDGETS.SHARE" | translate }}
+        </div>
         <button class="share-btn" (click)="copyLink()" type="button">
           <i class="feather icon-link"></i>
           {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}
