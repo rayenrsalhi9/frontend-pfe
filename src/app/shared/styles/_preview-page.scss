@@ -134,6 +134,8 @@ $preview-height: 350px;
 .author-info {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .author-name {
@@ -469,7 +471,7 @@ $preview-height: 350px;
 .comment-dropdown {
   position: absolute;
   top: calc(100% + 0.25rem);
-  right: 0;
+  inset-inline-end: 0;
   background: var(--card-bg);
   border: 0.5px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -488,7 +490,7 @@ $preview-height: 350px;
   border: none;
   cursor: pointer;
   width: 100%;
-  text-align: left;
+  text-align: start;
   font-size: 0.8125rem;
   color: var(--text-primary);
   border-radius: var(--radius-sm);

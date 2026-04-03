@@ -39,7 +39,7 @@
             <img
               [src]="
                 blog?.picture
-                  ? getHost() + blog.picture
+                  ? hostBase + blog.picture
                   : '/assets/images/others/bg-4.jpg'
               "
               class="item-thumb"
@@ -89,9 +89,9 @@
             <img
               [src]="
                 article?.picture
-                  ? getHost() + article.picture
+                  ? hostBase + article.picture
                   : article?.files?.length
-                    ? getHost() + article.files[0].path
+                    ? hostBase + article.files[0].path
                     : '/assets/images/others/bg-4.jpg'
               "
               class="item-thumb"
@@ -136,8 +136,8 @@
           >
             <div class="item-content">
               <h3 class="item-title">{{ forum?.title }}</h3>
-              <span class="item-meta">
-                {{ "WELCOME.BY" | translate }} {{ forum?.creator?.firstName || forum?.creator?.userName }}
+              <span class="item-meta" *ngIf="forum?.creator?.firstName || forum?.creator?.lastName || forum?.creator?.userName">
+                {{ "WELCOME.BY_AUTHOR" | translate:{ author: (forum?.creator?.firstName || '') + (forum?.creator?.lastName ? ' ' + forum?.creator?.lastName : '') || forum?.creator?.userName } }}
               </span>
             </div>
           </a>

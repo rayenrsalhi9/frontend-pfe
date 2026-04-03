@@ -23,6 +23,7 @@ export const welcome = {
     SURVEY: "Survey",
     POSTED_ON: "Published on",
     BY: "by",
+    BY_AUTHOR: "by {{ author }}",
 
     NO_BLOGS: "No blog posts available yet",
     NO_ARTICLES: "No articles have been published yet",

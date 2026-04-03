@@ -22,6 +22,7 @@ export const welcome = {
     SURVEY: "استبيان",
     POSTED_ON: "نُشر في",
     BY: "بواسطة",
+    BY_AUTHOR: "بواسطة {{ author }}",
 
     NO_BLOGS: "لا توجد مقالات في المدونة حالياً",
     NO_ARTICLES: "لا توجد مقالات منشورة حالياً",

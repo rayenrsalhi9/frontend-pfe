@@ -30,6 +30,7 @@ export class WelcomeComponent implements OnInit {
   selectedRating: number = 0;
   isAuthenticated$: Observable<boolean | null>;
   userName$: Observable<string | null>;
+  hostBase: string;
 
   constructor(
     private blogService: BlogService,
@@ -45,6 +46,8 @@ export class WelcomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.hostBase = environment.apiUrl;
+
     this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
       map((auth) => {
         if (auth === undefined) return null;

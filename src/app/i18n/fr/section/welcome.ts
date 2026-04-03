@@ -23,6 +23,7 @@ export const welcome = {
     SURVEY: "Sondage",
     POSTED_ON: "Publié le",
     BY: "par",
+    BY_AUTHOR: "par {{ author }}",
 
     NO_BLOGS: "Aucun article de blog disponible pour le moment",
     NO_ARTICLES: "Aucun article publié pour le moment",
