@@ -7,6 +7,11 @@ import { takeUntil } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 
+interface CategoryFormValues {
+  name: string;
+  description?: string;
+}
+
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html",
@@ -49,7 +54,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     });
   }
 
-  patchForm(values) {
+  patchForm(values: CategoryFormValues) {
     this.categoryManage.patchValue({
       name: values.name,
       description: values.description,

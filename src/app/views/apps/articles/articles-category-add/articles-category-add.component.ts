@@ -18,6 +18,7 @@ export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSubmitted = false;
   data: CategoryDto | null;
+  private editingCategoryId: number | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -49,12 +50,13 @@ export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  patchForm(values) {
+  patchForm(values: CategoryDto) {
     this.categoryManage.patchValue({
       name: values.name,
       description: values.description,
     });
     this.isEdit = !!values.id;
+    this.editingCategoryId = values.id;
     this.cdr.markForCheck();
   }
 
@@ -73,7 +75,7 @@ export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const request = this.isEdit
         ? this.articleCategoryService.updateCategory(
-            this.data.id,
+            this.editingCategoryId!,
             this.categoryManage.value,
           )
         : this.articleCategoryService.addCategory(this.categoryManage.value);
