@@ -8,6 +8,7 @@
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
+    aria-hidden="true"
   >
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="8" x2="12" y2="12" />
@@ -80,8 +81,10 @@
                 class="field-input"
                 [class.has-error]="isFirstNameInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.FIRSTNAME' | translate"
+                [attr.aria-invalid]="isFirstNameInvalid"
+                aria-describedby="firstName-error"
               />
-              <div class="field-error" *ngIf="isFirstNameInvalid">
+              <div class="field-error" id="firstName-error" *ngIf="isFirstNameInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ firstNameErrorMessage | translate }}
               </div>
@@ -99,8 +102,10 @@
                 class="field-input"
                 [class.has-error]="isLastNameInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.LASTNAME' | translate"
+                [attr.aria-invalid]="isLastNameInvalid"
+                aria-describedby="lastName-error"
               />
-              <div class="field-error" *ngIf="isLastNameInvalid">
+              <div class="field-error" id="lastName-error" *ngIf="isLastNameInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ lastNameErrorMessage | translate }}
               </div>
@@ -121,8 +126,10 @@
                 class="field-input"
                 [class.has-error]="isPhoneNumberInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.MOBILE' | translate"
+                [attr.aria-invalid]="isPhoneNumberInvalid"
+                aria-describedby="phoneNumber-error"
               />
-              <div class="field-error" *ngIf="isPhoneNumberInvalid">
+              <div class="field-error" id="phoneNumber-error" *ngIf="isPhoneNumberInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ phoneNumberErrorMessage | translate }}
               </div>
@@ -140,8 +147,10 @@
                 class="field-input"
                 [class.has-error]="isEmailInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.EMAIL' | translate"
+                [attr.aria-invalid]="isEmailInvalid"
+                aria-describedby="email-error"
               />
-              <div class="field-error" *ngIf="isEmailInvalid">
+              <div class="field-error" id="email-error" *ngIf="isEmailInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ emailErrorMessage | translate }}
               </div>
@@ -170,8 +179,10 @@
                 autocomplete="new-password"
                 [class.has-error]="isPasswordInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.PASSWORD' | translate"
+                [attr.aria-invalid]="isPasswordInvalid"
+                aria-describedby="password-error"
               />
-              <div class="field-error" *ngIf="isPasswordInvalid">
+              <div class="field-error" id="password-error" *ngIf="isPasswordInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ passwordErrorMessage | translate }}
               </div>
@@ -194,9 +205,12 @@
                 [placeholder]="
                   'ADD.USER.PLACEHOLDERS.CONFIRM_PASSWORD' | translate
                 "
+                [attr.aria-invalid]="isConfirmPasswordInvalid || isPasswordsNotMatch"
+                aria-describedby="confirmPassword-error"
               />
               <div
                 class="field-error"
+                id="confirmPassword-error"
                 *ngIf="isConfirmPasswordInvalid || isPasswordsNotMatch"
               >
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>

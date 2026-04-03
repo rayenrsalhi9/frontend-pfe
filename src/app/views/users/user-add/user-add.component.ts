@@ -81,11 +81,19 @@ export class UserAddComponent implements OnInit, OnDestroy {
           this.isEdit = true;
           this.userId = id;
           this.userForm.get("email")?.disable();
+          this.clearPasswordValidators();
           this.loadUser(id);
         } else {
           this.addPasswordValidators();
         }
       });
+  }
+
+  private clearPasswordValidators(): void {
+    this.userForm.get("password")?.clearValidators();
+    this.userForm.get("confirmPassword")?.clearValidators();
+    this.userForm.get("password")?.updateValueAndValidity();
+    this.userForm.get("confirmPassword")?.updateValueAndValidity();
   }
 
   private addPasswordValidators(): void {

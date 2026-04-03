@@ -263,20 +263,20 @@ $preview-height: 350px;
   }
 
   &.active-up {
-    background: rgba(16, 185, 129, 0.08);
-    border-color: rgba(16, 185, 129, 0.35);
+    background: rgba(var(--color-success-rgb, 16, 185, 129), 0.08);
+    border-color: rgba(var(--color-success-rgb, 16, 185, 129), 0.35);
     color: var(--color-success);
   }
 
   &.active-down {
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(var(--color-danger-rgb, 239, 68, 68), 0.08);
+    border-color: rgba(var(--color-danger-rgb, 239, 68, 68), 0.3);
     color: var(--color-danger);
   }
 
   &.active-heart {
-    background: rgba(236, 72, 153, 0.08);
-    border-color: rgba(236, 72, 153, 0.3);
+    background: rgba(var(--color-heart-rgb, 236, 72, 153), 0.08);
+    border-color: rgba(var(--color-heart-rgb, 236, 72, 153), 0.3);
     color: var(--color-heart, #db2777);
   }
 
@@ -366,7 +366,7 @@ $preview-height: 350px;
   align-items: center;
   padding: 0.625rem 1.125rem;
   background: var(--primary);
-  color: #fff;
+  color: var(--text-on-primary, #fff);
   border: none;
   border-radius: var(--radius-md);
   font-size: 0.875rem;

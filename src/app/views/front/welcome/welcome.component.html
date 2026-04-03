@@ -43,7 +43,7 @@
                   : '/assets/images/others/bg-4.jpg'
               "
               class="item-thumb"
-              alt="{{ blog?.title || '' }}"
+              alt=""
             />
             <div class="item-content">
               <h3 class="item-title">{{ blog?.title }}</h3>
@@ -75,7 +75,7 @@
         </a>
       </div>
       <div class="card-body">
-        <div *ngIf="errorMessage; else articlesContent" class="empty-state">
+        <div *ngIf="errorMessage; else articlesContent" class="empty-state" role="alert" aria-live="assertive">
           <i class="feather icon-alert-circle"></i>
           <p>{{ errorMessage }}</p>
         </div>
@@ -95,7 +95,7 @@
                     : '/assets/images/others/bg-4.jpg'
               "
               class="item-thumb"
-              alt="{{ article?.title || '' }}"
+              alt=""
             />
             <div class="item-content">
               <h3 class="item-title">{{ article?.title }}</h3>
@@ -137,7 +137,7 @@
             <div class="item-content">
               <h3 class="item-title">{{ forum?.title }}</h3>
               <span class="item-meta">
-                {{ "WELCOME.BY" | translate }} {{ forum?.creator?.firstName }}
+                {{ "WELCOME.BY" | translate }} {{ forum?.creator?.firstName || forum?.creator?.userName }}
               </span>
             </div>
           </a>
@@ -161,7 +161,7 @@
       </div>
       <div class="card-body survey-body">
         <div *ngIf="survey; else noSurvey" class="survey-content">
-          <p class="survey-question">"{{ survey?.title }}"</p>
+          <p class="survey-question">{{ survey?.title }}</p>
           <div class="survey-actions">
             <ng-container *ngIf="survey?.type === 'simple'">
               <button (click)="surveyAnswer(1)" class="btn-survey">
