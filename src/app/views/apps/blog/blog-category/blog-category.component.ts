@@ -58,7 +58,10 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
     };
 
     this.modalService
-      .show(ManageComponent, { initialState })
+      .show(ManageComponent, {
+        class: "modal-md modal-dialog-centered",
+        initialState,
+      })
       .onHide.pipe(first(), takeUntil(this.destroy$))
       .subscribe(() => {
         this.getCategories();

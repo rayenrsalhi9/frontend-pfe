@@ -160,6 +160,63 @@ export const add = {
       },
     },
 
+    SURVEY: {
+      TITLE: "استطلاع جديد",
+      DESCRIPTION: "أنشئ استطلاعًا لجمع الملاحظات أو الآراء.",
+      LABELS: {
+        TITLE: "العنوان",
+        TYPE: "النوع",
+        PRIVATE: "استطلاع خاص",
+        USERS: "المستخدمون المسموح لهم",
+      },
+      PLACEHOLDERS: {
+        TITLE: "ما موضوع الاستطلاع؟",
+        USERS: "ابحث عن مستخدمين…",
+      },
+      HINTS: {
+        PRIVATE: "فقط الأعضاء المدعوون سيتمكنون من رؤية الاستطلاع والرد عليه.",
+        REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
+      },
+      BUTTONS: {
+        SAVE: "إنشاء الاستطلاع",
+        CANCEL: "إلغاء",
+      },
+      ERRORS: {
+        TITLE_REQUIRED: "العنوان مطلوب",
+        TYPE_REQUIRED: "نوع الاستطلاع مطلوب",
+        SAVE_FAILED: "فشل إنشاء الاستطلاع",
+      },
+      TOAST: {
+        SUCCESS: "تم إنشاء الاستطلاع بنجاح",
+        ERROR: "فشل إنشاء الاستطلاع",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "فئة جديدة",
+      DESCRIPTION: "أنشئ فئة جديدة لتنظيم المحتوى الخاص بك.",
+      LABELS: {
+        NAME: "اسم الفئة",
+        DESCRIPTION: "الوصف",
+      },
+      PLACEHOLDERS: {
+        NAME: "أدخل اسم الفئة…",
+        DESCRIPTION: "صف هذه الفئة…",
+      },
+      BUTTONS: {
+        SAVE: "حفظ الفئة",
+        CANCEL: "إلغاء",
+      },
+      ERRORS: {
+        NAME_REQUIRED: "اسم الفئة مطلوب",
+        SAVE_FAILED: "فشل حفظ الفئة",
+      },
+      TOAST: {
+        SUCCESS: "تم حفظ الفئة بنجاح",
+        ERROR: "فشل حفظ الفئة",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "جارٍ التحميل…",
@@ -232,6 +289,30 @@ export const add = {
       TOAST: {
         SUCCESS: "تم تحديث المقال بنجاح",
         ERROR: "فشل تحديث المقال",
+      },
+    },
+
+    SURVEY: {
+      TITLE: "تعديل الاستطلاع",
+      DESCRIPTION: "قم بتحديث إعدادات الاستطلاع والمشاركين.",
+      BUTTONS: {
+        SAVE: "تحديث الاستطلاع",
+      },
+      TOAST: {
+        SUCCESS: "تم تحديث الاستطلاع بنجاح",
+        ERROR: "فشل تحديث الاستطلاع",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "تعديل الفئة",
+      DESCRIPTION: "قم بتحديث اسم الفئة ووصفها.",
+      BUTTONS: {
+        SAVE: "تحديث الفئة",
+      },
+      TOAST: {
+        SUCCESS: "تم تحديث الفئة بنجاح",
+        ERROR: "فشل تحديث الفئة",
       },
     },
   },

@@ -1,33 +1,68 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
-import { ArticleCategoryService } from '@app/shared/services/article-category.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { ArticleCategoryService, CategoryDto } from "@app/shared/services/article-category.service";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-articles-category-add',
-  templateUrl: './articles-category-add.component.html',
-  styleUrls: ['./articles-category-add.component.css']
+  selector: "app-articles-category-add",
+  templateUrl: "./articles-category-add.component.html",
+  styleUrls: ["./articles-category-add.component.scss"],
 })
-export class ArticlesCategoryAddComponent implements OnInit {
-
+export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
+  categoryManage: FormGroup;
   isEdit = false;
-  width:any
-  data:any
+  isLoading = false;
+  isSubmitted = false;
+  data: CategoryDto | null;
+  private editingCategoryId: number | null = null;
+  private destroy$ = new Subject<void>();
+
   constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
     private articleCategoryService: ArticleCategoryService,
     public bsModalRef: BsModalRef,
-  ) {
-  }
+    private toastr: ToastrService,
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
+    this.createForm();
 
+    if (this.data && Object.keys(this.data).length > 0) {
+      this.patchForm(this.data);
+    }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['data']) {
-      if (this.data.id) {
-        this.isEdit = true;
-      }
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  createForm() {
+    this.categoryManage = this.fb.group({
+      name: ["", [Validators.required]],
+      description: ["", []],
+    });
+  }
+
+  patchForm(values: CategoryDto) {
+    this.categoryManage.patchValue({
+      name: values.name,
+      description: values.description,
+    });
+    this.isEdit = !!values.id;
+    this.editingCategoryId = values.id;
+    this.cdr.markForCheck();
+  }
+
+  get isNameInvalid() {
+    const ctrl = this.categoryManage.get("name");
+    return ctrl && ctrl.invalid && (ctrl.dirty || this.isSubmitted);
   }
 
   onCancel(): void {
@@ -35,16 +70,39 @@ export class ArticlesCategoryAddComponent implements OnInit {
   }
 
   saveCategory(): void {
-    if (this.data.id) {
-      this.articleCategoryService.updateCategpry(this.data.id, this.data).subscribe((c) => {
-        this.bsModalRef.hide();
+    this.isSubmitted = true;
+    if (this.categoryManage.valid) {
+      this.isLoading = true;
+      const request = this.isEdit
+        ? this.articleCategoryService.updateCategory(
+            this.editingCategoryId!,
+            this.categoryManage.value,
+          )
+        : this.articleCategoryService.addCategory(this.categoryManage.value);
 
+      request.pipe(takeUntil(this.destroy$)).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          const toastKey = this.isEdit
+            ? "EDIT.CATEGORY.TOAST.SUCCESS"
+            : "ADD.CATEGORY.TOAST.SUCCESS";
+          this.toastr.success(this.translate.instant(toastKey));
+          this.bsModalRef.hide();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const toastKey = this.isEdit
+            ? "EDIT.CATEGORY.TOAST.ERROR"
+            : "ADD.CATEGORY.TOAST.ERROR";
+          this.toastr.error(this.translate.instant(toastKey));
+          console.error("Error saving article category:", err);
+        },
       });
     } else {
-      this.articleCategoryService.addCategory(this.data).subscribe((c) => {
-        this.bsModalRef.hide();
-      });
+      this.categoryManage.markAllAsTouched();
+      this.toastr.warning(
+        this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"),
+      );
     }
   }
-
 }

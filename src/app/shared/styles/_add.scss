@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────
 //  _add.scss — shared add/edit form styles
-//  Scoped to .add-form-page to avoid conflicts
+//  Covers both full-page forms (.add-form-page)
+//  and modal forms (.modal-form-body)
 // ─────────────────────────────────────────────
 
-// ── Page shell ────────────────────────────────
+// ── Page-only shell ───────────────────────────
 
 .add-form-page {
   min-height: calc(100vh - 70px);
@@ -11,746 +12,825 @@
 }
 
 .add-form-container {
-  max-width: 1000px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-// ── Page header ───────────────────────────────
-// Scoped to add-form-page to avoid conflicts with page-header component
+// ── Modal-only shell ──────────────────────────
+// The host component wraps the content in this class.
+// It provides all the internal padding so .form-body inside
+// a modal does NOT add its own padding again.
 
-.add-form-page .page-header {
+.modal-form-body {
+  padding: 1.75rem 2rem 0;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Headers ───────────────────────────────────
+
+.page-header {
   margin-bottom: 2rem;
 }
 
-.add-form-page .page-title {
-  font-size: 1.25rem;
+.modal-form-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-title,
+.modal-form-title {
+  font-size: 1.15rem;
   font-weight: 500;
   color: var(--text-primary);
   letter-spacing: -0.02em;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   display: block;
 }
 
-.add-form-page .page-sub {
-  font-size: 0.875rem;
+.page-sub,
+.modal-form-sub {
+  font-size: 0.8rem;
   color: var(--text-secondary);
   margin: 0;
   display: block;
+  line-height: 1.5;
 }
 
-// ── Form card ─────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
+// ── Form card (page only) ─────────────────────
 
-.add-form-page .form-card {
+.form-card {
   background: var(--card-bg);
   border: 0.5px solid var(--border-color);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
-.add-form-page .form-body {
-  padding: 2rem 2.5rem;
+// ── Form body ─────────────────────────────────
+
+.form-body {
+  // Page context: padded inside the card
+  .add-form-page & {
+    padding: 2rem 2.5rem;
+  }
+
+  // Modal context: no extra padding — the modal shell handles it
+  .modal-form-body & {
+    padding: 0;
+  }
+
   display: flex;
   flex-direction: column;
 }
 
-// ── Sections ──────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
+// ── Sections (page only) ──────────────────────
+// Modals are typically too compact for section dividers.
 
-.add-form-page .form-section {
-  padding-bottom: 1.75rem;
-  margin-bottom: 1.75rem;
-  border-bottom: 0.5px solid var(--border-color);
+.add-form-page {
+  .form-section {
+    padding-bottom: 1.75rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 0.5px solid var(--border-color);
 
-  &.last,
-  &:last-of-type {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
+    &.last,
+    &:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
   }
-}
 
-.add-form-page .section-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  line-height: 1;
-}
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+  }
 
-.add-form-page .section-dot {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--border-color);
-  flex-shrink: 0;
+  .section-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border-color);
+    flex-shrink: 0;
+  }
 }
 
 // ── Field layout ──────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .field {
-  margin-bottom: 1.25rem;
+.add-form-page,
+.modal-form-body {
+  .field {
+    margin-bottom: 1.1rem;
 
-  &:last-child {
-    margin-bottom: 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 }
 
-.add-form-page .field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+// Slightly tighter field gap inside modals
+.modal-form-body {
+  .field {
+    margin-bottom: 1rem;
+  }
 }
 
 // ── Labels ────────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .field-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-  line-height: 1.4;
-}
+.add-form-page,
+.modal-form-body {
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
 
-.add-form-page .required-mark {
-  color: var(--bs-danger);
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1;
-}
+  .required-mark {
+    color: var(--bs-danger);
+    font-weight: 400;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
 
-.add-form-page .optional-mark {
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--text-secondary);
+  .optional-mark {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
 }
 
 // ── Text inputs ───────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .field-input {
-  width: 100%;
-  height: 38px;
-  padding: 0 12px;
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-app);
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  font-family: inherit;
-  outline: none;
-  transition:
-    border-color 0.15s,
-    background 0.15s,
-    box-shadow 0.15s;
-  display: block;
-
-  &::placeholder {
-    color: var(--text-secondary);
-    opacity: 0.6;
-  }
-
-  &:hover {
-    filter: brightness(0.97);
-  }
-
-  &:focus {
-    border-color: var(--primary);
-    background: var(--card-bg);
-    box-shadow: 0 0 0 3px var(--primary-glow);
-  }
-
-  &.has-error {
-    border-color: var(--bs-danger);
-    background: rgba(var(--bs-danger-rgb), 0.04);
-
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
-    }
-  }
-}
-
-.add-form-page textarea.field-input {
-  height: auto;
-  min-height: 80px;
-  padding: 10px 12px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
-.add-form-page input[type="date"].field-input {
-  cursor: pointer;
-}
-
-// ── ng-select ─────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
-
-.add-form-page ng-select {
-  display: block;
-
-  &.ng-select {
+.add-form-page,
+.modal-form-body {
+  .field-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-app);
+    color: var(--text-primary);
     font-size: 0.875rem;
     font-family: inherit;
-  }
-
-  .ng-select-container {
-    min-height: 38px;
-    height: 38px;
-    border: 0.5px solid var(--border-color) !important;
-    border-radius: var(--radius-md) !important;
-    background: var(--bg-app) !important;
-    color: var(--text-primary);
-    box-shadow: none !important;
-    cursor: pointer;
+    outline: none;
     transition:
       border-color 0.15s,
       background 0.15s,
       box-shadow 0.15s;
+    display: block;
 
-    .ng-value-container {
-      padding: 0 8px;
-      align-items: center;
+    &::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
 
-      .ng-placeholder {
-        color: var(--text-secondary);
-        opacity: 0.6;
-        font-size: 0.875rem;
-        top: auto;
-        padding: 0;
+    &:hover {
+      filter: brightness(0.97);
+    }
+
+    &:focus {
+      border-color: var(--primary);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    &.has-error {
+      border-color: var(--bs-danger);
+      background: rgba(var(--bs-danger-rgb), 0.04);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
+      }
+    }
+  }
+
+  textarea.field-input {
+    height: auto;
+    min-height: 80px;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  input[type="date"].field-input {
+    cursor: pointer;
+  }
+}
+
+// ── ng-select ─────────────────────────────────
+
+.add-form-page,
+.modal-form-body {
+  ng-select {
+    display: block;
+
+    &.ng-select {
+      font-size: 0.875rem;
+      font-family: inherit;
+    }
+
+    .ng-select-container {
+      min-height: 38px;
+      height: 38px;
+      border: 0.5px solid var(--border-color) !important;
+      border-radius: var(--radius-md) !important;
+      background: var(--bg-app) !important;
+      color: var(--text-primary);
+      box-shadow: none !important;
+      cursor: pointer;
+      transition:
+        border-color 0.15s,
+        background 0.15s,
+        box-shadow 0.15s;
+
+      .ng-value-container {
+        padding: 0 8px;
+        align-items: center;
+
+        .ng-placeholder {
+          color: var(--text-secondary);
+          opacity: 0.6;
+          font-size: 0.875rem;
+          top: auto;
+          padding: 0;
+        }
+
+        .ng-input {
+          padding: 0;
+          top: auto;
+
+          input {
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: var(--text-primary);
+          }
+        }
       }
 
-      .ng-input {
-        padding: 0;
-        top: auto;
+      .ng-arrow-wrapper {
+        padding-right: 8px;
+        width: 28px;
 
-        input {
-          font-size: 0.875rem;
-          font-family: inherit;
+        .ng-arrow {
+          border-color: var(--text-secondary) transparent transparent;
+          border-width: 4px 4px 0;
+        }
+      }
+
+      .ng-clear-wrapper {
+        color: var(--text-secondary);
+        padding-right: 4px;
+
+        &:hover .ng-clear {
           color: var(--text-primary);
         }
       }
     }
 
-    .ng-arrow-wrapper {
-      padding-right: 8px;
-      width: 28px;
+    &.ng-select-opened .ng-select-container {
+      border-color: var(--primary) !important;
+      background: var(--card-bg) !important;
+      box-shadow: 0 0 0 3px var(--primary-glow) !important;
 
       .ng-arrow {
-        border-color: var(--text-secondary) transparent transparent;
-        border-width: 4px 4px 0;
+        border-color: transparent transparent var(--text-secondary);
+        border-width: 0 4px 4px;
       }
     }
 
-    .ng-clear-wrapper {
-      color: var(--text-secondary);
-      padding-right: 4px;
-
-      &:hover .ng-clear {
-        color: var(--text-primary);
-      }
-    }
-  }
-
-  &.ng-select-opened .ng-select-container {
-    border-color: var(--primary) !important;
-    background: var(--card-bg) !important;
-    box-shadow: 0 0 0 3px var(--primary-glow) !important;
-
-    .ng-arrow {
-      border-color: transparent transparent var(--text-secondary);
-      border-width: 0 4px 4px;
-    }
-  }
-
-  &.ng-select-focused .ng-select-container {
-    border-color: var(--primary) !important;
-    background: var(--card-bg) !important;
-    box-shadow: 0 0 0 3px var(--primary-glow) !important;
-  }
-
-  &.has-error .ng-select-container {
-    border-color: var(--bs-danger) !important;
-    background: rgba(var(--bs-danger-rgb), 0.04) !important;
-  }
-
-  .ng-value {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 4px;
-    background: #e6f1fb !important;
-    color: #185fa5 !important;
-    border: none !important;
-    border-radius: 20px !important;
-    padding: 2px 10px !important;
-    font-size: 0.875rem !important;
-    font-weight: 500;
-    margin: 2px 3px 2px 0 !important;
-    line-height: 1.6;
-  }
-
-  .ng-value-icon {
-    color: #185fa5 !important;
-    font-size: 0.875rem;
-    padding: 0 !important;
-    order: 1;
-
-    &:hover {
-      background: transparent !important;
-      color: #0c447c !important;
+    &.ng-select-focused .ng-select-container {
+      border-color: var(--primary) !important;
+      background: var(--card-bg) !important;
+      box-shadow: 0 0 0 3px var(--primary-glow) !important;
     }
 
-    &.left {
-      display: none !important;
-    }
-  }
-
-  .ng-value-label {
-    font-size: 0.875rem;
-  }
-
-  &.ng-select-multiple .ng-select-container {
-    height: auto;
-    min-height: 38px;
-
-    .ng-value-container {
-      flex-wrap: wrap;
-      padding: 4px 8px;
-      gap: 2px;
-    }
-  }
-
-  .ng-dropdown-panel {
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    margin-top: 4px;
-    background: var(--card-bg);
-    z-index: 1050;
-
-    .ng-dropdown-panel-items {
-      border-radius: var(--radius-md);
-      overflow: hidden;
+    &.has-error .ng-select-container {
+      border-color: var(--bs-danger) !important;
+      background: rgba(var(--bs-danger-rgb), 0.04) !important;
     }
 
-    .ng-option {
-      padding: 8px 12px;
-      font-size: 0.875rem;
-      color: var(--text-primary);
-      background: var(--card-bg);
-      cursor: pointer;
-      transition: background 0.1s;
-
-      &.ng-option-selected {
-        background: var(--primary-glow);
-        color: var(--primary);
-        font-weight: 500;
-      }
-
-      &.ng-option-marked {
-        background: var(--bg-app);
-        color: var(--text-primary);
-      }
-
-      &.ng-option-selected.ng-option-marked {
-        background: var(--primary-glow);
-        color: var(--primary);
-      }
-
-      &.ng-option-disabled {
-        color: var(--text-secondary);
-        opacity: 0.5;
-      }
-    }
-
-    .ng-optgroup {
-      padding: 6px 12px;
-      font-size: 0.875rem;
+    .ng-value {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-tag-bg, #e6f1fb) !important;
+      color: var(--color-tag-text, #185fa5) !important;
+      border: none !important;
+      border-radius: 20px !important;
+      padding: 2px 10px !important;
+      font-size: 0.72rem !important;
       font-weight: 500;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
+      margin: 2px 3px 2px 0 !important;
+      line-height: 1.6;
+    }
+
+    .ng-value-icon {
+      color: var(--color-tag-text, #185fa5) !important;
+      font-size: 0.7rem;
+      padding: 0 !important;
+      order: 1;
+
+      &:hover {
+        background: transparent !important;
+        color: var(--color-tag-hover, #0c447c) !important;
+      }
+
+      &.left {
+        display: none !important;
+      }
+    }
+
+    .ng-value-label {
+      font-size: 0.72rem;
+    }
+
+    &.ng-select-multiple .ng-select-container {
+      height: auto;
+      min-height: 38px;
+
+      .ng-value-container {
+        flex-wrap: wrap;
+        padding: 4px 8px;
+        gap: 2px;
+      }
+    }
+
+    .ng-dropdown-panel {
+      border: 0.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      margin-top: 4px;
+      background: var(--card-bg);
+      z-index: 1050;
+
+      .ng-dropdown-panel-items {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+
+      .ng-option {
+        padding: 8px 12px;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        background: var(--card-bg);
+        cursor: pointer;
+        transition: background 0.1s;
+
+        &.ng-option-selected {
+          background: var(--primary-glow);
+          color: var(--primary);
+          font-weight: 500;
+        }
+
+        &.ng-option-marked {
+          background: var(--bg-app);
+          color: var(--text-primary);
+        }
+
+        &.ng-option-selected.ng-option-marked {
+          background: var(--primary-glow);
+          color: var(--primary);
+        }
+
+        &.ng-option-disabled {
+          color: var(--text-secondary);
+          opacity: 0.5;
+        }
+      }
+
+      .ng-optgroup {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
     }
   }
 }
 
 // ── Quill editor ──────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .quill-wrap {
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
-
-  &:focus-within {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-glow);
-  }
-
-  &.has-error {
-    border-color: var(--bs-danger);
+.add-form-page,
+.modal-form-body {
+  .quill-wrap {
+    border: 0.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
 
     &:focus-within {
-      box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
-    }
-  }
-
-  .ql-toolbar {
-    border: none !important;
-    border-bottom: 0.5px solid var(--border-color) !important;
-    background: var(--bg-app);
-    padding: 6px 10px;
-
-    .ql-stroke {
-      stroke: var(--text-secondary);
-    }
-    .ql-fill {
-      fill: var(--text-secondary);
-    }
-    .ql-picker-label {
-      color: var(--text-secondary);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
-    button:hover,
-    button.ql-active {
+    &.has-error {
+      border-color: var(--bs-danger);
+
+      &:focus-within {
+        box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
+      }
+    }
+
+    .ql-toolbar {
+      border: none !important;
+      border-bottom: 0.5px solid var(--border-color) !important;
+      background: var(--bg-app);
+      padding: 6px 10px;
+
       .ql-stroke {
-        stroke: var(--text-primary);
+        stroke: var(--text-secondary);
       }
       .ql-fill {
-        fill: var(--text-primary);
+        fill: var(--text-secondary);
+      }
+      .ql-picker-label {
+        color: var(--text-secondary);
+      }
+
+      button:hover,
+      button.ql-active {
+        .ql-stroke {
+          stroke: var(--text-primary);
+        }
+        .ql-fill {
+          fill: var(--text-primary);
+        }
       }
     }
-  }
 
-  .ql-container {
-    border: none !important;
-    background: var(--card-bg);
-    font-size: 0.875rem;
-    font-family: inherit;
-  }
-
-  .ql-editor {
-    min-height: 200px;
-    line-height: 1.7;
-    color: var(--text-primary);
-    padding: 12px 14px;
-
-    &.ql-blank::before {
-      color: var(--text-secondary);
-      opacity: 0.6;
-      font-style: normal;
-      left: 14px;
-    }
-
-    p,
-    li {
+    .ql-container {
+      border: none !important;
+      background: var(--card-bg);
       font-size: 0.875rem;
+      font-family: inherit;
     }
 
-    h1,
-    h2,
-    h3 {
-      font-weight: 500;
-      letter-spacing: -0.02em;
-    }
+    .ql-editor {
+      min-height: 200px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      padding: 12px 14px;
 
-    a {
-      color: var(--primary);
-    }
+      &.ql-blank::before {
+        color: var(--text-secondary);
+        opacity: 0.6;
+        font-style: normal;
+        left: 14px;
+      }
 
-    blockquote {
-      border-left: 2px solid var(--border-color);
-      border-radius: 0;
-      padding-left: 1rem;
-      color: var(--text-secondary);
-      margin: 1rem 0;
+      p,
+      li {
+        font-size: 0.875rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      a {
+        color: var(--primary);
+      }
+
+      blockquote {
+        border-left: 2px solid var(--border-color);
+        border-radius: 0;
+        padding-left: 1rem;
+        color: var(--text-secondary);
+        margin: 1rem 0;
+      }
     }
   }
 }
 
 // ── Image upload zone ─────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
+.add-form-page,
+.modal-form-body {
+  .image-upload-zone {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    border: 0.5px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-app);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: var(--primary);
+    }
+
+    &.has-image {
+      border-style: solid;
+      border-color: var(--border-color);
+    }
+
+    &.has-error {
+      border-color: var(--bs-danger);
+      background: rgba(var(--bs-danger-rgb), 0.03);
+    }
+  }
+
+  .upload-preview-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    pointer-events: none;
+
+    svg {
+      opacity: 0.4;
+    }
+  }
+
+  .upload-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 2;
+  }
+
+  .upload-input {
+    display: none;
+  }
+}
+
+// Taller upload zone on full pages
 .add-form-page .image-upload-zone {
-  position: relative;
-  width: 100%;
   height: 200px;
-  border: 0.5px dashed var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-app);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition: border-color 0.15s;
-
-  &:hover {
-    border-color: var(--primary);
-  }
-
-  &.has-image {
-    border-style: solid;
-    border-color: var(--border-color);
-  }
-
-  &.has-error {
-    border-color: var(--bs-danger);
-    background: rgba(var(--bs-danger-rgb), 0.03);
-  }
-}
-
-.add-form-page .upload-preview-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.add-form-page .upload-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  pointer-events: none;
-
-  svg {
-    opacity: 0.4;
-  }
-}
-
-.add-form-page .upload-actions {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 2;
-}
-
-.add-form-page .upload-input {
-  display: none;
 }
 
 // ── Toggle ────────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .toggle-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  background: var(--bg-app);
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-md);
-  margin-bottom: 0.75rem;
+.add-form-page,
+.modal-form-body {
+  .toggle-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg-app);
+    border: 0.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.75rem;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.add-form-page .toggle-track {
-  position: relative;
-  display: inline-block;
-  width: 36px;
-  height: 20px;
-  flex-shrink: 0;
-  margin-top: 2px;
-  cursor: pointer;
-}
-
-.add-form-page .toggle-input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-
-  &:checked + .toggle-thumb {
-    background: var(--primary);
-
-    &::after {
-      left: 18px;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
-  &:focus + .toggle-thumb {
-    box-shadow: 0 0 0 3px var(--primary-glow);
+  .toggle-track {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
   }
-}
 
-.add-form-page .toggle-thumb {
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  background: var(--border-color);
-  transition: background 0.2s;
-
-  &::after {
-    content: "";
+  .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
     position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #fff;
-    transition: left 0.2s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+    &:checked + .toggle-thumb {
+      background: var(--primary);
+
+      &::after {
+        left: 18px;
+      }
+    }
+
+    &:focus + .toggle-thumb {
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
   }
-}
 
-.add-form-page .toggle-info {
-  flex: 1;
-}
+  .toggle-thumb {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: var(--border-color);
+    transition: background 0.2s;
 
-.add-form-page .toggle-title {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+  }
 
-.add-form-page .toggle-desc {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-top: 3px;
-  line-height: 1.5;
+  .toggle-info {
+    flex: 1;
+  }
+
+  .toggle-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .toggle-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
 }
 
 // ── Field helpers ─────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .field-error {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  color: var(--bs-danger);
-  margin-top: 5px;
-  line-height: 1.4;
+.add-form-page,
+.modal-form-body {
+  .field-error {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: var(--bs-danger);
+    margin-top: 5px;
+    line-height: 1.4;
 
-  svg {
-    flex-shrink: 0;
+    svg {
+      flex-shrink: 0;
+    }
   }
-}
 
-.add-form-page .field-hint {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-top: 5px;
-  line-height: 1.5;
+  .field-hint {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
 }
 
 // ── Form footer ───────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .form-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 2.5rem;
-  border-top: 0.5px solid var(--border-color);
-  background: var(--bg-app);
-  gap: 1rem;
+// Full-page footer: sits inside the card, full-width tinted strip
+.add-form-page {
+  .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    border-top: 0.5px solid var(--border-color);
+    background: var(--bg-app);
+    gap: 1rem;
+  }
+
+  .footer-note {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .footer-actions {
+    display: flex;
+    gap: 8px;
+  }
 }
 
-.add-form-page .footer-note {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
+// Modal footer: flush with modal edges, sits below the form body
+.modal-form-body {
+  .modal-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
 
-.add-form-page .footer-actions {
-  display: flex;
-  gap: 8px;
+    // Pull out to the modal shell edges and sit at the bottom
+    margin: 1.25rem -2rem 0;
+    padding: 1rem 2rem;
+    border-top: 0.5px solid var(--border-color);
+    background: var(--bg-app);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
 }
 
 // ── Buttons ───────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
-.add-form-page .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  border: 0.5px solid var(--border-color);
-  transition:
-    background 0.15s,
-    border-color 0.15s,
-    color 0.15s,
-    opacity 0.15s;
-  white-space: nowrap;
-  text-decoration: none;
+.add-form-page,
+.modal-form-body {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: 0.5px solid var(--border-color);
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      color 0.15s,
+      opacity 0.15s;
+    white-space: nowrap;
+    text-decoration: none;
 
-  &.btn-sm {
-    padding: 5px 12px;
-    font-size: 0.75rem;
-  }
+    &.btn-sm {
+      padding: 5px 12px;
+      font-size: 0.75rem;
+    }
 
-  &.btn-ghost {
-    background: var(--card-bg);
-    color: var(--text-secondary);
+    &.btn-ghost {
+      background: var(--card-bg);
+      color: var(--text-secondary);
 
-    &:hover {
-      color: var(--text-primary);
-      filter: brightness(0.96);
+      &:hover {
+        color: var(--text-primary);
+        filter: brightness(0.96);
+      }
+    }
+
+    &.btn-primary {
+      background: var(--text-primary);
+      color: var(--card-bg);
+      border-color: var(--text-primary);
+
+      &:hover:not(:disabled) {
+        opacity: 0.82;
+      }
+
+      &:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+      }
+    }
+
+    &.btn-danger {
+      background: transparent;
+      color: var(--bs-danger);
+      border-color: rgba(var(--bs-danger-rgb), 0.3);
+
+      &:hover {
+        background: rgba(var(--bs-danger-rgb), 0.06);
+        border-color: var(--bs-danger);
+      }
     }
   }
 
-  &.btn-primary {
-    background: var(--text-primary);
-    color: var(--card-bg);
-    border-color: var(--text-primary);
-
-    &:hover:not(:disabled) {
-      opacity: 0.82;
-    }
-
-    &:disabled {
-      opacity: 0.38;
-      cursor: not-allowed;
-    }
+  label.btn {
+    cursor: pointer;
   }
-
-  &.btn-danger {
-    background: transparent;
-    color: var(--bs-danger);
-    border-color: rgba(var(--bs-danger-rgb), 0.3);
-
-    &:hover {
-      background: rgba(var(--bs-danger-rgb), 0.06);
-      border-color: var(--bs-danger);
-    }
-  }
-}
-
-.add-form-page label.btn {
-  cursor: pointer;
 }
 
 // ── Loading skeleton ──────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
 @mixin shimmer {
   background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
@@ -808,7 +888,6 @@
 }
 
 // ── Responsive ────────────────────────────────
-// Scoped to add-form-page to avoid conflicts
 
 @media (max-width: 768px) {
   .add-form-container {
@@ -825,7 +904,8 @@
     align-items: flex-end;
   }
 
-  .add-form-page .field-row {
+  .add-form-page .field-row,
+  .modal-form-body .field-row {
     grid-template-columns: 1fr;
   }
 

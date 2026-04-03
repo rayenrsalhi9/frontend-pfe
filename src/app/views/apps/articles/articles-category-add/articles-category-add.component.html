@@ -1,32 +1,87 @@
-<div class="card">
-  <div class="card-body">
-    <div>
-      <div class="row">
-        <div class="col-sm-12">
-          <label class="form-label" for="categoryName">{{'CATEGORY.LIST.TABLE.NAME' | translate}}</label>
-          <input required [(ngModel)]="data.name" type="text" name="name" #name="ngModel" class="form-control"
-            id="categoryName">
-          <div *ngIf="name.invalid && (name.dirty || name.touched)">
-            <div class="text-danger" *ngIf="name?.hasError('required')">{{'CATEGORY.ADD.ERROR.CATEGORY_NAME_IS_REQUIRED' | translate}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <label class="form-label" for="description">{{'CATEGORY.LIST.TABLE.DESCRIPTION' | translate}}</label>
-          <textarea [(ngModel)]="data.description" name="description" type="text" class="form-control">
-              </textarea>
-        </div>
-      </div>
-    </div>
-    <div class="mt-2">
-      <ng-container *ngIf="!isEdit">
-        <button (click)="saveCategory()" style="margin-right: 10px;" type="submit" *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'" class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{"CATEGORY.ADD.BUTTONS.CATEGORY_SAVE" | translate}}</button>
-      </ng-container>
-      <ng-container *ngIf="isEdit">
-        <button (click)="saveCategory()" style="margin-right: 10px;" type="submit" *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'" class="btn btn-success btn-sm m-r-10" cdkFocusInitial><i class="far fa-save"></i>{{"CATEGORY.ADD.BUTTONS.CATEGORY_SAVE" | translate}}</button>
-      </ng-container>
-      <button type="button" class="btn btn-danger btn-sm" (click)="onCancel()"> <i class="fas fa-times-circle"></i>{{"CATEGORY.ADD.BUTTONS.CATEGORY_CANCEL" | translate}}</button>
-    </div>
+<div class="modal-form-body">
+  <!-- Modal Header -->
+  <div class="modal-form-header">
+    <h2 class="modal-form-title">
+      {{ (isEdit ? "EDIT.CATEGORY.TITLE" : "ADD.CATEGORY.TITLE") | translate }}
+    </h2>
+    <p class="modal-form-sub">
+      {{
+        (isEdit ? "EDIT.CATEGORY.DESCRIPTION" : "ADD.CATEGORY.DESCRIPTION")
+          | translate
+      }}
+    </p>
   </div>
+
+  <form
+    [formGroup]="categoryManage"
+    (ngSubmit)="saveCategory()"
+    class="form-body"
+  >
+    <!-- Category Name -->
+    <div class="field">
+      <label class="field-label" for="categoryName">
+        {{ "ADD.CATEGORY.LABELS.NAME" | translate }}
+        <span class="required-mark">*</span>
+      </label>
+      <input
+        type="text"
+        id="categoryName"
+        formControlName="name"
+        class="field-input"
+        [class.has-error]="isNameInvalid"
+        [placeholder]="'ADD.CATEGORY.PLACEHOLDERS.NAME' | translate"
+      />
+      <div class="field-error" *ngIf="isNameInvalid">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        {{ "ADD.CATEGORY.ERRORS.NAME_REQUIRED" | translate }}
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="field">
+      <label class="field-label" for="categoryDescription">
+        {{ "ADD.CATEGORY.LABELS.DESCRIPTION" | translate }}
+        <span class="optional-mark">{{
+          "ADD.SHARED.LABELS.OPTIONAL" | translate
+        }}</span>
+      </label>
+      <textarea
+        id="categoryDescription"
+        formControlName="description"
+        class="field-input"
+        rows="3"
+        [placeholder]="'ADD.CATEGORY.PLACEHOLDERS.DESCRIPTION' | translate"
+      ></textarea>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="modal-form-footer">
+      <button type="button" class="btn btn-ghost" (click)="onCancel()">
+        {{ "ADD.CATEGORY.BUTTONS.CANCEL" | translate }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isLoading || categoryManage.invalid"
+      >
+        {{
+          (isEdit ? "EDIT.CATEGORY.BUTTONS.SAVE" : "ADD.CATEGORY.BUTTONS.SAVE")
+            | translate
+        }}
+      </button>
+    </div>
+  </form>
 </div>

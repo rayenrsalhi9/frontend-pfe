@@ -169,6 +169,64 @@ export const add = {
       },
     },
 
+    SURVEY: {
+      TITLE: "Nouveau sondage",
+      DESCRIPTION: "Créez un sondage pour recueillir des avis ou des opinions.",
+      LABELS: {
+        TITLE: "Titre",
+        TYPE: "Type",
+        PRIVATE: "Sondage privé",
+        USERS: "Utilisateurs autorisés",
+      },
+      PLACEHOLDERS: {
+        TITLE: "De quoi parle ce sondage ?",
+        USERS: "Rechercher des utilisateurs…",
+      },
+      HINTS: {
+        PRIVATE:
+          "Seuls les membres invités pourront voir et répondre à ce sondage.",
+        REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
+      },
+      BUTTONS: {
+        SAVE: "Créer le sondage",
+        CANCEL: "Annuler",
+      },
+      ERRORS: {
+        TITLE_REQUIRED: "Le titre est requis",
+        TYPE_REQUIRED: "Le type de sondage est requis",
+        SAVE_FAILED: "Échec de la création du sondage",
+      },
+      TOAST: {
+        SUCCESS: "Sondage créé avec succès",
+        ERROR: "Échec de la création du sondage",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "Nouvelle catégorie",
+      DESCRIPTION: "Créez une nouvelle catégorie pour organiser votre contenu.",
+      LABELS: {
+        NAME: "Nom de la catégorie",
+        DESCRIPTION: "Description",
+      },
+      PLACEHOLDERS: {
+        NAME: "Entrez le nom de la catégorie…",
+        DESCRIPTION: "Décrivez cette catégorie…",
+      },
+      BUTTONS: {
+        SAVE: "Enregistrer la catégorie",
+        CANCEL: "Annuler",
+      },
+      ERRORS: {
+        NAME_REQUIRED: "Le nom de la catégorie est requis",
+        SAVE_FAILED: "Échec de l'enregistrement de la catégorie",
+      },
+      TOAST: {
+        SUCCESS: "Catégorie enregistrée avec succès",
+        ERROR: "Échec de l'enregistrement de la catégorie",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "Chargement…",
@@ -240,7 +298,32 @@ export const add = {
       },
       TOAST: {
         SUCCESS: "Article mis à jour avec succès",
-        ERROR: "Échec de la mise jour de l’article",
+        ERROR: "Échec de la mise à jour de l’article",
+      },
+    },
+
+    SURVEY: {
+      TITLE: "Modifier le sondage",
+      DESCRIPTION:
+        "Mettez à jour vos paramètres de sondage et vos participants.",
+      BUTTONS: {
+        SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Sondage mis à jour avec succès",
+        ERROR: "Échec de la mise à jour du sondage",
+      },
+    },
+
+    CATEGORY: {
+      TITLE: "Modifier la catégorie",
+      DESCRIPTION: "Mettez à jour le nom et la description de votre catégorie.",
+      BUTTONS: {
+        SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Catégorie mise à jour avec succès",
+        ERROR: "Échec de la mise à jour de la catégorie",
       },
     },
   },

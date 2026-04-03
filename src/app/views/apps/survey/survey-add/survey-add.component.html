@@ -1,120 +1,185 @@
-<div class="card">
-  <div class="card-body">
-    <form [formGroup]="surveyForm" (ngSubmit)="saveSurvey()">
-      <div class="row">
-        <div class="col-md-12">
-          <label class="form-label" for="surveyTitle">{{
-            "SURVEY.ADD.LABELS.TITLE" | translate
-          }}</label>
-          <input
-            formControlName="title"
-            class="form-control"
-            id="surveyTitle"
-          />
-          <div
-            *ngIf="
-              surveyForm.get('title').touched && surveyForm.get('title')?.errors
-            "
-          >
-            <div
-              class="text-danger"
-              *ngIf="surveyForm.get('title').errors?.['required']"
-            >
-              {{ "SURVEY.ADD.ERROR.TITLE" | translate }}
-            </div>
+<div class="add-form-page" *ngIf="!isLoading">
+  <div class="add-form-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        {{ (isEdit ? "EDIT.SURVEY.TITLE" : "ADD.SURVEY.TITLE") | translate }}
+      </h1>
+      <p class="page-sub">
+        {{
+          (isEdit ? "EDIT.SURVEY.DESCRIPTION" : "ADD.SURVEY.DESCRIPTION")
+            | translate
+        }}
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <form [formGroup]="surveyForm" class="form-body">
+        <!-- ── Basic Info ─────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <label class="form-label" for="surveyType">{{
-            "SURVEY.ADD.LABELS.TYPE" | translate
-          }}</label>
-          <ng-select formControlName="type" [multiple]="false" id="surveyType">
-            <ng-option *ngFor="let type of surveyType" [value]="type">{{
-              "SURVEY.OPTION." + type.toUpperCase() | translate
-            }}</ng-option>
-          </ng-select>
-          <div
-            *ngIf="
-              surveyForm.get('type').touched && surveyForm.get('type')?.errors
-            "
-          >
-            <div
-              class="text-danger"
-              *ngIf="surveyForm.get('type').errors?.['required']"
-            >
-              {{ "SURVEY.ADD.ERROR.TYPE" | translate }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12">
-              <label class="form-label" for="surveyPrivacy">{{
-                "SURVEY.ADD.LABELS.PRIVATE" | translate
-              }}</label>
-              <switch
-                formControlName="private"
-                style="margin-left: 5px"
-                id="surveyPrivacy"
-                [inline]="true"
+
+          <!-- Title -->
+          <div class="field">
+            <label class="field-label" for="title">
+              {{ "ADD.SURVEY.LABELS.TITLE" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="field-input"
+              [class.has-error]="isTitleInvalid"
+              [placeholder]="'ADD.SURVEY.PLACEHOLDERS.TITLE' | translate"
+            />
+            <div class="field-error" *ngIf="isTitleInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-              </switch>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ "ADD.SURVEY.ERRORS.TITLE_REQUIRED" | translate }}
             </div>
-            <div *ngIf="surveyForm.get('private').value" class="col-md-12">
-              <label class="form-label" for="articleUsers">{{ 'SURVEY.ADD.LABELS.USERS' | translate }}</label>
-              <ng-select
-                formControlName="users"
-                [multiple]="true"
-                id="articleUsers"
+          </div>
+
+          <!-- Type -->
+          <div class="field">
+            <label class="field-label" for="type">
+              {{ "ADD.SURVEY.LABELS.TYPE" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <ng-select
+              formControlName="type"
+              [class.has-error]="isTypeInvalid"
+              [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
+              [searchable]="false"
+              [labelForId]="'type'"
+            >
+              <ng-option *ngFor="let type of surveyType" [value]="type">
+                {{ "SURVEY.OPTION." + type.toUpperCase() | translate }}
+              </ng-option>
+            </ng-select>
+            <div class="field-error" *ngIf="isTypeInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <ng-option *ngFor="let user of users" [value]="user.id"
-                  >{{ user.firstName }} {{ user.lastName }}</ng-option
-                >
-              </ng-select>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ "ADD.SURVEY.ERRORS.TYPE_REQUIRED" | translate }}
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12">
-              <label class="form-label" for="surveyBlog">Show in blog</label>
-              <switch formControlName="blog" style="margin-left: 5px;" id="surveyBlog" [inline]="true">
-              </switch>
+
+        <!-- ── Settings ──────────────────────────── -->
+        <div class="form-section last">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
+          </div>
+
+          <!-- Private Toggle -->
+          <div class="field">
+            <div class="toggle-row">
+              <label class="toggle-track" for="private">
+                <input
+                  type="checkbox"
+                  id="private"
+                  formControlName="private"
+                  class="toggle-input"
+                  [attr.aria-labelledby]="'private-title'"
+                  [attr.aria-describedby]="'private-desc'"
+                />
+                <span class="toggle-thumb"></span>
+              </label>
+              <div class="toggle-info">
+                <div class="toggle-title" id="private-title">
+                  {{ "ADD.SURVEY.LABELS.PRIVATE" | translate }}
+                </div>
+                <div class="toggle-desc" id="private-desc">
+                  {{ "ADD.SURVEY.HINTS.PRIVATE" | translate }}
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Allowed Users (conditional) -->
+          <div
+            class="field animate-fade-in"
+            *ngIf="surveyForm.get('private')?.value"
+          >
+            <label class="field-label" for="users">
+              {{ "ADD.SURVEY.LABELS.USERS" | translate }}
+            </label>
+            <ng-select
+              id="users"
+              formControlName="users"
+              [multiple]="true"
+              [placeholder]="'ADD.SURVEY.PLACEHOLDERS.USERS' | translate"
+              [labelForId]="'users'"
+            >
+              <ng-option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </ng-option>
+            </ng-select>
           </div>
         </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12">
-              <label class="form-label" for="surveyForum">Show in forum</label>
-              <switch formControlName="forum" style="margin-left: 5px;" id="surveyForum" [inline]="true">
-              </switch>
-            </div>
-          </div>
-        </div> -->
+      </form>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <span class="footer-note">
+          {{ "ADD.SURVEY.HINTS.REQUIRED_FIELDS" | translate }}
+        </span>
+        <div class="footer-actions">
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+            {{ "ADD.SURVEY.BUTTONS.CANCEL" | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSubmit()"
+            [disabled]="isLoading"
+          >
+            {{
+              (isEdit ? "EDIT.SURVEY.BUTTONS.SAVE" : "ADD.SURVEY.BUTTONS.SAVE")
+                | translate
+            }}
+          </button>
+        </div>
       </div>
-      <div class="mt-2">
-        <button
-          style="margin-right: 10px"
-          type="submit"
-          class="btn btn-success btn-sm m-r-10"
-        >
-          <i class="fas fa-save"></i>
-          {{ "SURVEY.ADD.BUTTONS.SAVE" | translate }}
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger btn-sm"
-          routerLink="/apps/surveys"
-        >
-          <i class="fas fa-times-circle"></i
-          >{{ "SURVEY.ADD.BUTTONS.CANCEL" | translate }}
-        </button>
-      </div>
-    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading skeleton -->
+<div class="add-form-skeleton" *ngIf="isLoading">
+  <div class="skeleton-title"></div>
+  <div class="skeleton-card">
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line medium"></div>
+    <div class="skeleton-line short"></div>
   </div>
 </div>
