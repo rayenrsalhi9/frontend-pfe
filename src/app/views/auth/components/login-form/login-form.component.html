@@ -1,19 +1,19 @@
 <form [formGroup]="formGroup" (ngSubmit)="login()" novalidate class="modern-login-form">
-  <div class="form-group mb-4">
-    <label class="form-label modern-label">{{'SIGN.IN.USERNAME' | translate}}</label>
+  <div class="form-group">
+    <label class="form-label">{{'SIGN.IN.USERNAME' | translate}}</label>
     <input type="text" 
            class="form-control modern-input" 
            formControlName="username" 
            placeholder="m@example.com"
            [ngClass]="{'is-invalid': submitted && formGroup.get('username')?.invalid}">
-    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="invalid-feedback modern-error">
+    <div *ngIf="submitted && formGroup.get('username')?.invalid" class="modern-error">
       <div *ngIf="formGroup.get('username')?.errors?.['required']">{{'SIGN.IN.USERNAME_ERROR' | translate}}</div>
     </div>
   </div>
   
-  <div class="mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <label class="form-label modern-label">{{'SIGN.IN.PASSWORD' | translate}}</label>
+  <div class="form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <label class="form-label">{{'SIGN.IN.PASSWORD' | translate}}</label>
       <a class="forgot-password-link" [routerLink]="['/forgot']">{{'SIGN.IN.FORGET' | translate}}</a>
     </div>
     <div class="password-input-wrapper">
@@ -28,20 +28,20 @@
         <i class="feather" [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
       </button>
     </div>
-    <div *ngIf="submitted && formGroup.get('password')?.invalid" class="invalid-feedback modern-error">
+    <div *ngIf="submitted && formGroup.get('password')?.invalid" class="modern-error">
       <div *ngIf="formGroup.get('password')?.errors?.['required']">{{'SIGN.IN.PASSWORD_ERROR' | translate}}</div>
     </div>
   </div>
   
-  <button class="btn modern-submit-btn w-100" type="submit" [disabled]="isLoading">
+  <button class="btn modern-submit-btn" type="submit" [disabled]="isLoading">
     <span *ngIf="!isLoading">{{'SIGN.IN.BUTTON' | translate}}</span>
     <span *ngIf="isLoading">
       <i class="feather icon-loader spin"></i> {{'SIGN.IN.BUTTON' | translate}}
     </span>
   </button>
 </form>
-<!-- Signup prompt -->
-<div class="text-center mt-3">
-  <span class="text-muted">{{'SIGN.IN.NO_ACCOUNT' | translate}}</span>
-  <a class="signup-link ms-1" [routerLink]="['/register']">{{'SIGN.IN.SIGN_UP' | translate}}</a>
+
+<div class="signup-prompt">
+  <span>{{'SIGN.IN.NO_ACCOUNT' | translate}}</span>
+  <a class="signup-link" [routerLink]="['/register']">{{'SIGN.IN.SIGN_UP' | translate}}</a>
 </div>

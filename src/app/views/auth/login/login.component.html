@@ -1,21 +1,12 @@
 <div class="login-container">
   <div class="login-wrapper">
     <div class="login-card">
-      <!-- Left Column - Login Form -->
-      <div class="login-form-column">
-        <div class="login-header">
-          <h1 class="login-title">{{'SIGN.IN.WELCOME_BACK' | translate}}</h1>
-          <p class="login-subtitle">{{'SIGN.IN.LOGIN_TO_ACCOUNT' | translate}}</p>
-        </div>
-        
-        <!-- Login Form Component -->
-        <login-form></login-form>
+      <div class="login-header">
+        <h1 class="login-title">{{'SIGN.IN.WELCOME_BACK' | translate}}</h1>
+        <p class="login-subtitle">{{'SIGN.IN.LOGIN_TO_ACCOUNT' | translate}}</p>
       </div>
       
-      <!-- Right Column - Background Image -->
-      <div class="login-image-column">
-        <img src="/assets/images/auth/auth-bg.webp" alt="Authentication background" class="login-bg-image">
-      </div>
+      <login-form></login-form>
     </div>
   </div>
 </div>
