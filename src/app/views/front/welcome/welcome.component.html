@@ -163,7 +163,7 @@
         <div *ngIf="survey; else noSurvey" class="survey-content">
           <p class="survey-question">"{{ survey?.title }}"</p>
           <div class="survey-actions">
-            <ng-container *ngIf="survey?.type == 'simple'">
+            <ng-container *ngIf="survey?.type === 'simple'">
               <button (click)="surveyAnswer(1)" class="btn-survey">
                 {{ "BUTTONS.YES" | translate }}
               </button>
@@ -171,14 +171,14 @@
                 {{ "BUTTONS.NO" | translate }}
               </button>
             </ng-container>
-            <ng-container *ngIf="survey?.type == 'rating'">
+            <ng-container *ngIf="survey?.type === 'rating'">
               <rating
                 [max]="5"
                 [(ngModel)]="selectedRating"
                 (ngModelChange)="surveyAnswer($event)"
               ></rating>
             </ng-container>
-            <ng-container *ngIf="survey?.type == 'satisfaction'">
+            <ng-container *ngIf="survey?.type === 'satisfaction'">
               <button
                 (click)="surveyAnswer(0)"
                 class="btn-survey satisfied"

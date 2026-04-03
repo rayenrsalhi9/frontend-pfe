@@ -277,7 +277,7 @@ $preview-height: 350px;
   &.active-heart {
     background: rgba(236, 72, 153, 0.08);
     border-color: rgba(236, 72, 153, 0.3);
-    color: #db2777;
+    color: var(--color-heart, #db2777);
   }
 
   &:focus-visible {

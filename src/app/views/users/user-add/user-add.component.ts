@@ -122,12 +122,18 @@ export class UserAddComponent implements OnInit, OnDestroy {
           } else {
             const error = data as any;
             this.loadError = true;
+            this.isEdit = false;
+            this.userForm.disable();
+            this.cdr.markForCheck();
             this.toastrService.error(error.friendlyMessage || this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
           }
         },
         error: (error) => {
           this.isLoading = false;
           this.loadError = true;
+          this.isEdit = false;
+          this.userForm.disable();
+          this.cdr.markForCheck();
           console.error("Error loading user:", error);
           this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
         },
@@ -175,10 +181,15 @@ export class UserAddComponent implements OnInit, OnDestroy {
       .addUser(formData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
+        next: (data) => {
           this.isLoading = false;
-          this.toastrService.success(this.translate.instant("ADD.USER.TOAST.SUCCESS"));
-          this.router.navigate(["/user/list"]);
+          if ("id" in data) {
+            this.toastrService.success(this.translate.instant("ADD.USER.TOAST.SUCCESS"));
+            this.router.navigate(["/user/list"]);
+          } else {
+            const error = data as any;
+            this.toastrService.error(error.friendlyMessage || this.translate.instant("ADD.USER.TOAST.ERROR"));
+          }
         },
         error: (error) => {
           this.isLoading = false;
@@ -189,14 +200,22 @@ export class UserAddComponent implements OnInit, OnDestroy {
   }
 
   private updateUser(formData: any): void {
+    if (!this.isEdit || !formData.id) {
+      return;
+    }
     this.userService
       .updateUser(formData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
+        next: (data) => {
           this.isLoading = false;
-          this.toastrService.success(this.translate.instant("EDIT.USER.TOAST.SUCCESS"));
-          this.router.navigate(["/user/list"]);
+          if ("id" in data) {
+            this.toastrService.success(this.translate.instant("EDIT.USER.TOAST.SUCCESS"));
+            this.router.navigate(["/user/list"]);
+          } else {
+            const error = data as any;
+            this.toastrService.error(error.friendlyMessage || this.translate.instant("EDIT.USER.TOAST.ERROR"));
+          }
         },
         error: (error) => {
           this.isLoading = false;
