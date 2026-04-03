@@ -101,6 +101,8 @@
   line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition: color 0.15s ease;
 }
 

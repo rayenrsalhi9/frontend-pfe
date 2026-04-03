@@ -7,12 +7,12 @@ import {
   EventEmitter,
   Output,
   OnDestroy,
-  Inject,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 import { Directionality } from "@angular/cdk/bidi";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { NavMenu } from "@app/shared/types/nav-menu.interface";
 import { navConfiguration } from "@app/configs/nav.config";
 import { SecurityService } from "@app/core/security/security.service";
@@ -31,12 +31,14 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
   private manualExpandedKeys = new Set<string>();
   private autoExpandedKeys = new Set<string>();
   private routerSubscription?: Subscription;
+  private langSubscription?: Subscription;
 
   constructor(
     private router: Router,
     private securityService: SecurityService,
     private cdr: ChangeDetectorRef,
-    @Inject(Directionality) private directionality: Directionality,
+    private directionality: Directionality,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -50,10 +52,18 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
         this.syncExpandedState();
         this.cdr.markForCheck();
       });
+
+    this.langSubscription = this.translate.onLangChange.subscribe(
+      (event: LangChangeEvent) => {
+        this.isRtl = this.directionality.value === "rtl";
+        this.cdr.markForCheck();
+      },
+    );
   }
 
   ngOnDestroy(): void {
     this.routerSubscription?.unsubscribe();
+    this.langSubscription?.unsubscribe();
   }
 
   trackByKey(_: number, item: NavMenu): string {

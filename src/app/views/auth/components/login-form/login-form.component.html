@@ -33,6 +33,9 @@
       <label class="form-label" for="login-password">{{
         "SIGN.IN.PASSWORD" | translate
       }}</label>
+      <a class="forgot-password-link" routerLink="/forgot">{{
+        "SIGN.IN.FORGET" | translate
+      }}</a>
     </div>
     <div class="password-input-wrapper">
       <input
@@ -77,3 +80,10 @@
     </span>
   </button>
 </form>
+
+<div class="signup-prompt">
+  <span>{{ "SIGN.IN.NO_ACCOUNT" | translate }}</span>
+  <a class="signup-link" routerLink="/register">{{
+    "SIGN.IN.SIGN_UP" | translate
+  }}</a>
+</div>

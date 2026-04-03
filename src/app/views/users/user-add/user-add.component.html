@@ -32,7 +32,7 @@
 
     <!-- Form Card -->
     <div class="form-card">
-      <form [formGroup]="userForm" class="form-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form-body">
         <!-- ── Basic Info ─────────────────────────── -->
         <div class="form-section">
           <div class="section-label">
@@ -233,9 +233,8 @@
             {{ "ADD.USER.BUTTONS.CANCEL" | translate }}
           </button>
           <button
-            type="button"
+            type="submit"
             class="btn btn-primary"
-            (click)="onSubmit()"
             [disabled]="userForm.invalid || isLoading"
           >
             {{

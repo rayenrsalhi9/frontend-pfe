@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, Inject, PLATFORM_ID } from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { Blog } from "@app/shared/models/blog.model";
 import { environment } from "src/environments/environment";
+import { RtlService } from "@app/core/rtl.service";
 
 @Component({
   selector: "app-blog",
@@ -16,11 +16,9 @@ export class BlogComponent implements OnInit {
   constructor(
     private blogService: BlogService,
     private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private rtlService: RtlService,
   ) {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isRtl = document.dir === "rtl";
-    }
+    this.isRtl = this.rtlService.isRtl;
   }
 
   ngOnInit(): void {

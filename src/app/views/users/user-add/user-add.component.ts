@@ -18,6 +18,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   roleList: Role[] = [];
   isLoading = false;
+  loadError = false;
   isEdit = false;
   userId: string | null = null;
   isSubmitted = false;
@@ -98,26 +99,35 @@ export class UserAddComponent implements OnInit, OnDestroy {
 
   private loadUser(id: string): void {
     this.isLoading = true;
+    this.loadError = false;
     this.userService
       .getUser(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data: any) => {
+        next: (data) => {
           this.isLoading = false;
-          const roleIds = data.userRoles?.map((ur: any) => ur.roleId) || [];
-          this.userForm.patchValue({
-            id: data.id,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-            direction: data.direction,
-            roles: roleIds,
-          });
-          this.cdr.markForCheck();
+          if ("id" in data) {
+            const user = data as any;
+            const roleIds = user.userRoles?.map((ur: any) => ur.roleId) || [];
+            this.userForm.patchValue({
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+              direction: user.direction,
+              roles: roleIds,
+            });
+            this.cdr.markForCheck();
+          } else {
+            const error = data as any;
+            this.loadError = true;
+            this.toastrService.error(error.friendlyMessage || this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
+          }
         },
         error: (error) => {
           this.isLoading = false;
+          this.loadError = true;
           console.error("Error loading user:", error);
           this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
         },

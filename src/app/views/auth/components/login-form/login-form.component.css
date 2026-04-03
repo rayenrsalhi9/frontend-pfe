@@ -160,19 +160,10 @@
   .spin {
     animation: none;
   }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 }
 
 .forgot-password-link {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--primary);
   text-decoration: none;
   font-weight: 500;
@@ -207,7 +198,7 @@
   justify-content: center;
   gap: 4px;
   margin-top: 1.5rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -215,6 +206,7 @@
   color: var(--primary);
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.875rem;
   transition: color 0.15s;
 }
 
