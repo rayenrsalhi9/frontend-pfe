@@ -298,13 +298,14 @@ export const add = {
       },
       TOAST: {
         SUCCESS: "Article mis à jour avec succès",
-        ERROR: "Échec de la mise jour de l’article",
+        ERROR: "Échec de la mise à jour de l’article",
       },
     },
 
     SURVEY: {
       TITLE: "Modifier le sondage",
-      DESCRIPTION: "Mettez à jour vos paramètres de sondage et vos participants.",
+      DESCRIPTION:
+        "Mettez à jour vos paramètres de sondage et vos participants.",
       BUTTONS: {
         SAVE: "Mettre à jour",
       },

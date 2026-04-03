@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ForumCategoryService } from "./forum-category.service";
 import { Router } from "@angular/router";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
@@ -7,17 +7,20 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
 import { ManageComponent } from "./manage/manage.component";
 import { TranslateService } from "@ngx-translate/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "app-forum-category",
   templateUrl: "./forum-category.component.html",
   styleUrls: ["./forum-category.component.css"],
 })
-export class ForumCategoryComponent implements OnInit {
+export class ForumCategoryComponent implements OnInit, OnDestroy {
   rows: any[] = [];
   ColumnMode = ColumnMode;
 
   bsModalRef: BsModalRef;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private forumCategoryService: ForumCategoryService,
@@ -32,14 +35,27 @@ export class ForumCategoryComponent implements OnInit {
     this.getCategories();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getCategories() {
-    this.forumCategoryService.allCategories().subscribe(
-      (data: any) => {
-        this.rows = data;
-        this.cdr.markForCheck();
-      },
-      (error) => {},
-    );
+    this.forumCategoryService
+      .allCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data: any) => {
+          this.rows = data;
+          this.cdr.markForCheck();
+        },
+        (error) => {
+          console.error("Error loading forum categories:", error);
+          this.toastr.error(
+            this.translateService.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
+        },
+      );
   }
 
   manageCategory(data: any) {
@@ -52,7 +68,8 @@ export class ForumCategoryComponent implements OnInit {
         class: "modal-md modal-dialog-centered",
         initialState: initialState,
       })
-      .onHide.subscribe(() => {
+      .onHide.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
         this.getCategories();
       });
   }
@@ -60,6 +77,7 @@ export class ForumCategoryComponent implements OnInit {
   deleteCategory(data: any) {
     this.translateService
       .get("CATEGORY.DELETE.LABEL")
+      .pipe(takeUntil(this.destroy$))
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
@@ -73,18 +91,36 @@ export class ForumCategoryComponent implements OnInit {
           },
         });
 
-        this.bsModalRef.content.onClose.subscribe((result) => {
-          if (result) {
-            this.forumCategoryService.deleteCategory(data.id).subscribe((d) => {
-              this.translateService
-                .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY")
-                .subscribe((translatedMessage: string) => {
-                  this.toastr.success(translatedMessage);
+        this.bsModalRef.content.onClose
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((result) => {
+            if (result) {
+              this.forumCategoryService
+                .deleteCategory(data.id)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe({
+                  next: () => {
+                    this.translateService
+                      .get(
+                        "CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY",
+                      )
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe((translatedMessage: string) => {
+                        this.toastr.success(translatedMessage);
+                      });
+                    this.getCategories();
+                  },
+                  error: (err) => {
+                    console.error("Error deleting forum category:", err);
+                    this.toastr.error(
+                      this.translateService.instant(
+                        "ADD.SHARED.ERRORS.NETWORK_ERROR",
+                      ),
+                    );
+                  },
                 });
-              this.getCategories();
-            });
-          }
-        });
+            }
+          });
       });
   }
 }

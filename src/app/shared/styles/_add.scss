@@ -335,8 +335,8 @@
       display: inline-flex !important;
       align-items: center;
       gap: 4px;
-      background: #e6f1fb !important;
-      color: #185fa5 !important;
+      background: var(--color-tag-bg, #e6f1fb) !important;
+      color: var(--color-tag-text, #185fa5) !important;
       border: none !important;
       border-radius: 20px !important;
       padding: 2px 10px !important;
@@ -344,6 +344,18 @@
       font-weight: 500;
       margin: 2px 3px 2px 0 !important;
       line-height: 1.6;
+    }
+
+    .ng-value-icon {
+      color: var(--color-tag-text, #185fa5) !important;
+      font-size: 0.7rem;
+      padding: 0 !important;
+      order: 1;
+
+      &:hover {
+        background: transparent !important;
+        color: var(--color-tag-hover, #0c447c) !important;
+      }
     }
 
     .ng-value-icon {
@@ -564,11 +576,6 @@
     }
   }
 
-  // Taller upload zone on full pages
-  .add-form-page & .image-upload-zone {
-    height: 200px;
-  }
-
   .upload-preview-img {
     position: absolute;
     inset: 0;
@@ -602,6 +609,11 @@
   .upload-input {
     display: none;
   }
+}
+
+// Taller upload zone on full pages
+.add-form-page .image-upload-zone {
+  height: 200px;
 }
 
 // ── Toggle ────────────────────────────────────
@@ -750,6 +762,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
+
     // Pull out to the modal shell edges and sit at the bottom
     margin: 1.25rem -2rem 0;
     padding: 1rem 2rem;

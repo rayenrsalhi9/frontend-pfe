@@ -98,6 +98,9 @@ export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
       });
     } else {
       this.categoryManage.markAllAsTouched();
+      this.toastr.warning(
+        this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"),
+      );
     }
   }
 }

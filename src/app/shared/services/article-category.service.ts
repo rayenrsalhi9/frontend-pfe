@@ -5,6 +5,24 @@ import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { CommonError } from "../enums/common-error";
 
+export interface CreateCategoryDto {
+  name: string;
+  description?: string;
+}
+
+export interface UpdateCategoryDto {
+  name: string;
+  description?: string;
+}
+
+export interface CategoryDto {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export type CategoryListResponse = CategoryDto[] | CommonError;
+
 @Injectable({ providedIn: "root" })
 export class ArticleCategoryService {
   constructor(
@@ -12,31 +30,36 @@ export class ArticleCategoryService {
     private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
-  allCategories(): Observable<any[] | CommonError> {
+  allCategories(): Observable<CategoryListResponse> {
     const url = `articles/categories`;
     return this.httpClient
-      .get<any[]>(url)
+      .get<CategoryDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  addCategory(data: any): Observable<any[] | CommonError> {
+  addCategory(
+    data: CreateCategoryDto,
+  ): Observable<CategoryDto[] | CommonError> {
     const url = `articles/categories/create`;
     return this.httpClient
-      .post<any[]>(url, data)
+      .post<CategoryDto[]>(url, data)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  updateCategory(id: any, data: any): Observable<any[] | CommonError> {
+  updateCategory(
+    id: number,
+    data: UpdateCategoryDto,
+  ): Observable<CategoryDto[] | CommonError> {
     const url = `articles/categories/update/${id}`;
     return this.httpClient
-      .put<any[]>(url, data)
+      .put<CategoryDto[]>(url, data)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteCategory(id: any): Observable<any[] | CommonError> {
+  deleteCategory(id: number): Observable<void | CommonError> {
     const url = `articles/categories/delete/${id}`;
     return this.httpClient
-      .delete<any[]>(url)
+      .delete<void>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 }

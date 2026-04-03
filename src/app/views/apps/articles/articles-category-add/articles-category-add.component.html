@@ -12,7 +12,11 @@
     </p>
   </div>
 
-  <form [formGroup]="categoryManage" class="form-body">
+  <form
+    [formGroup]="categoryManage"
+    (ngSubmit)="saveCategory()"
+    class="form-body"
+  >
     <!-- Category Name -->
     <div class="field">
       <label class="field-label" for="categoryName">
@@ -69,9 +73,8 @@
         {{ "ADD.CATEGORY.BUTTONS.CANCEL" | translate }}
       </button>
       <button
-        type="button"
+        type="submit"
         class="btn btn-primary"
-        (click)="saveCategory()"
         [disabled]="isLoading || categoryManage.invalid"
       >
         {{

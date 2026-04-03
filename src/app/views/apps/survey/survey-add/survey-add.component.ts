@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  OnDestroy,
-} from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SurveyService } from "../survey.service";
@@ -13,6 +8,8 @@ import { CommonService } from "@app/shared/services/common.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+
+type SurveyType = "simple" | "rating" | "satisfaction";
 
 @Component({
   selector: "app-survey-add",
@@ -25,10 +22,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
   isLoading = false;
   isEdit = false;
   isSubmitted = false;
-  surveyId: any = null;
+  surveyId: string | null = null;
   private destroy$ = new Subject<void>();
 
-  surveyType = ["simple", "rating", "satisfaction"];
+  surveyType: readonly SurveyType[] = ["simple", "rating", "satisfaction"];
 
   constructor(
     private fb: FormBuilder,
@@ -86,7 +83,9 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.isLoading = false;
           console.error("Error loading survey:", err);
-          this.toastr.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
         },
       });
   }
@@ -140,28 +139,34 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     if (this.surveyForm.valid) {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
-      
-      const request = this.isEdit 
+
+      const request = this.isEdit
         ? this.surveyService.updateSurvey(this.surveyId, formValue)
         : this.surveyService.addSurvey(formValue);
 
       request.pipe(takeUntil(this.destroy$)).subscribe({
         next: (res) => {
           this.isLoading = false;
-          const toastKey = this.isEdit ? "EDIT.SURVEY.TOAST.SUCCESS" : "ADD.SURVEY.TOAST.SUCCESS";
+          const toastKey = this.isEdit
+            ? "EDIT.SURVEY.TOAST.SUCCESS"
+            : "ADD.SURVEY.TOAST.SUCCESS";
           this.toastr.success(this.translate.instant(toastKey));
           this.router.navigate(["/apps/surveys"]);
         },
         error: (err) => {
           this.isLoading = false;
-          const toastKey = this.isEdit ? "EDIT.SURVEY.TOAST.ERROR" : "ADD.SURVEY.TOAST.ERROR";
+          const toastKey = this.isEdit
+            ? "EDIT.SURVEY.TOAST.ERROR"
+            : "ADD.SURVEY.TOAST.ERROR";
           this.toastr.error(this.translate.instant(toastKey));
           console.error("Error saving survey:", err);
         },
       });
     } else {
       this.surveyForm.markAllAsTouched();
-      this.toastr.warning(this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"));
+      this.toastr.warning(
+        this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"),
+      );
     }
   }
 
