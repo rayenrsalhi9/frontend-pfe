@@ -1,74 +1,203 @@
-<div class="card">
-  <div class="card-body">
-    <form [formGroup]="userForm">
-      <div class="row">
-        <div class="col-md-3">
-          <label class="mb-2" for="">{{'PROFILE_SETTING.LABEL.PROFILE_PICTURE' | translate}}</label>
-          <div class="rounded overflow-hidden">
-            <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file"
-              name="Profile Photo" fxFlex="30">
-            <img *ngIf="avatar && !newPicture" style="width: 100%;" class="full-width company-logo" [src]="avatar" />
-            <img *ngIf="!avatar || avatar && newPicture" style="width: 100%;" class="full-width company-logo" [src]="newPicture?newPicture:'/assets/images/avatars/thumb-16.jpg'" />
-            <div class="mt-2">
-              <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
-                <i class="far fa-image"></i> {{'PROFILE_SETTING.LABEL.CHANGE_LOGO' | translate}}
+<ng-template #errorIcon>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+</ng-template>
+
+<div class="profile-page" *ngIf="!isLoading">
+  <div class="profile-container">
+    <div class="page-header">
+      <h1 class="page-title">{{ "PROFILE_SETTING.TITLE" | translate }}</h1>
+      <p class="page-sub">{{ "PROFILE_SETTING.DESCRIPTION" | translate }}</p>
+    </div>
+
+    <div class="profile-card">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <div class="profile-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "PROFILE_SETTING.LABELS.PERSONAL_INFO" | translate }}
+          </div>
+
+          <div class="avatar-section">
+            <div class="avatar-preview">
+              <img
+                *ngIf="newPicture"
+                [src]="newPicture"
+                alt="Profile picture"
+              />
+              <img
+                *ngIf="!newPicture && avatar"
+                [src]="avatar"
+                alt="Profile picture"
+              />
+              <img
+                *ngIf="!newPicture && !avatar"
+                src="/assets/images/avatars/thumb-16.jpg"
+                alt="Default avatar"
+              />
+            </div>
+            <div class="avatar-actions">
+              <input
+                type="file"
+                #fileInput
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                (change)="onFileSelect($event)"
+                hidden
+              />
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="fileInput.click()"
+              >
+                <i class="feather icon-camera"></i>
+                {{ "PROFILE_SETTING.LABELS.CHANGE_PICTURE" | translate }}
               </button>
             </div>
           </div>
-        </div>
-        <div class="col-md-9">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group ">
-                <label>{{'PROFILE_SETTING.LABEL.FIRST_NAME' | translate }}</label>
-                <input formControlName="firstName" class="form-control" type="text">
-                <div *ngIf="userForm.get('firstName').touched && userForm.get('firstName').errors">
-                  <div class="text-danger" *ngIf="userForm.get('firstName').errors?.['required']">
-                    {{'PROFILE_SETTING.ERROR.FIRST_NAME_IS_REQUIRED' | translate }}
-                  </div>
-                </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="firstName">
+                {{ "PROFILE_SETTING.LABELS.FIRST_NAME" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="field-input"
+                [class.has-error]="isFirstNameInvalid"
+                [placeholder]="
+                  'PROFILE_SETTING.PLACEHOLDERS.FIRST_NAME' | translate
+                "
+                [attr.aria-invalid]="isFirstNameInvalid"
+                [attr.aria-describedby]="
+                  isFirstNameInvalid ? 'firstName-error' : null
+                "
+              />
+              <div
+                class="field-error"
+                id="firstName-error"
+                *ngIf="isFirstNameInvalid"
+              >
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ firstNameErrorMessage | translate }}
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group ">
-                <label>{{'PROFILE_SETTING.LABEL.LAST_NAME'| translate }}</label>
-                <input formControlName="lastName" class="form-control" type="text">
-                <div *ngIf="userForm.get('lastName').touched && userForm.get('lastName').errors">
-                  <div class="text-danger" *ngIf="userForm.get('lastName').errors?.['required']">
-                    {{'PROFILE_SETTING.ERROR.LAST_NAME_IS_REQUIRED'| translate }}
-                  </div> 
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group ">
-                <label>{{'PROFILE_SETTING.LABEL.MOBILE_NUMBER' | translate }}</label>
-                <input formControlName="phoneNumber" class="form-control" type="text">
-                <div *ngIf="userForm.get('phoneNumber').touched && userForm.get('phoneNumber').errors">
-                  <div class="text-danger" *ngIf="userForm.get('phoneNumber').errors?.['required']">
-                    {{'PROFILE_SETTING.ERROR.MOBILE_IS_REQUIRED' | translate }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label>{{'PROFILE_SETTING.LABEL.EMAIL' | translate }}</label>
-                <input formControlName="email" class="form-control" type="email">
+
+            <div class="field">
+              <label class="field-label" for="lastName">
+                {{ "PROFILE_SETTING.LABELS.LAST_NAME" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="field-input"
+                [class.has-error]="isLastNameInvalid"
+                [placeholder]="
+                  'PROFILE_SETTING.PLACEHOLDERS.LAST_NAME' | translate
+                "
+                [attr.aria-invalid]="isLastNameInvalid"
+                [attr.aria-describedby]="
+                  isLastNameInvalid ? 'lastName-error' : null
+                "
+              />
+              <div
+                class="field-error"
+                id="lastName-error"
+                *ngIf="isLastNameInvalid"
+              >
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ lastNameErrorMessage | translate }}
               </div>
             </div>
           </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="phoneNumber">
+                {{ "PROFILE_SETTING.LABELS.MOBILE" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                formControlName="phoneNumber"
+                class="field-input"
+                [class.has-error]="isPhoneNumberInvalid"
+                [placeholder]="
+                  'PROFILE_SETTING.PLACEHOLDERS.MOBILE' | translate
+                "
+                [attr.aria-invalid]="isPhoneNumberInvalid"
+                [attr.aria-describedby]="
+                  isPhoneNumberInvalid ? 'phoneNumber-error' : null
+                "
+              />
+              <div
+                class="field-error"
+                id="phoneNumber-error"
+                *ngIf="isPhoneNumberInvalid"
+              >
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ phoneNumberErrorMessage | translate }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="email">
+                {{ "PROFILE_SETTING.LABELS.EMAIL" | translate }}
+              </label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="field-input"
+                [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
+                disabled
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="m-t-10 col-md-12 mt-2">
-          <button class="btn btn-success btn-sm m-r-10" (click)="updateProfile()" cdkFocusInitial><i
-              class="fas fa-save"></i> {{'PROFILE_SETTING.LABEL.SAVE' | translate }}</button>
-          <button style="margin-left: 5px;" routerLink="/dashboard" type="button" class="btn btn-danger btn-sm"><i
-              class="fas fa-times-circle"></i>
-              {{'PROFILE_SETTING.LABEL.CANCEL' | translate }}</button>
+
+        <div class="form-footer">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="userForm.invalid || isLoading"
+          >
+            <i class="feather icon-save"></i>
+            {{ "PROFILE_SETTING.BUTTONS.SAVE" | translate }}
+          </button>
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+            {{ "PROFILE_SETTING.BUTTONS.CANCEL" | translate }}
+          </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="profile-skeleton" *ngIf="isLoading">
+  <div class="skeleton-title"></div>
+  <div class="skeleton-card">
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-line wide"></div>
+    <div class="skeleton-line medium"></div>
+    <div class="skeleton-line short"></div>
   </div>
 </div>

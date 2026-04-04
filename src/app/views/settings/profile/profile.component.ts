@@ -1,128 +1,285 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SafeUrl } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { SecurityService } from '@app/core/security/security.service';
-import { UserAuth, User } from '@app/shared/enums/user-auth';
-import { CompanyProfileService } from '@app/shared/services/company-profile.service';
-import { UserService } from '@app/shared/services/user.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { SecurityService } from "@app/core/security/security.service";
+import { UserAuth } from "@app/shared/enums/user-auth";
+import { UserService } from "@app/shared/services/user.service";
+import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
+import { environment } from "src/environments/environment";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  selector: "app-profile",
+  templateUrl: "./profile.component.html",
+  styleUrls: ["./profile.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileComponent implements OnInit {
-
+export class ProfileComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
-  user: UserAuth;
-  avatar: SafeUrl
-  newPicture: string = null
+  user: UserAuth | null = null;
+  avatar: string | null = null;
+  newPicture: string | null = null;
+  isLoading = false;
+  isSubmitted = false;
+
+  private destroy$ = new Subject<void>();
+
+  get hostBase(): string {
+    return environment.apiUrl;
+  }
+
+  get firstNameControl() {
+    return this.userForm.get("firstName");
+  }
+
+  get lastNameControl() {
+    return this.userForm.get("lastName");
+  }
+
+  get phoneNumberControl() {
+    return this.userForm.get("phoneNumber");
+  }
+
+  get emailControl() {
+    return this.userForm.get("email");
+  }
+
+  get isFirstNameInvalid(): boolean {
+    const control = this.firstNameControl;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || this.isSubmitted)
+    );
+  }
+
+  get isLastNameInvalid(): boolean {
+    const control = this.lastNameControl;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || this.isSubmitted)
+    );
+  }
+
+  get isPhoneNumberInvalid(): boolean {
+    const control = this.phoneNumberControl;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || this.isSubmitted)
+    );
+  }
+
+  get firstNameErrorMessage(): string {
+    const control = this.firstNameControl;
+    if (control?.errors?.["required"]) {
+      return "PROFILE_SETTING.ERROR.FIRST_NAME_IS_REQUIRED";
+    }
+    return "";
+  }
+
+  get lastNameErrorMessage(): string {
+    const control = this.lastNameControl;
+    if (control?.errors?.["required"]) {
+      return "PROFILE_SETTING.ERROR.LAST_NAME_IS_REQUIRED";
+    }
+    return "";
+  }
+
+  get phoneNumberErrorMessage(): string {
+    const control = this.phoneNumberControl;
+    if (control?.errors?.["required"]) {
+      return "PROFILE_SETTING.ERROR.MOBILE_IS_REQUIRED";
+    }
+    return "";
+  }
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
-    private toastrService: ToastrService,
     private securityService: SecurityService,
-    private companyProfileService: CompanyProfileService,
+    private toastrService: ToastrService,
     private cdr: ChangeDetectorRef,
-    private translateService: TranslateService,
-    private translate: TranslateService
-  ) {
-  }
-
-  getHost() {
-    return environment.apiUrl
-  }
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.createUserForm();
-    this.user = this.securityService.getUserDetail();
-
-    if (this.user) {
-      this.userForm.patchValue(this.user.user);
-      this.avatar = this.user.user.avatar ? (this.user.user.avatar.startsWith("data:image") ? this.user.user.avatar : this.getHost() + this.user.user.avatar) : null
-      this.cdr.markForCheck()
-    }
-    this.cdr.detectChanges()
+    this.loadUserData();
   }
 
-  createUserForm() {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private createUserForm(): void {
     this.userForm = this.fb.group({
-      id: [''],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]],
-      avatar: ['', []],
+      id: [""],
+      firstName: ["", [Validators.required]],
+      lastName: ["", [Validators.required]],
+      email: [
+        { value: "", disabled: true },
+        [Validators.required, Validators.email],
+      ],
+      phoneNumber: ["", [Validators.required]],
+      avatar: [""],
     });
   }
 
-  updateProfile() {
-    if (this.userForm.valid) {
-      const user = this.createBuildObject();
-      this.userService
-        .updateUserProfile(user)
-        .subscribe((userData: any) => {
-          this.userService.refreshUser(user)
+  private loadUserData(): void {
+    this.isLoading = true;
+    const userAuth = this.securityService.getUserDetail();
 
-          this.user.user.firstName = user.firstName;
-          this.user.user.lastName = user.lastName;
-          this.user.user.phoneNumber = user.phoneNumber;
-          this.user.user.avatar = user.avatar
-          this.translate.get('PROFILE_SETTING.TOAST.PROFILE_UPDATED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage); 
-          }); 
-          this.securityService.setUserDetail(this.user);
-        });
-    } else {
-      this.userForm.markAllAsTouched();
+    if (!userAuth) {
+      this.isLoading = false;
+      this.toastrService.error(
+        this.translate.instant("PROFILE_SETTING.ERROR.LOAD_FAILED"),
+      );
+      this.cdr.markForCheck();
+      return;
     }
+
+    this.user = userAuth;
+    const userData = userAuth.user;
+
+    this.userForm.patchValue({
+      id: userData.id,
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      phoneNumber: userData.phoneNumber || "",
+      email: userData.email || "",
+    });
+
+    this.avatar = userData?.avatar
+      ? userData.avatar.startsWith("data:image")
+        ? userData.avatar
+        : this.hostBase + userData.avatar
+      : null;
+
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 
-  onFileSelect(event) {
-    const fileSelected: File = event.target.files[0];
-    if (!fileSelected) {
+  onFileSelect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      this.toastrService.error(
+        this.translate.instant("PROFILE_SETTING.ERROR.INVALID_IMAGE_TYPE"),
+      );
       return;
     }
-    const mimeType = fileSelected.type;
-    if (mimeType.match(/image\/*/) == null) {
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.toastrService.error(
+        this.translate.instant("PROFILE_SETTING.ERROR.FILE_TOO_LARGE"),
+      );
       return;
     }
+
     const reader = new FileReader();
-    reader.readAsDataURL(fileSelected);
-    reader.onload = (_event) => {
-      this.avatar = reader.result;
-      this.userForm.patchValue({
-        avatar: reader.result.toString()
-      })
-      this.newPicture = reader.result.toString()
-      this.cdr.detectChanges()
+    reader.onload = () => {
+      this.newPicture = reader.result as string;
+      this.userForm.patchValue({ avatar: this.newPicture });
+      this.cdr.markForCheck();
+    };
+    reader.onerror = () => {
+      this.toastrService.error(
+        this.translate.instant("PROFILE_SETTING.ERROR.READ_FAILED"),
+      );
+      this.cdr.markForCheck();
+    };
+    reader.readAsDataURL(file);
+    input.value = "";
+  }
+
+  onSubmit(): void {
+    this.isSubmitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      this.toastrService.warning(
+        this.translate.instant("PROFILE_SETTING.ERROR.VALIDATION_ERROR"),
+      );
+      return;
     }
 
+    this.isLoading = true;
+    const userData = this.prepareFormData();
+
+    this.userService
+      .updateUserProfile(userData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          if (response?.id) {
+            this.updateLocalUser(response);
+            this.toastrService.success(
+              this.translate.instant(
+                "PROFILE_SETTING.TOAST.PROFILE_UPDATED_SUCCESSFULLY",
+              ),
+            );
+            this.cdr.markForCheck();
+          } else {
+            this.toastrService.error(
+              response?.friendlyMessage ||
+                this.translate.instant("PROFILE_SETTING.ERROR.UPDATE_FAILED"),
+            );
+            this.cdr.markForCheck();
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.toastrService.error(
+            this.translate.instant("PROFILE_SETTING.ERROR.UPDATE_FAILED"),
+          );
+          this.cdr.markForCheck();
+        },
+      });
   }
 
-  createBuildObject(): User {
-    const user: User = {
-      id: this.userForm.get('id').value,
-      firstName: this.userForm.get('firstName').value,
-      lastName: this.userForm.get('lastName').value,
-      email: this.userForm.get('email').value,
-      phoneNumber: this.userForm.get('phoneNumber').value,
-      userName: this.userForm.get('email').value,
-      avatar: this.avatar
+  private prepareFormData(): any {
+    const formValue = this.userForm.getRawValue();
+    return {
+      id: formValue.id,
+      firstName: (formValue.firstName || "").trim(),
+      lastName: (formValue.lastName || "").trim(),
+      phoneNumber: (formValue.phoneNumber || "").trim(),
+      userName: formValue.email,
+      avatar: this.newPicture || this.avatar || null,
     };
-    return user;
   }
 
-  /* changePassword(): void {
-    this.dialog.open(ChangePasswordComponent, {
-      width: '350px',
-      data: Object.assign({}, this.user),
-    });
-  } */
+  private updateLocalUser(userData: any): void {
+    if (!this.user) return;
 
+    this.user.user.firstName = userData.firstName;
+    this.user.user.lastName = userData.lastName;
+    this.user.user.phoneNumber = userData.phoneNumber;
+    this.user.user.avatar = userData.avatar;
+
+    this.avatar = userData.avatar;
+    this.newPicture = null;
+
+    this.securityService.setUserDetail(this.user);
+  }
+
+  onCancel(): void {
+    this.router.navigate(["/dashboard"]);
+  }
 }
