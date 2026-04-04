@@ -94,6 +94,12 @@ $font-size-base: 0.875rem; // Assumes the browser default, typically `16px`
 $font-size-sm: $font-size-base * 0.875;
 $font-size-lg: $font-size-base * 1.25;
 
+// Design Tokens - Typography Scale
+$font-size-body-lg: 1rem;
+$font-size-label-md: 0.75rem;
+$font-size-headline-sm: 1.5rem;
+$font-size-display-lg: 3.5rem;
+
 $body-bg: $gray-100;
 $body-color: $gray-700;
 

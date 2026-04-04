@@ -20,7 +20,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "nav-i18n",
   templateUrl: "./nav-i18n.component.html",
-  styleUrls: ["./nav-i18n.component.css"],
+  styleUrls: ["./nav-i18n.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavI18NComponent implements OnInit, OnDestroy {

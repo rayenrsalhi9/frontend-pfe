@@ -227,6 +227,60 @@ export const add = {
       },
     },
 
+    USER: {
+      TITLE: "Nouvel utilisateur",
+      DESCRIPTION: "Créez un nouveau compte utilisateur et attribuez des rôles.",
+      LABELS: {
+        DIRECTION: "Direction",
+        FIRSTNAME: "Prénom",
+        LASTNAME: "Nom",
+        MOBILE: "Mobile",
+        EMAIL: "Email",
+        PASSWORD: "Mot de passe",
+        CONFIRM_PASSWORD: "Confirmer le mot de passe",
+        ROLES: "Rôles",
+      },
+      PLACEHOLDERS: {
+        DIRECTION: "Entrez la direction…",
+        FIRSTNAME: "Entrez le prénom…",
+        LASTNAME: "Entrez le nom…",
+        MOBILE: "Entrez le numéro de mobile…",
+        EMAIL: "Entrez l'adresse email…",
+        PASSWORD: "Entrez le mot de passe…",
+        CONFIRM_PASSWORD: "Confirmez le mot de passe…",
+        ROLES: "Sélectionnez les rôles…",
+      },
+      HINTS: {
+        REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
+        PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+      },
+      BUTTONS: {
+        SAVE: "Créer l'utilisateur",
+        CANCEL: "Annuler",
+      },
+      ERRORS: {
+        DIRECTION_REQUIRED: "La direction est requise",
+        FIRST_NAME_REQUIRED: "Le prénom est requis",
+        LAST_NAME_REQUIRED: "Le nom est requis",
+        MOBILE_REQUIRED: "Le mobile est requis",
+        EMAIL_REQUIRED: "L'email est requis",
+        EMAIL_INVALID: "Veuillez entrer une adresse email valide",
+        PASSWORD_REQUIRED: "Le mot de passe est requis",
+        PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+        CONFIRM_PASSWORD_REQUIRED: "La confirmation du mot de passe est requise",
+        PASSWORDS_DO_NOT_MATCH: "Les mots de passe ne correspondent pas",
+        ROLES_REQUIRED: "Au moins un rôle est requis",
+        SAVE_FAILED: "Échec de la création de l'utilisateur",
+      },
+      TOAST: {
+        SUCCESS: "Utilisateur créé avec succès",
+        ERROR: "Échec de la création de l'utilisateur",
+      },
+      VALIDATION: {
+        PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "Chargement…",
@@ -324,6 +378,18 @@ export const add = {
       TOAST: {
         SUCCESS: "Catégorie mise à jour avec succès",
         ERROR: "Échec de la mise à jour de la catégorie",
+      },
+    },
+
+    USER: {
+      TITLE: "Modifier l'utilisateur",
+      DESCRIPTION: "Mettez à jour les informations et les rôles de l'utilisateur.",
+      BUTTONS: {
+        SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Utilisateur mis à jour avec succès",
+        ERROR: "Échec de la mise à jour de l'utilisateur",
       },
     },
   },

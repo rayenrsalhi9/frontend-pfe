@@ -11,7 +11,6 @@ export const users = {
         MOBILE: "Numéro de mobile",
         PHONE: "Numéro de téléphone",
         DIRECTION: "Département",
-        MATRICULE: "Matricule",
         ACTION: "Actions",
       },
       BUTTONS: {
@@ -34,7 +33,6 @@ export const users = {
         PASSWORD: "Mot de passe",
         CONFPASSWORD: "Confirmer le mot de passe",
         ROLES: "Rôles utilisateur",
-        MATRICULE: "Matricule",
         DIRECTION: "Département",
       },
 
@@ -55,7 +53,6 @@ export const users = {
         CONFIRM_PASSWORD_IS_REQUIRED: "Veuillez confirmer le mot de passe",
         PASSWORDS_DO_NOT_MATCH: "Les mots de passe ne correspondent pas",
         DIRECTION_IS_REQUIRED: "Le département est obligatoire",
-        MATRICULE_IS_REQUIRED: "Le matricule est obligatoire",
       },
 
       TOAST: {

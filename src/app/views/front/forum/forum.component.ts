@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { ForumThread } from "./forum-thread.interface";
+import { RtlService } from "@app/core/rtl.service";
 
 @Component({
   selector: "app-forum",
@@ -9,6 +10,7 @@ import { ForumThread } from "./forum-thread.interface";
 })
 export class ForumComponent implements OnInit {
   rows: ForumThread[] | null = null;
+  isRtl = false;
 
   categories = [];
   tags = [];
@@ -18,7 +20,10 @@ export class ForumComponent implements OnInit {
   constructor(
     private forumService: ForumService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private rtlService: RtlService,
+  ) {
+    this.isRtl = this.rtlService.isRtl;
+  }
 
   ngOnInit(): void {
     this.getAllForums();

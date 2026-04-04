@@ -11,6 +11,8 @@ import {
 import { NavigationEnd, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
+import { Directionality } from "@angular/cdk/bidi";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { NavMenu } from "@app/shared/types/nav-menu.interface";
 import { navConfiguration } from "@app/configs/nav.config";
 import { SecurityService } from "@app/core/security/security.service";
@@ -24,18 +26,23 @@ import { SecurityService } from "@app/core/security/security.service";
 export class VerticalMenuContentComponent implements OnInit, OnDestroy {
   menu: NavMenu[] = [];
   @Output() onNavLinkClick = new EventEmitter<string>();
+  isRtl = false;
 
   private manualExpandedKeys = new Set<string>();
   private autoExpandedKeys = new Set<string>();
   private routerSubscription?: Subscription;
+  private langSubscription?: Subscription;
 
   constructor(
     private router: Router,
     private securityService: SecurityService,
     private cdr: ChangeDetectorRef,
+    private directionality: Directionality,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
+    this.isRtl = this.directionality.value === "rtl";
     this.menu = this.filterVisibleMenu(navConfiguration);
     this.syncExpandedState();
 
@@ -45,10 +52,18 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
         this.syncExpandedState();
         this.cdr.markForCheck();
       });
+
+    this.langSubscription = this.translate.onLangChange.subscribe(
+      (event: LangChangeEvent) => {
+        this.isRtl = this.directionality.value === "rtl";
+        this.cdr.markForCheck();
+      },
+    );
   }
 
   ngOnDestroy(): void {
     this.routerSubscription?.unsubscribe();
+    this.langSubscription?.unsubscribe();
   }
 
   trackByKey(_: number, item: NavMenu): string {

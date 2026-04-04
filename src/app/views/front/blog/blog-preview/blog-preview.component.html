@@ -1,4 +1,4 @@
-<div class="blog-page" *ngIf="blog?.id">
+<div class="preview-page" *ngIf="blog?.id">
   <!-- Hero -->
   <div class="hero">
     <div class="cover-image" *ngIf="blog.picture">
@@ -13,39 +13,16 @@
       />
     </div>
     <div class="cover-placeholder" *ngIf="!blog.picture">
-      <svg
-        width="80"
-        height="60"
-        viewBox="0 0 80 60"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect
-          x="2"
-          y="2"
-          width="76"
-          height="56"
-          rx="4"
-          stroke="currentColor"
-          stroke-width="2"
-        />
-        <circle cx="22" cy="20" r="7" stroke="currentColor" stroke-width="2" />
-        <path
-          d="M2 42 L20 26 L34 38 L50 22 L78 46"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <i class="feather icon-image"></i>
     </div>
     <div class="hero-body">
       <div class="meta-row">
-        <span class="badge badge-amber">
-          {{ "PREVIEW.BLOG.LABEL" | translate }}
-        </span>
-        <span class="badge badge-cat" *ngIf="blog.category?.name">
-          {{ blog.category.name }}
-        </span>
+        <span class="badge badge-blog">{{
+          "PREVIEW.BLOG.LABEL" | translate
+        }}</span>
+        <span class="badge badge-cat" *ngIf="blog.category?.name">{{
+          blog.category.name
+        }}</span>
       </div>
       <h1 class="hero-title">{{ blog.title }}</h1>
       <p class="hero-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
@@ -53,7 +30,7 @@
         <div class="avatar-circle">
           <i class="feather icon-user"></i>
         </div>
-        <div>
+        <div class="author-info">
           <div class="author-name">
             {{ blog.creator?.firstName }} {{ blog.creator?.lastName }}
           </div>
@@ -66,15 +43,12 @@
   </div>
 
   <!-- Two-column layout -->
-  <div class="layout">
+  <div class="preview-layout">
     <!-- Main column -->
     <div class="main-col">
       <!-- Article body -->
-      <div class="card article-card">
-        <div
-          class="article-body rich-content"
-          [innerHTML]="blog.body | safeHtml"
-        ></div>
+      <div class="preview-card article-body">
+        <div class="rich-content" [innerHTML]="blog.body | safeHtml"></div>
 
         <!-- Reactions -->
         <div class="reactions">
@@ -83,7 +57,12 @@
               class="rxn-btn"
               [class.active-up]="hasReacted('up')"
               (click)="addReaction('up')"
-              [title]="'PREVIEW.BLOG.REACTIONS.UP' | translate"
+              [attr.aria-label]="
+                ('PREVIEW.BLOG.REACTIONS.UP' | translate) +
+                ' ' +
+                (blog.reactionsUp?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('up')"
             >
               <i class="feather icon-thumbs-up"></i>
               {{ blog.reactionsUp?.length || 0 }}
@@ -92,7 +71,12 @@
               class="rxn-btn"
               [class.active-down]="hasReacted('down')"
               (click)="addReaction('down')"
-              [title]="'PREVIEW.BLOG.REACTIONS.DOWN' | translate"
+              [attr.aria-label]="
+                ('PREVIEW.BLOG.REACTIONS.DOWN' | translate) +
+                ' ' +
+                (blog.reactionsDown?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('down')"
             >
               <i class="feather icon-thumbs-down"></i>
               {{ blog.reactionsDown?.length || 0 }}
@@ -106,7 +90,7 @@
       </div>
 
       <!-- Comments -->
-      <div class="card comments-card">
+      <div class="preview-card comments-card">
         <div class="comments-header">
           <span class="comments-title">{{
             "PREVIEW.BLOG.PREVIEW.COMMENTS" | translate
@@ -161,7 +145,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <!-- Stats -->
-      <div class="card widget-card">
+      <div class="preview-card widget-card">
         <div class="widget-title">
           {{ "PREVIEW.WIDGETS.STATS" | translate }}
         </div>
@@ -182,7 +166,7 @@
       </div>
 
       <!-- Share -->
-      <div class="card widget-card">
+      <div class="preview-card widget-card">
         <div class="widget-title">
           {{ "PREVIEW.WIDGETS.SHARE" | translate }}
         </div>

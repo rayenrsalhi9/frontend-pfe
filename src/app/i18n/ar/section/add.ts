@@ -217,6 +217,60 @@ export const add = {
       },
     },
 
+    USER: {
+      TITLE: "مستخدم جديد",
+      DESCRIPTION: "أنشئ حساب مستخدم جديد وعيّن الأدوار.",
+      LABELS: {
+        DIRECTION: "الإدارة",
+        FIRSTNAME: "الاسم الأول",
+        LASTNAME: "اسم العائلة",
+        MOBILE: "الهاتف",
+        EMAIL: "البريد الإلكتروني",
+        PASSWORD: "كلمة المرور",
+        CONFIRM_PASSWORD: "تأكيد كلمة المرور",
+        ROLES: "الأدوار",
+      },
+      PLACEHOLDERS: {
+        DIRECTION: "أدخل الإدارة…",
+        FIRSTNAME: "أدخل الاسم الأول…",
+        LASTNAME: "أدخل اسم العائلة…",
+        MOBILE: "أدخل رقم الهاتف…",
+        EMAIL: "أدخل البريد الإلكتروني…",
+        PASSWORD: "أدخل كلمة المرور…",
+        CONFIRM_PASSWORD: "أكد كلمة المرور…",
+        ROLES: "اختر الأدوار…",
+      },
+      HINTS: {
+        REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
+        PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+      },
+      BUTTONS: {
+        SAVE: "إنشاء المستخدم",
+        CANCEL: "إلغاء",
+      },
+      ERRORS: {
+        DIRECTION_REQUIRED: "الإدارة مطلوبة",
+        FIRST_NAME_REQUIRED: "الاسم الأول مطلوب",
+        LAST_NAME_REQUIRED: "اسم العائلة مطلوب",
+        MOBILE_REQUIRED: "الهاتف مطلوب",
+        EMAIL_REQUIRED: "البريد الإلكتروني مطلوب",
+        EMAIL_INVALID: "الرجاء إدخال بريد إلكتروني صالح",
+        PASSWORD_REQUIRED: "كلمة المرور مطلوبة",
+        PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+        CONFIRM_PASSWORD_REQUIRED: "تأكيد كلمة المرور مطلوب",
+        PASSWORDS_DO_NOT_MATCH: "كلمات المرور غير متطابقة",
+        ROLES_REQUIRED: "مطلوب دور واحد على الأقل",
+        SAVE_FAILED: "فشل إنشاء المستخدم",
+      },
+      TOAST: {
+        SUCCESS: "تم إنشاء المستخدم بنجاح",
+        ERROR: "فشل إنشاء المستخدم",
+      },
+      VALIDATION: {
+        PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "جارٍ التحميل…",
@@ -313,6 +367,18 @@ export const add = {
       TOAST: {
         SUCCESS: "تم تحديث الفئة بنجاح",
         ERROR: "فشل تحديث الفئة",
+      },
+    },
+
+    USER: {
+      TITLE: "تعديل المستخدم",
+      DESCRIPTION: "قم بتحديث معلومات المستخدم والأدوار.",
+      BUTTONS: {
+        SAVE: "تحديث المستخدم",
+      },
+      TOAST: {
+        SUCCESS: "تم تحديث المستخدم بنجاح",
+        ERROR: "فشل تحديث المستخدم",
       },
     },
   },

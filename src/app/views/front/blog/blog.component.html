@@ -1,42 +1,40 @@
-<div class="list-page">
+<div class="content-page">
   <!-- Page Header -->
-  <div class="list-page-header">
-    <div class="list-page-header-inner">
-      <div class="header-text">
-        <h1 class="list-page-title">
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="header-content">
+        <h1 class="page-title">
           <i class="feather icon-book-open"></i>
           {{ "PREVIEW.BLOG.LIST.TITLE" | translate }}
         </h1>
-        <p class="list-page-desc">
+        <p class="page-description">
           {{ "PREVIEW.BLOG.LIST.DESCRIPTION" | translate }}
         </p>
       </div>
-      <div class="header-stat" *ngIf="blogs !== null">
-        <span class="stat-pill">
-          <i class="feather icon-layers"></i>
-          {{ blogs.length }} {{ "PREVIEW.BLOG.TABLE.POSTS" | translate }}
-        </span>
+      <div class="header-badge" *ngIf="blogs !== null">
+        <i class="feather icon-layers"></i>
+        {{ "PREVIEW.BLOG.TABLE.POSTS_COUNT" | translate:{count: blogs.length} }}
       </div>
     </div>
-  </div>
+  </header>
 
   <!-- Blog Cards Grid -->
-  <div class="list-page-body">
+  <main class="content-body">
     <!-- Empty State -->
-    <div class="empty-state-card" *ngIf="blogs !== null && blogs.length === 0">
+    <div class="empty-state" *ngIf="blogs !== null && blogs.length === 0">
       <i class="feather icon-book-open"></i>
       <h3>{{ "PREVIEW.BLOG.LIST.NO_RESULTS" | translate }}</h3>
     </div>
 
-    <!-- Card grid -->
-    <div class="blog-grid" *ngIf="blogs !== null && blogs.length > 0">
+    <!-- Cards Grid -->
+    <div class="cards-grid" *ngIf="blogs !== null && blogs.length > 0">
       <a
         *ngFor="let blog of blogs"
-        class="blog-card"
+        class="card-item"
         [routerLink]="['/blog', blog.id]"
       >
-        <!-- Cover image -->
-        <div class="blog-cover">
+        <!-- Cover -->
+        <div class="card-cover">
           <img
             *ngIf="blog.picture"
             [src]="
@@ -49,73 +47,37 @@
             class="cover-img"
           />
           <div class="cover-placeholder" *ngIf="!blog.picture">
-            <svg
-              width="80"
-              height="60"
-              viewBox="0 0 80 60"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="2"
-                y="2"
-                width="76"
-                height="56"
-                rx="4"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <circle
-                cx="22"
-                cy="20"
-                r="7"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path
-                d="M2 42 L20 26 L34 38 L50 22 L78 46"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <i class="feather icon-image"></i>
           </div>
-          <div class="cover-overlay"></div>
-          <span class="cover-category" *ngIf="blog.category?.name">
+          <span class="category-badge" *ngIf="blog.category?.name">
             {{ blog.category.name }}
           </span>
         </div>
 
-        <!-- Card body -->
-        <div class="blog-card-body">
-          <h2 class="blog-title">{{ blog.title }}</h2>
-          <p class="blog-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
-          <div class="blog-footer">
-            <div class="blog-footer-stats">
-              <span
-                class="blog-comments"
-                [title]="'PREVIEW.WIDGETS.COMMENTS' | translate"
-                [attr.aria-label]="('PREVIEW.WIDGETS.COMMENTS' | translate) + ': ' + (blog.commentsCount ?? blog.comments?.length ?? 0)"
-              >
-                <i class="feather icon-message-square"></i>
+        <!-- Body -->
+        <div class="card-body">
+          <h2 class="card-title">{{ blog.title }}</h2>
+          <p class="card-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
+          
+          <!-- Footer -->
+          <div class="card-footer">
+            <div class="card-stats">
+              <span class="stat-item" [attr.aria-label]="('PREVIEW.WIDGETS.COMMENTS' | translate) + ': ' + (blog.commentsCount ?? blog.comments?.length ?? 0)">
+                <i class="feather icon-message-square" aria-hidden="true"></i>
                 {{ blog.commentsCount ?? blog.comments?.length ?? 0 }}
               </span>
-              <span
-                class="blog-reactions"
-                [title]="'PREVIEW.WIDGETS.LIKES' | translate"
-                [attr.aria-label]="('PREVIEW.WIDGETS.LIKES' | translate) + ': ' + (blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0)"
-              >
-                <i class="feather icon-thumbs-up"></i>
+              <span class="stat-item" [attr.aria-label]="('PREVIEW.WIDGETS.LIKES' | translate) + ': ' + (blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0)">
+                <i class="feather icon-thumbs-up" aria-hidden="true"></i>
                 {{ blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0 }}
               </span>
             </div>
-            <span class="blog-cta">
+            <span class="read-more">
               {{ "PREVIEW.BLOG.LIST.READ_MORE" | translate }}
-              <i class="feather icon-arrow-right"></i>
+              <i class="feather" [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"></i>
             </span>
           </div>
         </div>
       </a>
     </div>
-  </div>
+  </main>
 </div>

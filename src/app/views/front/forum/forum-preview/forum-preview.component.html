@@ -1,7 +1,6 @@
-<div class="blog-page" *ngIf="forum?.id">
+<div class="preview-page" *ngIf="forum?.id">
   <!-- Hero -->
   <div class="hero">
-    <!-- No cover image for forums currently, so just show body directly -->
     <div class="hero-body">
       <div class="meta-row">
         <span class="badge badge-forum">
@@ -27,7 +26,7 @@
         <div class="avatar-circle">
           <i class="feather icon-user"></i>
         </div>
-        <div>
+        <div class="author-info">
           <div class="author-name">
             {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
           </div>
@@ -40,15 +39,12 @@
   </div>
 
   <!-- Two-column layout -->
-  <div class="layout">
+  <div class="preview-layout">
     <!-- Main column -->
     <div class="main-col">
       <!-- Article body -->
-      <div class="card article-card">
-        <div
-          class="article-body rich-content"
-          [innerHTML]="forum.content | safeHtml"
-        ></div>
+      <div class="preview-card article-body">
+        <div class="rich-content" [innerHTML]="forum.content | safeHtml"></div>
 
         <!-- Reactions -->
         <div class="reactions">
@@ -57,7 +53,12 @@
               class="rxn-btn"
               [class.active-up]="hasReacted('up')"
               (click)="addReaction('up')"
-              [title]="'PREVIEW.FORUM.REACTIONS.UP' | translate"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.UP' | translate) +
+                ' ' +
+                (forum.reactionsUp?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('up')"
             >
               <i class="feather icon-thumbs-up"></i>
               {{ forum.reactionsUp?.length || 0 }}
@@ -66,7 +67,12 @@
               class="rxn-btn"
               [class.active-down]="hasReacted('down')"
               (click)="addReaction('down')"
-              [title]="'PREVIEW.FORUM.REACTIONS.DOWN' | translate"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.DOWN' | translate) +
+                ' ' +
+                (forum.reactionsDown?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('down')"
             >
               <i class="feather icon-thumbs-down"></i>
               {{ forum.reactionsDown?.length || 0 }}
@@ -75,7 +81,12 @@
               class="rxn-btn"
               [class.active-heart]="hasReacted('heart')"
               (click)="addReaction('heart')"
-              [title]="'PREVIEW.FORUM.REACTIONS.HEART' | translate"
+              [attr.aria-label]="
+                ('PREVIEW.FORUM.REACTIONS.HEART' | translate) +
+                ' ' +
+                (forum.reactionsHeart?.length || 0)
+              "
+              [attr.aria-pressed]="hasReacted('heart')"
             >
               <i class="feather icon-heart"></i>
               {{ forum.reactionsHeart?.length || 0 }}
@@ -89,7 +100,7 @@
       </div>
 
       <!-- Comments -->
-      <div class="card comments-card">
+      <div class="preview-card comments-card">
         <div class="comments-header">
           <span class="comments-title">{{
             "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate
@@ -126,7 +137,7 @@
               <i class="feather icon-user"></i>
             </div>
             <div class="cm-body">
-              <div class="cm-header cm-header-flex">
+              <div class="cm-header cm-header--spaced">
                 <div>
                   <span class="cm-name"
                     >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
@@ -178,7 +189,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <!-- Stats -->
-      <div class="card widget-card">
+      <div class="preview-card widget-card">
         <div class="widget-title">
           {{ "PREVIEW.WIDGETS.STATS" | translate }}
         </div>
@@ -199,7 +210,7 @@
       </div>
 
       <!-- Share -->
-      <div class="card widget-card">
+      <div class="preview-card widget-card">
         <div class="widget-title">
           {{ "PREVIEW.WIDGETS.SHARE" | translate }}
         </div>

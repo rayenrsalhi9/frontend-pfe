@@ -1,9 +1,14 @@
 export const welcome = {
   WELCOME: {
+    HERO_TITLE: "Bienvenue sur notre plateforme",
+    HERO_SUBTITLE: "Découvrez le dernier contenu, rejoignez les discussions et connectez-vous avec notre communauté.",
+    GET_STARTED: "Commencer",
+
     LATEST_BLOGS: "Derniers articles du blog",
     LATEST_BLOGS_DESC:
       "Découvrez les dernières actualités, analyses et publications de notre communauté.",
     SEE_ALL_BLOGS: "Voir tous les articles du blog",
+    SEE_ALL: "Voir tout",
 
     LATEST_ARTICLES: "Derniers articles",
     LATEST_ARTICLES_DESC:
@@ -18,6 +23,7 @@ export const welcome = {
     SURVEY: "Sondage",
     POSTED_ON: "Publié le",
     BY: "par",
+    BY_AUTHOR: "par {{ author }}",
 
     NO_BLOGS: "Aucun article de blog disponible pour le moment",
     NO_ARTICLES: "Aucun article publié pour le moment",

@@ -1,127 +1,295 @@
-<div class="card">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
-          <div class="body">
-            <form [formGroup]="userForm">
-              <div class="row">
-                <div class="col-md-6 mt-2">
-                  <label class="form-label">{{'USERS.ADD.LABELS.MATRICULE' | translate}}</label>
-                  <ng-select [multiple]="false" [items]="employeList"  (change)="selectEmploye($event)"  [searchable]="true"    [clearable]="true" bindLabel="matricule"  >
-                    
-                    <ng-option *ngFor="let employe of employeList" [value]="employe">{{employe.matricule}}</ng-option>
-                  </ng-select>
-                </div>
-                <div class="col-md-6 mt-2">
-                  <label class="form-label">{{'USERS.ADD.LABELS.DIRECTION' | translate}}</label>
-                  <input formControlName="direction" class="form-control" type="text">
-                  <div class="text-danger" *ngIf="userForm.get('direction')?.touched &&
-                userForm.get('direction')?.hasError('required')">
-                    {{'USERS.ADD.ERRORS.DIRECTION_IS_REQUIRED' | translate}}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.FIRSTNAME' | translate}}</label>
-                  <input formControlName="firstName" class="form-control" type="text">
-                  <div class="text-danger" *ngIf="userForm.get('firstName')?.touched &&
-                userForm.get('firstName')?.hasError('required')">
-                    {{'USERS.ADD.ERRORS.FIRST_NAME_IS_REQUIRED' | translate}}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.LASTNAME' | translate}}</label>
-                  <input formControlName="lastName" class="form-control" type="text">
-                  <div class="text-danger"
-                    *ngIf="userForm.get('lastName').touched && userForm.get('lastName')?.hasError('required')">
-                    {{'USERS.ADD.ERRORS.LAST_NAME_IS_REQUIRED' | translate}}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.MOBILE' | translate}}</label>
-                  <input formControlName="phoneNumber" class="form-control" type="text">
-                  <div class="text-danger"
-                    *ngIf="userForm.get('phoneNumber').touched && userForm.get('phoneNumber')?.hasError('required')">
-                    {{"USERS.ADD.ERRORS.MOBILE_IS_REQUIRED" | translate}}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.EMAIL' | translate}}</label>
-                  <input formControlName="email" class="form-control" type="email">
-                  <div class="text-danger"
-                    *ngIf="userForm.get('email').touched  && userForm.get('email')?.hasError('required')">
-                    {{'USERS.ADD.ERRORS.EMAIL_IS_REQUIRED' | translate}}
-                  </div>
-                  <div class="text-danger"
-                    *ngIf="userForm.get('email').touched  && userForm.get('email')?.hasError('email')">
-                    {{'USERS.ADD.ERRORS.PLEASE_ENTER_VALID_EMAIL' | translate}}
-                  </div>
-                </div>
-                <div *ngIf="!isEditMode" class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.PASSWORD' | translate}}</label>
-                  <input autocomplete="new-password" formControlName="password" class="form-control" type="password">
-                  <div class="text-danger"
-                    *ngIf="userForm.get('password').touched && userForm.get('password').hasError('required')">
-                    {{'USERS.ADD.ERRORS.PASSWORD_IS_REQUIRED' | translate}}
-                  </div>
-                  <div class="text-danger"
-                    *ngIf="userForm.get('password').touched && userForm.get('password')?.hasError('minlength')">
-                    {{'USERS.ADD.ERRORS.YOU_HAVE_TO_ENTER_AT_LEAST_DIGIT' | translate}}
-                  </div>
-                </div>
-                <div *ngIf="!isEditMode" class="col-md-6">
-                  <label class="form-label">{{'USERS.ADD.LABELS.CONFPASSWORD' | translate}}</label>
-                  <input autocomplete="new-password" formControlName="confirmPassword" class="form-control"
-                    type="password">
-                  <div class="text-danger"
-                    *ngIf="userForm.get('confirmPassword').touched && userForm.get('confirmPassword').hasError('required')">
-                    {{'USERS.ADD.ERRORS.CONFIRM_PASSWORD_IS_REQUIRED' | translate}}
-                  </div>
-                  <div class="text-danger"
-                    *ngIf="userForm.get('confirmPassword').touched && userForm.get('confirmPassword').touched && userForm.hasError('notSame')">
-                    {{'USERS.ADD.ERRORS.PASSWORDS_DO_NOT_MATCH' | translate}}
-                  </div>
-                </div>
-                <div class="col-md-6 mt-2">
-                  <!-- <mat-form-field appearance="fill"> -->
-                  <label class="form-label">{{'USERS.ADD.LABELS.ROLES' | translate}}</label>
-                  <ng-select [multiple]="true" (change)="selectRole($event)">
-                    <ng-option *ngFor="let role of roleList" [value]="role">{{role.name}}</ng-option>
-                  </ng-select>
+<ng-template #errorIcon>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+</ng-template>
 
-                  <!-- <mat-select class="form-select" [(value)]="selectedRoles" multiple>
-                    <mat-select-trigger>
-                      <span *ngIf="selectedRoles.length > 0">
-                        {{selectedRoles[0].name}}
-                      </span>
-                      <span *ngIf="selectedRoles.length > 1" class="example-additional-selection">
-                        (+{{selectedRoles.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
-                      </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let role of roleList" [value]="role">{{role.name}}</mat-option>
-                  </mat-select> -->
-                  <!-- </mat-form-field> -->
-                </div>
-               
-                
-                <div class="m-t-10 col-md-12 mt-3">
-                  <ng-container *ngIf="isEditMode">
-                    <button *hasClaim="'USER_EDIT_USER'" class="btn btn-success" style="margin-right: 10px;" (click)="saveUser()"
-                      cdkFocusInitial><i class="feather icon-plus-circle"></i> {{'USERS.ADD.BUTTONS.ADD' | translate}}</button>
-                  </ng-container>
-                  <ng-container *ngIf="!isEditMode">
-                    <button *hasClaim="'USER_CREATE_USER'" class="btn btn-success" style="margin-right: 10px;" (click)="saveUser()"
-                      cdkFocusInitial><i class="feather icon-plus-circle"></i> {{'USERS.ADD.BUTTONS.ADD' | translate}}</button>
-                  </ng-container>
-                  <button type="button" class="btn btn-danger" [routerLink]="['/user/list']"><i
-                    class="feather icon-x-circle"></i>
-                    {{'USERS.ADD.BUTTONS.CANCEL' | translate}}</button>
-                </div>
-              </div>
-            </form>
+<div class="add-form-page" *ngIf="!isLoading">
+  <div class="add-form-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        {{ (isEdit ? "EDIT.USER.TITLE" : "ADD.USER.TITLE") | translate }}
+      </h1>
+      <p class="page-sub">
+        {{
+          (isEdit ? "EDIT.USER.DESCRIPTION" : "ADD.USER.DESCRIPTION")
+            | translate
+        }}
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <form
+        id="userForm"
+        [formGroup]="userForm"
+        (ngSubmit)="onSubmit()"
+        class="form-body"
+      >
+        <!-- ── Basic Info ─────────────────────────── -->
+        <div class="form-section">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
           </div>
+
+          <!-- Direction -->
+          <div class="field">
+            <label class="field-label" for="direction">
+              {{ "ADD.USER.LABELS.DIRECTION" | translate }}
+              <span class="optional-mark">{{
+                "ADD.SHARED.LABELS.OPTIONAL" | translate
+              }}</span>
+            </label>
+            <input
+              type="text"
+              id="direction"
+              formControlName="direction"
+              class="field-input"
+              [class.has-error]="
+                directionControl?.invalid &&
+                (directionControl?.dirty || isSubmitted)
+              "
+              [placeholder]="'ADD.USER.PLACEHOLDERS.DIRECTION' | translate"
+            />
+          </div>
+
+          <!-- First Name + Last Name -->
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="firstName">
+                {{ "ADD.USER.LABELS.FIRSTNAME" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="field-input"
+                [class.has-error]="isFirstNameInvalid"
+                [placeholder]="'ADD.USER.PLACEHOLDERS.FIRSTNAME' | translate"
+                [attr.aria-invalid]="isFirstNameInvalid"
+                aria-describedby="firstName-error"
+              />
+              <div class="field-error" id="firstName-error" *ngIf="isFirstNameInvalid">
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ firstNameErrorMessage | translate }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="lastName">
+                {{ "ADD.USER.LABELS.LASTNAME" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="field-input"
+                [class.has-error]="isLastNameInvalid"
+                [placeholder]="'ADD.USER.PLACEHOLDERS.LASTNAME' | translate"
+                [attr.aria-invalid]="isLastNameInvalid"
+                aria-describedby="lastName-error"
+              />
+              <div class="field-error" id="lastName-error" *ngIf="isLastNameInvalid">
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ lastNameErrorMessage | translate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile + Email -->
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="phoneNumber">
+                {{ "ADD.USER.LABELS.MOBILE" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                id="phoneNumber"
+                formControlName="phoneNumber"
+                class="field-input"
+                [class.has-error]="isPhoneNumberInvalid"
+                [placeholder]="'ADD.USER.PLACEHOLDERS.MOBILE' | translate"
+                [attr.aria-invalid]="isPhoneNumberInvalid"
+                aria-describedby="phoneNumber-error"
+              />
+              <div class="field-error" id="phoneNumber-error" *ngIf="isPhoneNumberInvalid">
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ phoneNumberErrorMessage | translate }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="email">
+                {{ "ADD.USER.LABELS.EMAIL" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="field-input"
+                [class.has-error]="isEmailInvalid"
+                [placeholder]="'ADD.USER.PLACEHOLDERS.EMAIL' | translate"
+                [attr.aria-invalid]="isEmailInvalid"
+                aria-describedby="email-error"
+              />
+              <div class="field-error" id="email-error" *ngIf="isEmailInvalid">
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ emailErrorMessage | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Password (only in add mode) ────────── -->
+        <div class="form-section" *ngIf="!isEdit">
+          <div class="section-label">
+            <span class="section-dot"></span>
+            {{ "ADD.USER.LABELS.PASSWORD" | translate }}
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="password">
+                {{ "ADD.USER.LABELS.PASSWORD" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="field-input"
+                autocomplete="new-password"
+                [class.has-error]="isPasswordInvalid"
+                [placeholder]="'ADD.USER.PLACEHOLDERS.PASSWORD' | translate"
+                [attr.aria-invalid]="isPasswordInvalid"
+                aria-describedby="password-error"
+              />
+              <div class="field-error" id="password-error" *ngIf="isPasswordInvalid">
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ passwordErrorMessage | translate }}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="confirmPassword">
+                {{ "ADD.USER.LABELS.CONFIRM_PASSWORD" | translate }}
+                <span class="required-mark">*</span>
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="field-input"
+                autocomplete="new-password"
+                [class.has-error]="
+                  isConfirmPasswordInvalid || isPasswordsNotMatch
+                "
+                [placeholder]="
+                  'ADD.USER.PLACEHOLDERS.CONFIRM_PASSWORD' | translate
+                "
+                [attr.aria-invalid]="isConfirmPasswordInvalid || isPasswordsNotMatch"
+                aria-describedby="confirmPassword-error"
+              />
+              <div
+                class="field-error"
+                id="confirmPassword-error"
+                *ngIf="isConfirmPasswordInvalid || isPasswordsNotMatch"
+              >
+                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+                {{ confirmPasswordErrorMessage | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Roles ──────────────────────────────── -->
+        <div class="form-section last">
+          <div class="section-label" id="rolesLabel">
+            <span class="section-dot"></span>
+            {{ "ADD.USER.LABELS.ROLES" | translate }}
+          </div>
+
+          <div class="field">
+            <ng-select
+              formControlName="roles"
+              [items]="roleList"
+              [multiple]="true"
+              bindLabel="name"
+              bindValue="id"
+              [clearable]="true"
+              [placeholder]="'ADD.USER.PLACEHOLDERS.ROLES' | translate"
+              [attr.aria-labelledby]="'rolesLabel'"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <span class="footer-note">
+          {{ "ADD.USER.HINTS.REQUIRED_FIELDS" | translate }}
+        </span>
+        <div class="footer-actions">
+          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+            {{ "ADD.USER.BUTTONS.CANCEL" | translate }}
+          </button>
+          <button
+            form="userForm"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="userForm.invalid || isLoading"
+          >
+            {{
+              (isEdit ? "EDIT.USER.BUTTONS.SAVE" : "ADD.USER.BUTTONS.SAVE")
+                | translate
+            }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Loading skeleton -->
+<div class="add-form-skeleton" *ngIf="isLoading" role="status" aria-live="polite">
+  <span class="visually-hidden">Loading user form…</span>
+  <div class="skeleton-title" aria-hidden="true"></div>
+  <div class="skeleton-card" aria-hidden="true">
+    <div class="skeleton-line wide" aria-hidden="true"></div>
+    <div class="skeleton-line medium" aria-hidden="true"></div>
+    <div class="skeleton-line short" aria-hidden="true"></div>
+  </div>
+</div>
+
+<style>
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>

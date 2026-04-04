@@ -1,5 +1,3 @@
-import { Claim } from './claim';
-
 export class UserAuth {
   isAuthenticated? = false;
   authorisation?: Authorisation;
@@ -16,15 +14,14 @@ export class Authorisation {
 
 export class User {
   id?: string;
-  matricule?: string;
   direction?: string;
   firstName?: string;
   lastName?: string;
-  password?:string;
+  password?: string;
   email?: string;
   userName?: string;
   phoneNumber?: string;
-  roleIds?:any;
-  avatar?:any;
-  userRoles?:any
+  roleIds?: any;
+  avatar?: any;
+  userRoles?: any;
 }

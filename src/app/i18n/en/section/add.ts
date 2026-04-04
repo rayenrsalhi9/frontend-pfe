@@ -220,6 +220,60 @@ export const add = {
       },
     },
 
+    USER: {
+      TITLE: "New user",
+      DESCRIPTION: "Create a new user account and assign roles.",
+      LABELS: {
+        DIRECTION: "Direction",
+        FIRSTNAME: "First name",
+        LASTNAME: "Last name",
+        MOBILE: "Mobile",
+        EMAIL: "Email",
+        PASSWORD: "Password",
+        CONFIRM_PASSWORD: "Confirm password",
+        ROLES: "Roles",
+      },
+      PLACEHOLDERS: {
+        DIRECTION: "Enter direction…",
+        FIRSTNAME: "Enter first name…",
+        LASTNAME: "Enter last name…",
+        MOBILE: "Enter mobile number…",
+        EMAIL: "Enter email address…",
+        PASSWORD: "Enter password…",
+        CONFIRM_PASSWORD: "Confirm password…",
+        ROLES: "Select roles…",
+      },
+      HINTS: {
+        REQUIRED_FIELDS: "Fields marked * are required",
+        PASSWORD_MIN_LENGTH: "Password must be at least 6 characters",
+      },
+      BUTTONS: {
+        SAVE: "Create user",
+        CANCEL: "Cancel",
+      },
+      ERRORS: {
+        DIRECTION_REQUIRED: "Direction is required",
+        FIRST_NAME_REQUIRED: "First name is required",
+        LAST_NAME_REQUIRED: "Last name is required",
+        MOBILE_REQUIRED: "Mobile is required",
+        EMAIL_REQUIRED: "Email is required",
+        EMAIL_INVALID: "Please enter a valid email",
+        PASSWORD_REQUIRED: "Password is required",
+        PASSWORD_MIN_LENGTH: "Password must be at least 6 characters",
+        CONFIRM_PASSWORD_REQUIRED: "Confirm password is required",
+        PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
+        ROLES_REQUIRED: "At least one role is required",
+        SAVE_FAILED: "Failed to create user",
+      },
+      TOAST: {
+        SUCCESS: "User created successfully",
+        ERROR: "Failed to create user",
+      },
+      VALIDATION: {
+        PASSWORD_MIN_LENGTH: "Password must be at least 6 characters",
+      },
+    },
+
     SHARED: {
       LABELS: {
         LOADING: "Loading…",
@@ -316,6 +370,18 @@ export const add = {
       TOAST: {
         SUCCESS: "Category updated successfully",
         ERROR: "Failed to update category",
+      },
+    },
+
+    USER: {
+      TITLE: "Edit user",
+      DESCRIPTION: "Update user information and roles.",
+      BUTTONS: {
+        SAVE: "Update user",
+      },
+      TOAST: {
+        SUCCESS: "User updated successfully",
+        ERROR: "Failed to update user",
       },
     },
   },

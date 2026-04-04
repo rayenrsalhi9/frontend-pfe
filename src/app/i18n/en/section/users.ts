@@ -11,7 +11,6 @@ export const users = {
         MOBILE: "Mobile Number",
         PHONE: "Phone Number",
         DIRECTION: "Department",
-        MATRICULE: "Employee ID",
         ACTION: "Actions",
       },
       BUTTONS: {
@@ -34,7 +33,6 @@ export const users = {
         PASSWORD: "Password",
         CONFPASSWORD: "Confirm Password",
         ROLES: "User Roles",
-        MATRICULE: "Employee ID",
         DIRECTION: "Department",
       },
 
@@ -55,7 +53,6 @@ export const users = {
         CONFIRM_PASSWORD_IS_REQUIRED: "Please confirm the password",
         PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
         DIRECTION_IS_REQUIRED: "Department is required",
-        MATRICULE_IS_REQUIRED: "Employee ID is required",
       },
 
       TOAST: {

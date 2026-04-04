@@ -1,34 +1,20 @@
 <div class="ged-nav-tree">
   <ng-container *ngFor="let item of menu; trackBy: trackByKey">
     <ng-container *ngIf="isVisible(item)">
-      <ng-container *ngIf="isSection(item); else renderTopLevelNode">
+      <ng-container *ngIf="isSection(item); else renderItem">
         <section class="ged-nav-section" *ngIf="hasChildren(item)">
           <div class="ged-nav-section-title">
             {{ (item.translateKey | translate) || item.title }}
           </div>
-
           <div class="ged-nav-section-items">
-            <ng-container
-              *ngFor="
-                let child of getVisibleChildren(item);
-                trackBy: trackByKey
-              "
-            >
-              <ng-container
-                *ngTemplateOutlet="
-                  renderNode;
-                  context: { $implicit: child, level: 0 }
-                "
-              ></ng-container>
+            <ng-container *ngFor="let child of getVisibleChildren(item); trackBy: trackByKey">
+              <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: child, level: 0 }"></ng-container>
             </ng-container>
           </div>
         </section>
       </ng-container>
-
-      <ng-template #renderTopLevelNode>
-        <ng-container
-          *ngTemplateOutlet="renderNode; context: { $implicit: item, level: 0 }"
-        ></ng-container>
+      <ng-template #renderItem>
+        <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: item, level: 0 }"></ng-container>
       </ng-template>
     </ng-container>
   </ng-container>
@@ -37,73 +23,28 @@
 <ng-template #renderNode let-item let-level="level">
   <ng-container *ngIf="isVisible(item)">
     <ng-container *ngIf="hasChildren(item); else leafNode">
-      <div
-        class="ged-nav-node ged-nav-node--group"
-        [class.is-open]="isExpanded(item)"
-        [class.is-active-branch]="isBranchActive(item)"
-      >
-        <button
-          type="button"
-          class="ged-nav-button ged-nav-button--group"
-          [class.ged-nav-button--nested]="level > 0"
-          [style.--ged-level]="level"
-          [attr.aria-expanded]="isExpanded(item)"
-          (click)="toggleSubmenu(item)"
-        >
+      <div class="ged-nav-node ged-nav-node--group" [class.is-open]="isExpanded(item)" [class.is-active-branch]="isBranchActive(item)">
+        <button type="button" class="ged-nav-button ged-nav-button--group" [class.ged-nav-button--nested]="level > 0" [style.--ged-level]="level" [attr.aria-expanded]="isExpanded(item)" (click)="toggleSubmenu(item)">
           <span class="ged-nav-icon-shell">
-            <ng-container
-              *ngTemplateOutlet="
-                iconTemplate;
-                context: { item: item, level: level }
-              "
-            ></ng-container>
+            <ng-container *ngTemplateOutlet="iconTemplate; context: { item: item, level: level }"></ng-container>
           </span>
-
-          <span class="ged-nav-label">
-            {{ (item.translateKey | translate) || item.title }}
-          </span>
-
-          <i class="las la-angle-down ged-nav-chevron" aria-hidden="true"></i>
+          <span class="ged-nav-label">{{ (item.translateKey | translate) || item.title }}</span>
+          <i class="feather ged-nav-chevron" [ngClass]="{'icon-chevron-left': !isExpanded(item) && isRtl, 'icon-chevron-right': !isExpanded(item) && !isRtl, 'icon-chevron-down': isExpanded(item)}"></i>
         </button>
-
         <div class="ged-nav-children" *ngIf="isExpanded(item)">
-          <ng-container
-            *ngFor="let child of getVisibleChildren(item); trackBy: trackByKey"
-          >
-            <ng-container
-              *ngTemplateOutlet="
-                renderNode;
-                context: { $implicit: child, level: level + 1 }
-              "
-            ></ng-container>
+          <ng-container *ngFor="let child of getVisibleChildren(item); trackBy: trackByKey">
+            <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: child, level: level + 1 }"></ng-container>
           </ng-container>
         </div>
       </div>
     </ng-container>
 
     <ng-template #leafNode>
-      <a
-        *ngIf="item.path"
-        class="ged-nav-button ged-nav-button--link"
-        [class.ged-nav-button--nested]="level > 0"
-        [style.--ged-level]="level"
-        [routerLink]="item.path"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="onLinkClick(item.path)"
-      >
+      <a *ngIf="item.path" class="ged-nav-button ged-nav-button--link" [class.ged-nav-button--nested]="level > 0" [style.--ged-level]="level" [routerLink]="item.path" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="onLinkClick(item.path)">
         <span class="ged-nav-icon-shell">
-          <ng-container
-            *ngTemplateOutlet="
-              iconTemplate;
-              context: { item: item, level: level }
-            "
-          ></ng-container>
+          <ng-container *ngTemplateOutlet="iconTemplate; context: { item: item, level: level }"></ng-container>
         </span>
-
-        <span class="ged-nav-label">
-          {{ (item.translateKey | translate) || item.title }}
-        </span>
+        <span class="ged-nav-label">{{ (item.translateKey | translate) || item.title }}</span>
       </a>
     </ng-template>
   </ng-container>
@@ -111,15 +52,9 @@
 
 <ng-template #iconTemplate let-item="item" let-level="level">
   <ng-container *ngIf="item.icon; else fallbackIcon">
-    <i [ngClass]="getIconClass(item)" aria-hidden="true"></i>
+    <i [ngClass]="getIconClass(item)"></i>
   </ng-container>
-
   <ng-template #fallbackIcon>
-    <span class="ged-nav-bullet" *ngIf="level > 0" aria-hidden="true"></span>
-    <span
-      class="ged-nav-bullet ged-nav-bullet--root"
-      *ngIf="level === 0"
-      aria-hidden="true"
-    ></span>
+    <span class="ged-nav-bullet" [class.ged-nav-bullet--root]="level === 0"></span>
   </ng-template>
 </ng-template>

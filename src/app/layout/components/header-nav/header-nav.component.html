@@ -16,12 +16,7 @@
         [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
         (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
       >
-        <i
-          class="feather nav-icon"
-          [ngClass]="
-            isMobile ? 'icon-menu' : collapse ? 'icon-menu' : 'icon-align-left'
-          "
-        ></i>
+        <i class="feather nav-icon icon-menu"></i>
       </button>
     </div>
   </div>

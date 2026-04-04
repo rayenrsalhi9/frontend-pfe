@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
@@ -19,7 +21,6 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./welcome.component.css"],
 })
 export class WelcomeComponent implements OnInit {
-  banners = [];
   latestBlogs = [];
   latestForums = [];
   articles: any[] = [];
@@ -27,6 +28,9 @@ export class WelcomeComponent implements OnInit {
   errorMessage: string = "";
   bsModalRef: BsModalRef;
   selectedRating: number = 0;
+  isAuthenticated$: Observable<boolean | null>;
+  userName$: Observable<string | null>;
+  hostBase: string;
 
   constructor(
     private blogService: BlogService,
@@ -42,7 +46,25 @@ export class WelcomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getBannerBlogs();
+    this.hostBase = environment.apiUrl;
+
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth === undefined) return null;
+        if (auth === null) return false;
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
+    );
+
+    this.userName$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth && auth?.user?.userName) {
+          return auth.user.firstName || auth.user.userName;
+        }
+        return null;
+      }),
+    );
+
     this.getLatestBlogs();
     this.getLastForums();
     this.getLatestSurvey();
@@ -51,7 +73,7 @@ export class WelcomeComponent implements OnInit {
 
   loadPublicArticles(): void {
     this.userService.getArticles().subscribe(
-      (data) => {
+      (data: any) => {
         this.articles = data;
       },
       (error) => {
@@ -73,15 +95,6 @@ export class WelcomeComponent implements OnInit {
   }
   getHost() {
     return environment.apiUrl;
-  }
-
-  getBannerBlogs() {
-    this.blogService
-      .allBlogs({ banner: 1, limit: 5 })
-      .subscribe((data: any) => {
-        this.banners = data;
-        this.cdr.markForCheck();
-      });
   }
 
   getLatestBlogs() {

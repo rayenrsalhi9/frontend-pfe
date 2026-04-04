@@ -1,9 +1,16 @@
 export const footer = {
   FOOTER: {
+    DESC: "Your unified solution for document management, forums, and professional insights.",
+    LINKS: "Quick Links",
+    CONNECT: "Connect",
+    RIGHTS: "All rights reserved.",
+
+    EXPLORE: "Explore",
+    FOLLOW_US: "Follow us",
+    TAGLINE: "Your unified solution for document management, forums and professional insights.",
     ABOUT: "About Us",
     SITEMAP: "Sitemap",
     CONTACT: "Contact Us",
-    EXPLORE: "Explore",
     PORTAL: "Portal",
     COPYRIGHT: "All rights reserved.",
     OVERVIEW: "Overview",

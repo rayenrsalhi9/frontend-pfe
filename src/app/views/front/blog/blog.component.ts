@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { Blog } from "@app/shared/models/blog.model";
 import { environment } from "src/environments/environment";
+import { RtlService } from "@app/core/rtl.service";
 
 @Component({
   selector: "app-blog",
@@ -10,11 +11,15 @@ import { environment } from "src/environments/environment";
 })
 export class BlogComponent implements OnInit {
   blogs: Blog[] | null = null;
+  isRtl = false;
 
   constructor(
     private blogService: BlogService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private rtlService: RtlService,
+  ) {
+    this.isRtl = this.rtlService.isRtl;
+  }
 
   ngOnInit(): void {
     this.getBlogs();

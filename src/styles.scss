@@ -29,6 +29,18 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --empty-table-svg: url("assets/images/empty-table.svg");
 
+  /* Skeleton Loading */
+  --skeleton-base: #f0f0f0;
+  --skeleton-highlight: #e8e8e8;
+
+  /* Header Scrolled State */
+  --header-scrolled-bg: rgba(255, 255, 255, 0.85);
+  --header-scrolled-border: rgba(226, 232, 240, 0.5);
+  --header-scrolled-shadow: var(--shadow-sm);
+
+  /* Text on dark backgrounds */
+  --text-inverse: #ffffff;
+
   --color-bg-danger: #fef2f2;
   --color-danger: #dc2626;
   --color-border-danger: rgba(239, 68, 68, 0.1);

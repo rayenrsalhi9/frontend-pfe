@@ -3,23 +3,25 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: 50px;
-    padding: 0.4rem 1rem 0.4rem 0.5rem;
-    background: rgba($primary, 0.02);
-    border: 1px solid rgba($primary, 0.02);
-    color: $primary;
+    border-radius: var(--radius-md);
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    background: transparent;
+    border: 0.5px solid var(--border-color);
+    color: var(--text-primary);
     cursor: pointer;
-    font-weight: 600;
-    @include transition(all 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    font-weight: 500;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
 
     .user-name {
-      font-size: 0.875rem;
+      font-size: $font-size-body-lg - 0.15rem;
       letter-spacing: -0.01em;
       margin: 0 0.25rem;
     }
 
     [dir="rtl"] & {
-      padding: 0.4rem 0.5rem 0.4rem 1rem;
+      padding: 0.35rem 0.35rem 0.35rem 0.75rem;
       [avatar] {
         order: 3;
       }
@@ -33,18 +35,22 @@
 
     &:hover,
     &:focus-visible {
-      background: rgba($primary, 0.1);
-      border-color: rgba($primary, 0.1);
-      box-shadow: 0 4px 12px rgba($primary, 0.15);
-      transform: translateY(-1px);
+      background: var(--primary-glow);
+      border-color: var(--primary);
+    }
+
+    .icon-chevron-down {
+      font-size: 1rem;
+      color: var(--text-secondary);
     }
   }
+
   .dropdown-menu {
-    min-width: 260px;
+    min-width: 240px;
     padding: 0.5rem;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border-color);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
 
     [dir="rtl"] & {
@@ -56,47 +62,62 @@
   .nav-profile-header {
     padding: 1rem 0.75rem;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    background: rgba($primary, 0.02);
-    border-radius: 12px 12px 0 0;
+    border-bottom: 0.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+
+    .profile-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .profile-email {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
 
     .avatar {
-      box-shadow: 0 4px 10px rgba($primary, 0.1);
+      box-shadow: none;
     }
   }
 
   .dropdown-item {
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-md);
     margin: 0.15rem 0;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: $gray-700;
+    color: var(--text-primary);
+    font-size: 0.85rem;
     font-weight: 500;
-    @include transition(all 0.2s ease);
+    transition:
+      background 0.15s,
+      color 0.15s;
 
     &:hover {
-      background: rgba($primary, 0.05);
-      color: $primary;
+      background: var(--primary-glow);
+      color: var(--primary);
 
       i {
-        color: $primary;
+        color: var(--primary);
       }
     }
 
     i {
-      font-size: 1.1rem;
-      color: $gray-500;
-      @include transition(color 0.2s ease);
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: color 0.15s;
     }
 
     &.cursor-pointer:hover {
-      background: rgba($red, 0.05);
-      color: $red;
+      background: rgba(var(--bs-danger-rgb), 0.06);
+      color: var(--bs-danger);
 
       i {
-        color: $red;
+        color: var(--bs-danger);
       }
     }
   }

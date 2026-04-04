@@ -1,9 +1,14 @@
 export const welcome = {
   WELCOME: {
+    HERO_TITLE: "مرحباً بك في منصتنا",
+    HERO_SUBTITLE: "اكتشف أحدث المحتوى، انضم إلى النقاشات، وتواصل مع مجتمعنا.",
+    GET_STARTED: "ابدأ الآن",
+
     LATEST_BLOGS: "أحدث مقالات المدونة",
     LATEST_BLOGS_DESC:
       "اطّلع على أحدث الأخبار والمقالات والمحتوى الذي يقدمه مجتمعنا.",
     SEE_ALL_BLOGS: "عرض جميع مقالات المدونة",
+    SEE_ALL: "عرض الكل",
 
     LATEST_ARTICLES: "أحدث المقالات",
     LATEST_ARTICLES_DESC:
@@ -17,6 +22,7 @@ export const welcome = {
     SURVEY: "استبيان",
     POSTED_ON: "نُشر في",
     BY: "بواسطة",
+    BY_AUTHOR: "بواسطة {{ author }}",
 
     NO_BLOGS: "لا توجد مقالات في المدونة حالياً",
     NO_ARTICLES: "لا توجد مقالات منشورة حالياً",
