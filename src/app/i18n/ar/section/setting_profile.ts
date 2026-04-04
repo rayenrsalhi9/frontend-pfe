@@ -5,16 +5,16 @@ export const setting_profile = {
 
     LABELS: {
       PERSONAL_INFO: "المعلومات الشخصية",
-      FIRST_NAME: "الإسم الأول",
-      LAST_NAME: "إسم العائلة",
+      FIRST_NAME: "الاسم الأول",
+      LAST_NAME: "اسم العائلة",
       MOBILE: "رقم الجوال",
       EMAIL: "البريد الإلكتروني",
       CHANGE_PICTURE: "تغيير الصورة",
     },
 
     PLACEHOLDERS: {
-      FIRST_NAME: "أدخل الإسم الأول",
-      LAST_NAME: "أدخل إسم العائلة",
+      FIRST_NAME: "أدخل الاسم الأول",
+      LAST_NAME: "أدخل اسم العائلة",
       MOBILE: "أدخل رقم الجوال",
       EMAIL: "أدخل البريد الإلكتروني",
     },
@@ -24,9 +24,9 @@ export const setting_profile = {
       CANCEL: "إلغاء",
     },
 
-    ERROR: {
-      FIRST_NAME_IS_REQUIRED: "الإسم الأول مطلوب",
-      LAST_NAME_IS_REQUIRED: "إسم العائلة مطلوب",
+    ERRORS: {
+      FIRST_NAME_IS_REQUIRED: "الاسم الأول مطلوب",
+      LAST_NAME_IS_REQUIRED: "اسم العائلة مطلوب",
       MOBILE_IS_REQUIRED: "رقم الجوال مطلوب",
       LOAD_FAILED: "فشل تحميل بيانات المستخدم",
       UPDATE_FAILED: "فشل تحديث الملف الشخصي",

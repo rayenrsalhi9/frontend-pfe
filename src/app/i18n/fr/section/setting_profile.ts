@@ -24,7 +24,7 @@ export const setting_profile = {
       CANCEL: "Annuler",
     },
 
-    ERROR: {
+    ERRORS: {
       FIRST_NAME_IS_REQUIRED: "Le prénom est requis",
       LAST_NAME_IS_REQUIRED: "Le nom de famille est requis",
       MOBILE_IS_REQUIRED: "Le numéro de téléphone est requis",

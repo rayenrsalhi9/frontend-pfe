@@ -2,14 +2,16 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@app/core/security/auth.guard";
 
+const DEFAULT_ROUTE_DATA = { hidePageHeader: true };
+
 const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
       import("./smtp-list/smtp-list.module").then((m) => m.SmtpListModule),
     data: {
+      ...DEFAULT_ROUTE_DATA,
       title: "SMTP list",
-      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -18,8 +20,8 @@ const routes: Routes = [
     loadChildren: () =>
       import("./smtp-add/smtp-add.module").then((m) => m.SmtpAddModule),
     data: {
+      ...DEFAULT_ROUTE_DATA,
       title: "SMTP add",
-      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -28,8 +30,8 @@ const routes: Routes = [
     loadChildren: () =>
       import("./smtp-add/smtp-add.module").then((m) => m.SmtpAddModule),
     data: {
+      ...DEFAULT_ROUTE_DATA,
       title: "SMTP update",
-      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -40,8 +42,8 @@ const routes: Routes = [
         (m) => m.CompanyProfileModule,
       ),
     data: {
+      ...DEFAULT_ROUTE_DATA,
       title: "Company profile",
-      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -50,8 +52,8 @@ const routes: Routes = [
     loadChildren: () =>
       import("./profile/profile.module").then((m) => m.ProfileModule),
     data: {
+      ...DEFAULT_ROUTE_DATA,
       title: "Profile",
-      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },

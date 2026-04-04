@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   user: UserAuth | null = null;
   avatar: string | null = null;
+  avatarPreview: string | null = null;
   newPicture: string | null = null;
   isLoading = false;
   isSubmitted = false;
@@ -82,7 +83,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   get firstNameErrorMessage(): string {
     const control = this.firstNameControl;
     if (control?.errors?.["required"]) {
-      return "PROFILE_SETTING.ERROR.FIRST_NAME_IS_REQUIRED";
+      return "PROFILE_SETTING.ERRORS.FIRST_NAME_IS_REQUIRED";
     }
     return "";
   }
@@ -90,7 +91,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   get lastNameErrorMessage(): string {
     const control = this.lastNameControl;
     if (control?.errors?.["required"]) {
-      return "PROFILE_SETTING.ERROR.LAST_NAME_IS_REQUIRED";
+      return "PROFILE_SETTING.ERRORS.LAST_NAME_IS_REQUIRED";
     }
     return "";
   }
@@ -98,7 +99,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   get phoneNumberErrorMessage(): string {
     const control = this.phoneNumberControl;
     if (control?.errors?.["required"]) {
-      return "PROFILE_SETTING.ERROR.MOBILE_IS_REQUIRED";
+      return "PROFILE_SETTING.ERRORS.MOBILE_IS_REQUIRED";
     }
     return "";
   }
@@ -144,7 +145,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (!userAuth) {
       this.isLoading = false;
       this.toastrService.error(
-        this.translate.instant("PROFILE_SETTING.ERROR.LOAD_FAILED"),
+        this.translate.instant("PROFILE_SETTING.ERRORS.LOAD_FAILED"),
       );
       this.cdr.markForCheck();
       return;
@@ -161,7 +162,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       email: userData.email || "",
     });
 
-    this.avatar = userData?.avatar
+    this.avatar = userData?.avatar || null;
+
+    this.avatarPreview = userData?.avatar
       ? userData.avatar.startsWith("data:image")
         ? userData.avatar
         : this.hostBase + userData.avatar
@@ -179,27 +182,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       this.toastrService.error(
-        this.translate.instant("PROFILE_SETTING.ERROR.INVALID_IMAGE_TYPE"),
+        this.translate.instant("PROFILE_SETTING.ERRORS.INVALID_IMAGE_TYPE"),
       );
+      input.value = "";
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       this.toastrService.error(
-        this.translate.instant("PROFILE_SETTING.ERROR.FILE_TOO_LARGE"),
+        this.translate.instant("PROFILE_SETTING.ERRORS.FILE_TOO_LARGE"),
       );
+      input.value = "";
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => {
       this.newPicture = reader.result as string;
-      this.userForm.patchValue({ avatar: this.newPicture });
+      this.userForm.patchValue({ avatar: file });
       this.cdr.markForCheck();
     };
     reader.onerror = () => {
       this.toastrService.error(
-        this.translate.instant("PROFILE_SETTING.ERROR.READ_FAILED"),
+        this.translate.instant("PROFILE_SETTING.ERRORS.READ_FAILED"),
       );
       this.cdr.markForCheck();
     };
@@ -210,10 +215,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.isSubmitted = true;
 
+    Object.keys(this.userForm.controls).forEach((key) => {
+      const value = this.userForm.get(key)?.value;
+      if (typeof value === "string") {
+        this.userForm.get(key)?.setValue(value.trim());
+      }
+    });
+
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       this.toastrService.warning(
-        this.translate.instant("PROFILE_SETTING.ERROR.VALIDATION_ERROR"),
+        this.translate.instant("PROFILE_SETTING.ERRORS.VALIDATION_ERROR"),
       );
       return;
     }
@@ -238,7 +250,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           } else {
             this.toastrService.error(
               response?.friendlyMessage ||
-                this.translate.instant("PROFILE_SETTING.ERROR.UPDATE_FAILED"),
+                this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
             );
             this.cdr.markForCheck();
           }
@@ -246,7 +258,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         error: (error) => {
           this.isLoading = false;
           this.toastrService.error(
-            this.translate.instant("PROFILE_SETTING.ERROR.UPDATE_FAILED"),
+            this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
           );
           this.cdr.markForCheck();
         },
@@ -257,11 +269,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const formValue = this.userForm.getRawValue();
     return {
       id: formValue.id,
-      firstName: (formValue.firstName || "").trim(),
-      lastName: (formValue.lastName || "").trim(),
-      phoneNumber: (formValue.phoneNumber || "").trim(),
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      phoneNumber: formValue.phoneNumber,
       userName: formValue.email,
-      avatar: this.newPicture || this.avatar || null,
+      avatar: this.newPicture || this.avatar,
     };
   }
 
@@ -274,6 +286,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.user.user.avatar = userData.avatar;
 
     this.avatar = userData.avatar;
+    this.avatarPreview = userData.avatar
+      ? userData.avatar.startsWith("data:image")
+        ? userData.avatar
+        : this.hostBase + userData.avatar
+      : null;
     this.newPicture = null;
 
     this.securityService.setUserDetail(this.user);

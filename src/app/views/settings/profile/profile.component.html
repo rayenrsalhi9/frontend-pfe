@@ -39,12 +39,12 @@
                 alt="Profile picture"
               />
               <img
-                *ngIf="!newPicture && avatar"
-                [src]="avatar"
+                *ngIf="!newPicture && avatarPreview"
+                [src]="avatarPreview"
                 alt="Profile picture"
               />
               <img
-                *ngIf="!newPicture && !avatar"
+                *ngIf="!newPicture && !avatarPreview"
                 src="/assets/images/avatars/thumb-16.jpg"
                 alt="Default avatar"
               />
@@ -168,7 +168,6 @@
                 formControlName="email"
                 class="field-input"
                 [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
-                disabled
               />
             </div>
           </div>

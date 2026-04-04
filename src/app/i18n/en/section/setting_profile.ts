@@ -24,7 +24,7 @@ export const setting_profile = {
       CANCEL: "Cancel",
     },
 
-    ERROR: {
+    ERRORS: {
       FIRST_NAME_IS_REQUIRED: "First name is required",
       LAST_NAME_IS_REQUIRED: "Last name is required",
       MOBILE_IS_REQUIRED: "Mobile number is required",
