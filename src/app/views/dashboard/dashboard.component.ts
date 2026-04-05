@@ -97,6 +97,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this._isRtl = this.rtlService.isRtl;
     this.documentResource = new DocumentResource();
     this.chartOptions = this.getDonutChartOptions();
+    this.rtlService.getIsRtl$().subscribe((isRtl) => {
+      this._isRtl = isRtl;
+    });
   }
 
   ngOnInit(): void {

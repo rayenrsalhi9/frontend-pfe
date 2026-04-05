@@ -142,7 +142,7 @@
       <div class="card-body">
         <ng-container *ngIf="newsLoaded">
           <div *ngIf="articles?.length > 0; else noNews" class="news-list">
-            <div
+            <a
               class="news-item"
               *ngFor="let article of articles | slice: 0 : 3"
               [routerLink]="['/article', article.id]"
@@ -175,7 +175,7 @@
                   >
                 </div>
               </div>
-            </div>
+            </a>
           </div>
           <ng-template #noNews>
             <div class="empty-state">
@@ -213,29 +213,31 @@
       </div>
       <div class="card-body">
         <ng-container *ngIf="usersLoaded">
-          <div *ngIf="rows?.length > 0; else noUsers" class="users-list">
-            <div class="user-row header-row" role="row">
+          <div *ngIf="rows?.length > 0; else noUsers" class="users-list" role="table" aria-label="{{ 'DASHBOARD.USERS' | translate }}">
+            <div class="user-row header-row" role="rowgroup">
               <span role="columnheader">{{ "USERS.LIST.TABLE.EMAIL" | translate }}</span>
               <span role="columnheader">{{ "USERS.LIST.TABLE.FIRSTNAME" | translate }}</span>
               <span role="columnheader">{{ "USERS.LIST.TABLE.LASTNAME" | translate }}</span>
               <span role="columnheader">{{ "USERS.LIST.TABLE.PHONE" | translate }}</span>
             </div>
-            <div class="user-row" *ngFor="let user of rows | slice: 0 : 5">
-              <div class="user-cell">
-                <avatar
-                  [size]="32"
-                  [src]="
-                    user.avatar
-                      ? getHost() + user.avatar
-                      : '/assets/images/avatars/thumb-16.jpg'
-                  "
-                  [ngClass]="isRtl ? 'ml-2' : 'mr-2'"
-                ></avatar>
-                <span class="user-email">{{ user.email }}</span>
+            <div role="rowgroup">
+              <div class="user-row" *ngFor="let user of rows | slice: 0 : 5" role="row">
+                <div class="user-cell" role="cell">
+                  <avatar
+                    [size]="32"
+                    [src]="
+                      user.avatar
+                        ? getHost() + user.avatar
+                        : '/assets/images/avatars/thumb-16.jpg'
+                    "
+                    [ngClass]="isRtl ? 'ml-2' : 'mr-2'"
+                  ></avatar>
+                  <span class="user-email" role="cell">{{ user.email }}</span>
+                </div>
+                <span role="cell">{{ user.firstName }}</span>
+                <span role="cell">{{ user.lastName }}</span>
+                <span class="user-phone" role="cell">{{ user.phoneNumber || "—" }}</span>
               </div>
-              <span>{{ user.firstName }}</span>
-              <span>{{ user.lastName }}</span>
-              <span class="user-phone">{{ user.phoneNumber || "—" }}</span>
             </div>
           </div>
           <ng-template #noUsers>

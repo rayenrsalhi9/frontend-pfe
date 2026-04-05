@@ -75,8 +75,14 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       .getIsRtl$()
       .pipe(takeUntil(this.destroy$))
       .subscribe((isRtl) => {
-        if (this.overviewChartOptions?.yaxis) {
-          this.overviewChartOptions.yaxis.opposite = isRtl;
+        if (this.overviewChartOptions) {
+          this.overviewChartOptions = {
+            ...this.overviewChartOptions,
+            yaxis: {
+              ...this.overviewChartOptions.yaxis,
+              opposite: isRtl,
+            },
+          };
           this.cdr.markForCheck();
         }
       });

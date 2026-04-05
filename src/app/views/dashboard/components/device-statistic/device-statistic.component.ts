@@ -50,6 +50,7 @@ interface ExtensionItem {
 })
 export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
   private readonly destroy$ = new Subject<void>();
+  private _isRtl = false;
 
   @Input() data: DeviceStatistic;
 
@@ -121,7 +122,25 @@ export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
     private rtlService: RtlService,
-  ) {}
+  ) {
+    this._isRtl = this.rtlService.isRtl;
+    this.rtlService
+      .getIsRtl$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isRtl) => {
+        this._isRtl = isRtl;
+        if (this.chartOptions?.yaxis) {
+          this.chartOptions = {
+            ...this.chartOptions,
+            yaxis: {
+              ...this.chartOptions.yaxis,
+              opposite: isRtl,
+            },
+          };
+          this.cdr.markForCheck();
+        }
+      });
+  }
 
   ngOnInit(): void {
     this.translate
@@ -176,20 +195,31 @@ export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
     const totalDocs = Number(this.data.totalDocuments) || 1;
     this.totalCount = totalDocs;
 
-    this.extensions = this.data.documents
-      .map((item, index) => {
-        const key = this.resolveMimeKey(item.extension || "");
-        const label = this.extensionLabels[key] || key.toUpperCase();
-        return {
-          extension: label,
-          total: Number(item.total) || 0,
-          percentage: Math.round((Number(item.total) / totalDocs) * 100),
-          color: this.colors[index % this.colors.length],
-          icon: this.extensionIcons[key] || "icon-file",
-        };
-      })
+    const aggregated: Record<string, { label: string; total: number; key: string }> = {};
+
+    this.data.documents.forEach((item) => {
+      const key = this.resolveMimeKey(item.extension || "");
+      const label = this.extensionLabels[key] || key.toUpperCase();
+      const total = Number(item.total) || 0;
+
+      if (aggregated[label]) {
+        aggregated[label].total += total;
+      } else {
+        aggregated[label] = { label, total, key };
+      }
+    });
+
+    const sorted = Object.values(aggregated)
       .sort((a, b) => b.total - a.total)
       .slice(0, this.maxItems);
+
+    this.extensions = sorted.map((item, index) => ({
+      extension: item.label,
+      total: item.total,
+      percentage: Math.round((item.total / totalDocs) * 100),
+      color: this.colors[index % this.colors.length],
+      icon: this.extensionIcons[item.key] || "icon-file",
+    }));
 
     this.buildChart();
   }
@@ -241,7 +271,7 @@ export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
         axisTicks: { show: false },
       },
       yaxis: {
-        opposite: this.rtlService.isRtl,
+        opposite: this._isRtl,
         labels: {
           style: {
             fontSize: "12px",

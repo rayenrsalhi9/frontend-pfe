@@ -203,16 +203,16 @@
   min-height: 240px;
   position: relative;
 
-  .apexcharts-datalabel {
+  ::ng-deep .apexcharts-datalabel {
     font-family: "Inter", sans-serif !important;
   }
 
-  .apexcharts-datalabel-label {
+  ::ng-deep .apexcharts-datalabel-label {
     fill: var(--text-primary) !important;
     font-weight: 600 !important;
   }
 
-  .apexcharts-datalabel-value {
+  ::ng-deep .apexcharts-datalabel-value {
     fill: var(--text-secondary) !important;
   }
 }
