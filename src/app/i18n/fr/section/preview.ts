@@ -26,6 +26,16 @@ export const preview = {
         REPLIES: "Réponses",
         ADD_COMMENT: "Écrivez votre réponse ici...",
         DELETE: "Supprimer le commentaire",
+        DELETE_CONFIRM: {
+          TITLE: "Supprimer le commentaire",
+          MESSAGE: "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+          CANCEL: "Annuler",
+          CONFIRM: "Supprimer",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "Commentaire supprimé avec succès",
+        ERROR: "Échec de la suppression du commentaire",
       },
       LIST: {
         TITLE: "Forum Communautaire",
@@ -61,6 +71,16 @@ export const preview = {
         REPLIES: "Commentaires",
         ADD_COMMENT: "Écrivez votre réponse ici...",
         DELETE: "Supprimer le commentaire",
+        DELETE_CONFIRM: {
+          TITLE: "Supprimer le commentaire",
+          MESSAGE: "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+          CANCEL: "Annuler",
+          CONFIRM: "Supprimer",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "Commentaire supprimé avec succès",
+        ERROR: "Échec de la suppression du commentaire",
       },
       LIST: {
         TITLE: "Coin Créatif",

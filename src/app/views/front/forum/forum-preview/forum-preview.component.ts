@@ -4,9 +4,11 @@ import { Subject, of } from "rxjs";
 import { takeUntil, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { ForumService } from "@app/views/apps/forum/forum.service";
-import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -19,6 +21,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   comment: any;
   user: any;
   private destroy$ = new Subject<void>();
+  private modalRef: BsModalRef | null = null;
 
   constructor(
     private forumService: ForumService,
@@ -27,6 +30,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private modalService: BsModalService,
     private toastr: ToastrService,
+    private translate: TranslateService,
   ) {}
 
   getHost() {
@@ -134,33 +138,58 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
     ) {
-      // Show confirmation dialog
-      if (confirm("Are you sure you want to delete this comment?")) {
-        this.forumService.deleteComment(id).subscribe(
-          (response: any) => {
-            if (response.success) {
-              // Remove comment from local array
-              this.forum.comments = this.forum.comments.filter(
-                (comment: any) => comment.id !== id,
-              );
-              this.cdr.markForCheck();
+      const initialState = {
+        title: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.TITLE"),
+        message: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.MESSAGE"),
+        button: {
+          cancel: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.CANCEL"),
+          confirm: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.CONFIRM"),
+        },
+      };
 
-              // Show success message
-              this.toastr.success("Comment deleted successfully");
-            } else {
-              this.toastr.error(response.message || "Failed to delete comment");
-            }
-          },
-          (error: any) => {
-            console.error("Delete comment error:", error);
-            this.toastr.error("An error occurred while deleting the comment");
-          },
-        );
+      this.modalRef = this.modalService.show(ConfirmModalComponent, {
+        initialState,
+        class: "modal-dialog-centered",
+        backdrop: "static",
+        keyboard: false,
+      });
+
+      if (this.modalRef) {
+        this.modalRef.content.onClose.subscribe((confirmed: boolean) => {
+          if (confirmed) {
+            this.confirmDeleteComment(id);
+          }
+        });
       }
     } else {
-      console.log(false);
       this.modalService.show(SusbcribeModalComponent);
     }
+  }
+
+  private confirmDeleteComment(id: string): void {
+    this.forumService.deleteComment(id).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.forum.comments = this.forum.comments.filter(
+            (comment: any) => comment.id !== id,
+          );
+          this.cdr.markForCheck();
+          this.toastr.success(
+            this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.SUCCESS"),
+          );
+        } else {
+          this.toastr.error(
+            response.message ||
+              this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
+          );
+        }
+      },
+      error: () => {
+        this.toastr.error(
+          this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
+        );
+      },
+    });
   }
 
   // Check if user can delete a comment

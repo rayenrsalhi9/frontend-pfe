@@ -4,9 +4,11 @@ import { Subject } from "rxjs";
 import { takeUntil, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { BlogService } from "@app/views/apps/blog/blog.service";
-import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -19,6 +21,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   comment: any;
   user: any;
   private destroy$ = new Subject<void>();
+  private modalRef: BsModalRef | null = null;
 
   constructor(
     private blogService: BlogService,
@@ -27,6 +30,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private modalService: BsModalService,
     private toastr: ToastrService,
+    private translate: TranslateService,
   ) {}
 
   getHost() {
@@ -141,5 +145,74 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
     } else {
       this.modalService.show(SusbcribeModalComponent);
     }
+  }
+
+  deleteComment(id: string) {
+    if (
+      this.securityService.isGuestUser() ||
+      this.securityService.isUserAuthenticate()
+    ) {
+      const initialState = {
+        title: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.TITLE"),
+        message: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.MESSAGE"),
+        button: {
+          cancel: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.CANCEL"),
+          confirm: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.CONFIRM"),
+        },
+      };
+
+      this.modalRef = this.modalService.show(ConfirmModalComponent, {
+        initialState,
+        class: "modal-dialog-centered",
+        backdrop: "static",
+        keyboard: false,
+      });
+
+      if (this.modalRef) {
+        this.modalRef.content.onClose.subscribe((confirmed: boolean) => {
+          if (confirmed) {
+            this.confirmDeleteComment(id);
+          }
+        });
+      }
+    } else {
+      this.modalService.show(SusbcribeModalComponent);
+    }
+  }
+
+  private confirmDeleteComment(id: string): void {
+    this.blogService.deleteComment(id).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.blog.comments = this.blog.comments.filter(
+            (comment: any) => comment.id !== id,
+          );
+          this.cdr.markForCheck();
+          this.toastr.success(
+            this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.SUCCESS"),
+          );
+        } else {
+          this.toastr.error(
+            response.message ||
+              this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
+          );
+        }
+      },
+      error: () => {
+        this.toastr.error(
+          this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
+        );
+      },
+    });
+  }
+
+  canDeleteComment(comment: any): boolean {
+    if (!this.user) return false;
+
+    if (comment.user?.email === this.user.email) {
+      return true;
+    }
+
+    return this.securityService.hasClaim("BLOG_DELETE_COMMENT");
   }
 }

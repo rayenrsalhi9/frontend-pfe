@@ -122,13 +122,25 @@
               <i class="feather icon-user"></i>
             </div>
             <div class="cm-body">
-              <div class="cm-header">
-                <span class="cm-name"
-                  >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
+              <div class="cm-header cm-header--spaced">
+                <div>
+                  <span class="cm-name"
+                    >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
+                  >
+                  <span class="cm-time">{{
+                    c.createdAt | utcToLocalTime: "mediumDate"
+                  }}</span>
+                </div>
+                <!-- Delete button -->
+                <button
+                  *ngIf="canDeleteComment(c)"
+                  class="delete-btn"
+                  type="button"
+                  [title]="'PREVIEW.BLOG.COMMENT.DELETE' | translate"
+                  (click)="deleteComment(c.id)"
                 >
-                <span class="cm-time">{{
-                  c.createdAt | utcToLocalTime: "mediumDate"
-                }}</span>
+                  <i class="feather icon-trash-2"></i>
+                </button>
               </div>
               <p class="cm-text">{{ c.comment }}</p>
             </div>

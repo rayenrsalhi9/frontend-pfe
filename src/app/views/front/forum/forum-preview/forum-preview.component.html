@@ -146,33 +146,16 @@
                     c.createdAt | utcToLocalTime: "mediumDate"
                   }}</span>
                 </div>
-                <!-- Delete menu -->
-                <div
-                  class="comment-menu"
+                <!-- Delete button -->
+                <button
                   *ngIf="canDeleteComment(c)"
-                  dropdown
-                  [insideClick]="true"
+                  class="delete-btn"
+                  type="button"
+                  [title]="'PREVIEW.FORUM.COMMENT.DELETE' | translate"
+                  (click)="deleteComment(c.id)"
                 >
-                  <button
-                    dropdownToggle
-                    type="button"
-                    class="comment-menu-btn"
-                    [title]="'PREVIEW.ACTIONS.MORE' | translate"
-                  >
-                    <i class="feather icon-more-horizontal"></i>
-                  </button>
-                  <ul *dropdownMenu class="comment-dropdown">
-                    <li>
-                      <button
-                        class="comment-dropdown-item danger"
-                        (click)="deleteComment(c.id)"
-                      >
-                        <i class="feather icon-trash-2"></i>
-                        {{ "PREVIEW.FORUM.COMMENT.DELETE" | translate }}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+                  <i class="feather icon-trash-2"></i>
+                </button>
               </div>
               <p class="cm-text">{{ c.comment }}</p>
             </div>

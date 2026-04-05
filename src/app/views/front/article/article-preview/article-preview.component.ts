@@ -2,10 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subject, EMPTY } from "rxjs";
 import { takeUntil, switchMap, map, filter, catchError } from "rxjs/operators";
-import { SecurityService } from "@app/core/security/security.service";
-import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
-import { BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
@@ -17,16 +14,12 @@ import { environment } from "src/environments/environment";
 })
 export class ArticlePreviewComponent implements OnInit, OnDestroy {
   article: any = {};
-  comment: string = "";
-  user: any;
   private destroy$ = new Subject<void>();
 
   constructor(
     private articleService: ArticleService,
     private cdr: ChangeDetectorRef,
     private activeRoute: ActivatedRoute,
-    private securityService: SecurityService,
-    private modalService: BsModalService,
     private toastr: ToastrService,
     private translate: TranslateService,
   ) {}
@@ -51,120 +44,11 @@ export class ArticlePreviewComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
       });
-
-    this.getUserInfo();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  getUserInfo() {
-    const currentUser = localStorage.getItem("currentUser");
-    const guestUser = localStorage.getItem("guestUser");
-
-    let parsedCurrentUser: any = null;
-    let parsedGuestUser: any = null;
-
-    if (currentUser) {
-      try {
-        parsedCurrentUser = JSON.parse(currentUser);
-      } catch (e) {
-        console.error("Invalid currentUser JSON", e);
-      }
-    }
-
-    if (guestUser) {
-      try {
-        parsedGuestUser = JSON.parse(guestUser);
-      } catch (e) {
-        console.error("Invalid guestUser JSON", e);
-      }
-    }
-
-    if (parsedCurrentUser?.user) {
-      this.user = parsedCurrentUser.user;
-    } else if (parsedGuestUser) {
-      this.user = parsedGuestUser;
-    }
-  }
-
-  addComment() {
-    const text = (this.comment || "").trim();
-    if (!text) return;
-
-    if (
-      this.securityService.isGuestUser() ||
-      this.securityService.isUserAuthenticate()
-    ) {
-      this.articleService
-        .addComment(this.article.id, { comment: text })
-        .subscribe({
-          next: (data: any) => {
-            this.article.comments = data.comments;
-            this.comment = "";
-            this.cdr.markForCheck();
-          },
-          error: (error: any) => {
-            console.error(error);
-          },
-        });
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
-    }
-  }
-
-  deleteComment(id: string) {
-    if (
-      this.securityService.isGuestUser() ||
-      this.securityService.isUserAuthenticate()
-    ) {
-      if (
-        confirm(
-          this.translate.instant("ARTICLES.DELETE_COMMENT.BUTTON.CONFIRM"),
-        )
-      ) {
-        this.articleService.deleteComment(id).subscribe({
-          next: (response: any) => {
-            if (response?.success === true) {
-              this.article.comments = this.article.comments.filter(
-                (comment: any) => comment.id !== id,
-              );
-              this.cdr.markForCheck();
-              this.toastr.success(
-                this.translate.instant(
-                  "ARTICLES.DELETE_COMMENT.TOAST.DELETED_SUCCESSFULLY",
-                ),
-              );
-            } else {
-              this.toastr.error(
-                response?.message ||
-                  this.translate.instant(
-                    "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
-                  ),
-              );
-            }
-          },
-          error: (error: any) => {
-            console.error("Delete comment error:", error);
-            this.toastr.error(
-              this.translate.instant(
-                "ARTICLES.DELETE_COMMENT.TOAST.DELETED_ERROR",
-              ),
-            );
-          },
-        });
-      }
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
-    }
-  }
-
-  canDeleteComment(comment: any): boolean {
-    if (!this.user) return false;
-    if (comment.user?.email === this.user.email) return true;
-    return this.securityService.hasClaim("ARTICLE_DELETE_COMMENT");
   }
 
   copyLink() {

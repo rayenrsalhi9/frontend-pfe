@@ -13,7 +13,9 @@
       </div>
       <div class="header-badge" *ngIf="blogs !== null">
         <i class="feather icon-layers"></i>
-        {{ "PREVIEW.BLOG.TABLE.POSTS_COUNT" | translate:{count: blogs.length} }}
+        {{
+          "PREVIEW.BLOG.TABLE.POSTS_COUNT" | translate: { count: blogs.length }
+        }}
       </div>
     </div>
   </header>
@@ -58,22 +60,39 @@
         <div class="card-body">
           <h2 class="card-title">{{ blog.title }}</h2>
           <p class="card-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
-          
+
           <!-- Footer -->
           <div class="card-footer">
             <div class="card-stats">
-              <span class="stat-item" [attr.aria-label]="('PREVIEW.WIDGETS.COMMENTS' | translate) + ': ' + (blog.commentsCount ?? blog.comments?.length ?? 0)">
+              <span
+                class="stat-item"
+                [attr.aria-label]="
+                  ('PREVIEW.WIDGETS.COMMENTS' | translate) +
+                  ': ' +
+                  (blog.commentsCount ?? 0)
+                "
+              >
                 <i class="feather icon-message-square" aria-hidden="true"></i>
-                {{ blog.commentsCount ?? blog.comments?.length ?? 0 }}
+                {{ blog.commentsCount ?? 0 }}
               </span>
-              <span class="stat-item" [attr.aria-label]="('PREVIEW.WIDGETS.LIKES' | translate) + ': ' + (blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0)">
+              <span
+                class="stat-item"
+                [attr.aria-label]="
+                  ('PREVIEW.WIDGETS.LIKES' | translate) +
+                  ': ' +
+                  (blog.reactionsUpCount ?? 0)
+                "
+              >
                 <i class="feather icon-thumbs-up" aria-hidden="true"></i>
-                {{ blog.reactionsUpCount ?? blog.reactionsUp?.length ?? 0 }}
+                {{ blog.reactionsUpCount ?? 0 }}
               </span>
             </div>
             <span class="read-more">
               {{ "PREVIEW.BLOG.LIST.READ_MORE" | translate }}
-              <i class="feather" [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"></i>
+              <i
+                class="feather"
+                [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
+              ></i>
             </span>
           </div>
         </div>

@@ -63,15 +63,9 @@
           
           <!-- Footer -->
           <div class="card-footer">
-            <div class="card-stats">
-              <span class="stat-item">
-                <i class="feather icon-message-square"></i>
-                {{ article.commentsCount ?? article.comments?.length ?? 0 }}
-              </span>
-            </div>
             <span class="read-more">
               {{ "PREVIEW.ARTICLE.LIST.READ_MORE" | translate }}
-              <i class="feather icon-arrow-right"></i>
+              <i class="feather" [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"></i>
             </span>
           </div>
         </div>
