@@ -11,10 +11,25 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { UserAuth } from "@app/shared/enums/user-auth";
+import { CommonError } from "@app/shared/enums/common-error";
 import { UserService } from "@app/shared/services/user.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { environment } from "src/environments/environment";
+
+interface UpdateUserProfilePayload {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  userName: string;
+  email: string;
+  avatar: string | null;
+}
+
+function isCommonError(response: any): response is CommonError {
+  return response && typeof response === "object" && "friendlyMessage" in response;
+}
 
 @Component({
   selector: "app-profile",
@@ -152,14 +167,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.user = userAuth;
-    const userData = userAuth.user;
+    const userData = userAuth.user ?? {};
 
     this.userForm.patchValue({
-      id: userData.id,
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      phoneNumber: userData.phoneNumber || "",
-      email: userData.email || "",
+      id: userData?.id || "",
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
+      phoneNumber: userData?.phoneNumber || "",
+      email: userData?.email || "",
     });
 
     this.avatar = userData?.avatar || null;
@@ -239,18 +254,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          if (response?.id) {
+          if (isCommonError(response)) {
+            this.toastrService.error(
+              response.friendlyMessage ||
+                this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
+            );
+            this.cdr.markForCheck();
+          } else {
             this.updateLocalUser(response);
             this.toastrService.success(
               this.translate.instant(
                 "PROFILE_SETTING.TOAST.PROFILE_UPDATED_SUCCESSFULLY",
               ),
-            );
-            this.cdr.markForCheck();
-          } else {
-            this.toastrService.error(
-              response?.friendlyMessage ||
-                this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
             );
             this.cdr.markForCheck();
           }
@@ -265,7 +280,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-  private prepareFormData(): any {
+  private prepareFormData(): UpdateUserProfilePayload {
     const formValue = this.userForm.getRawValue();
     return {
       id: formValue.id,
@@ -273,6 +288,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       lastName: formValue.lastName,
       phoneNumber: formValue.phoneNumber,
       userName: formValue.email,
+      email: formValue.email,
       avatar: this.newPicture || this.avatar,
     };
   }

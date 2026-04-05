@@ -41,6 +41,11 @@ export const setting_profile = {
       PROFILE_UPDATED_SUCCESSFULLY: "Profile updated successfully",
     },
 
+    ACCESSIBILITY: {
+      PROFILE_PICTURE: "Profile picture",
+      DEFAULT_AVATAR: "Default avatar",
+    },
+
     PASSWORD: {
       LABELS: {
         TITLE: "User Password",

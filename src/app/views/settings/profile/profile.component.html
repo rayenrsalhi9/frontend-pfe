@@ -36,17 +36,17 @@
               <img
                 *ngIf="newPicture"
                 [src]="newPicture"
-                alt="Profile picture"
+                [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
               />
               <img
                 *ngIf="!newPicture && avatarPreview"
                 [src]="avatarPreview"
-                alt="Profile picture"
+                [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
               />
               <img
                 *ngIf="!newPicture && !avatarPreview"
                 src="/assets/images/avatars/thumb-16.jpg"
-                alt="Default avatar"
+                [alt]="'PROFILE_SETTING.ACCESSIBILITY.DEFAULT_AVATAR' | translate"
               />
             </div>
             <div class="avatar-actions">

@@ -40,6 +40,11 @@ export const setting_profile = {
       PROFILE_UPDATED_SUCCESSFULLY: "تم تحديث الملف الشخصي بنجاح",
     },
 
+    ACCESSIBILITY: {
+      PROFILE_PICTURE: "صورة الملف الشخصي",
+      DEFAULT_AVATAR: "الصورة الافتراضية",
+    },
+
     PASSWORD: {
       LABELS: {
         TITLE: "كلمة مرور المستخدم",
