@@ -202,24 +202,25 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   private confirmDeleteComment(id: string): void {
     this.blogService.deleteComment(id).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          this.blog.comments = (this.blog.comments || []).filter(
-            (comment: any) => comment.id !== id,
-          );
+        if (Array.isArray(response)) {
+          this.blog.comments = response;
           this.cdr.markForCheck();
           this.toastr.success(
             this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.SUCCESS"),
           );
         } else {
           this.toastr.error(
-            response.message ||
+            response.friendlyMessage ||
+              response.messages?.[0] ||
               this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
           );
         }
       },
-      error: () => {
+      error: (err: any) => {
         this.toastr.error(
-          this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
+          err?.friendlyMessage ||
+            err?.messages?.[0] ||
+            this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
         );
       },
     });

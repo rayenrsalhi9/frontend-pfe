@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { ArticleService } from "@app/shared/services/article.service";
 import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/articles-views.component";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -11,9 +13,10 @@ import { RtlService } from "@app/core/rtl.service";
   templateUrl: "./article.component.html",
   styleUrls: ["./article.component.scss"],
 })
-export class ArticleComponent implements OnInit {
+export class ArticleComponent implements OnInit, OnDestroy {
   articles: Article[] | null = null;
   isRtl = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private articleService: ArticleService,
@@ -23,10 +26,17 @@ export class ArticleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.rtlService.getIsRtl$().subscribe((isRtl: boolean) => {
+    this.rtlService.getIsRtl$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isRtl: boolean) => {
       this.isRtl = isRtl;
     });
     this.getArticles();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getArticles() {
