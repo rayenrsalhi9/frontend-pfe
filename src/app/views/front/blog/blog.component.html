@@ -69,22 +69,22 @@
                 [attr.aria-label]="
                   ('PREVIEW.WIDGETS.COMMENTS' | translate) +
                   ': ' +
-                  (blog.commentsCount ?? 0)
+                  (blog.comments?.length ?? blog.commentsCount ?? 0)
                 "
               >
                 <i class="feather icon-message-square" aria-hidden="true"></i>
-                {{ blog.commentsCount ?? 0 }}
+                {{ blog.comments?.length ?? blog.commentsCount ?? 0 }}
               </span>
               <span
                 class="stat-item"
                 [attr.aria-label]="
                   ('PREVIEW.WIDGETS.LIKES' | translate) +
                   ': ' +
-                  (blog.reactionsUpCount ?? 0)
+                  (blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0)
                 "
               >
                 <i class="feather icon-thumbs-up" aria-hidden="true"></i>
-                {{ blog.reactionsUpCount ?? 0 }}
+                {{ blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0 }}
               </span>
             </div>
             <span class="read-more">

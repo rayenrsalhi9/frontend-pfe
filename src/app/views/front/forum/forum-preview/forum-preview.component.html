@@ -152,6 +152,7 @@
                   class="delete-btn"
                   type="button"
                   [title]="'PREVIEW.FORUM.COMMENT.DELETE' | translate"
+                  [attr.aria-label]="'PREVIEW.FORUM.COMMENT.DELETE' | translate"
                   (click)="deleteComment(c.id)"
                 >
                   <i class="feather icon-trash-2"></i>

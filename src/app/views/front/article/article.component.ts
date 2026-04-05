@@ -4,6 +4,7 @@ import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/
 import { BsModalService } from "ngx-bootstrap/modal";
 import { Article } from "@app/shared/models/article.model";
 import { environment } from "src/environments/environment";
+import { RtlService } from "@app/core/rtl.service";
 
 @Component({
   selector: "app-article",
@@ -12,12 +13,16 @@ import { environment } from "src/environments/environment";
 })
 export class ArticleComponent implements OnInit {
   articles: Article[] | null = null;
+  isRtl = false;
 
   constructor(
     private articleService: ArticleService,
     private cdr: ChangeDetectorRef,
     private modalService: BsModalService,
-  ) {}
+    private rtlService: RtlService,
+  ) {
+    this.isRtl = this.rtlService.isRtl;
+  }
 
   ngOnInit(): void {
     this.getArticles();

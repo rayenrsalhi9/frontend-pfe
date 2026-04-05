@@ -526,6 +526,13 @@ $preview-height: 350px;
     color: var(--color-danger, #dc2626);
   }
 
+  &:focus-visible {
+    background: var(--color-bg-danger, #fef2f2);
+    color: var(--color-danger, #dc2626);
+    outline: 2px solid var(--color-danger, #dc2626);
+    outline-offset: 2px;
+  }
+
   i {
     font-size: 1rem;
   }

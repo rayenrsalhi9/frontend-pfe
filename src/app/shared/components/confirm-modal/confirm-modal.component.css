@@ -93,27 +93,27 @@
   background: var(--card-bg);
   color: var(--text-secondary);
   border: 0.5px solid var(--border-color);
+}
 
-  &:hover {
-    color: var(--text-primary);
-    border-color: var(--text-secondary);
-    filter: brightness(0.97);
-  }
+.cm-btn-cancel:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  filter: brightness(0.97);
 }
 
 .cm-btn-delete {
-  background: #dc2626;
+  background: var(--color-danger, #dc2626);
   color: #fff;
-  border: 0.5px solid #dc2626;
+  border: 0.5px solid var(--color-danger, #dc2626);
+}
 
-  &:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-  }
+.cm-btn-delete:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
 
-  &:active {
-    transform: translateY(0);
-  }
+.cm-btn-delete:active {
+  transform: translateY(0);
 }
 
 @media (max-width: 480px) {

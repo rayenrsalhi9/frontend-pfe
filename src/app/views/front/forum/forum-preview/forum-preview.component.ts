@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subject, of } from "rxjs";
-import { takeUntil, switchMap, map, filter } from "rxjs/operators";
+import { takeUntil, switchMap, map, filter, take } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
@@ -155,7 +155,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
       });
 
       if (this.modalRef) {
-        this.modalRef.content.onClose.subscribe((confirmed: boolean) => {
+        this.modalRef.content.onClose.pipe(take(1)).subscribe((confirmed: boolean) => {
           if (confirmed) {
             this.confirmDeleteComment(id);
           }
