@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import {
   ApexAxisChartSeries,
@@ -97,9 +103,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this._isRtl = this.rtlService.isRtl;
     this.documentResource = new DocumentResource();
     this.chartOptions = this.getDonutChartOptions();
-    this.rtlService.getIsRtl$().subscribe((isRtl) => {
-      this._isRtl = isRtl;
-    });
+    this._subscriptions.add(
+      this.rtlService.getIsRtl$().subscribe((isRtl) => {
+        this._isRtl = isRtl;
+      }),
+    );
   }
 
   ngOnInit(): void {
@@ -138,7 +146,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDonutChartOptions(totalLabel?: string): any {
-    const label = totalLabel || this.donutTotalLabel || this.translate.instant("DASHBOARD.TOTAL");
+    const label =
+      totalLabel ||
+      this.donutTotalLabel ||
+      this.translate.instant("DASHBOARD.TOTAL");
     return {
       series: [],
       chart: { type: "donut", height: 280, sparkline: { enabled: true } },
