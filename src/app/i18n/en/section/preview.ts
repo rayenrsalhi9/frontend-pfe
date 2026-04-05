@@ -26,6 +26,16 @@ export const preview = {
         REPLIES: "Replies",
         ADD_COMMENT: "Write your reply here...",
         DELETE: "Delete comment",
+        DELETE_CONFIRM: {
+          TITLE: "Delete Comment",
+          MESSAGE: "Are you sure you want to delete this comment? This action cannot be undone.",
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "Comment deleted successfully",
+        ERROR: "Failed to delete comment",
       },
       LIST: {
         TITLE: "Community Forum",
@@ -60,6 +70,16 @@ export const preview = {
         REPLIES: "Comments",
         ADD_COMMENT: "Write your reply here...",
         DELETE: "Delete comment",
+        DELETE_CONFIRM: {
+          TITLE: "Delete Comment",
+          MESSAGE: "Are you sure you want to delete this comment? This action cannot be undone.",
+          CANCEL: "Cancel",
+          CONFIRM: "Delete",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "Comment deleted successfully",
+        ERROR: "Failed to delete comment",
       },
       LIST: {
         TITLE: "Creative Corner",

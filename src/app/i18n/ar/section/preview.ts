@@ -26,6 +26,16 @@ export const preview = {
         REPLIES: "الردود",
         ADD_COMMENT: "اكتب ردك هنا...",
         DELETE: "حذف التعليق",
+        DELETE_CONFIRM: {
+          TITLE: "حذف التعليق",
+          MESSAGE: "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+          CANCEL: "إلغاء",
+          CONFIRM: "حذف",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "تم حذف التعليق بنجاح",
+        ERROR: "فشل في حذف التعليق",
       },
       LIST: {
         TITLE: "منتدى المجتمع",
@@ -58,6 +68,16 @@ export const preview = {
         REPLIES: "التعليقات",
         ADD_COMMENT: "اكتب تعليقك هنا...",
         DELETE: "حذف التعليق",
+        DELETE_CONFIRM: {
+          TITLE: "حذف التعليق",
+          MESSAGE: "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+          CANCEL: "إلغاء",
+          CONFIRM: "حذف",
+        },
+      },
+      DELETE_TOAST: {
+        SUCCESS: "تم حذف التعليق بنجاح",
+        ERROR: "فشل في حذف التعليق",
       },
       LIST: {
         TITLE: "الركن الإبداعي",

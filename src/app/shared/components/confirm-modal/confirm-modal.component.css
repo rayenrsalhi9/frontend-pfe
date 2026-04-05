@@ -1,33 +1,20 @@
 :host {
   display: block;
-  width: 100%;
 }
 
-.confirm-modal-container {
+.cm-modal-wrapper {
+  padding: 2rem 1.75rem 1.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-}
-
-.confirm-modal-box {
-  background: #ffffff;
-  border-radius: var(--radius-lg);
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 400px;
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -6px rgba(0, 0, 0, 0.04);
   text-align: center;
-  border: 1px solid var(--border-color);
-  animation: modal-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cm-modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes modal-in {
+@keyframes cm-modal-in {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    transform: scale(0.96) translateY(8px);
   }
   to {
     opacity: 1;
@@ -35,89 +22,110 @@
   }
 }
 
-/* Illustration / Icon */
-.modal-illustration {
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: center;
+.cm-modal-icon {
+  margin-bottom: 1.25rem;
 }
 
-.icon-wrapper {
-  width: 48px;
-  height: 48px;
+.cm-icon-circle {
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #dc2626;
   font-size: 1.5rem;
+  line-height: 1;
 }
 
-.icon-wrapper.danger {
-  background-color: var(--color-bg-danger, #fef2f2);
-  color: var(--color-danger, #dc2626);
-  border: 2px solid var(--color-border-danger, rgba(239, 68, 68, 0.1));
+.cm-modal-content {
+  margin-bottom: 1.75rem;
 }
 
-/* Content */
-.modal-content-area {
-  margin-bottom: 2rem;
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 800;
+.cm-modal-title {
+  font-size: 1.125rem;
+  font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
 }
 
-.modal-message {
+.cm-modal-message {
+  font-size: 0.9375rem;
   color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.5;
   margin: 0;
+  line-height: 1.6;
+  max-width: 320px;
 }
 
-/* Actions */
-.modal-actions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.cm-modal-footer {
+  display: flex;
+  gap: 0.625rem;
+  width: 100%;
 }
 
-.modal-actions-grid button {
-  padding: 0.75rem 1rem;
+.cm-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
   border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: var(--transition);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  border: 1px solid transparent;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    opacity 0.15s,
+    transform 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
-.btn-cancel {
-  background: #f8fafc;
+.cm-btn-cancel {
+  background: var(--card-bg);
   color: var(--text-secondary);
-  border-color: var(--border-color) !important;
+  border: 0.5px solid var(--border-color);
 }
 
-.btn-cancel:hover {
-  background: #f1f5f9;
+.cm-btn-cancel:hover {
   color: var(--text-primary);
-  border-color: #cbd5e1 !important;
+  border-color: var(--text-secondary);
+  filter: brightness(0.97);
+}
+
+.cm-btn-delete {
+  background: var(--color-danger, #dc2626);
+  color: #fff;
+  border: 0.5px solid var(--color-danger, #dc2626);
+}
+
+.cm-btn-delete:hover {
+  opacity: 0.85;
   transform: translateY(-1px);
 }
 
-.btn-confirm {
-  background: var(--color-danger, #dc2626);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+.cm-btn-delete:active {
+  transform: translateY(0);
 }
 
-.btn-confirm:hover {
-  background: var(--color-danger-hover, #b91c1c);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--color-danger-shadow, rgba(239, 68, 68, 0.3));
+@media (max-width: 480px) {
+  .cm-modal-wrapper {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .cm-modal-footer {
+    flex-direction: column-reverse;
+
+    .cm-btn {
+      width: 100%;
+    }
+  }
 }
-
-

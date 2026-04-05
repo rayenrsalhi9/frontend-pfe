@@ -30,85 +30,14 @@
   <div class="preview-layout">
     <!-- Main column -->
     <div class="main-col">
-      <!-- Article body -->
+      <!-- Article body (read-only, no comments or reactions) -->
       <div class="preview-card article-body">
         <div class="rich-content" [innerHTML]="article.longText ?? '' | safeHtml"></div>
-
-        <!-- Reactions (simplified for article) -->
-        <div class="reactions">
-          <div class="rxn-group"></div>
-          <span class="comment-pill">
-            <i class="feather icon-message-square"></i>
-            {{ article.comments?.length || 0 }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Comments -->
-      <div class="preview-card comments-card">
-        <div class="comments-header">
-          <span class="comments-title">{{ "PREVIEW.ARTICLE.PREVIEW.COMMENTS" | translate }}</span>
-        </div>
-
-        <!-- Add comment form -->
-        <div class="comment-form">
-          <div class="avatar-circle sm">
-            <i class="feather icon-user"></i>
-          </div>
-          <textarea class="comment-input" [(ngModel)]="comment" id="articleComment" rows="2" [placeholder]="'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate" [attr.aria-label]="'PREVIEW.ARTICLE.COMMENT.ADD_COMMENT' | translate"></textarea>
-          <button class="send-btn" (click)="addComment()" type="button">{{ "PREVIEW.ARTICLE.PREVIEW.ADD_COMMENT" | translate }}</button>
-        </div>
-
-        <!-- Comments list -->
-        <div class="comments-list" *ngIf="article.comments?.length > 0">
-          <div class="comment-item" *ngFor="let c of article.comments">
-            <div class="cm-avatar">
-              <i class="feather icon-user"></i>
-            </div>
-            <div class="cm-body">
-              <div class="cm-header cm-header--spaced">
-                <div>
-                  <span class="cm-name">{{ c.user?.firstName }} {{ c.user?.lastName }}</span>
-                  <span class="cm-time">{{ c.createdAt | utcToLocalTime: "mediumDate" }}</span>
-                </div>
-                <!-- Delete menu -->
-                <div class="comment-menu" *ngIf="canDeleteComment(c)" dropdown [insideClick]="true">
-                  <button dropdownToggle type="button" class="comment-menu-btn" [title]="'PREVIEW.ACTIONS.MORE' | translate">
-                    <i class="feather icon-more-horizontal"></i>
-                  </button>
-                  <ul *dropdownMenu class="comment-dropdown">
-                    <li>
-                      <button class="comment-dropdown-item danger" (click)="deleteComment(c.id)">
-                        <i class="feather icon-trash-2"></i>
-                        {{ "PREVIEW.ARTICLE.COMMENT.DELETE" | translate }}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <p class="cm-text">{{ c.comment }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty state -->
-        <div class="empty-state" *ngIf="!article.comments?.length">{{ "PREVIEW.ARTICLE.PREVIEW.NO_COMMENTS" | translate }}</div>
       </div>
     </div>
 
     <!-- Sidebar -->
     <aside class="sidebar">
-      <!-- Stats -->
-      <div class="preview-card widget-card">
-        <div class="widget-title">{{ "PREVIEW.WIDGETS.STATS" | translate }}</div>
-        <div class="stat-row">
-          <div class="stat-item">
-            <div class="stat-val">{{ article.comments?.length || 0 }}</div>
-            <div class="stat-lbl">{{ "PREVIEW.WIDGETS.COMMENTS" | translate }}</div>
-          </div>
-        </div>
-      </div>
-
       <!-- Share -->
       <div class="preview-card widget-card">
         <div class="widget-title">{{ "PREVIEW.WIDGETS.SHARE" | translate }}</div>
