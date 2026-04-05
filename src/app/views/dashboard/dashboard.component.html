@@ -66,6 +66,7 @@
           <div *ngIf="chartOptions?.series?.length > 0; else noCategories">
             <div class="donut-chart-wrapper">
               <apx-chart
+                #donutChart
                 [series]="chartOptions.series"
                 [chart]="chartOptions.chart"
                 [labels]="chartOptions.labels"
@@ -157,8 +158,8 @@
                 />
               </div>
               <div class="news-info">
-                <span class="news-category" *ngIf="article.category?.name">{{
-                  article.category?.name
+                <span class="news-category" *ngIf="article.category?.name as name">{{
+                  name
                 }}</span>
                 <h4 class="news-title">{{ article.title }}</h4>
                 <p class="news-excerpt">{{ article.shortText }}</p>
@@ -213,11 +214,11 @@
       <div class="card-body">
         <ng-container *ngIf="usersLoaded">
           <div *ngIf="rows?.length > 0; else noUsers" class="users-list">
-            <div class="user-row header-row">
-              <span>{{ "USERS.LIST.TABLE.EMAIL" | translate }}</span>
-              <span>{{ "USERS.LIST.TABLE.FIRSTNAME" | translate }}</span>
-              <span>{{ "USERS.LIST.TABLE.LASTNAME" | translate }}</span>
-              <span>{{ "USERS.LIST.TABLE.PHONE" | translate }}</span>
+            <div class="user-row header-row" role="row">
+              <span role="columnheader">{{ "USERS.LIST.TABLE.EMAIL" | translate }}</span>
+              <span role="columnheader">{{ "USERS.LIST.TABLE.FIRSTNAME" | translate }}</span>
+              <span role="columnheader">{{ "USERS.LIST.TABLE.LASTNAME" | translate }}</span>
+              <span role="columnheader">{{ "USERS.LIST.TABLE.PHONE" | translate }}</span>
             </div>
             <div class="user-row" *ngFor="let user of rows | slice: 0 : 5">
               <div class="user-cell">

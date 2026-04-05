@@ -3,9 +3,13 @@ import {
   Component,
   Input,
   OnInit,
+  OnChanges,
+  OnDestroy,
   SimpleChanges,
   ViewChild,
 } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { TranslateService } from "@ngx-translate/core";
 import { RtlService } from "@app/core/rtl.service";
 import { OverviewData } from "../../dashboard.type";
@@ -42,10 +46,13 @@ export type ChartOptions = {
 @Component({
   selector: "overview",
   templateUrl: "./overview-component.html",
+  styleUrls: ["./overview.component.scss"],
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild("overviewChart") chart: ChartComponent;
   public overviewChartOptions: Partial<ChartOptions>;
+
+  private readonly destroy$ = new Subject<void>();
 
   @Input() data: OverviewData;
 
@@ -64,6 +71,15 @@ export class OverviewComponent implements OnInit {
     private rtlService: RtlService,
   ) {
     this.initChartOptions();
+    this.rtlService
+      .getIsRtl$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isRtl) => {
+        if (this.overviewChartOptions?.yaxis) {
+          this.overviewChartOptions.yaxis.opposite = isRtl;
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -73,6 +89,7 @@ export class OverviewComponent implements OnInit {
   private translateLabels() {
     this.translate
       .stream(["DASHBOARD.UPLOAD", "DASHBOARD.DOWNLOAD", "DASHBOARD.DOCUMENTS"])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.uploadLabel = res["DASHBOARD.UPLOAD"] || "Uploads";
         this.downloadLabel = res["DASHBOARD.DOWNLOAD"] || "Downloads";
@@ -195,5 +212,10 @@ export class OverviewComponent implements OnInit {
       },
     };
     this.cdr.markForCheck();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

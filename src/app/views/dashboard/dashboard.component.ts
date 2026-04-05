@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import {
   ApexAxisChartSeries,
@@ -11,6 +11,7 @@ import {
   ApexTooltip,
   ApexStroke,
   ApexLegend,
+  ChartComponent,
 } from "ng-apexcharts";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { DocumentService } from "@app/shared/services/document.service";
@@ -50,6 +51,8 @@ export interface StatCard {
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChild("donutChart") donutChart: ChartComponent;
+
   monthlyRevenueChart: Partial<ChartOptions>;
   overviewData = {
     duration: [] as string[],
@@ -60,20 +63,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   recentReviewData: any[] = [];
   deviceStatisticData: any;
   countriesData: any[] = [];
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription = new Subscription();
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   rows: any[] = [];
   selected: any[] = [];
   documentResource: DocumentResource;
   chartOptions: any;
+  donutTotalLabel = "";
   articles: any[] = [];
   categoriesLoaded = false;
   devicesLoaded = false;
   newsLoaded = false;
   usersLoaded = false;
   overviewLoaded = false;
-  isRtl = false;
+  private _isRtl = false;
+
+  get isRtl(): boolean {
+    return this._isRtl;
+  }
 
   statCards: StatCard[] = [];
 
@@ -86,9 +94,49 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private rtlService: RtlService,
   ) {
-    this.isRtl = this.rtlService.isRtl;
+    this._isRtl = this.rtlService.isRtl;
     this.documentResource = new DocumentResource();
-    this.chartOptions = {
+    this.chartOptions = this.getDonutChartOptions();
+  }
+
+  ngOnInit(): void {
+    this.initStats();
+    this.initDeviceStatisticData();
+    this.getUsers();
+    this.getArticles();
+    this.categoriesDonut();
+    this.documentTransaction();
+
+    this._subscriptions.add(
+      this.translate.stream("DASHBOARD.TOTAL").subscribe((label: string) => {
+        if (this.chartOptions) {
+          this.donutTotalLabel = label;
+          this.chartOptions.plotOptions.pie.donut.labels.total.label = label;
+          setTimeout(() => {
+            if (this.donutChart) {
+              this.donutChart.updateOptions({
+                plotOptions: {
+                  pie: {
+                    donut: {
+                      labels: {
+                        total: {
+                          label: label,
+                        },
+                      },
+                    },
+                  },
+                },
+              });
+            }
+          });
+        }
+      }),
+    );
+  }
+
+  private getDonutChartOptions(totalLabel?: string): any {
+    const label = totalLabel || this.donutTotalLabel || this.translate.instant("DASHBOARD.TOTAL");
+    return {
       series: [],
       chart: { type: "donut", height: 280, sparkline: { enabled: true } },
       labels: [],
@@ -109,7 +157,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               show: true,
               total: {
                 show: true,
-                label: this.translate.instant("DASHBOARD.TOTAL"),
+                label: label,
                 color: "#64748b",
                 fontFamily: "Cairo, Inter, sans-serif",
               },
@@ -131,15 +179,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getHost() {
     return environment.apiUrl;
-  }
-
-  ngOnInit(): void {
-    this.initStats();
-    this.initDeviceStatisticData();
-    this.getUsers();
-    this.getArticles();
-    this.categoriesDonut();
-    this.documentTransaction();
   }
 
   private initStats() {
@@ -172,7 +211,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getArticles() {
-    this._subscriptions.push(
+    this._subscriptions.add(
       this.articleService.allArticles({ limit: 4 }).subscribe({
         next: (data: any) => {
           this.articles = data;
@@ -241,7 +280,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ],
     };
 
-    this._subscriptions.push(
+    this._subscriptions.add(
       this.documentService.documentTransaction().subscribe(
         (data: any) => {
           const duration: string[] = [];
@@ -275,7 +314,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   categoriesDonut() {
-    this._subscriptions.push(
+    this._subscriptions.add(
       this.dashboardService.getDocumentByCategory().subscribe(
         (data) => {
           if (!data || data.length === 0) {
@@ -290,46 +329,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
               series.push(item.documentCount);
             });
 
-            this.chartOptions = {
-              series,
-              chart: {
-                type: "donut",
-                height: 280,
-                sparkline: { enabled: true },
-              },
-              labels,
-              responsive: [
-                {
-                  breakpoint: 480,
-                  options: { chart: {}, legend: { position: "bottom" } },
-                },
-              ],
-              plotOptions: {
-                pie: {
-                  donut: {
-                    size: "70%",
-                    labels: {
-                      show: true,
-                      total: {
-                        show: true,
-                        label: this.translate.instant("DASHBOARD.TOTAL"),
-                        color: "#64748b",
-                        fontFamily: "Cairo, Inter, sans-serif",
-                      },
-                    },
-                  },
-                },
-              },
-              legend: { position: "bottom", fontSize: "13px" },
-              colors: [
-                "#2563eb",
-                "#10b981",
-                "#f59e0b",
-                "#ef4444",
-                "#8b5cf6",
-                "#06b6d4",
-              ],
-            };
+            this.chartOptions.series = series;
+            this.chartOptions.labels = labels;
             this.updateStatCard(
               2,
               series.reduce((a: number, b: number) => a + b, 0),
@@ -351,7 +352,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getUsers(): void {
-    this._subscriptions.push(
+    this._subscriptions.add(
       this.commonService.getUsers().subscribe(
         (data: any) => {
           this.rows = data;
@@ -368,7 +369,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   initDeviceStatisticData() {
-    this._subscriptions.push(
+    this._subscriptions.add(
       this.documentService.getDocumentByExtension().subscribe(
         (data: any) => {
           this.deviceStatisticData = data;
@@ -384,6 +385,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._subscriptions.forEach((elm) => elm.unsubscribe());
+    this._subscriptions.unsubscribe();
   }
 }

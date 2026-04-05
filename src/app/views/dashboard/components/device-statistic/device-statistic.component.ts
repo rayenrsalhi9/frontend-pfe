@@ -177,10 +177,8 @@ export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
     this.totalCount = totalDocs;
 
     this.extensions = this.data.documents
-      .slice(0, this.maxItems)
       .map((item, index) => {
         const key = this.resolveMimeKey(item.extension || "");
-        // Friendly label: lookup by resolved key, fallback to uppercase subtype
         const label = this.extensionLabels[key] || key.toUpperCase();
         return {
           extension: label,
@@ -190,7 +188,8 @@ export class DeviceStatisticComponent implements OnInit, OnChanges, OnDestroy {
           icon: this.extensionIcons[key] || "icon-file",
         };
       })
-      .sort((a, b) => b.total - a.total);
+      .sort((a, b) => b.total - a.total)
+      .slice(0, this.maxItems);
 
     this.buildChart();
   }
