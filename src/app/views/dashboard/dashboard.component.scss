@@ -494,15 +494,6 @@
       display: none;
     }
   }
-
-  .format-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .distribution-legend {
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
 @media (max-width: 480px) {
