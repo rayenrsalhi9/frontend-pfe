@@ -1,16 +1,16 @@
-<div class="card-body">
-  <div id="dash-line">
-    <apx-chart
-      [series]="overviewChartOptions.series"
-      [chart]="overviewChartOptions.chart"
-      [dataLabels]="overviewChartOptions.dataLabels"
-      [plotOptions]="overviewChartOptions.plotOptions"
-      [yaxis]="overviewChartOptions.yaxis"
-      [legend]="overviewChartOptions.legend"
-      [fill]="overviewChartOptions.fill"
-      [stroke]="overviewChartOptions.stroke"
-      [tooltip]="overviewChartOptions.tooltip"
-      [xaxis]="overviewChartOptions.xaxis"
-    ></apx-chart>
-  </div>
+<div class="overview-chart-container">
+  <apx-chart
+    [series]="overviewChartOptions.series"
+    [chart]="overviewChartOptions.chart"
+    [dataLabels]="overviewChartOptions.dataLabels"
+    [plotOptions]="overviewChartOptions.plotOptions"
+    [yaxis]="overviewChartOptions.yaxis"
+    [legend]="overviewChartOptions.legend"
+    [fill]="overviewChartOptions.fill"
+    [stroke]="overviewChartOptions.stroke"
+    [tooltip]="overviewChartOptions.tooltip"
+    [xaxis]="overviewChartOptions.xaxis"
+    [colors]="overviewChartOptions.colors"
+    [grid]="overviewChartOptions.grid"
+  ></apx-chart>
 </div>

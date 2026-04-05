@@ -1,5 +1,16 @@
 export const dashboard = {
   DASHBOARD: {
+    TOTAL: "الإجمالي",
+    STATS: {
+      USERS: "المستخدمون",
+      ARTICLES: "المقالات",
+      DOCUMENTS: "المستندات",
+      CATEGORIES: "التصنيفات",
+    },
+    UPLOAD: "الرفع",
+    DOWNLOAD: "التنزيل",
+    DOCUMENTS: "المستندات",
+    FILE_FORMATS: "أنواع الملفات",
     TRANSMISSION: "نشاط المستندات",
     EXTENSIONS: "المستندات حسب نوع الملف",
     CATEGORIES: "تصنيفات المستندات",

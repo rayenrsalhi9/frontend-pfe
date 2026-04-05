@@ -1,5 +1,16 @@
 export const dashboard = {
   DASHBOARD: {
+    TOTAL: "Total",
+    STATS: {
+      USERS: "Users",
+      ARTICLES: "Articles",
+      DOCUMENTS: "Documents",
+      CATEGORIES: "Categories",
+    },
+    UPLOAD: "Uploads",
+    DOWNLOAD: "Downloads",
+    DOCUMENTS: "Documents",
+    FILE_FORMATS: "File Formats",
     TRANSMISSION: "Document Activity",
     EXTENSIONS: "Documents by File Format",
     CATEGORIES: "Document Categories",
