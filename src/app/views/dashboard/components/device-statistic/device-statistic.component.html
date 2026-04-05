@@ -1,38 +1,55 @@
-<div class="card-body">
-  <div class="mt-3" *ngIf="data && data.documents">
-    <div class="progress">
-      <div
-        *ngFor="let item of data.documents; let i = index"
-        [tooltip]="item.extension + ' ' + ('TABLE_MESSAGE.TOTAL' | translate) + ': ' + item.total"
-        class="progress-bar cursor-pointer"
-        [ngClass]="'bg-' + progressType[i]"
-        [ngStyle]="{ width: (item.total / data.totalDocuments) * 100 + '%' }"
-      ></div>
+<div class="ds-container">
+  <ng-container *ngIf="extensions.length > 0; else noData">
+    <!-- Stacked Rainbow Bar -->
+    <div class="stacked-bar-wrap">
+      <div class="stacked-bar">
+        <div
+          *ngFor="let item of extensions"
+          class="stacked-segment"
+          [style.width.%]="item.percentage"
+          [style.background]="item.color"
+          [title]="item.extension + ' · ' + item.percentage + '%'"
+        ></div>
+      </div>
     </div>
-    <div class="mt-3">
-      <ngx-datatable
-        [messages]="tableMessages"
-        [rows]="data.documents"
-        [columnMode]="ColumnMode.force"
-        rowHeight="auto"
-        [limit]="3"
-        [headerHeight]="50"
-        [footerHeight]="50"
-      >
-        <ngx-datatable-column
-          [name]="'TABLE_MESSAGE.EXTENSION' | translate"
-          prop="extension"
-        ></ngx-datatable-column>
-        <ngx-datatable-column
-          [name]="'TABLE_MESSAGE.TOTAL' | translate"
-          prop="total"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <i class="feather icon-file"></i>
-            <span class="ms-1">{{ value }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
+
+    <!-- ApexCharts bar -->
+    <div class="chart-wrap">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [plotOptions]="chartOptions.plotOptions"
+        [dataLabels]="chartOptions.dataLabels"
+        [colors]="chartOptions.colors"
+        [grid]="chartOptions.grid"
+        [tooltip]="chartOptions.tooltip"
+      ></apx-chart>
     </div>
-  </div>
+
+    <!-- Legend + total -->
+    <div class="ds-footer">
+      <div class="legend-grid">
+        <div class="legend-item" *ngFor="let item of extensions">
+          <span class="legend-dot" [style.background]="item.color"></span>
+          <span class="legend-name">{{ item.extension }}</span>
+          <span class="legend-pct" [style.color]="item.color"
+            >{{ item.percentage }}%</span
+          >
+        </div>
+      </div>
+      <div class="total-pill">
+        <span class="total-num">{{ totalCount | number }}</span>
+        <span class="total-lbl">{{ translations.documents }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noData>
+    <div class="ds-empty">
+      <i class="feather icon-database"></i>
+      <p>{{ translations.noData }}</p>
+    </div>
+  </ng-template>
 </div>

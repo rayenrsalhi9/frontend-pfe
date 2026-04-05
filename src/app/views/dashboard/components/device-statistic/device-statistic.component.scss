@@ -1,0 +1,148 @@
+:host {
+  display: block;
+}
+
+.ds-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Stacked rainbow bar ─────────────────────────────── */
+.stacked-bar-wrap {
+  padding: 0 0.25rem;
+}
+
+.stacked-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--bg-app, #f1f5f9);
+  gap: 2px;
+}
+
+.stacked-segment {
+  height: 100%;
+  border-radius: 99px;
+  transition: opacity 0.2s;
+  cursor: default;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* ── ApexCharts bar chart ────────────────────────────── */
+.chart-wrap {
+  margin: -4px 0;
+
+  /* strip the extra white-space ApexCharts adds */
+  ::ng-deep .apexcharts-canvas {
+    overflow: visible;
+  }
+
+  ::ng-deep .apexcharts-datalabels text {
+    font-weight: 600 !important;
+  }
+
+  ::ng-deep .apexcharts-yaxis-label {
+    font-family: "Cairo", "Inter", sans-serif !important;
+    fill: #64748b !important;
+  }
+
+  ::ng-deep .apexcharts-tooltip {
+    background: var(--card-bg, white) !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+/* ── Footer: legend + total pill ────────────────────── */
+.ds-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  flex-wrap: wrap;
+}
+
+.legend-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  flex: 1;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  font-size: 0.72rem;
+  color: var(--text-secondary, #64748b);
+  font-weight: 500;
+}
+
+.legend-pct {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ── Total pill ──────────────────────────────────────── */
+.total-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.total-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-primary, #0f172a);
+  letter-spacing: -0.03em;
+}
+
+.total-lbl {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Empty state ─────────────────────────────────────── */
+.ds-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  color: var(--text-secondary, #64748b);
+  gap: 0.5rem;
+
+  i {
+    font-size: 2.5rem;
+    opacity: 0.35;
+  }
+
+  p {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0;
+  }
+}
