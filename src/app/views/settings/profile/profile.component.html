@@ -61,7 +61,6 @@
                 type="button"
                 class="btn btn-secondary"
                 (click)="fileInput.click()"
-                [disabled]="isSubmitting"
               >
                 <i class="feather icon-camera"></i>
                 {{ "PROFILE_SETTING.LABELS.CHANGE_PICTURE" | translate }}
@@ -88,7 +87,6 @@
                 [attr.aria-describedby]="
                   isFirstNameInvalid ? 'firstName-error' : null
                 "
-                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -118,7 +116,6 @@
                 [attr.aria-describedby]="
                   isLastNameInvalid ? 'lastName-error' : null
                 "
-                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -150,7 +147,6 @@
                 [attr.aria-describedby]="
                   isPhoneNumberInvalid ? 'phoneNumber-error' : null
                 "
-                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -172,7 +168,6 @@
                 formControlName="email"
                 class="field-input"
                 [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
-                [disabled]="isSubmitting"
               />
             </div>
           </div>

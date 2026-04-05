@@ -27,6 +27,12 @@ interface UpdateUserProfilePayload {
   avatar: string | null;
 }
 
+interface ProfileFormValues {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}
+
 function isCommonError(response: any): response is CommonError {
   return response && typeof response === "object" && "friendlyMessage" in response;
 }
@@ -48,10 +54,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isSubmitted = false;
 
   private destroy$ = new Subject<void>();
-  private initialFormValues: any = {};
+  private initialFormValues: ProfileFormValues = {
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+  };
 
   get hostBase(): string {
     return environment.apiUrl;
+  }
+
+  private buildAvatarPreview(avatar: string | null | undefined): string | null {
+    if (!avatar) return null;
+    if (avatar.startsWith("data:image")) return avatar;
+    if (avatar.startsWith("http://") || avatar.startsWith("https://")) return avatar;
+    return this.hostBase + avatar;
   }
 
   get hasChanges(): boolean {
@@ -201,11 +218,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.avatar = userData.avatar || null;
 
-    this.avatarPreview = userData.avatar
-      ? userData.avatar.startsWith("data:image")
-        ? userData.avatar
-        : this.hostBase + userData.avatar
-      : null;
+    this.avatarPreview = this.buildAvatarPreview(userData.avatar);
 
     this.isLoading = false;
     this.cdr.markForCheck();
@@ -268,6 +281,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.isSubmitting = true;
+    this.disableFormForSubmission();
     const userData = this.prepareFormData();
 
     this.userService
@@ -276,6 +290,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
+          this.enableFormAfterSubmission();
           if (isCommonError(response)) {
             this.toastrService.error(
               response.friendlyMessage ||
@@ -294,6 +309,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.isSubmitting = false;
+          this.enableFormAfterSubmission();
           this.toastrService.error(
             this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
           );
@@ -318,17 +334,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private updateLocalUser(userData: any): void {
     if (!this.user) return;
 
-    this.user.user.firstName = userData.firstName;
-    this.user.user.lastName = userData.lastName;
-    this.user.user.phoneNumber = userData.phoneNumber;
-    this.user.user.avatar = userData.avatar;
+    this.user.user = this.user.user ?? {};
+    const target = this.user.user;
+
+    target.firstName = userData.firstName;
+    target.lastName = userData.lastName;
+    target.phoneNumber = userData.phoneNumber;
+    target.avatar = userData.avatar;
 
     this.avatar = userData.avatar;
-    this.avatarPreview = userData.avatar
-      ? userData.avatar.startsWith("data:image")
-        ? userData.avatar
-        : this.hostBase + userData.avatar
-      : null;
+    this.avatarPreview = this.buildAvatarPreview(userData.avatar);
     this.newPicture = null;
 
     this.initialFormValues = {
@@ -338,6 +353,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     };
 
     this.securityService.setUserDetail(this.user);
+  }
+
+  private disableFormForSubmission(): void {
+    this.userForm.get("firstName")?.disable();
+    this.userForm.get("lastName")?.disable();
+    this.userForm.get("phoneNumber")?.disable();
+  }
+
+  private enableFormAfterSubmission(): void {
+    this.userForm.get("firstName")?.enable();
+    this.userForm.get("lastName")?.enable();
+    this.userForm.get("phoneNumber")?.enable();
+    this.emailControl.disable();
   }
 
   onCancel(): void {
