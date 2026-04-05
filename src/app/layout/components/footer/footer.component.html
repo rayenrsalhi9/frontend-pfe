@@ -1,68 +1,102 @@
 <footer class="app-footer">
-  <div class="footer-container">
-    <div class="footer-grid">
-      <div class="footer-brand-col">
+  <div class="footer-main">
+    <div class="footer-top">
+      <div class="footer-brand">
         <a routerLink="/" class="footer-logo">
           <logo></logo>
         </a>
-        <p class="footer-desc">{{ "FOOTER.DESC" | translate }}</p>
-      </div>
-
-      <div class="footer-links-col">
-        <h4 class="col-title">{{ "FOOTER.LINKS" | translate }}</h4>
-        <ul class="footer-links">
-          <li>
-            <a routerLink="/" class="footer-link">{{
-              "NAV.HOME" | translate
-            }}</a>
-          </li>
-          <li>
-            <a routerLink="/forum" class="footer-link">{{
-              "NAV.FORUM" | translate
-            }}</a>
-          </li>
-          <li>
-            <a routerLink="/blog" class="footer-link">{{
-              "NAV.BLOG" | translate
-            }}</a>
-          </li>
-          <li>
-            <a routerLink="/article" class="footer-link">{{
-              "NAV.ARTICLE" | translate
-            }}</a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="footer-social-col">
-        <h4 class="col-title">{{ "FOOTER.CONNECT" | translate }}</h4>
-        <div class="social-links">
-          <a href="https://x.com" class="social-btn" aria-label="Twitter">
+        <p class="footer-brand-desc">{{ "FOOTER.DESC" | translate }}</p>
+        <div class="footer-social">
+          <a href="https://x.com" class="social-link" aria-label="Twitter">
             <i class="feather icon-twitter"></i>
           </a>
           <a
             href="https://facebook.com"
-            class="social-btn"
+            class="social-link"
             aria-label="Facebook"
           >
             <i class="feather icon-facebook"></i>
           </a>
           <a
             href="https://linkedin.com"
-            class="social-btn"
+            class="social-link"
             aria-label="LinkedIn"
           >
             <i class="feather icon-linkedin"></i>
           </a>
         </div>
       </div>
-    </div>
 
-    <div class="footer-bar">
+      <div class="footer-nav">
+        <div class="nav-section">
+          <h4 class="nav-title">{{ "FOOTER.LINKS" | translate }}</h4>
+          <ul class="nav-list">
+            <li>
+              <a
+                routerLink="/"
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                >{{ "NAV.HOME" | translate }}</a
+              >
+            </li>
+            <li>
+              <a routerLink="/forum" class="nav-link" routerLinkActive="active">{{
+                "NAV.FORUM" | translate
+              }}</a>
+            </li>
+            <li>
+              <a routerLink="/blog" class="nav-link" routerLinkActive="active">{{
+                "NAV.BLOG" | translate
+              }}</a>
+            </li>
+            <li>
+              <a routerLink="/article" class="nav-link" routerLinkActive="active">{{
+                "NAV.ARTICLE" | translate
+              }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-membership">
+        <h4 class="nav-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</h4>
+        <p class="membership-text">
+          {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}
+        </p>
+        <form class="membership-form" (submit)="onSubmitMembership($event)">
+          <div class="form-row">
+            <input
+              type="email"
+              class="form-input"
+              placeholder="{{ 'FOOTER.EMAIL_PLACEHOLDER' | translate }}"
+              [(ngModel)]="email"
+              name="email"
+              required
+            />
+            <button type="submit" class="form-btn">
+              {{ "FOOTER.REQUEST_MEMBERSHIP" | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
       <p class="copyright">
         &copy; {{ currentYear }} {{ companyProfile?.title || "ged" }}.
         {{ "FOOTER.RIGHTS" | translate }}
       </p>
+      <div class="footer-legal">
+        <a routerLink="/privacy" class="legal-link">{{
+          "FOOTER.PRIVACY" | translate
+        }}</a>
+        <a routerLink="/help" class="legal-link">{{
+          "FOOTER.HELP" | translate
+        }}</a>
+      </div>
     </div>
   </div>
 </footer>
