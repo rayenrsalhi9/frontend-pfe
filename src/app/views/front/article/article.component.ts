@@ -20,11 +20,12 @@ export class ArticleComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private modalService: BsModalService,
     private rtlService: RtlService,
-  ) {
-    this.isRtl = this.rtlService.isRtl;
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.rtlService.getIsRtl$().subscribe((isRtl: boolean) => {
+      this.isRtl = isRtl;
+    });
     this.getArticles();
   }
 

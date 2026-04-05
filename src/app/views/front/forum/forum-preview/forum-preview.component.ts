@@ -170,7 +170,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
     this.forumService.deleteComment(id).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.forum.comments = this.forum.comments.filter(
+          this.forum.comments = (this.forum.comments || []).filter(
             (comment: any) => comment.id !== id,
           );
           this.cdr.markForCheck();

@@ -203,7 +203,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
     this.blogService.deleteComment(id).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.blog.comments = this.blog.comments.filter(
+          this.blog.comments = (this.blog.comments || []).filter(
             (comment: any) => comment.id !== id,
           );
           this.cdr.markForCheck();

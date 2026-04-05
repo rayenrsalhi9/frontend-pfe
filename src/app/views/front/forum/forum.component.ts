@@ -21,11 +21,12 @@ export class ForumComponent implements OnInit {
     private forumService: ForumService,
     private cdr: ChangeDetectorRef,
     private rtlService: RtlService,
-  ) {
-    this.isRtl = this.rtlService.isRtl;
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.rtlService.getIsRtl$().subscribe((isRtl: boolean) => {
+      this.isRtl = isRtl;
+    });
     this.getAllForums();
   }
 
