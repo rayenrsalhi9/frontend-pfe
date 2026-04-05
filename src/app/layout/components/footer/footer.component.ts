@@ -16,6 +16,7 @@ import { CompanyProfile } from "@app/shared/enums/company-profile";
 export class FooterComponent implements OnInit, OnDestroy {
   currentYear: number = new Date().getFullYear();
   companyProfile: CompanyProfile | null = null;
+  email: string = "";
   private destroy$ = new Subject<void>();
 
   constructor(private companyProfileService: CompanyProfileService) {}
@@ -40,8 +41,9 @@ export class FooterComponent implements OnInit, OnDestroy {
       });
   }
 
-  onRequestMembership(email: string): void {
-    console.log(email);
+  onSubmitMembership(event: Event): void {
+    event.preventDefault();
+    console.log("Membership requested for email:", this.email);
   }
 
   ngOnDestroy(): void {
