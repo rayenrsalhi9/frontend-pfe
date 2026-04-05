@@ -22,6 +22,7 @@ export const setting_profile = {
     BUTTONS: {
       SAVE: "حفظ",
       CANCEL: "إلغاء",
+      LOADING: "جاري الحفظ...",
     },
 
     ERRORS: {

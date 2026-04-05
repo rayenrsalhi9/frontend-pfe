@@ -44,12 +44,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
   avatarPreview: string | null = null;
   newPicture: string | null = null;
   isLoading = false;
+  isSubmitting = false;
   isSubmitted = false;
 
   private destroy$ = new Subject<void>();
+  private initialFormValues: any = {};
 
   get hostBase(): string {
     return environment.apiUrl;
+  }
+
+  get hasChanges(): boolean {
+    const current = {
+      firstName: this.userForm.get("firstName")?.value || "",
+      lastName: this.userForm.get("lastName")?.value || "",
+      phoneNumber: this.userForm.get("phoneNumber")?.value || "",
+    };
+    return (
+      this.newPicture !== null ||
+      current.firstName !== this.initialFormValues.firstName ||
+      current.lastName !== this.initialFormValues.lastName ||
+      current.phoneNumber !== this.initialFormValues.phoneNumber
+    );
   }
 
   get firstNameControl() {
@@ -170,16 +186,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const userData = userAuth.user ?? {};
 
     this.userForm.patchValue({
-      id: userData?.id || "",
-      firstName: userData?.firstName || "",
-      lastName: userData?.lastName || "",
-      phoneNumber: userData?.phoneNumber || "",
-      email: userData?.email || "",
+      id: userData.id || "",
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      phoneNumber: userData.phoneNumber || "",
+      email: userData.email || "",
     });
 
-    this.avatar = userData?.avatar || null;
+    this.initialFormValues = {
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      phoneNumber: userData.phoneNumber || "",
+    };
 
-    this.avatarPreview = userData?.avatar
+    this.avatar = userData.avatar || null;
+
+    this.avatarPreview = userData.avatar
       ? userData.avatar.startsWith("data:image")
         ? userData.avatar
         : this.hostBase + userData.avatar
@@ -245,7 +267,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     const userData = this.prepareFormData();
 
     this.userService
@@ -253,7 +275,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          this.isLoading = false;
+          this.isSubmitting = false;
           if (isCommonError(response)) {
             this.toastrService.error(
               response.friendlyMessage ||
@@ -270,8 +292,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
           }
         },
-        error: (error) => {
-          this.isLoading = false;
+        error: () => {
+          this.isSubmitting = false;
           this.toastrService.error(
             this.translate.instant("PROFILE_SETTING.ERRORS.UPDATE_FAILED"),
           );
@@ -289,7 +311,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       phoneNumber: formValue.phoneNumber,
       userName: formValue.email,
       email: formValue.email,
-      avatar: this.newPicture || this.avatar,
+      avatar: this.newPicture || null,
     };
   }
 
@@ -308,6 +330,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         : this.hostBase + userData.avatar
       : null;
     this.newPicture = null;
+
+    this.initialFormValues = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      phoneNumber: userData.phoneNumber,
+    };
 
     this.securityService.setUserDetail(this.user);
   }

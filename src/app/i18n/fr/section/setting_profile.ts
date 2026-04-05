@@ -22,6 +22,7 @@ export const setting_profile = {
     BUTTONS: {
       SAVE: "Enregistrer",
       CANCEL: "Annuler",
+      LOADING: "Enregistrement...",
     },
 
     ERRORS: {

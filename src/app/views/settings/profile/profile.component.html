@@ -61,6 +61,7 @@
                 type="button"
                 class="btn btn-secondary"
                 (click)="fileInput.click()"
+                [disabled]="isSubmitting"
               >
                 <i class="feather icon-camera"></i>
                 {{ "PROFILE_SETTING.LABELS.CHANGE_PICTURE" | translate }}
@@ -87,6 +88,7 @@
                 [attr.aria-describedby]="
                   isFirstNameInvalid ? 'firstName-error' : null
                 "
+                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -116,6 +118,7 @@
                 [attr.aria-describedby]="
                   isLastNameInvalid ? 'lastName-error' : null
                 "
+                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -147,6 +150,7 @@
                 [attr.aria-describedby]="
                   isPhoneNumberInvalid ? 'phoneNumber-error' : null
                 "
+                [disabled]="isSubmitting"
               />
               <div
                 class="field-error"
@@ -168,6 +172,7 @@
                 formControlName="email"
                 class="field-input"
                 [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
+                [disabled]="isSubmitting"
               />
             </div>
           </div>
@@ -177,12 +182,18 @@
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="userForm.invalid || isLoading"
+            [disabled]="userForm.invalid || isLoading || isSubmitting || !hasChanges"
           >
-            <i class="feather icon-save"></i>
-            {{ "PROFILE_SETTING.BUTTONS.SAVE" | translate }}
+            <i *ngIf="!isSubmitting" class="feather icon-save"></i>
+            <i *ngIf="isSubmitting" class="feather icon-loader spinner"></i>
+            {{ (isSubmitting ? "PROFILE_SETTING.BUTTONS.LOADING" : "PROFILE_SETTING.BUTTONS.SAVE") | translate }}
           </button>
-          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            (click)="onCancel()"
+            [disabled]="isSubmitting"
+          >
             {{ "PROFILE_SETTING.BUTTONS.CANCEL" | translate }}
           </button>
         </div>

@@ -314,6 +314,19 @@
   }
 }
 
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 576px) {
   .profile-page {
     padding: 1.5rem 0.75rem 3rem;
