@@ -26,6 +26,7 @@ export const chat = {
       USERS: "المستخدمون",
       CLOSE: "إغلاق",
       REMOVE_USER: "إزالة المستخدم",
+      REMOVE_USER_CONFIRM: "هل أنت متأكد من أنك تريد إزالة هذا العضو؟",
     },
     MODAL: {
       ADD_USER: {
@@ -51,13 +52,19 @@ export const chat = {
       SAVE: "حفظ",
     },
     TOAST: {
-      SELECTED_USER_EMPTY: "الرجاء اختيار مستخدم!",
+      PLEASE_SELECT_USER: "الرجاء اختيار مستخدم",
       USER_ADDED_SUCCESSFULLY: "تمت إضافة المستخدم بنجاح",
+      FAILED_TO_ADD_USER: "فشل في إضافة المستخدم",
+      SELECTED_USER_EMPTY: "الرجاء اختيار مستخدم!",
+      USER_ADDED: "تمت إضافة المستخدم بنجاح",
       GROUP_ADDED_SUCCESSFULLY: "تمت إضافة المجموعة بنجاح",
       USER_REMOVED_SUCCESSFULLY: "تمت إزالة المستخدم بنجاح",
       FAILED_TO_REMOVE_USER: "فشل في إزالة المستخدم",
       GROUP_UPDATED_SUCCESSFULLY: "تمت تحديث المجموعة بنجاح",
       FAILED_TO_UPDATE_GROUP: "فشل في تحديث المجموعة",
+      GROUP_NAME_REQUIRED: "اسم المجموعة مطلوب",
+      SELECT_AT_LEAST_ONE_MEMBER: "الرجاء اختيار عضو واحد على الأقل",
+      FAILED_TO_CREATE_GROUP: "فشل في إنشاء المجموعة",
     },
     DELETE: {
       LABEL: {
@@ -69,10 +76,18 @@ export const chat = {
           CONFIRM: "تأكيد",
         },
       },
-      ERROR: {},
       TOAST: {
         CONVERSATION_DELETED_SUCCESSFULLY: "تم حذف المحادثة بنجاح",
       },
+    },
+    ERROR: {
+      LOAD_USERS_FAILED: "فشل في تحميل المستخدمين",
+      CREATE_CONVERSATION_FAILED: "فشل في إنشاء المحادثة",
+      LOAD_CONVERSATIONS_FAILED: "فشل في تحميل المحادثات",
+      LOAD_MESSAGES_FAILED: "فشل في تحميل الرسائل",
+      DELETE_CONVERSATION_FAILED: "فشل في حذف المحادثة",
+      SEND_MESSAGE_FAILED: "فشل في إرسال الرسالة",
+      ADD_USER_FAILED: "فشل في إضافة المستخدم",
     },
   },
 };

@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Conversation } from '@app/shared/enums/conversation';
-import { CommonService } from '@app/shared/services/common.service';
 import { ConversationService } from '@app/shared/services/conversation.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './update-conversation.component.html',
   styleUrls: ['./update-conversation.component.css']
 })
-export class UpdateConversationComponent implements OnInit {
+export class UpdateConversationComponent implements OnInit, OnDestroy {
 
   conversation: Conversation;
   originalTitle: string;
@@ -24,7 +23,6 @@ export class UpdateConversationComponent implements OnInit {
 
   constructor(
     public bsModalRef: BsModalRef,
-    private commonService: CommonService,
     private conversationService: ConversationService,
     private toastr: ToastrService,
     private translate: TranslateService
@@ -33,6 +31,11 @@ export class UpdateConversationComponent implements OnInit {
 
   ngOnInit(): void {
     this.originalTitle = this.conversation.title || '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onTitleChange() {

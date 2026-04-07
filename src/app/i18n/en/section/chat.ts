@@ -26,6 +26,7 @@ export const chat = {
       USERS: "Users",
       CLOSE: "Close",
       REMOVE_USER: "Remove user",
+      REMOVE_USER_CONFIRM: "Are you sure you want to remove this member?",
     },
     MODAL: {
       ADD_USER: {
@@ -51,19 +52,25 @@ export const chat = {
       SAVE: "Save",
     },
     TOAST: {
-      SELECTED_USER_EMPTY: "Please select a user!",
+      PLEASE_SELECT_USER: "Please select a user",
       USER_ADDED_SUCCESSFULLY: "User added successfully",
+      FAILED_TO_ADD_USER: "Failed to add user",
+      SELECTED_USER_EMPTY: "Please select a user!",
+      USER_ADDED: "User added successfully",
       GROUP_ADDED_SUCCESSFULLY: "Group added successfully",
       USER_REMOVED_SUCCESSFULLY: "User removed successfully",
       FAILED_TO_REMOVE_USER: "Failed to remove user",
       GROUP_UPDATED_SUCCESSFULLY: "Group updated successfully",
       FAILED_TO_UPDATE_GROUP: "Failed to update group",
+      GROUP_NAME_REQUIRED: "Group name is required",
+      SELECT_AT_LEAST_ONE_MEMBER: "Please select at least one member",
+      FAILED_TO_CREATE_GROUP: "Failed to create group",
     },
     DELETE: {
       LABEL: {
         TITLE: "Delete Conversation",
         MESSAGE:
-          "Are you sure you want to delete this conversation? the action is irreversible.",
+          "Are you sure you want to delete this conversation? The action is irreversible.",
         BUTTON: {
           CANCEL: "Cancel",
           CONFIRM: "Confirm",
@@ -73,6 +80,15 @@ export const chat = {
       TOAST: {
         CONVERSATION_DELETED_SUCCESSFULLY: "Conversation deleted successfully",
       },
+    },
+    ERROR: {
+      LOAD_USERS_FAILED: "Failed to load users",
+      CREATE_CONVERSATION_FAILED: "Failed to create conversation",
+      LOAD_CONVERSATIONS_FAILED: "Failed to load conversations",
+      LOAD_MESSAGES_FAILED: "Failed to load messages",
+      DELETE_CONVERSATION_FAILED: "Failed to delete conversation",
+      SEND_MESSAGE_FAILED: "Failed to send message",
+      ADD_USER_FAILED: "Failed to add user",
     },
   },
 };

@@ -26,6 +26,7 @@ export const chat = {
       USERS: "Utilisateurs",
       CLOSE: "Fermer",
       REMOVE_USER: "Supprimer l'utilisateur",
+      REMOVE_USER_CONFIRM: "Êtes-vous sûr de vouloir supprimer ce membre ?",
     },
     MODAL: {
       ADD_USER: {
@@ -52,28 +53,42 @@ export const chat = {
       SAVE: "Enregistrer",
     },
     TOAST: {
-      SELECTED_USER_EMPTY: "Veuillez sélectionner un utilisateur!",
+      PLEASE_SELECT_USER: "Veuillez sélectionner un utilisateur",
       USER_ADDED_SUCCESSFULLY: "Utilisateur ajouté avec succès",
+      FAILED_TO_ADD_USER: "Échec de l'ajout de l'utilisateur",
+      SELECTED_USER_EMPTY: "Veuillez sélectionner un utilisateur!",
+      USER_ADDED: "Utilisateur ajouté avec succès",
       GROUP_ADDED_SUCCESSFULLY: "Groupe ajouté avec succès",
       USER_REMOVED_SUCCESSFULLY: "Utilisateur supprimé avec succès",
       FAILED_TO_REMOVE_USER: "Échec de la suppression de l'utilisateur",
       GROUP_UPDATED_SUCCESSFULLY: "Groupe mis à jour avec succès",
       FAILED_TO_UPDATE_GROUP: "Échec de la mise à jour du groupe",
+      GROUP_NAME_REQUIRED: "Le nom du groupe est requis",
+      SELECT_AT_LEAST_ONE_MEMBER: "Veuillez sélectionner au moins un membre",
+      FAILED_TO_CREATE_GROUP: "Échec de la création du groupe",
     },
     DELETE: {
       LABEL: {
         TITLE: "Supprimer conversation",
         MESSAGE:
-          "Êtes-vous sûr de vouloir supprimer cette conversation ? l'action est irréversible",
+          "Êtes-vous sûr de vouloir supprimer cette conversation ? L'action est irréversible",
         BUTTON: {
           CANCEL: "Annuler",
           CONFIRM: "Confirmer",
         },
       },
-      ERROR: {},
       TOAST: {
         CONVERSATION_DELETED_SUCCESSFULLY: "Conversation supprimée avec succès",
       },
+    },
+    ERROR: {
+      LOAD_USERS_FAILED: "Échec du chargement des utilisateurs",
+      CREATE_CONVERSATION_FAILED: "Échec de la création de la conversation",
+      LOAD_CONVERSATIONS_FAILED: "Échec du chargement des conversations",
+      LOAD_MESSAGES_FAILED: "Échec du chargement des messages",
+      DELETE_CONVERSATION_FAILED: "Échec de la suppression de la conversation",
+      SEND_MESSAGE_FAILED: "Échec de l'envoi du message",
+      ADD_USER_FAILED: "Échec de l'ajout de l'utilisateur",
     },
   },
 };

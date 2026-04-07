@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { Subject } from "rxjs";
 import { CommonService } from "@app/shared/services/common.service";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { ConversationService } from "@app/shared/services/conversation.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 import { User } from "@app/shared/enums/user-auth";
 import { environment } from "src/environments/environment";
 
@@ -13,9 +14,7 @@ import { environment } from "src/environments/environment";
   templateUrl: "./create-group.component.html",
   styleUrls: ["./create-group.component.scss"],
 })
-export class CreateGroupComponent implements OnInit {
-  @Input() conversationId: number | string | null = null;
-
+export class CreateGroupComponent implements OnInit, OnDestroy {
   users: User[] = [];
   filteredUsers: User[] = [];
   currentUser: any;
@@ -23,6 +22,8 @@ export class CreateGroupComponent implements OnInit {
   selectedUsers: Set<User> = new Set();
   searchTerm: string = "";
   isLoading: boolean = false;
+
+  private destroy$ = new Subject<void>();
 
   public onClose: Subject<any> = new Subject<any>();
 
@@ -32,6 +33,7 @@ export class CreateGroupComponent implements OnInit {
     private securityService: SecurityService,
     private conversationService: ConversationService,
     private toastr: ToastrService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -44,9 +46,18 @@ export class CreateGroupComponent implements OnInit {
   }
 
   getUsers() {
-    this.commonService.getUsersWithClaim('CHAT_VIEW_CHATS').subscribe((users: User[]) => {
-      this.users = users.filter((u) => u.id !== this.currentUser.id);
-      this.filteredUsers = this.users;
+    this.commonService.getUsersWithClaim('CHAT_VIEW_CHATS').subscribe({
+      next: (users: User[]) => {
+        this.users = users.filter((u) => u.id !== this.currentUser.id);
+        this.filteredUsers = this.users;
+      },
+      error: () => {
+        this.users = [];
+        this.filteredUsers = [];
+        this.translate.get('CHAT.ERROR.LOAD_USERS_FAILED').subscribe((msg: string) => {
+          this.toastr.error(msg);
+        });
+      }
     });
   }
 
@@ -80,7 +91,7 @@ export class CreateGroupComponent implements OnInit {
   }
 
   deselectAll() {
-    this.selectedUsers.clear();
+    this.filteredUsers.forEach((u) => this.selectedUsers.delete(u));
   }
 
   get selectedCount(): number {
@@ -89,12 +100,16 @@ export class CreateGroupComponent implements OnInit {
 
   createGroup() {
     if (!this.groupName.trim()) {
-      this.toastr.error("Group name is required");
+      this.translate.get('CHAT.TOAST.GROUP_NAME_REQUIRED').subscribe((msg: string) => {
+        this.toastr.error(msg);
+      });
       return;
     }
 
     if (this.selectedUsers.size === 0) {
-      this.toastr.error("Please select at least one member");
+      this.translate.get('CHAT.TOAST.SELECT_AT_LEAST_ONE_MEMBER').subscribe((msg: string) => {
+        this.toastr.error(msg);
+      });
       return;
     }
 
@@ -109,15 +124,25 @@ export class CreateGroupComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
-          this.toastr.success("Group created successfully");
+          this.translate.get('CHAT.TOAST.GROUP_ADDED_SUCCESSFULLY').subscribe((msg: string) => {
+            this.toastr.success(msg);
+          });
           this.onClose.next(data);
           this.bsModalRef.hide();
         },
         error: () => {
           this.isLoading = false;
-          this.toastr.error("Failed to create group");
+          this.translate.get('CHAT.TOAST.FAILED_TO_CREATE_GROUP').subscribe((msg: string) => {
+            this.toastr.error(msg);
+          });
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.onClose.complete();
   }
 
   cancel() {

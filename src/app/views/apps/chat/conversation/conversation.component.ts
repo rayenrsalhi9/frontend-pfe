@@ -49,8 +49,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   @Input() set chatId(id: number | string) {
-    this._id = id;
     this.fetchChatDetail(id as string);
+    this._id = id;
   }
 
   @Input() user: User;
@@ -232,18 +232,23 @@ export class ConversationComponent implements OnInit, OnDestroy {
     }).content.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
-        if (data.conversation.title) {
-          this.title = data.conversation.title;
+        if (data.conversation) {
+          if (data.conversation.title) {
+            this.title = data.conversation.title;
+          }
+          if (data.conversation.users) {
+            this.conversation.users = data.conversation.users;
+          }
           this.cdr.markForCheck();
         }
         this.updateConversation.emit(data.conversation);
+        this.fetchChatDetail(this._id as string);
       });
   }
 
   createGroup() {
     this.modalService.show(CreateGroupComponent, {
       class: 'modal-form-container',
-      initialState: { conversationId: null }
     }).content.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {

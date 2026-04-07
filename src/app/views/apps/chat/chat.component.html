@@ -42,10 +42,7 @@
                 *ngIf="conversation"
                 class="chat-list-row"
                 [class.active]="conversation.id === selectedId"
-                [class.unread]="
-                  conversation.lastMessage?.isRead == null &&
-                  conversation.lastMessage?.sender?.id != user.id
-                "
+                [class.unread]="isUnreadMessage(conversation)"
                 (click)="selectChat(conversation)"
               >
               <!-- Avatar -->
@@ -177,16 +174,8 @@
                 <!-- Last message preview -->
                 <p
                   class="chat-list-preview mb-0"
-                  [class.fw-semibold]="
-                    conversation.lastMessage?.isRead == null &&
-                    conversation.lastMessage?.sender?.id != user.id
-                  "
-                  [class.text-muted]="
-                    !(
-                      conversation.lastMessage?.isRead == null &&
-                      conversation.lastMessage?.sender?.id != user.id
-                    )
-                  "
+                  [class.fw-semibold]="isUnreadMessage(conversation)"
+                  [class.text-muted]="!isUnreadMessage(conversation)"
                 >
                   <ng-container *ngIf="conversation.lastMessage; else noMessagesTpl">
                     {{
@@ -195,10 +184,7 @@
                         : conversation.lastMessage?.content
                     }}
                     <span
-                      *ngIf="
-                        conversation.lastMessage?.isRead == null &&
-                        conversation.lastMessage?.sender?.id != user.id
-                      "
+                      *ngIf="isUnreadMessage(conversation)"
                       class="chat-unread-dot"
                     ></span>
                   </ng-container>
@@ -223,7 +209,7 @@
         </ng-container>
 
           <!-- Users List (always visible) -->
-          <div *ngIf="users.length > 0" class="chat-users-list-header">
+          <div *ngIf="filteredUsers.length > 0" class="chat-users-list-header">
             <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
           </div>
           <ng-container *ngFor="let usr of filteredUsers">

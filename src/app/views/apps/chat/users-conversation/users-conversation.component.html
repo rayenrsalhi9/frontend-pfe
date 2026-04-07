@@ -29,6 +29,7 @@
           class="btn-remove"
           (click)="removeUser(member)"
           [tooltip]="'CHAT.LABELS.REMOVE_USER' | translate"
+          [attr.aria-label]="'CHAT.LABELS.REMOVE_USER' | translate"
         >
           <i class="feather icon-user-minus"></i>
         </button>

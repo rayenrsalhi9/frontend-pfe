@@ -69,10 +69,14 @@
   flex-shrink: 0;
 }
 
-.btn-remove:hover {
+.btn-remove:hover,
+.btn-remove:focus,
+.btn-remove:focus-visible {
   background: rgba(var(--bs-danger-rgb), 0.1);
   border-color: var(--bs-danger);
   color: var(--bs-danger);
+  outline: 2px solid var(--bs-danger);
+  outline-offset: 2px;
 }
 
 .btn-remove i {

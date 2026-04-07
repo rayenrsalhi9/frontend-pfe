@@ -63,8 +63,15 @@ export class AddConversationComponent implements OnInit {
   createConversation() {
 
     if (this.type == 'group') {
+      const selectedUsers = this.selectedUser || [];
+      if (!Array.isArray(selectedUsers) || selectedUsers.length === 0) {
+        this.translate.get('CHAT.TOAST.SELECT_AT_LEAST_ONE_MEMBER').subscribe((msg: string) => {
+          this.toastr.error(msg);
+        });
+        return;
+      }
 
-      const users = this.selectedUser.map((u) => {
+      const users = selectedUsers.map((u) => {
         return u.id
       })
 

@@ -24,6 +24,13 @@ export class ConversationService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  findOrCreateDirectConversation(userId: number | string): Observable<Conversation | CommonError> {
+    const url = `conversations/find-or-create`;
+    return this.httpClient
+      .post<Conversation>(url, { userId })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   deleteConversation(id:any):Observable<Conversation | CommonError> {
     const url = `conversations/delete/${id}`;
     return this.httpClient

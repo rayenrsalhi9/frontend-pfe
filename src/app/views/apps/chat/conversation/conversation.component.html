@@ -153,12 +153,12 @@
       class="msg"
       *ngFor="let msg of conversation.messages"
       [ngClass]="{
-        'msg-recipient': msg.sender.id !== user.id,
-        'msg-sent': msg.sender.id === user.id
+        'msg-recipient': msg.sender?.id !== user.id,
+        'msg-sent': msg.sender?.id === user.id
       }"
     >
       <!-- Sender avatar (received only) -->
-      <div class="msg-avatar" *ngIf="msg.sender.id !== user.id">
+      <div class="msg-avatar" *ngIf="msg.sender?.id !== user.id">
         <avatar
           [icon]="'feather icon-user'"
           [src]="
@@ -175,13 +175,13 @@
         <!-- Bubble -->
         <div
           class="bubble"
-          [ngClass]="{ 'no-avatar': msg.sender.id === user.id }"
+          [ngClass]="{ 'no-avatar': msg.sender?.id === user.id }"
         >
           <!-- Reaction menu toggle -->
           <div
             class="bubble-react-btn"
-            [class.bubble-react-btn--sent]="msg.sender.id === user.id"
-            [class.bubble-react-btn--recv]="msg.sender.id !== user.id"
+            [class.bubble-react-btn--sent]="msg.sender?.id === user.id"
+            [class.bubble-react-btn--recv]="msg.sender?.id !== user.id"
             (click)="handlerRactionToggle(msg)"
           >
             <i class="feather icon-more-vertical"></i>
@@ -190,8 +190,8 @@
             <div
               *ngIf="reactionToggle === msg.id"
               class="bubble-react-picker"
-              [class.bubble-react-picker--left]="msg.sender.id === user.id"
-              [class.bubble-react-picker--right]="msg.sender.id !== user.id"
+              [class.bubble-react-picker--left]="msg.sender?.id === user.id"
+              [class.bubble-react-picker--right]="msg.sender?.id !== user.id"
             >
               <i
                 class="feather icon-heart react-icon"
@@ -271,12 +271,6 @@
             </div>
 
             <!-- Fullscreen viewer (hidden until triggered) -->
-            <ng-image-fullscreen-view
-              [images]="selectedImage"
-              [imageIndex]="0"
-              [show]="showFlag"
-              (close)="closeEventHandler()"
-            ></ng-image-fullscreen-view>
           </div>
         </div>
 
@@ -311,6 +305,14 @@
         </span>
       </div>
     </div>
+
+    <!-- Single global fullscreen image viewer -->
+    <ng-image-fullscreen-view
+      [images]="selectedImage"
+      [imageIndex]="0"
+      [show]="showFlag"
+      (close)="closeEventHandler()"
+    ></ng-image-fullscreen-view>
   </div>
 
   <!-- Empty / Welcome state -->

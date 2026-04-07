@@ -37,6 +37,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private searchTerm$ = new Subject<string>();
+  private currentSearchTerm: string = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -154,10 +155,12 @@ export class ChatComponent implements OnInit, OnDestroy {
   /** Called from (input) on the search field */
   onSearch(event: Event) {
     const term = (event.target as HTMLInputElement).value;
+    this.currentSearchTerm = term;
     this.searchTerm$.next(term);
   }
 
   private applySearch(searchValue: string) {
+    this.currentSearchTerm = searchValue;
     if (searchValue) {
       this.conversations = this.conversationsTemp.filter((conver) => {
         if (conver.title) {
@@ -188,20 +191,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   newConversation(data: any) {
-    // Check if conversation with this user already exists
-    const existingConversation = this.conversations.find(
-      (conver) =>
-        !conver.title &&
-        conver.users.length === 2 &&
-        conver.users.some((u) => u.id === data.id),
-    );
-
-    if (existingConversation) {
-      this.selectChat(existingConversation);
-      return;
-    }
-
-    // Create new conversation if doesn't exist
     this.conversationService
       .createConversation({ users: [data.id, this.user.id] })
       .pipe(takeUntil(this.destroy$))
@@ -233,7 +222,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.modalService
       .show(CreateGroupComponent, {
         class: "modal-form-container",
-        initialState: { conversationId: null },
       })
       .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
@@ -270,12 +258,41 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     this.conversationsTemp = updatedConversations;
-    this.conversations = updatedConversations;
+
+    if (this.conversations !== this.conversationsTemp) {
+      this.applySearchFilterToConversations(updatedConversations);
+    } else {
+      this.conversations = updatedConversations;
+    }
     this.cdr.markForCheck();
   }
 
+  private applySearchFilterToConversations(conversations: Conversation[]) {
+    const searchValue = this.getCurrentSearchTerm();
+    if (searchValue) {
+      this.conversations = conversations.filter((conver) => {
+        if (conver.title) {
+          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
+        }
+        return conver.users.some((u) => {
+          const fullName = `${u.firstName} ${u.lastName}`;
+          return (
+            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
+            u.email.toLowerCase().includes(searchValue.toLowerCase())
+          );
+        });
+      });
+    } else {
+      this.conversations = conversations;
+    }
+  }
+
+  private getCurrentSearchTerm(): string {
+    return this.currentSearchTerm;
+  }
+
   updateConversation(data: Conversation) {
-    const updated = this.conversations.map((conversation: Conversation) => {
+    let updated = this.conversations.map((conversation: Conversation) => {
       if (conversation.id === data.id) {
         return {
           ...conversation,
@@ -286,6 +303,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
       return conversation;
     });
+
+    const exists = updated.some((c: Conversation) => c.id === data.id);
+    if (!exists) {
+      updated = [data, ...updated];
+    }
+
     this.conversations = updated;
     this.conversationsTemp = updated;
     this.selectChat(data);
@@ -347,5 +370,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       return otherUsers.map(u => `${u.firstName} ${u.lastName}`).join(', ');
     }
     return `${otherUsers[0].firstName} ${otherUsers[0].lastName} +${otherUsers.length - 1}`;
+  }
+
+  isUnreadMessage(conversation: Conversation): boolean {
+    return conversation.lastMessage?.isRead == null && 
+           conversation.lastMessage?.sender?.id !== this.user.id;
   }
 }

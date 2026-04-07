@@ -222,7 +222,7 @@
     width: 100%;
     max-width: 350px;
     position: relative;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 
     &.no-avatar {
       margin-inline-start: 2.5rem;
@@ -232,7 +232,7 @@
       padding: 0.625rem 0.875rem;
       border-radius: 16px;
       overflow: hidden;
-      word-break: break-word;
+      overflow-wrap: anywhere;
       white-space: pre-wrap;
       position: relative;
 
