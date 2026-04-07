@@ -1,309 +1,353 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, EventEmitter, Output } from '@angular/core';
+import {
+  Component, OnInit, OnDestroy, Input, ChangeDetectorRef,
+  ViewChild, EventEmitter, Output
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { PusherService } from '@app/shared/services/pusher.service';
 import { ConversationService } from '@app/shared/services/conversation.service';
 import { Conversation, Message } from '@app/shared/enums/conversation';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AddConversationComponent } from '../add-conversation/add-conversation.component';
+import { AddUserComponent } from '../add-user/add-user.component';
+import { CreateGroupComponent } from '../create-group/create-group.component';
 import { environment } from 'src/environments/environment';
-import { User } from '@app/shared/enums/user';
+import { User } from '@app/shared/enums/user-auth';
 import { UpdateConversationComponent } from '../update-conversation/update-conversation.component';
 import { ImageModalComponent } from '../image-modal/image-modal.component';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { UsersConversationComponent } from '../users-conversation/users-conversation.component';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss'],
-  host: {'[class.conversation]': 'true'},
+  host: { '[class.conversation]': 'true' },
   providers: [{ provide: BsDropdownConfig, useValue: { isAnimated: true, autoClose: true } }]
 })
-export class ConversationComponent implements OnInit {
+export class ConversationComponent implements OnInit, OnDestroy {
 
   @ViewChild('chatPS') chatPS: PerfectScrollbarComponent;
-  conversation: Conversation
-  message: string
-  toggled: boolean
-  title: string
-  avatar:string
 
-  private _id: string;
-  isOpen:boolean = false
-  isScrolled:boolean = false
-  reactionToggle:any = false
+  conversation: Conversation;
+  message: string = '';
+  title: string;
+  avatar: string;
 
-  @Input() set chatId(id) {
+  private _id: number | string;
+  isOpen: boolean = false;
+  isScrolled: boolean = false;
+  reactionToggle: any = null;
+
+  showFlag: boolean = false;
+  selectedImage: any = [];
+  isSending: boolean = false;
+
+  private destroy$ = new Subject<void>();
+
+  @Input() set chatId(id: number | string) {
     this._id = id;
-    this.fetchChatDetail(id);
+    this.fetchChatDetail(id as string);
   }
-  @Input() user: User
 
-  get chatId(): string {
+  @Input() user: User;
+
+  get chatId(): number | string {
     return this._id;
   }
 
-  showFlag: boolean = false;
-  selectedImage:any = []
+  get isGroupConversation(): boolean {
+    return (this.conversation?.title != null && this.conversation?.title !== '') || 
+           (this.conversation?.users?.length > 2);
+  }
 
-  @Output() updateChat: EventEmitter<Message> = new EventEmitter<Message>();
-  @Output() updateConversation: EventEmitter<Conversation>  = new EventEmitter<Conversation>();
-  @Output() openMobilePanel = new EventEmitter();
-  public bsModalRef: BsModalRef
+  @Output() updateChat = new EventEmitter<Message>();
+  @Output() updateConversation = new EventEmitter<Conversation>();
+  @Output() openMobilePanel = new EventEmitter<void>();
+
+  public bsModalRef: BsModalRef;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private pusherService: PusherService,
     private conversationService: ConversationService,
     private modalService: BsModalService,
-  ) { }
+    private toastr: ToastrService,
+    private translate: TranslateService,
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
 
-  }
-
-  handleUpdateChat() {
-
-    const initialState = {
-      conversation: Object.assign({}, this.conversation),
-    };
-
-    this.modalService.show(UpdateConversationComponent,{initialState:initialState})
-  }
-
-  handleShowUsers() {
-    const initialState = {
-      conversation: Object.assign({}, this.conversation),
-    };
-
-    this.modalService.show(UsersConversationComponent,{initialState:initialState})
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this._id) {
+      this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+    }
   }
 
   getHost() {
-    return environment.apiUrl
+    return environment.apiUrl;
+  }
+
+  handleUpdateChat() {
+    const initialState = { conversation: Object.assign({}, this.conversation) };
+    this.modalService.show(UpdateConversationComponent, { initialState });
+  }
+
+  handleShowUsers() {
+    const initialState = { conversation: Object.assign({}, this.conversation) };
+    this.modalService.show(UsersConversationComponent, { initialState });
   }
 
   handleEmojiBar() {
-    this.isOpen = !this.isOpen
+    this.isOpen = !this.isOpen;
   }
 
   ngAfterViewChecked() {
-    if(!this.isScrolled) {
+    if (!this.isScrolled) {
       this.scrollToBottom();
-      this.isScrolled = true
+      this.isScrolled = true;
     }
   }
 
-  handlerRactionToggle(message:Message) {
-    if(this.reactionToggle != null && this.reactionToggle == message.id) {
-      this.reactionToggle = null
-    } else {
-      this.reactionToggle = message.id
-    }
+  handlerRactionToggle(message: Message) {
+    this.reactionToggle = (this.reactionToggle !== null && this.reactionToggle === message.id)
+      ? null
+      : message.id;
   }
 
-  handleSelection(event) {
-    this.message = this.message ? this.message + event.emoji.native : event.emoji.native
-    /* this.toggled = false; */
+  handleSelection(event: any) {
+    this.message = this.message
+      ? this.message + event.emoji.native
+      : event.emoji.native;
   }
 
   fetchChatDetail(id: string) {
-
-    if(id == null) {
-      this.conversation = null
-      this.message = null
+    if (id == null) {
+      this.conversation = null;
+      this.message = '';
+      if (this._id) {
+        this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+      }
+      return;
     }
 
-    if(id) {
-      this.conversationService.getMessages(id).subscribe(
-        (data: Conversation) => {
+    if (this._id && this._id !== id) {
+      this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+    }
 
-          this.conversation = data
+    this.isScrolled = false;
+
+    this.conversationService.getMessages(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: Conversation) => {
+          this.conversation = data;
 
           if (this.conversation.title) {
-            this.title = this.conversation.title
+            this.title = this.conversation.title;
           } else {
-            let usr = this.conversation.users.filter(usr => usr.id != this.user.id)[0]
-            this.title = usr.firstName + ' ' + usr.lastName
+            const usr = this.conversation.users.find(u => u.id !== this.user.id);
+            this.title = usr ? `${usr.firstName} ${usr.lastName}` : '';
           }
 
-          this.avatar = this.conversation.users.filter((u:User)=>u.id != this.user.id)[0].avatar
+          const otherUser = this.conversation.users.find((u: User) => u.id !== this.user.id);
+          this.avatar = otherUser ? otherUser.avatar : null;
 
-          this.initChannel(data.id)
-          this.initMessageSeenEvent(data.id)
-          this.initMessageReaction(data.id)
-          this.cdr.detectChanges()
-          this.scrollToBottom()
-
+          this.initChannel(data.id);
+          this.initMessageSeenEvent(data.id);
+          this.initMessageReaction(data.id);
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+        },
+        error: () => {
+          this.conversation = null;
+          this.translate.get('CHAT.ERROR.LOAD_MESSAGES_FAILED').subscribe((msg: string) => {
+            this.toastr.error(msg);
+          });
+          this.cdr.markForCheck();
         }
-      )
-    }
-
+      });
   }
 
   initChannel(id: any) {
     this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message`, (data: any) => {
-      this.conversation.messages.push(data.data)
-      this.updateChat.emit(data.data)
-      var audio = new Audio('/assets/songs/messageReceived.mp3')
-      audio.play()
-      this.messageIsSeen(data.data)
-      this.cdr.detectChanges()
-      this.scrollToBottom()
-
-    })
+      this.conversation.messages.push(data.data);
+      this.updateChat.emit(data.data);
+      this.playAudio('/assets/songs/messageReceived.mp3');
+      this.messageIsSeen(data.data);
+      this.cdr.detectChanges();
+      this.scrollToBottom();
+    });
   }
 
-  messageIsSeen(data:Message) {
-    this.conversationService.seenMessage(data).subscribe((data:any)=>{
-      let messageRead:Message = data
-      this.updateChat.emit(messageRead)
-      var foundIndex = this.conversation.messages.findIndex(x => x.id == messageRead.id);
-      this.conversation.messages[foundIndex] = {...messageRead,isRead:messageRead.isRead.date};
-      this.cdr.markForCheck()
-    })
+  messageIsSeen(data: Message) {
+    this.conversationService.seenMessage(data)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        const messageRead: Message = res;
+        this.updateChat.emit(messageRead);
+        const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
+        if (idx > -1) {
+          this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
+        }
+        this.cdr.markForCheck();
+      });
   }
 
-  initMessageSeenEvent(id:any=null) {
+  initMessageSeenEvent(id: any = null) {
     this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message-seen`, (data: any) => {
-      let messageRead:Message = data.data
-      this.updateChat.emit(messageRead)
-      var foundIndex = this.conversation.messages.findIndex(x => x.id == messageRead.id);
-      this.conversation.messages[foundIndex] = {...messageRead,isRead:messageRead.isRead.date};
-      this.cdr.markForCheck()
-    })
+      const messageRead: Message = data.data;
+      this.updateChat.emit(messageRead);
+      const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
+      if (idx > -1) {
+        this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
+      }
+      this.cdr.markForCheck();
+    });
   }
 
-  initMessageReaction(id:any=null) {
+  initMessageReaction(id: any = null) {
     this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message-reaction`, (data: any) => {
-      let messageRead:Message = data.data
-      var foundIndex = this.conversation.messages.findIndex(x => x.id == messageRead.id);
-      this.conversation.messages[foundIndex] = {...messageRead,isRead:messageRead.isRead.date};
-      this.cdr.markForCheck()
-    })
+      const messageRead: Message = data.data;
+      const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
+      if (idx > -1) {
+        this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
+      }
+      this.cdr.markForCheck();
+    });
   }
 
   addUser() {
-    this.modalService.show(AddConversationComponent,{initialState:{conversationId:this.conversation.id,type:'user'}}).content.onClose.subscribe(
-      (data:any)=>{
-        if(data.conversation.title) {
-          this.title = data.conversation.title
-          this.cdr.markForCheck()
+    this.modalService.show(AddUserComponent, {
+      class: 'modal-form-container',
+      initialState: { 
+        conversationId: this.conversation.id, 
+        currentMembers: this.conversation.users 
+      }
+    }).content.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: any) => {
+        if (data.conversation.title) {
+          this.title = data.conversation.title;
+          this.cdr.markForCheck();
         }
         this.updateConversation.emit(data.conversation);
-      }
-    )
+      });
   }
 
   createGroup() {
-    this.modalService.show(AddConversationComponent,{initialState:{conversationId:null,type:'group'}}).content.onClose.subscribe(
-      (data:Conversation)=>{
+    this.modalService.show(CreateGroupComponent, {
+      class: 'modal-form-container',
+      initialState: { conversationId: null }
+    }).content.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Conversation) => {
         this.updateConversation.emit(data);
-      }
-    )
+      });
   }
 
-  sendMessage(type = 'msg', file=null) {
+  sendMessage(type = 'msg', file = null) {
+    this.isOpen = false;
 
-    this.isOpen = false
-    if(this.message || file) {
-      const message: Message = {
-        content: file?file:this.message,
-        type: type,
-        conversation: { id: this.conversation.id }
-      }
+    const trimmedMessage = this.message ? this.message.trim() : null;
 
-
-      this.conversationService.setMessage(message).subscribe(
-        (data: Message) => {
-          this.conversation.messages.push(data)
-          this.updateChat.emit(data)
-          this.message = ""
-          var audio = new Audio('/assets/songs/messageSent.mp3')
-          audio.play()
-          this.cdr.markForCheck()
-          this.scrollToBottom()
-        }
-      )
-    }
-
-
-  }
-
-  onFileSelect($event) {
-
-    const fileSelected: File = $event.target.files[0];
-    if (!fileSelected) {
+    if (!trimmedMessage && !file) {
       return;
     }
 
-    const extension = fileSelected.name.split('.')[fileSelected.name.split('.').length -1]
+    this.isSending = true;
 
-    const mimeType = fileSelected.type;
-    if (mimeType.match(/image\/*/) == null) {
-      //return;
-    }
-    const reader = new FileReader();
-    reader.readAsDataURL(fileSelected);
-    reader.onload = (_event) => {
-      this.sendMessage(mimeType.split('/')[0],reader.result)
+    const message: Message = {
+      content: file ? file : trimmedMessage,
+      type: type,
+      conversation: { id: this.conversation.id }
+    };
 
-      /* this.imgSrc = reader.result;
-      this.companyProfileForm.patchValue({
-        imageData: reader.result.toString(),
-        logoUrl: fileSelected.name
-      }) */
-      /* $event.target.value = '';
-      this.cdr.detectChanges() */
-    }
+    this.conversationService.setMessage(message)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: Message) => {
+          this.conversation.messages.push(data);
+          this.updateChat.emit(data);
+          this.message = '';
+          this.isSending = false;
+          this.playAudio('/assets/songs/messageSent.mp3');
+          this.cdr.markForCheck();
+          this.scrollToBottom();
+        },
+        error: () => {
+          this.isSending = false;
+          this.translate.get('CHAT.ERROR.SEND_MESSAGE_FAILED').subscribe((msg: string) => {
+            this.toastr.error(msg);
+          });
+          this.cdr.markForCheck();
+        }
+      });
   }
 
-  onMessageReact(type:string, message:Message) {
-    this.conversationService.reactionMessage({mid:message.id, type:type, uid:this.user.id}).subscribe((data:Message)=>{
-      let messageReaction:Message = data
-      var foundIndex = this.conversation.messages.findIndex(x => x.id == messageReaction.id);
-      this.conversation.messages[foundIndex] = messageReaction;
-      this.reactionToggle = null
-      this.cdr.markForCheck()
-    })
+  onFileSelect($event: Event) {
+    const fileSelected: File = ($event.target as HTMLInputElement).files[0];
+    if (!fileSelected) { return; }
+
+    const mimeType = fileSelected.type;
+    const reader = new FileReader();
+    reader.readAsDataURL(fileSelected);
+    reader.onload = () => {
+      this.sendMessage(mimeType.split('/')[0], reader.result);
+    };
+  }
+
+  onMessageReact(type: string, message: Message) {
+    this.conversationService.reactionMessage({ mid: message.id, type: type, uid: this.user.id })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Message) => {
+        const idx = this.conversation.messages.findIndex(x => x.id === data.id);
+        if (idx > -1) {
+          this.conversation.messages[idx] = data;
+        }
+        this.reactionToggle = null;
+        this.cdr.markForCheck();
+      });
   }
 
   onInputMessageFocus() {
-    if(this.conversation.messages.length >0) {
-      let lastMessage =  this.conversation.messages[this.conversation.messages.length -1]
-
-      if(!lastMessage.isRead && lastMessage.sender.id != this.user.id) {
-        this.messageIsSeen(lastMessage)
+    if (this.conversation && this.conversation.messages.length > 0) {
+      const lastMessage = this.conversation.messages[this.conversation.messages.length - 1];
+      if (lastMessage && !lastMessage.isRead && lastMessage.sender?.id !== this.user.id) {
+        this.messageIsSeen(lastMessage);
       }
     }
   }
 
   scrollToBottom(): void {
-    this.chatPS.directiveRef.scrollToBottom()
+    try {
+      this.chatPS.directiveRef.scrollToBottom();
+    } catch (e) {}
   }
 
   onMobilePanelOpen() {
-    this.openMobilePanel.emit()
+    this.openMobilePanel.emit();
   }
 
-  showLightbox(data) {
-    console.log(data);
-
-    const initialState = {
-      data: data
-    };
-
-    this.modalService.show(ImageModalComponent,{initialState:initialState})
-    /* this.selectedImage = [{
-      image: this.getHost()+data,
-      alt:data,
-      title:data
-    }]
-    this.showFlag = true; */
+  showLightbox(data: string) {
+    const initialState = { data: data };
+    this.modalService.show(ImageModalComponent, { initialState });
   }
 
   closeEventHandler() {
     this.showFlag = false;
-    this.selectedImage = []
-}
+    this.selectedImage = [];
+  }
+
+  private playAudio(src: string) {
+    try {
+      const audio = new Audio(src);
+      audio.play().catch(() => {});
+    } catch (e) {}
+  }
 }

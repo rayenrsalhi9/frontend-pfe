@@ -11,12 +11,14 @@ import { ConversationComponent } from './conversation/conversation.component';
 
 import { ChatService } from './chat.service';
 import { AddConversationComponent } from './add-conversation/add-conversation.component';
+import { CreateGroupComponent } from './create-group/create-group.component';
+import { AddUserComponent } from './add-user/add-user.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MomentModule } from 'ngx-moment';
 import { UploadModule } from '@app/shared/components/upload/upload.module';
 import { PickerComponent, PickerModule } from '@ctrl/ngx-emoji-mart';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgImageFullscreenViewModule } from 'ng-image-fullscreen-view';
 import { UpdateConversationComponent } from './update-conversation/update-conversation.component';
@@ -31,6 +33,8 @@ import { UsersConversationComponent } from './users-conversation/users-conversat
     ChatComponent,
     ConversationComponent,
     AddConversationComponent,
+    CreateGroupComponent,
+    AddUserComponent,
     UpdateConversationComponent,
     ImageModalComponent,
     UsersConversationComponent
@@ -39,6 +43,7 @@ import { UsersConversationComponent } from './users-conversation/users-conversat
     SharedModule,
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     PickerModule,
     ModalModule.forRoot(),
     ColumnPanelModule,

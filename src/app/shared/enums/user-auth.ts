@@ -24,4 +24,5 @@ export class User {
   roleIds?: any;
   avatar?: any;
   userRoles?: any;
+  claims?: string[];
 }

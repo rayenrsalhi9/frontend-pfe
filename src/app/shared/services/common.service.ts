@@ -41,6 +41,14 @@ export class CommonService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  getUsersWithClaim(claimType: string = 'CHAT_VIEW_CHATS'): Observable<User[] | CommonError> {
+    const url = `user-with-claim`;
+    const params = new HttpParams().set('claim', claimType);
+    return this.httpClient
+      .get<User[]>(url, { params })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   getRoles(): Observable<Role[] | CommonError> {
     const url = `role`;
     return this.httpClient

@@ -1,17 +1,45 @@
-<div class="card">
-  <div class="card-header">
-    <h4>Membres</h4>
+<div class="modal-form-body">
+  <!-- Modal Header -->
+  <div class="modal-form-header">
+    <h2 class="modal-form-title">
+      {{ 'CHAT.LABELS.MEMBERS_LIST' | translate }}
+    </h2>
   </div>
-  <div class="card-body">
-    <div class="users-list" style="display: flex; flex-direction: column; gap: 20px;">
-      <div *ngFor="let user of conversation.users" class="list-item">
-        <div class="item-user" style="display: flex; gap: 10px; align-items: center;">
-          <avatar [src]="user.avatar?getHost()+user.avatar:'/assets/images/avatars/thumb-16.jpg'"></avatar>
-          <div style="display: flex; flex-direction: column;">
-            <p style="margin: 0;">{{user.firstName}} {{user.lastName}}</p>
+
+  <!-- Members List -->
+  <div class="form-body">
+    <div class="members-list">
+      <div
+        class="member-item"
+        *ngFor="let member of conversation.users"
+      >
+        <div class="member-info">
+          <avatar
+            [src]="member.avatar ? getHost() + member.avatar : '/assets/images/avatars/thumb-16.jpg'"
+            [size]="32"
+          ></avatar>
+          <div class="member-details">
+            <span class="member-name">{{ member.firstName }} {{ member.lastName }}</span>
+            <span class="member-email">{{ member.email }}</span>
           </div>
         </div>
+        <button
+          *ngIf="member.id !== currentUserId"
+          type="button"
+          class="btn-remove"
+          (click)="removeUser(member)"
+          [tooltip]="'CHAT.LABELS.REMOVE_USER' | translate"
+        >
+          <i class="feather icon-user-minus"></i>
+        </button>
       </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="modal-form-footer">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">
+        {{ 'CHAT.BUTTONS.CLOSE' | translate }}
+      </button>
     </div>
   </div>
 </div>
