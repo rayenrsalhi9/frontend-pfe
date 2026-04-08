@@ -38,7 +38,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private searchTerm$ = new Subject<string>();
-  private currentSearchTerm: string = '';
+  private currentSearchTerm: string = "";
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -88,9 +88,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: User[] | CommonError) => {
           if (this.isCommonError(response)) {
-            this.translateService.get('CHAT.ERROR.LOAD_USERS_FAILED').subscribe((msg: string) => {
-              this.toastrService.error(msg);
-            });
+            this.translateService
+              .get("CHAT.ERROR.LOAD_USERS_FAILED")
+              .subscribe((msg: string) => {
+                this.toastrService.error(msg);
+              });
             return;
           }
           this.users = response;
@@ -99,15 +101,19 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
         error: () => {
-          this.translateService.get('CHAT.ERROR.LOAD_USERS_FAILED').subscribe((msg: string) => {
-            this.toastrService.error(msg);
-          });
-        }
+          this.translateService
+            .get("CHAT.ERROR.LOAD_USERS_FAILED")
+            .subscribe((msg: string) => {
+              this.toastrService.error(msg);
+            });
+        },
       });
   }
 
-  private isCommonError(response: User[] | CommonError): response is CommonError {
-    return !Array.isArray(response) && 'friendlyMessage' in response;
+  private isCommonError(
+    response: User[] | CommonError,
+  ): response is CommonError {
+    return !Array.isArray(response) && "friendlyMessage" in response;
   }
 
   initConversations(page: number = 1) {
@@ -117,37 +123,46 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          const data = Array.isArray(response) ? response : response.data;
-          const filteredData = data.filter(
+          const safeData = Array.isArray(response)
+            ? response
+            : Array.isArray(response?.data)
+              ? response.data
+              : [];
+          const filteredData = safeData.filter(
             (c): c is Conversation => !!c && !!c.id,
           );
-          
+
           const dataToUse = this.currentSearchTerm
             ? this.applySearchFilterToConversations(filteredData)
             : filteredData;
-          
+
           if (page === 1) {
             this.conversations = dataToUse;
             this.conversationsTemp = filteredData;
           } else {
             this.conversations = [...this.conversations, ...dataToUse];
-            this.conversationsTemp = [...this.conversationsTemp, ...filteredData];
+            this.conversationsTemp = [
+              ...this.conversationsTemp,
+              ...filteredData,
+            ];
           }
-          
+
           if (response.meta) {
             this.currentPage = response.meta.current_page;
             this.totalPages = response.meta.last_page;
           }
-          
+
           this.isLoadingConversations = false;
           this.cdr.markForCheck();
         },
         error: () => {
           this.isLoadingConversations = false;
-          this.translateService.get('CHAT.ERROR.LOAD_CONVERSATIONS_FAILED').subscribe((msg: string) => {
-            this.toastrService.error(msg);
-          });
-        }
+          this.translateService
+            .get("CHAT.ERROR.LOAD_CONVERSATIONS_FAILED")
+            .subscribe((msg: string) => {
+              this.toastrService.error(msg);
+            });
+        },
       });
   }
 
@@ -218,14 +233,27 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (conversation: Conversation) => {
+          const existingIndex = this.conversationsTemp.findIndex(
+            (c) => c.id === conversation.id,
+          );
+          if (existingIndex >= 0) {
+            this.conversationsTemp[existingIndex] = conversation;
+          } else {
+            this.conversationsTemp.unshift(conversation);
+          }
+          this.conversations = this.currentSearchTerm
+            ? this.applySearchFilterToConversations(this.conversationsTemp)
+            : [...this.conversationsTemp];
           this.selectChat(conversation);
           this.cdr.markForCheck();
         },
         error: (err) => {
-          this.translateService.get('CHAT.ERROR.CREATE_CONVERSATION_FAILED').subscribe((msg: string) => {
-            this.toastrService.error(msg);
-          });
-        }
+          this.translateService
+            .get("CHAT.ERROR.CREATE_CONVERSATION_FAILED")
+            .subscribe((msg: string) => {
+              this.toastrService.error(msg);
+            });
+        },
       });
   }
 
@@ -252,44 +280,35 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateChat(data: Message) {
-    let updatedConversations = this.conversationsTemp.map(
-      (conversation: Conversation) => {
-        if (conversation.id === data.conversation.id) {
-          return {
-            ...conversation,
-            title: conversation.title,
-            lastMessage: data,
-          };
-        }
-        return conversation;
-      },
-    );
+    const newConversation = {
+      ...this.conversationsTemp.find((c) => c.id === data.conversation.id),
+      id: data.conversation.id,
+      createdAt: data.conversation.createdAt,
+      updatedAt: data.conversation.updatedAt,
+      title: data.conversation.title,
+      users: data.conversation.users,
+      lastMessage: data,
+    };
 
-    const found = updatedConversations.some(
-      (c) => c.id === data.conversation.id,
+    let updatedConversations = this.conversationsTemp.filter(
+      (c) => c.id !== data.conversation.id,
     );
-    if (!found) {
-      updatedConversations.push({
-        id: data.conversation.id,
-        createdAt: data.conversation.createdAt,
-        updatedAt: data.conversation.updatedAt,
-        title: data.conversation.title,
-        users: data.conversation.users,
-        lastMessage: data,
-      });
-    }
+    updatedConversations.unshift(newConversation);
 
     this.conversationsTemp = updatedConversations;
 
     if (this.conversations !== this.conversationsTemp) {
-      this.conversations = this.applySearchFilterToConversations(updatedConversations);
+      this.conversations =
+        this.applySearchFilterToConversations(updatedConversations);
     } else {
       this.conversations = updatedConversations;
     }
     this.cdr.markForCheck();
   }
 
-  private applySearchFilterToConversations(conversations: Conversation[]): Conversation[] {
+  private applySearchFilterToConversations(
+    conversations: Conversation[],
+  ): Conversation[] {
     const searchValue = this.getCurrentSearchTerm();
     if (searchValue) {
       return conversations.filter((conver) => {
@@ -341,8 +360,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  deleteConversation(event: Event, conversation: Conversation) {
-    event.stopPropagation();
+  deleteConversation(conversation: Conversation) {
     this.translateService.get("CHAT.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         class: "modal-confirm-custom",
@@ -370,7 +388,9 @@ export class ChatComponent implements OnInit, OnDestroy {
                   this.initConversations();
                   this.translateService
                     .get("CHAT.DELETE.TOAST.CONVERSATION_DELETED_SUCCESSFULLY")
-                    .subscribe((msg: string) => this.toastrService.success(msg));
+                    .subscribe((msg: string) =>
+                      this.toastrService.success(msg),
+                    );
                   if (this.selectedId === conversation.id) {
                     this.selectedId = null;
                   }
@@ -379,7 +399,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                   this.translateService
                     .get("CHAT.ERROR.DELETE_CONVERSATION_FAILED")
                     .subscribe((msg: string) => this.toastrService.error(msg));
-                }
+                },
               });
           }
         });
@@ -391,9 +411,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getParticipantNames(users: User[]): string {
-    const otherUsers = users.filter(u => u.id !== this.user.id);
+    const otherUsers = users.filter((u) => u.id !== this.user.id);
     if (otherUsers.length <= 2) {
-      return otherUsers.map(u => `${u.firstName} ${u.lastName}`).join(', ');
+      return otherUsers.map((u) => `${u.firstName} ${u.lastName}`).join(", ");
     }
     return `${otherUsers[0].firstName} ${otherUsers[0].lastName} +${otherUsers.length - 1}`;
   }
@@ -402,7 +422,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!conversation.lastMessage) {
       return false;
     }
-    return conversation.lastMessage.isRead == null && 
-           conversation.lastMessage.sender?.id !== this.user.id;
+    return (
+      conversation.lastMessage.isRead == null &&
+      conversation.lastMessage.sender?.id !== this.user.id
+    );
   }
 }

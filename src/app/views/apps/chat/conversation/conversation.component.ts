@@ -1,39 +1,49 @@
 import {
-  Component, OnInit, OnDestroy, Input, ChangeDetectorRef,
-  ViewChild, EventEmitter, Output
-} from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
-import { PusherService } from '@app/shared/services/pusher.service';
-import { ConversationService } from '@app/shared/services/conversation.service';
-import { Conversation, Message } from '@app/shared/enums/conversation';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { AddConversationComponent } from '../add-conversation/add-conversation.component';
-import { AddUserComponent } from '../add-user/add-user.component';
-import { CreateGroupComponent } from '../create-group/create-group.component';
-import { environment } from 'src/environments/environment';
-import { User } from '@app/shared/enums/user-auth';
-import { UpdateConversationComponent } from '../update-conversation/update-conversation.component';
-import { ImageModalComponent } from '../image-modal/image-modal.component';
-import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
-import { UsersConversationComponent } from '../users-conversation/users-conversation.component';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  ChangeDetectorRef,
+  ViewChild,
+  EventEmitter,
+  Output,
+} from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { PerfectScrollbarComponent } from "ngx-perfect-scrollbar";
+import { PusherService } from "@app/shared/services/pusher.service";
+import { ConversationService } from "@app/shared/services/conversation.service";
+import { Conversation, Message } from "@app/shared/enums/conversation";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { AddConversationComponent } from "../add-conversation/add-conversation.component";
+import { AddUserComponent } from "../add-user/add-user.component";
+import { CreateGroupComponent } from "../create-group/create-group.component";
+import { environment } from "src/environments/environment";
+import { User } from "@app/shared/enums/user-auth";
+import { UpdateConversationComponent } from "../update-conversation/update-conversation.component";
+import { ImageModalComponent } from "../image-modal/image-modal.component";
+import { BsDropdownConfig } from "ngx-bootstrap/dropdown";
+import { UsersConversationComponent } from "../users-conversation/users-conversation.component";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'conversation',
-  templateUrl: './conversation.component.html',
-  styleUrls: ['./conversation.component.scss'],
-  host: { '[class.conversation]': 'true' },
-  providers: [{ provide: BsDropdownConfig, useValue: { isAnimated: true, autoClose: true } }]
+  selector: "conversation",
+  templateUrl: "./conversation.component.html",
+  styleUrls: ["./conversation.component.scss"],
+  host: { "[class.conversation]": "true" },
+  providers: [
+    {
+      provide: BsDropdownConfig,
+      useValue: { isAnimated: true, autoClose: true },
+    },
+  ],
 })
 export class ConversationComponent implements OnInit, OnDestroy {
-
-  @ViewChild('chatPS') chatPS: PerfectScrollbarComponent;
+  @ViewChild("chatPS") chatPS: PerfectScrollbarComponent;
 
   conversation: Conversation;
-  message: string = '';
+  message: string = "";
   title: string;
   avatar: string;
 
@@ -47,6 +57,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   isSending: boolean = false;
 
   private destroy$ = new Subject<void>();
+  private chatLoadCancel$ = new Subject<void>();
 
   @Input() set chatId(id: number | string) {
     this.fetchChatDetail(id as string);
@@ -60,8 +71,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   get isGroupConversation(): boolean {
-    return (this.conversation?.title != null && this.conversation?.title !== '') || 
-           (this.conversation?.users?.length > 2);
+    return (
+      (this.conversation?.title != null && this.conversation?.title !== "") ||
+      this.conversation?.users?.length > 2
+    );
   }
 
   @Output() updateChat = new EventEmitter<Message>();
@@ -84,8 +97,12 @@ export class ConversationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.chatLoadCancel$.next();
+    this.chatLoadCancel$.complete();
     if (this._id) {
-      this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+      this.pusherService.unsubscribeFromChannel(
+        `private-conversation.${this._id}`,
+      );
     }
   }
 
@@ -115,9 +132,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   handlerRactionToggle(message: Message) {
-    this.reactionToggle = (this.reactionToggle !== null && this.reactionToggle === message.id)
-      ? null
-      : message.id;
+    this.reactionToggle =
+      this.reactionToggle !== null && this.reactionToggle === message.id
+        ? null
+        : message.id;
   }
 
   handleSelection(event: any) {
@@ -129,21 +147,28 @@ export class ConversationComponent implements OnInit, OnDestroy {
   fetchChatDetail(id: string) {
     if (id == null) {
       this.conversation = null;
-      this.message = '';
+      this.message = "";
       if (this._id) {
-        this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+        this.pusherService.unsubscribeFromChannel(
+          `private-conversation.${this._id}`,
+        );
       }
       return;
     }
 
     if (this._id && this._id !== id) {
-      this.pusherService.unsubscribeFromChannel(`private-conversation.${this._id}`);
+      this.pusherService.unsubscribeFromChannel(
+        `private-conversation.${this._id}`,
+      );
     }
 
     this.isScrolled = false;
 
-    this.conversationService.getMessages(id)
-      .pipe(takeUntil(this.destroy$))
+    this.chatLoadCancel$.next();
+
+    this.conversationService
+      .getMessages(id)
+      .pipe(takeUntil(this.chatLoadCancel$), takeUntil(this.destroy$))
       .subscribe({
         next: (data: Conversation) => {
           this.conversation = data;
@@ -151,11 +176,15 @@ export class ConversationComponent implements OnInit, OnDestroy {
           if (this.conversation.title) {
             this.title = this.conversation.title;
           } else {
-            const usr = this.conversation.users.find(u => u.id !== this.user.id);
-            this.title = usr ? `${usr.firstName} ${usr.lastName}` : '';
+            const usr = this.conversation.users.find(
+              (u) => u.id !== this.user.id,
+            );
+            this.title = usr ? `${usr.firstName} ${usr.lastName}` : "";
           }
 
-          const otherUser = this.conversation.users.find((u: User) => u.id !== this.user.id);
+          const otherUser = this.conversation.users.find(
+            (u: User) => u.id !== this.user.id,
+          );
           this.avatar = otherUser ? otherUser.avatar : null;
 
           this.initChannel(data.id);
@@ -166,71 +195,102 @@ export class ConversationComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.conversation = null;
-          this.translate.get('CHAT.ERROR.LOAD_MESSAGES_FAILED').subscribe((msg: string) => {
-            this.toastr.error(msg);
-          });
+          this.translate
+            .get("CHAT.ERROR.LOAD_MESSAGES_FAILED")
+            .subscribe((msg: string) => {
+              this.toastr.error(msg);
+            });
           this.cdr.markForCheck();
-        }
+        },
       });
   }
 
   initChannel(id: any) {
-    this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message`, (data: any) => {
-      this.conversation.messages.push(data.data);
-      this.updateChat.emit(data.data);
-      this.playAudio('/assets/songs/messageReceived.mp3');
-      this.messageIsSeen(data.data);
-      this.cdr.detectChanges();
-      this.scrollToBottom();
-    });
+    this.pusherService.subscribeToChannel(
+      `private-conversation.${id}`,
+      `message`,
+      (data: any) => {
+        this.conversation.messages.push(data.data);
+        this.updateChat.emit(data.data);
+        this.playAudio("/assets/songs/messageReceived.mp3");
+        this.messageIsSeen(data.data);
+        this.cdr.detectChanges();
+        this.scrollToBottom();
+      },
+    );
   }
 
   messageIsSeen(data: Message) {
-    this.conversationService.seenMessage(data)
+    this.conversationService
+      .seenMessage(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         const messageRead: Message = res;
         this.updateChat.emit(messageRead);
-        const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
+        const idx = this.conversation.messages.findIndex(
+          (x) => x.id === messageRead.id,
+        );
         if (idx > -1) {
-          this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
+          this.conversation.messages[idx] = {
+            ...messageRead,
+            isRead: messageRead.isRead.date,
+          };
         }
         this.cdr.markForCheck();
       });
   }
 
   initMessageSeenEvent(id: any = null) {
-    this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message-seen`, (data: any) => {
-      const messageRead: Message = data.data;
-      this.updateChat.emit(messageRead);
-      const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
-      if (idx > -1) {
-        this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
-      }
-      this.cdr.markForCheck();
-    });
+    this.pusherService.subscribeToChannel(
+      `private-conversation.${id}`,
+      `message-seen`,
+      (data: any) => {
+        const messageRead: Message = data.data;
+        this.updateChat.emit(messageRead);
+        const idx = this.conversation.messages.findIndex(
+          (x) => x.id === messageRead.id,
+        );
+        if (idx > -1) {
+          this.conversation.messages[idx] = {
+            ...messageRead,
+            isRead: messageRead.isRead.date,
+          };
+        }
+        this.cdr.markForCheck();
+      },
+    );
   }
 
   initMessageReaction(id: any = null) {
-    this.pusherService.subscribeToChannel(`private-conversation.${id}`, `message-reaction`, (data: any) => {
-      const messageRead: Message = data.data;
-      const idx = this.conversation.messages.findIndex(x => x.id === messageRead.id);
-      if (idx > -1) {
-        this.conversation.messages[idx] = { ...messageRead, isRead: messageRead.isRead.date };
-      }
-      this.cdr.markForCheck();
-    });
+    this.pusherService.subscribeToChannel(
+      `private-conversation.${id}`,
+      `message-reaction`,
+      (data: any) => {
+        const messageRead: Message = data.data;
+        const idx = this.conversation.messages.findIndex(
+          (x) => x.id === messageRead.id,
+        );
+        if (idx > -1) {
+          this.conversation.messages[idx] = {
+            ...messageRead,
+            isRead: messageRead.isRead.date,
+          };
+        }
+        this.cdr.markForCheck();
+      },
+    );
   }
 
   addUser() {
-    this.modalService.show(AddUserComponent, {
-      class: 'modal-form-container',
-      initialState: { 
-        conversationId: this.conversation.id, 
-        currentMembers: this.conversation.users 
-      }
-    }).content.onClose
-      .pipe(takeUntil(this.destroy$))
+    this.modalService
+      .show(AddUserComponent, {
+        class: "modal-form-container",
+        initialState: {
+          conversationId: this.conversation.id,
+          currentMembers: this.conversation.users,
+        },
+      })
+      .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
         if (data.conversation) {
           if (data.conversation.title) {
@@ -242,28 +302,29 @@ export class ConversationComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         }
         this.updateConversation.emit(data.conversation);
-        this.fetchChatDetail(this._id as string);
       });
   }
 
   createGroup() {
-    this.modalService.show(CreateGroupComponent, {
-      class: 'modal-form-container',
-    }).content.onClose
-      .pipe(takeUntil(this.destroy$))
+    this.modalService
+      .show(CreateGroupComponent, {
+        class: "modal-form-container",
+      })
+      .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
         this.updateConversation.emit(data);
       });
   }
 
   openNewConversation() {
-    this.modalService.show(AddConversationComponent, {
-      class: 'modal-form-container',
-      initialState: {
-        type: 'user'
-      }
-    }).content.onClose
-      .pipe(takeUntil(this.destroy$))
+    this.modalService
+      .show(AddConversationComponent, {
+        class: "modal-form-container",
+        initialState: {
+          type: "user",
+        },
+      })
+      .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
         if (data && data.id) {
           this.updateConversation.emit(data);
@@ -271,7 +332,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
       });
   }
 
-  sendMessage(type = 'msg', file = null) {
+  sendMessage(type = "msg", file = null) {
+    if (this.isSending) {
+      return;
+    }
+
     this.isOpen = false;
 
     const trimmedMessage = this.message ? this.message.trim() : null;
@@ -285,48 +350,56 @@ export class ConversationComponent implements OnInit, OnDestroy {
     const message: Message = {
       content: file ? file : trimmedMessage,
       type: type,
-      conversation: { id: this.conversation.id }
+      conversation: { id: this.conversation.id },
     };
 
-    this.conversationService.setMessage(message)
+    this.conversationService
+      .setMessage(message)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: Message) => {
           this.conversation.messages.push(data);
           this.updateChat.emit(data);
-          this.message = '';
+          this.message = "";
           this.isSending = false;
-          this.playAudio('/assets/songs/messageSent.mp3');
+          this.playAudio("/assets/songs/messageSent.mp3");
           this.cdr.markForCheck();
           this.scrollToBottom();
         },
         error: () => {
           this.isSending = false;
-          this.translate.get('CHAT.ERROR.SEND_MESSAGE_FAILED').subscribe((msg: string) => {
-            this.toastr.error(msg);
-          });
+          this.translate
+            .get("CHAT.ERROR.SEND_MESSAGE_FAILED")
+            .subscribe((msg: string) => {
+              this.toastr.error(msg);
+            });
           this.cdr.markForCheck();
-        }
+        },
       });
   }
 
   onFileSelect($event: Event) {
     const fileSelected: File = ($event.target as HTMLInputElement).files[0];
-    if (!fileSelected) { return; }
+    if (!fileSelected) {
+      return;
+    }
 
     const mimeType = fileSelected.type;
     const reader = new FileReader();
     reader.readAsDataURL(fileSelected);
     reader.onload = () => {
-      this.sendMessage(mimeType.split('/')[0], reader.result);
+      this.sendMessage(mimeType.split("/")[0], reader.result);
     };
   }
 
   onMessageReact(type: string, message: Message) {
-    this.conversationService.reactionMessage({ mid: message.id, type: type, uid: this.user.id })
+    this.conversationService
+      .reactionMessage({ mid: message.id, type: type, uid: this.user.id })
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Message) => {
-        const idx = this.conversation.messages.findIndex(x => x.id === data.id);
+        const idx = this.conversation.messages.findIndex(
+          (x) => x.id === data.id,
+        );
         if (idx > -1) {
           this.conversation.messages[idx] = data;
         }
@@ -337,8 +410,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   onInputMessageFocus() {
     if (this.conversation && this.conversation.messages.length > 0) {
-      const lastMessage = this.conversation.messages[this.conversation.messages.length - 1];
-      if (lastMessage && !lastMessage.isRead && lastMessage.sender?.id !== this.user.id) {
+      const lastMessage =
+        this.conversation.messages[this.conversation.messages.length - 1];
+      if (
+        lastMessage &&
+        !lastMessage.isRead &&
+        lastMessage.sender?.id !== this.user.id
+      ) {
         this.messageIsSeen(lastMessage);
       }
     }
@@ -366,14 +444,14 @@ export class ConversationComponent implements OnInit, OnDestroy {
 
   getReactionSummary(reactions: any[]): string {
     if (!reactions || reactions.length === 0) {
-      return '';
+      return "";
     }
 
     const counts: { [key: string]: number } = {};
     const icons: { [key: string]: string } = {
-      'heart': '❤️',
-      'like': '👍',
-      'dislike': '👎'
+      heart: "❤️",
+      like: "👍",
+      dislike: "👎",
     };
 
     for (const reaction of reactions) {
@@ -384,10 +462,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
     const parts: string[] = [];
     for (const [type, count] of Object.entries(counts)) {
       const icon = icons[type] || type;
-      parts.push(`${count > 1 ? count : ''}${icon}`);
+      parts.push(`${count > 1 ? count : ""}${icon}`);
     }
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 
   private playAudio(src: string) {

@@ -106,9 +106,14 @@ $conversation-footer-height: 3.5rem;
   }
 
   // ── Conversation List Panel ────────────────────────────
+  .chat-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
   .chat-panel-body {
+    flex: 1;
     padding: 0 0.75rem;
-    height: calc(100% - 6.5rem);
     overflow-y: auto;
   }
 
@@ -424,46 +429,46 @@ $conversation-footer-height: 3.5rem;
   }
 
   // ── Conversation Panel ────────────────────────────────
-    .conversation {
+  .conversation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: var(--card-bg);
+    border-left: 0.5px solid var(--border-color);
+
+    @media (max-width: 991px) {
+      border-left: none;
+    }
+
+    .conversation-header {
+      flex-shrink: 0;
+      min-height: $conversation-header-height;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      border-bottom: 0.5px solid var(--border-color);
+      background: var(--card-bg);
+    }
+
+    .conversation-body {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-app);
       display: flex;
       flex-direction: column;
-      height: 100%;
-      width: 100%;
+    }
+
+    .conversation-footer {
+      flex-shrink: 0;
+      min-height: $conversation-footer-height;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-top: 0.5px solid var(--border-color);
       background: var(--card-bg);
-      border-left: 0.5px solid var(--border-color);
-
-      @media (max-width: 991px) {
-        border-left: none;
-      }
-
-      .conversation-header {
-        flex-shrink: 0;
-        min-height: $conversation-header-height;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1.25rem;
-        border-bottom: 0.5px solid var(--border-color);
-        background: var(--card-bg);
-      }
-
-      .conversation-body {
-        flex: 1;
-        overflow-y: auto;
-        background: var(--bg-app);
-        display: flex;
-        flex-direction: column;
-      }
-
-      .conversation-footer {
-        flex-shrink: 0;
-        min-height: $conversation-footer-height;
-        padding: 0 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        border-top: 0.5px solid var(--border-color);
-        background: var(--card-bg);
 
       .conversation-footer-icon {
         font-size: 1.25rem;

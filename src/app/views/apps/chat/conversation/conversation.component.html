@@ -7,7 +7,7 @@
       <button
         class="conv-mobile-back d-block d-lg-none"
         (click)="onMobilePanelOpen()"
-        aria-label="Back"
+        [attr.aria-label]="'chat.back' | translate"
       >
         <i class="feather icon-chevron-left"></i>
       </button>
@@ -198,40 +198,40 @@
               [attr.aria-label]="'CHAT.LABELS.SHOW_REACTIONS' | translate"
             >
               <i class="feather icon-more-vertical"></i>
-
-              <!-- Reaction picker -->
-              <div
-                *ngIf="reactionToggle === msg.id"
-                class="bubble-react-picker"
-                [class.bubble-react-picker--left]="msg.sender?.id === user.id"
-                [class.bubble-react-picker--right]="msg.sender?.id !== user.id"
-              >
-                <button
-                  type="button"
-                  class="react-icon"
-                  (click)="onMessageReact('heart', msg)"
-                  [attr.aria-label]="'CHAT.LABELS.REACT_HEART' | translate"
-                >
-                  <i class="feather icon-heart"></i>
-                </button>
-                <button
-                  type="button"
-                  class="react-icon"
-                  (click)="onMessageReact('like', msg)"
-                  [attr.aria-label]="'CHAT.LABELS.REACT_LIKE' | translate"
-                >
-                  <i class="feather icon-thumbs-up"></i>
-                </button>
-                <button
-                  type="button"
-                  class="react-icon"
-                  (click)="onMessageReact('dislike', msg)"
-                  [attr.aria-label]="'CHAT.LABELS.REACT_DISLIKE' | translate"
-                >
-                  <i class="feather icon-thumbs-down"></i>
-                </button>
-              </div>
             </button>
+
+            <!-- Reaction picker -->
+            <div
+              *ngIf="reactionToggle === msg.id"
+              class="bubble-react-picker"
+              [class.bubble-react-picker--left]="msg.sender?.id === user.id"
+              [class.bubble-react-picker--right]="msg.sender?.id !== user.id"
+            >
+              <button
+                type="button"
+                class="react-icon"
+                (click)="onMessageReact('heart', msg)"
+                [attr.aria-label]="'CHAT.LABELS.REACT_HEART' | translate"
+              >
+                <i class="feather icon-heart"></i>
+              </button>
+              <button
+                type="button"
+                class="react-icon"
+                (click)="onMessageReact('like', msg)"
+                [attr.aria-label]="'CHAT.LABELS.REACT_LIKE' | translate"
+              >
+                <i class="feather icon-thumbs-up"></i>
+              </button>
+              <button
+                type="button"
+                class="react-icon"
+                (click)="onMessageReact('dislike', msg)"
+                [attr.aria-label]="'CHAT.LABELS.REACT_DISLIKE' | translate"
+              >
+                <i class="feather icon-thumbs-down"></i>
+              </button>
+            </div>
 
             <!-- Bubble wrapper -->
             <div
@@ -259,6 +259,7 @@
                   [href]="getHost() + msg.content"
                   download
                   target="_blank"
+                  rel="noopener noreferrer"
                   class="bubble-file-link"
                 >
                   <i class="feather icon-file"></i>
@@ -272,6 +273,7 @@
                   [href]="getHost() + msg.content"
                   download
                   target="_blank"
+                  rel="noopener noreferrer"
                   class="bubble-file-link"
                 >
                   <i class="feather icon-file-text"></i>
@@ -305,17 +307,18 @@
             </div>
           </div>
         </div>
-
-        <!-- Single global fullscreen image viewer -->
-        <ng-image-fullscreen-view
-          [images]="selectedImage"
-          [imageIndex]="0"
-          [show]="showFlag"
-          (close)="closeEventHandler()"
-        ></ng-image-fullscreen-view>
       </div>
     </div>
   </perfect-scrollbar>
+
+  <!-- Single global fullscreen image viewer -->
+  <ng-image-fullscreen-view
+    *ngIf="showFlag"
+    [images]="selectedImage"
+    [imageIndex]="0"
+    [show]="showFlag"
+    (close)="closeEventHandler()"
+  ></ng-image-fullscreen-view>
 
   <!-- ── Footer ───────────────────────────────────────── -->
   <div *ngIf="chatId" class="conversation-footer">
@@ -342,7 +345,7 @@
         type="button"
         class="conv-icon-btn"
         (click)="fileInput.click()"
-        aria-label="Attach file"
+        [attr.aria-label]="'chat.attachFile' | translate"
       >
         <i class="las la-paperclip"></i>
       </button>
@@ -352,7 +355,7 @@
           type="button"
           class="conv-icon-btn"
           (click)="handleEmojiBar()"
-          aria-label="Emoji"
+          [attr.aria-label]="'chat.emoji' | translate"
         >
           <i class="las la-smile"></i>
         </button>
@@ -363,7 +366,7 @@
           [emojiTooltip]="false"
           [enableSearch]="false"
           [darkMode]="false"
-          title="Pick your emoji…"
+          [title]="'chat.pickEmoji' | translate"
           emoji="point_up"
         ></emoji-mart>
       </div>
