@@ -80,6 +80,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   @Output() updateChat = new EventEmitter<Message>();
   @Output() updateConversation = new EventEmitter<Conversation>();
   @Output() openMobilePanel = new EventEmitter<void>();
+  @Output() deleteConversation = new EventEmitter<Conversation>();
 
   public bsModalRef: BsModalRef;
 
@@ -118,6 +119,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
   handleShowUsers() {
     const initialState = { conversation: Object.assign({}, this.conversation) };
     this.modalService.show(UsersConversationComponent, { initialState });
+  }
+
+  onDeleteConversation() {
+    this.deleteConversation.emit(this.conversation);
   }
 
   handleEmojiBar() {

@@ -1,5 +1,5 @@
 <div class="chat card mb-0">
-  <div class="d-flex content-min-height content-max-height">
+  <div class="d-flex content-min-height content-max-height chat-main">
     <!-- ── Sidebar Panel ──────────────────────────────── -->
     <column-panel
       borderRight="true"
@@ -48,190 +48,65 @@
               >
                 <!-- Avatar -->
                 <div class="chat-list-row-avatar">
-                  <!-- Has title = group -->
-                  <ng-container *ngIf="conversation.title">
+                  <!-- Group or 1-on-1 -->
+                  <ng-container *ngIf="isGroupConversation(conversation); else oneOnOne">
                     <div class="collage">
                       <div class="avatar-collage">
-                        <ng-container
-                          *ngFor="let usr of conversation.users; let i = index"
-                        >
+                        <ng-container *ngFor="let avatar of getConversationAvatars(conversation); let i = index">
                           <avatar
-                            *ngIf="i <= 3"
-                            [tooltip]="usr.firstName + ' ' + usr.lastName"
+                            *ngIf="i < 4"
+                            [tooltip]="avatar.tooltip"
                             [ngClass]="'collage-img'"
                             class="avatar"
                             [size]="38"
-                            [src]="
-                              usr.avatar
-                                ? getHost() + usr.avatar
-                                : '/assets/images/avatars/thumb-16.jpg'
-                            "
+                            [src]="avatar.url"
                           ></avatar>
                         </ng-container>
                       </div>
-                      <div
-                        *ngIf="conversation.users.length > 4"
-                        class="collage-rest"
-                      >
+                      <div *ngIf="conversation.users.length > 4" class="collage-rest">
                         +{{ conversation.users.length - 4 }}
                       </div>
                     </div>
                   </ng-container>
-                  <!-- No title, 2 users = 1-on-1 -->
-                  <ng-container
-                    *ngIf="
-                      !conversation.title && conversation.users.length === 2
-                    "
-                  >
-                    <ng-container *ngFor="let c_user of conversation.users">
+                  <ng-template #oneOnOne>
+                    <ng-container *ngIf="getOtherUser(conversation) as otherUser">
                       <avatar
-                        *ngIf="user.id !== c_user.id"
                         class="avatar"
                         [size]="38"
-                        [src]="
-                          c_user.avatar
-                            ? getHost() + c_user.avatar
-                            : '/assets/images/avatars/thumb-16.jpg'
-                        "
+                        [src]="getAvatarUrl(otherUser)"
                       ></avatar>
                     </ng-container>
-                  </ng-container>
-                  <!-- No title, 3+ users = group without name -->
-                  <ng-container
-                    *ngIf="!conversation.title && conversation.users.length > 2"
-                  >
-                    <div class="collage">
-                      <div class="avatar-collage">
-                        <ng-container
-                          *ngFor="let usr of conversation.users; let i = index"
-                        >
-                          <avatar
-                            *ngIf="i <= 3"
-                            [tooltip]="usr.firstName + ' ' + usr.lastName"
-                            [ngClass]="'collage-img'"
-                            class="avatar"
-                            [size]="38"
-                            [src]="
-                              usr.avatar
-                                ? getHost() + usr.avatar
-                                : '/assets/images/avatars/thumb-16.jpg'
-                            "
-                          ></avatar>
-                        </ng-container>
-                      </div>
-                      <div
-                        *ngIf="conversation.users.length > 4"
-                        class="collage-rest"
-                      >
-                        +{{ conversation.users.length - 4 }}
-                      </div>
-                    </div>
-                  </ng-container>
+                  </ng-template>
                 </div>
 
                 <!-- Content -->
                 <div class="chat-list-row-msg">
-                  <!-- Name / Title with time -->
-                  <ng-container *ngIf="conversation.title">
-                    <h6 class="chat-list-name mb-0">
+                  <!-- Name -->
+                  <h6 class="chat-list-name mb-0">
+                    <ng-container *ngIf="conversation.title">
                       {{ conversation.title }}
-                      <span
-                        *ngIf="conversation.lastMessage?.createdAt"
-                        class="chat-list-time-inline"
-                      >
-                        ({{
-                          conversation.lastMessage.createdAt
-                            | amLocale: momentLang
-                            | amTimeAgo: true
-                        }})
-                      </span>
-                    </h6>
-                  </ng-container>
-                  <ng-container *ngIf="!conversation.title">
-                    <ng-container *ngIf="conversation.users.length === 2">
-                      <ng-container *ngFor="let c_user of conversation.users">
-                        <h6
-                          *ngIf="user.id !== c_user.id"
-                          class="chat-list-name mb-0"
-                        >
-                          {{ c_user.firstName }} {{ c_user.lastName }}
-                          <span
-                            *ngIf="conversation.lastMessage?.createdAt"
-                            class="chat-list-time-inline"
-                          >
-                            ({{
-                              conversation.lastMessage.createdAt
-                                | amLocale: momentLang
-                                | amTimeAgo: true
-                            }})
-                          </span>
-                        </h6>
-                      </ng-container>
                     </ng-container>
-                    <ng-container *ngIf="conversation.users.length > 2">
-                      <h6 class="chat-list-name mb-0">
-                        {{ getParticipantNames(conversation.users) }}
-                        <span
-                          *ngIf="conversation.lastMessage?.createdAt"
-                          class="chat-list-time-inline"
-                        >
-                          ({{
-                            conversation.lastMessage.createdAt
-                              | amLocale: momentLang
-                              | amTimeAgo: true
-                          }})
-                        </span>
-                      </h6>
+                    <ng-container *ngIf="!conversation.title">
+                      {{ getParticipantNames(conversation.users) }}
                     </ng-container>
-                  </ng-container>
+                    <span *ngIf="conversation.lastMessage?.createdAt" class="chat-list-time-inline">
+                      ({{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }})
+                    </span>
+                  </h6>
 
                   <!-- Last message preview -->
-                  <p
-                    class="chat-list-preview mb-0"
-                    [class.fw-semibold]="isUnreadMessage(conversation)"
-                    [class.text-muted]="!isUnreadMessage(conversation)"
-                  >
-                    <ng-container
-                      *ngIf="conversation.lastMessage; else noMessagesTpl"
-                    >
-                      {{
-                        conversation.lastMessage?.type !== "msg"
-                          ? ("CHAT.LABELS.FILE_SENT" | translate)
-                          : conversation.lastMessage?.content
-                      }}
-                      <span
-                        *ngIf="isUnreadMessage(conversation)"
-                        class="chat-unread-dot"
-                      ></span>
+                  <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
+                    <ng-container *ngIf="conversation.lastMessage; else noMessagesTpl">
+                      {{ conversation.lastMessage?.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+                      <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
                     </ng-container>
                     <ng-template #noMessagesTpl>
-                      <ng-container
-                        *ngIf="
-                          conversation.title || conversation.users.length > 2
-                        "
-                      >
-                        <span class="text-muted">{{
-                          "CHAT.LABELS.NO_MESSAGES_YET" | translate
-                        }}</span>
-                      </ng-container>
+                      <span *ngIf="conversation.title || conversation.users.length > 2" class="text-muted">
+                        {{ 'CHAT.LABELS.NO_MESSAGES_YET' | translate }}
+                      </span>
                     </ng-template>
                   </p>
                 </div>
-
-                <!-- Delete action -->
-                <button
-                  type="button"
-                  class="chat-list-row-action"
-                  *hasClaim="'CHAT_DELETE_CHAT'"
-                  (click)="
-                    $event.stopPropagation(); deleteConversation(conversation)
-                  "
-                  [attr.aria-label]="
-                    'CHAT.LABELS.DELETE_CONVERSATION' | translate
-                  "
-                >
-                  <i class="feather icon-trash-2"></i>
-                </button>
               </button>
             </ng-container>
           </ng-container>
@@ -250,11 +125,7 @@
                 <div class="chat-avatar-wrap">
                   <avatar
                     [size]="38"
-                    [src]="
-                      usr.avatar
-                        ? getHost() + usr.avatar
-                        : '/assets/images/avatars/thumb-16.jpg'
-                    "
+                    [src]="getAvatarUrl(usr)"
                   ></avatar>
                   <span
                     class="user-status-dot"
@@ -279,11 +150,13 @@
 
     <!-- ── Conversation Panel ─────────────────────────── -->
     <conversation
+      class="chat-conversation-panel"
       [chatId]="selectedId"
       [user]="user"
       (updateChat)="updateChat($event)"
       (updateConversation)="updateConversation($event)"
       (openMobilePanel)="onMobilePanelToggleOpen()"
+      (deleteConversation)="deleteConversation($event)"
     ></conversation>
   </div>
 </div>

@@ -7,7 +7,7 @@
       <button
         class="conv-mobile-back d-block d-lg-none"
         (click)="onMobilePanelOpen()"
-        [attr.aria-label]="'chat.back' | translate"
+        [attr.aria-label]="'CHAT.LABELS.BACK' | translate"
       >
         <i class="feather icon-chevron-left"></i>
       </button>
@@ -93,9 +93,8 @@
         </div>
 
         <!-- Header actions -->
-        <div class="conv-header-actions" dropdown *ngIf="isGroupConversation">
+        <div class="conv-header-actions" dropdown *ngIf="chatId">
           <button
-            *ngIf="chatId"
             type="button"
             class="conv-action-btn"
             dropdownToggle
@@ -108,7 +107,7 @@
             class="dropdown-menu dropdown-menu-modern dropdown-menu-right"
             role="menu"
           >
-            <li role="menuitem">
+            <li role="menuitem" *ngIf="isGroupConversation">
               <button
                 type="button"
                 class="dropdown-item-modern"
@@ -118,7 +117,7 @@
                 {{ "CHAT.LABELS.MEMBERS_LIST" | translate }}
               </button>
             </li>
-            <li role="menuitem">
+            <li role="menuitem" *ngIf="isGroupConversation">
               <button
                 type="button"
                 class="dropdown-item-modern"
@@ -128,16 +127,27 @@
                 {{ "CHAT.LABELS.EDIT_CHAT" | translate }}
               </button>
             </li>
+            <li role="menuitem" *ngIf="isGroupConversation">
+              <button
+                type="button"
+                class="dropdown-item-modern"
+                (click)="addUser()"
+              >
+                <i class="feather icon-user-plus"></i>
+                {{ "CHAT.LABELS.ADD_USER" | translate }}
+              </button>
+            </li>
+            <li role="menuitem">
+              <button
+                type="button"
+                class="dropdown-item-modern"
+                (click)="onDeleteConversation()"
+              >
+                <i class="feather icon-trash-2"></i>
+                {{ "CHAT.LABELS.DELETE_CONVERSATION" | translate }}
+              </button>
+            </li>
           </ul>
-          <button
-            *ngIf="chatId"
-            type="button"
-            class="conv-action-btn"
-            (click)="addUser()"
-            [attr.aria-label]="'CHAT.LABELS.ADD_USER' | translate"
-          >
-            <i class="feather icon-user-plus"></i>
-          </button>
         </div>
       </ng-container>
     </div>

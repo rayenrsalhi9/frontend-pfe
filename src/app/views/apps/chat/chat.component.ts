@@ -51,13 +51,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
   ) {}
 
-  getHost() {
+  getHost(): string {
     return environment.apiUrl;
   }
 
   ngOnInit(): void {
     this.user = this.securityService.getUserDetail().user;
-    this.momentLang = this.translateService.currentLang.split("_")[0];
+    const currentLang = this.translateService.currentLang;
+    this.momentLang = currentLang ? currentLang.split("_")[0] : "en";
     this.getUsers();
     this.initConversations();
     this.initChatChannel();
@@ -75,10 +76,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.user) {
       this.pusherService.unsubscribeFromChannel("user." + this.user.id);
     }
-  }
-
-  getHost_(): string {
-    return environment.apiUrl;
   }
 
   getUsers() {
@@ -297,7 +294,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.conversationsTemp = updatedConversations;
 
-    if (this.conversations !== this.conversationsTemp) {
+    if (this.currentSearchTerm) {
       this.conversations =
         this.applySearchFilterToConversations(updatedConversations);
     } else {
@@ -416,6 +413,45 @@ export class ChatComponent implements OnInit, OnDestroy {
       return otherUsers.map((u) => `${u.firstName} ${u.lastName}`).join(", ");
     }
     return `${otherUsers[0].firstName} ${otherUsers[0].lastName} +${otherUsers.length - 1}`;
+  }
+
+  getAvatarUrl(user: User): string {
+    return user.avatar ? this.getHost() + user.avatar : "/assets/images/avatars/thumb-16.jpg";
+  }
+
+  getConversationAvatars(conversation: Conversation): { url: string; tooltip: string }[] {
+    const users = conversation.users || [];
+    const result: { url: string; tooltip: string }[] = [];
+    const avatarUrl = this.getHost();
+    const defaultAvatar = "/assets/images/avatars/thumb-16.jpg";
+    
+    if (conversation.title || users.length > 2) {
+      for (let i = 0; i < Math.min(users.length, 4); i++) {
+        result.push({
+          url: users[i].avatar ? avatarUrl + users[i].avatar : defaultAvatar,
+          tooltip: `${users[i].firstName} ${users[i].lastName}`
+        });
+      }
+    } else if (users.length === 2) {
+      const otherUser = users.find(u => u.id !== this.user.id);
+      if (otherUser) {
+        result.push({
+          url: otherUser.avatar ? avatarUrl + otherUser.avatar : defaultAvatar,
+          tooltip: `${otherUser.firstName} ${otherUser.lastName}`
+        });
+      }
+    }
+    
+    return result;
+  }
+
+  isGroupConversation(conversation: Conversation): boolean {
+    return !!(conversation.title || (conversation.users && conversation.users.length > 2));
+  }
+
+  getOtherUser(conversation: Conversation): User | null {
+    if (!conversation.users || conversation.users.length !== 2) return null;
+    return conversation.users.find(u => u.id !== this.user.id) || null;
   }
 
   isUnreadMessage(conversation: Conversation): boolean {
