@@ -38,8 +38,9 @@
               <span>{{ 'CHAT.LABELS.LATEST_CONVERSATIONS' | translate }}</span>
             </div>
             <ng-container *ngFor="let conversation of conversations">
-              <div
+              <button
                 *ngIf="conversation"
+                type="button"
                 class="chat-list-row"
                 [class.active]="conversation.id === selectedId"
                 [class.unread]="isUnreadMessage(conversation)"
@@ -198,13 +199,15 @@
 
               <!-- Delete action -->
               <button
+                type="button"
                 class="chat-list-row-action"
                 *hasClaim="'CHAT_DELETE_CHAT'"
                 (click)="deleteConversation($event, conversation)"
+                [attr.aria-label]="'CHAT.LABELS.DELETE_CONVERSATION' | translate"
               >
                 <i class="feather icon-trash-2"></i>
               </button>
-            </div>
+            </button>
           </ng-container>
         </ng-container>
 
@@ -213,7 +216,7 @@
             <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
           </div>
           <ng-container *ngFor="let usr of filteredUsers">
-            <div class="chat-list-row" (click)="newConversation(usr)">
+            <button type="button" class="chat-list-row" (click)="newConversation(usr)">
               <div class="chat-list-row-avatar">
                 <div class="chat-avatar-wrap">
                   <avatar
@@ -239,7 +242,7 @@
                   {{ usr.email }}
                 </p>
               </div>
-            </div>
+            </button>
           </ng-container>
         </perfect-scrollbar>
       </div>

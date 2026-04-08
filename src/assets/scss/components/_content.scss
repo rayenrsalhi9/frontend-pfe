@@ -32,12 +32,15 @@
     }
 
     .content-min-height {
-      min-height: calc(100vh - #{$header-nav-height} - 6px);
-      overflow-y: hidden;
+      min-height: calc(100vh - #{$header-nav-height});
+      height: calc(100vh - #{$header-nav-height});
+      overflow: hidden;
     }
 
     .content-max-height {
-      max-height: calc(100vh - #{$header-nav-height} - #{$layout-content-gutter} - #{$layout-content-gutter} - #{$footer-height} - 2px);
+      max-height: calc(100vh - #{$header-nav-height});
+      height: calc(100vh - #{$header-nav-height});
+      overflow: hidden;
     }
   }
 }
@@ -55,11 +58,15 @@
     }
 
     .content-min-height {
-      min-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$layout-content-gutter} - #{$layout-content-gutter} - #{$footer-height} - 2px);
+      min-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      overflow: hidden;
     }
 
     .content-max-height {
-      max-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$layout-content-gutter} - #{$layout-content-gutter} - #{$footer-height} - 2px);
+      max-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      overflow: hidden;
     }
   }
 }

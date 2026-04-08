@@ -2,7 +2,7 @@ export const chat = {
   CHAT: {
     LABELS: {
       PLACEHOLDER: "أدخل رسالتك هنا",
-      WELCOME: "قل مرحبًا لفريقك",
+      WELCOME: "اختر محادثة لبدء الدردشة مع فريقك أو جهات اتصالك.",
       SEARCH: "البحث عن المستخدم",
       CREATE_GROUP_CONVERSATION: "إنشاء محادثة جماعية",
       ADD_USER_TO_CONVERSATION: "إضافة مستخدم إلى المحادثة",
@@ -13,7 +13,7 @@ export const chat = {
       SEEN: "مُشاهَد",
       NO_CONVERSATIONS: "لا توجد محادثات بعد",
       NO_MESSAGES_YET: "لا توجد رسائل بعد",
-      START_CHAT: "اختر محادثة للبدء في الدردشة",
+      START_CHAT: "مرحباً بك في رسائلك",
       MEMBERS_LIST: "عرض الأعضاء",
       EDIT_CHAT: "تعديل الدردشة",
       SELECT_USER: "اختر مستخدم",
@@ -27,6 +27,13 @@ export const chat = {
       CLOSE: "إغلاق",
       REMOVE_USER: "إزالة المستخدم",
       REMOVE_USER_CONFIRM: "هل أنت متأكد من أنك تريد إزالة هذا العضو؟",
+      DELETE_CONVERSATION: "حذف المحادثة",
+      MORE_ACTIONS: "المزيد من الإجراءات",
+      ADD_USER: "إضافة مستخدم",
+      SHOW_REACTIONS: "إظهار التفاعلات",
+      REACT_HEART: "تفاعل مع القلب",
+      REACT_LIKE: "تفاعل مع الإعجاب",
+      REACT_DISLIKE: "تفاعل مع عدم الإعجاب",
     },
     MODAL: {
       ADD_USER: {

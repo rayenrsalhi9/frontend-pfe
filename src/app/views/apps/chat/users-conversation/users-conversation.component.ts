@@ -39,8 +39,8 @@ export class UsersConversationComponent implements OnInit {
 
   removeUser(member: any) {
     this.translate.get('CHAT.LABELS.REMOVE_USER_CONFIRM').subscribe((confirmMsg: string) => {
-      this.translate.get('CHAT.BUTTONS.CONFIRM').subscribe((confirmBtn: string) => {
-        this.translate.get('CHAT.BUTTONS.CANCEL').subscribe((cancelBtn: string) => {
+      this.translate.get('CHAT.DELETE.LABEL.BUTTON.CONFIRM').subscribe((confirmBtn: string) => {
+        this.translate.get('CHAT.DELETE.LABEL.BUTTON.CANCEL').subscribe((cancelBtn: string) => {
           const bsModalRef = this.modalService.show(ConfirmModalComponent, {
             class: 'modal-confirm-custom',
             initialState: {
@@ -62,7 +62,10 @@ export class UsersConversationComponent implements OnInit {
                   this.translate.get('CHAT.TOAST.USER_REMOVED_SUCCESSFULLY').subscribe((msg: string) => {
                     this.toastr.success(msg);
                   });
-                  this.conversation.users = this.conversation.users.filter(u => u.id !== member.id);
+                  const index = this.conversation.users.findIndex(u => u.id === member.id);
+                  if (index > -1) {
+                    this.conversation.users.splice(index, 1);
+                  }
                   this.cdr.markForCheck();
                 },
                 error: () => {

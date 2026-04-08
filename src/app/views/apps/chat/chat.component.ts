@@ -10,6 +10,7 @@ import { CreateGroupComponent } from "./create-group/create-group.component";
 import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { CommonService } from "@app/shared/services/common.service";
+import { CommonError } from "@app/shared/enums/common-error";
 import { environment } from "src/environments/environment";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
@@ -84,12 +85,29 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.commonService
       .getUsersWithClaim("CHAT_VIEW_CHATS")
       .pipe(takeUntil(this.destroy$))
-      .subscribe((users: User[]) => {
-        this.users = users;
-        this.usersTemp = users;
-        this.filteredUsers = users;
-        this.cdr.markForCheck();
+      .subscribe({
+        next: (response: User[] | CommonError) => {
+          if (this.isCommonError(response)) {
+            this.translateService.get('CHAT.ERROR.LOAD_USERS_FAILED').subscribe((msg: string) => {
+              this.toastrService.error(msg);
+            });
+            return;
+          }
+          this.users = response;
+          this.usersTemp = response;
+          this.filteredUsers = response;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.translateService.get('CHAT.ERROR.LOAD_USERS_FAILED').subscribe((msg: string) => {
+            this.toastrService.error(msg);
+          });
+        }
       });
+  }
+
+  private isCommonError(response: User[] | CommonError): response is CommonError {
+    return !Array.isArray(response) && 'friendlyMessage' in response;
   }
 
   initConversations(page: number = 1) {
@@ -104,11 +122,15 @@ export class ChatComponent implements OnInit, OnDestroy {
             (c): c is Conversation => !!c && !!c.id,
           );
           
+          const dataToUse = this.currentSearchTerm
+            ? this.applySearchFilterToConversations(filteredData)
+            : filteredData;
+          
           if (page === 1) {
-            this.conversations = filteredData;
+            this.conversations = dataToUse;
             this.conversationsTemp = filteredData;
           } else {
-            this.conversations = [...this.conversations, ...filteredData];
+            this.conversations = [...this.conversations, ...dataToUse];
             this.conversationsTemp = [...this.conversationsTemp, ...filteredData];
           }
           
@@ -260,17 +282,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.conversationsTemp = updatedConversations;
 
     if (this.conversations !== this.conversationsTemp) {
-      this.applySearchFilterToConversations(updatedConversations);
+      this.conversations = this.applySearchFilterToConversations(updatedConversations);
     } else {
       this.conversations = updatedConversations;
     }
     this.cdr.markForCheck();
   }
 
-  private applySearchFilterToConversations(conversations: Conversation[]) {
+  private applySearchFilterToConversations(conversations: Conversation[]): Conversation[] {
     const searchValue = this.getCurrentSearchTerm();
     if (searchValue) {
-      this.conversations = conversations.filter((conver) => {
+      return conversations.filter((conver) => {
         if (conver.title) {
           return conver.title.toLowerCase().includes(searchValue.toLowerCase());
         }
@@ -282,9 +304,8 @@ export class ChatComponent implements OnInit, OnDestroy {
           );
         });
       });
-    } else {
-      this.conversations = conversations;
     }
+    return conversations;
   }
 
   private getCurrentSearchTerm(): string {
@@ -292,7 +313,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateConversation(data: Conversation) {
-    let updated = this.conversations.map((conversation: Conversation) => {
+    let updated = this.conversationsTemp.map((conversation: Conversation) => {
       if (conversation.id === data.id) {
         return {
           ...conversation,
@@ -309,8 +330,13 @@ export class ChatComponent implements OnInit, OnDestroy {
       updated = [data, ...updated];
     }
 
-    this.conversations = updated;
     this.conversationsTemp = updated;
+
+    const dataToUse = this.currentSearchTerm
+      ? this.applySearchFilterToConversations(updated)
+      : updated;
+    this.conversations = dataToUse;
+
     this.selectChat(data);
     this.cdr.markForCheck();
   }
@@ -373,7 +399,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   isUnreadMessage(conversation: Conversation): boolean {
-    return conversation.lastMessage?.isRead == null && 
-           conversation.lastMessage?.sender?.id !== this.user.id;
+    if (!conversation.lastMessage) {
+      return false;
+    }
+    return conversation.lastMessage.isRead == null && 
+           conversation.lastMessage.sender?.id !== this.user.id;
   }
 }

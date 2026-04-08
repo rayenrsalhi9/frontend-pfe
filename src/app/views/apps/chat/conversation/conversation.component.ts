@@ -256,6 +256,21 @@ export class ConversationComponent implements OnInit, OnDestroy {
       });
   }
 
+  openNewConversation() {
+    this.modalService.show(AddConversationComponent, {
+      class: 'modal-form-container',
+      initialState: {
+        type: 'user'
+      }
+    }).content.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Conversation) => {
+        if (data && data.id) {
+          this.updateConversation.emit(data);
+        }
+      });
+  }
+
   sendMessage(type = 'msg', file = null) {
     this.isOpen = false;
 
@@ -347,6 +362,32 @@ export class ConversationComponent implements OnInit, OnDestroy {
   closeEventHandler() {
     this.showFlag = false;
     this.selectedImage = [];
+  }
+
+  getReactionSummary(reactions: any[]): string {
+    if (!reactions || reactions.length === 0) {
+      return '';
+    }
+
+    const counts: { [key: string]: number } = {};
+    const icons: { [key: string]: string } = {
+      'heart': '❤️',
+      'like': '👍',
+      'dislike': '👎'
+    };
+
+    for (const reaction of reactions) {
+      const type = reaction.type || reaction;
+      counts[type] = (counts[type] || 0) + 1;
+    }
+
+    const parts: string[] = [];
+    for (const [type, count] of Object.entries(counts)) {
+      const icon = icons[type] || type;
+      parts.push(`${count > 1 ? count : ''}${icon}`);
+    }
+
+    return parts.join(' ');
   }
 
   private playAudio(src: string) {

@@ -2,6 +2,48 @@
 //  conversation.component.scss — Redesigned Chat Messages
 // ─────────────────────────────────────────────────────────
 
+// ── Container ─────────────────────────────────────────────
+
+.conversation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--card-bg);
+  overflow: hidden;
+  padding: 0.5rem 0;
+
+  .conversation-header {
+    flex-shrink: 0;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    border-bottom: 0.5px solid var(--border-color);
+    background: var(--card-bg);
+  }
+
+  .conversation-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-app);
+  }
+
+  .conversation-footer {
+    flex-shrink: 0;
+    min-height: 56px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 0.5px solid var(--border-color);
+    background: var(--card-bg);
+  }
+}
+
 // ── Header ───────────────────────────────────────────────
 
 .conv-mobile-back {
@@ -128,7 +170,7 @@
   .collage-rest {
     background: var(--bs-danger);
     position: absolute;
-    right: -6px;
+    inset-inline-end: -6px;
     bottom: -6px;
     border-radius: 10px;
     padding: 0 4px;
@@ -145,7 +187,7 @@
   .collage-menu {
     cursor: pointer;
     position: absolute;
-    right: -8px;
+    inset-inline-end: -8px;
     top: -4px;
     background: var(--primary);
     width: 20px;
@@ -191,6 +233,19 @@
     .bubble-react-btn {
       opacity: 1;
     }
+  }
+
+  &:focus-within {
+    background: rgba(var(--primary-rgb, 37, 99, 235), 0.04);
+
+    .bubble-react-btn {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
   }
 
   .msg-avatar {
@@ -303,12 +358,26 @@
       color: var(--primary);
     }
 
+    &:focus {
+      opacity: 1;
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    &:focus-visible {
+      opacity: 1;
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
     &--sent {
-      left: -32px;
+      inset-inline-start: -32px;
     }
 
     &--recv {
-      right: -32px;
+      inset-inline-end: -32px;
     }
   }
 
@@ -326,127 +395,203 @@
     white-space: nowrap;
 
     &--left {
-      left: 0;
+      inset-inline-start: 0;
     }
 
     &--right {
-      right: 0;
-    }
-
-    .react-icon {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.15s ease;
-
-      &:hover {
-        color: var(--primary);
-        transform: scale(1.15);
-      }
+      inset-inline-end: 0;
     }
   }
 
-  // ── Reactions display ───────────────────────────────────
-  .bubble-reactions {
-    position: absolute;
-    bottom: -10px;
-    right: 8px;
-    display: flex;
-    gap: 2px;
+  &--recv {
+    right: -32px;
+  }
+}
+
+.bubble-react-picker {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  background: var(--card-bg);
+  border: 0.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 6px 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  white-space: nowrap;
+
+  &--left {
+    inset-inline-start: 0;
+  }
+
+  &--right {
+    inset-inline-end: 0;
+  }
+
+  .react-icon {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: none;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+
+    &:hover {
+      color: var(--primary);
+      transform: scale(1.15);
+    }
+
+    &:focus {
+      outline: none;
+      color: var(--primary);
+      background: var(--primary-glow);
+      border-radius: 4px;
+    }
+
+    &:focus-visible {
+      outline: none;
+      color: var(--primary);
+      background: var(--primary-glow);
+      border-radius: 4px;
+    }
+  }
+}
+
+// ── Reactions display ───────────────────────────────────
+.bubble-reactions {
+  position: absolute;
+  bottom: -15px;
+  inset-inline-end: -10px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  z-index: 10;
+  pointer-events: none;
+
+  .reaction-count {
     background: var(--card-bg);
-    border: 0.5px solid var(--border-color);
-    padding: 2px 6px;
+    border: 1.5px solid var(--border-color);
+    padding: 3px 8px;
     border-radius: 50px;
     font-size: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: var(--transition);
+    cursor: pointer;
+    pointer-events: auto;
 
-    .reaction-icon {
-      font-size: 0.75rem;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      border-color: var(--primary);
     }
   }
+}
 
-  // ── Seen label ─────────────────────────────────────────
-  .bubble-seen {
-    font-size: 0.6875rem;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    margin-top: 4px;
-    display: block;
+// ── Seen label ─────────────────────────────────────────
+.bubble-seen {
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  margin-top: 4px;
+  display: block;
 
-    &--with-reactions {
-      margin-top: 22px;
-    }
-
-    .msg-sent & {
-      text-align: right;
-    }
+  &--with-reactions {
+    margin-top: 22px;
   }
 
-  // ── Received bubble ────────────────────────────────────
-  &.msg-recipient {
-    justify-content: flex-start;
+  .msg-sent & {
+    text-align: right;
+  }
+}
+
+// ── Received bubble ────────────────────────────────────
+.msg.msg-recipient {
+  justify-content: flex-start;
+  align-items: flex-end;
+
+  .bubble-container {
+    align-items: flex-start;
+  }
+
+  .bubble {
+    &.no-avatar {
+      margin-inline-start: 2.5rem;
+    }
+
+    .bubble-wrapper {
+      background: var(--bg-app);
+      color: var(--text-primary);
+      border-bottom-left-radius: 4px;
+      border: 0.5px solid var(--border-color);
+    }
+
+    .bubble-file-link {
+      color: var(--primary);
+    }
+
+    .bubble-img {
+      border: 0.5px solid var(--border-color);
+    }
+  }
+}
+
+// ── Sent bubble ─────────────────────────────────────────
+.msg.msg-sent {
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  .bubble-container {
     align-items: flex-end;
+  }
 
-    .bubble-container {
-      align-items: flex-start;
+  .bubble {
+    .bubble-wrapper {
+      background: linear-gradient(
+        135deg,
+        var(--primary) 0%,
+        var(--primary-hover) 100%
+      );
+      color: #fff;
+      border-bottom-right-radius: 4px;
     }
 
-    .bubble {
-      &.no-avatar {
-        margin-inline-start: 2.5rem;
-      }
-
-      .bubble-wrapper {
-        background: var(--bg-app);
-        color: var(--text-primary);
-        border-bottom-left-radius: 4px;
-        border: 0.5px solid var(--border-color);
-      }
-
-      .bubble-file-link {
-        color: var(--primary);
-      }
-
-      .bubble-img {
-        border: 0.5px solid var(--border-color);
-      }
+    .bubble-file-link {
+      color: rgba(255, 255, 255, 0.9);
     }
   }
 
-  // ── Sent bubble ─────────────────────────────────────────
-  &.msg-sent {
-    justify-content: flex-end;
-    align-items: flex-end;
+  .bubble-react-btn {
+    inset-inline-start: -32px !important;
+    inset-inline-end: auto !important;
+  }
 
-    .bubble-container {
-      align-items: flex-end;
-    }
+  .bubble-react-picker {
+    inset-inline-start: 0 !important;
+    inset-inline-end: auto !important;
+  }
 
-    .bubble {
-      .bubble-wrapper {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-        color: #fff;
-        border-bottom-right-radius: 4px;
+  .bubble-reactions {
+    inset-inline-end: auto;
+    inset-inline-start: -15px;
+
+    .reaction-count {
+      background: var(--primary);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+
+      &:hover {
+        background: var(--primary-hover);
+        border-color: #fff;
       }
-
-      .bubble-file-link {
-        color: rgba(255, 255, 255, 0.9);
-      }
-    }
-
-    .bubble-react-btn {
-      left: -32px !important;
-      right: auto !important;
-    }
-
-    .bubble-react-picker {
-      left: 0 !important;
-      right: auto !important;
-    }
-
-    .bubble-reactions {
-      right: auto;
-      left: 8px;
     }
   }
 }
@@ -458,24 +603,159 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   text-align: center;
   height: 100%;
-  gap: 1.25rem;
-  background: var(--bg-app);
+  width: 100%;
+  background: var(--card-bg);
+  overflow: hidden;
 
-  .conv-welcome-img {
-    width: 140px;
-    opacity: 0.5;
+  .welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    animation: welcomeFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .conv-welcome-text {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  .welcome-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 30px;
+    background: linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      var(--primary-hover) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 20px 40px rgba(var(--bs-primary-rgb), 0.2);
+    position: relative;
+    transform: rotate(-5deg);
+    transition: var(--transition);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      padding: 1px;
+      border-radius: 30px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    &:hover {
+      transform: rotate(0deg) scale(1.05);
+      box-shadow: 0 25px 50px rgba(var(--bs-primary-rgb), 0.3);
+    }
+
+    i {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    }
+  }
+
+  .welcome-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .welcome-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
     margin: 0;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--text-primary) 0%, #475569 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .welcome-subtitle {
+    font-size: 1.0625rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.8;
+  }
+
+  .welcome-actions {
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .welcome-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+    i {
+      font-size: 1.25rem;
+      color: var(--primary);
+      transition: var(--transition);
+    }
+
+    &:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(var(--bs-primary-rgb), 0.3);
+
+      i {
+        color: #fff;
+        transform: scale(1.2) rotate(10deg);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+@keyframes welcomeFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -539,7 +819,7 @@
 
 .conv-emoji-mart {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   bottom: 48px;
   z-index: 100;
 }

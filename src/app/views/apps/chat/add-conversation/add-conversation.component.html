@@ -22,7 +22,7 @@
         </div>
         <div class="col-md-12 mt-3">
           <button (click)="createConversation()" type="button" class="btn btn-success" ><i class="feather icon-plus-circle"></i> {{ type === 'group' ? ('CHAT.BUTTONS.CREATE' | translate) : ('CHAT.BUTTONS.ADD' | translate) }}</button>
-          <button (click)="closeConver()" style="margin-left: 5px;" type="button" class="btn btn-danger"><i class="feather icon-x-circle"></i> {{'CHAT.BUTTONS.CANCEL' | translate}}</button>
+          <button (click)="closeConver()" class="btn btn-danger ms-2"><i class="feather icon-x-circle"></i> {{'CHAT.BUTTONS.CANCEL' | translate}}</button>
         </div>
       </div>
     </form>

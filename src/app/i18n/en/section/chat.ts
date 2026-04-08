@@ -2,7 +2,8 @@ export const chat = {
   CHAT: {
     LABELS: {
       PLACEHOLDER: "Enter your message here",
-      WELCOME: "Say hi to your team",
+      WELCOME:
+        "Select a conversation to begin chatting with your team or contacts.",
       SEARCH: "Search for a user",
       CREATE_GROUP_CONVERSATION: "Create group conversation",
       ADD_USER_TO_CONVERSATION: "Add user to conversation",
@@ -13,7 +14,7 @@ export const chat = {
       SEEN: "Seen",
       NO_CONVERSATIONS: "No conversations yet",
       NO_MESSAGES_YET: "No messages yet",
-      START_CHAT: "Select a conversation to start chatting",
+      START_CHAT: "Welcome to your messages",
       MEMBERS_LIST: "View members",
       EDIT_CHAT: "Edit chat",
       SELECT_USER: "Select User",
@@ -27,6 +28,13 @@ export const chat = {
       CLOSE: "Close",
       REMOVE_USER: "Remove user",
       REMOVE_USER_CONFIRM: "Are you sure you want to remove this member?",
+      DELETE_CONVERSATION: "Delete conversation",
+      MORE_ACTIONS: "More actions",
+      ADD_USER: "Add user",
+      SHOW_REACTIONS: "Show reactions",
+      REACT_HEART: "React with heart",
+      REACT_LIKE: "React with like",
+      REACT_DISLIKE: "React with dislike",
     },
     MODAL: {
       ADD_USER: {
