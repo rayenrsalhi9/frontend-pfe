@@ -7,10 +7,19 @@ export const notification = {
         "REMINDER": "تذكير",
         "DOCUMENT_NAME": "اسم المستند",
         "SEND_MESSAGE": "أرسل رسالة",
-        "CHAT": "مراسلة"
+        "CHAT": "مراسلة",
+        "EMPTY": "لا توجد إشعارات"
       },
       "BUTTONS": {
         "READ": "وضع علامة على الكل كمقروء"
+      }
+    },
+    "MESSAGES":{
+      "LABELS":{
+        "TITLE":"الرسائل",
+        "VIEW_ALL":"عرض الكل",
+        "EMPTY":"لا توجد محادثات",
+        "FILE_SENT":"تم إرسال ملف"
       }
     }
   }

@@ -1,36 +1,41 @@
 import {
   Component,
   OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  ChangeDetectorRef,
-  ElementRef,
-  HostListener,
   OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Input,
+  HostListener,
+  ElementRef,
   ViewChildren,
   QueryList,
 } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
+import { Observable, Subject, Subscription } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { AppConfig } from "@app/shared/types/app-config.interface";
-import { Observable, Subscription } from "rxjs";
 import { UpdateCurrentLanguage } from "@app/store/app-config/app-config.action";
 import { supportedLanguages } from "@app/configs/i18n.config";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: "nav-i18n",
-  templateUrl: "./nav-i18n.component.html",
-  styleUrls: ["./nav-i18n.component.scss"],
+  selector: "nav-i18n-header",
+  templateUrl: "./nav-i18n-header.component.html",
+  styleUrls: ["./nav-i18n-header.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[class.header-nav-item]": "true",
   },
 })
-export class NavI18NComponent implements OnInit, OnDestroy {
+export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   @Input() dropDirection: "dropdown" | "dropup" | "dropright" = "dropdown";
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
+  
+  private destroy$ = new Subject<void>();
   private appSubscription: Subscription;
-  currentLang: string;
+  private clickListener: (event: MouseEvent) => void;
+
+  currentLang: string = "";
   languageList: { key: string; lang: any }[] = [];
   isMenuOpen = false;
   focusedIndex = -1;
@@ -42,14 +47,18 @@ export class NavI18NComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private cdr: ChangeDetectorRef,
     private elementRef: ElementRef,
-  ) {}
+  ) {
+    this.clickListener = (event: MouseEvent) => {
+      if (!this.elementRef.nativeElement.contains(event.target)) {
+        this.isMenuOpen = false;
+        this.cdr.markForCheck();
+      }
+    };
+  }
 
   @HostListener("document:click", ["$event"])
-  clickout(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.isMenuOpen = false;
-      this.cdr.markForCheck();
-    }
+  onDocumentClick(event: MouseEvent) {
+    this.clickListener(event);
   }
 
   ngOnInit(): void {
@@ -61,13 +70,15 @@ export class NavI18NComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.appSubscription) {
       this.appSubscription.unsubscribe();
     }
   }
 
   getLanguageList() {
-    let list = [];
+    const list: { key: string; lang: any }[] = [];
     for (const key in supportedLanguages) {
       if (Object.prototype.hasOwnProperty.call(supportedLanguages, key)) {
         const lang = supportedLanguages[key];
@@ -140,7 +151,8 @@ export class NavI18NComponent implements OnInit, OnDestroy {
       case "Tab":
         this.isMenuOpen = false;
         if (event.key === "Escape") {
-          this.elementRef.nativeElement.querySelector(".trigger-btn").focus();
+          const btn = this.elementRef.nativeElement.querySelector(".trigger-btn");
+          if (btn) btn.focus();
           event.preventDefault();
         }
         break;
@@ -160,5 +172,17 @@ export class NavI18NComponent implements OnInit, OnDestroy {
     this.translateService.use(language);
     this.isMenuOpen = false;
     this.cdr.markForCheck();
+  }
+
+  getFlagEmoji(langKey: string): string {
+    const flags: { [key: string]: string } = {
+      "en": "🇬🇧",
+      "en_US": "🇬🇧",
+      "fr": "🇫🇷",
+      "fr_FR": "🇫🇷",
+      "ar": "🇸🇦",
+      "ar_SA": "🇸🇦",
+    };
+    return flags[langKey] || "🌐";
   }
 }

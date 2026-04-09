@@ -26,6 +26,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   filteredUsers: User[] = [];
   conversations: Conversation[] = [];
   conversationsTemp: Conversation[] = [];
+  groupConversations: Conversation[] = [];
+  groupConversationsTemp: Conversation[] = [];
   selectedId: number | string | null = null;
   oldSelectedId: number | string | null = null;
   mobilePanelOpen: boolean = false;
@@ -120,27 +122,63 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          const safeData = Array.isArray(response)
-            ? response
-            : Array.isArray(response?.data)
-              ? response.data
-              : [];
+          let safeData: any[] = [];
+          if (Array.isArray(response)) {
+            safeData = response;
+          } else if (response && Array.isArray(response.data)) {
+            safeData = response.data;
+          } else if (response && typeof response === 'object') {
+            safeData = [response];
+          }
+          console.log('Conversations response:', safeData);
+          
           const filteredData = safeData.filter(
             (c): c is Conversation => !!c && !!c.id,
           );
+          console.log('Filtered conversations:', filteredData.length);
+          
+          if (filteredData.length > 0) {
+            const first = filteredData[0];
+            console.log('First conversation keys:', Object.keys(first));
+            console.log('lastMessage exists:', 'lastMessage' in first);
+            console.log('lastMessage value:', first.lastMessage);
+          }
+
+          const conversationsWithMessages = filteredData.filter(
+            (c) => !!c.lastMessage,
+          );
+
+          const oneOnOneConversations = conversationsWithMessages.filter(
+            (c) => !c.title && (!c.users || c.users.length <= 2)
+          );
+
+          const groupConversations = filteredData.filter(
+            (c) => !!c.title || (c.users && c.users.length > 2)
+          );
 
           const dataToUse = this.currentSearchTerm
-            ? this.applySearchFilterToConversations(filteredData)
-            : filteredData;
+            ? this.applySearchFilterToConversations(oneOnOneConversations)
+            : oneOnOneConversations;
+
+          const groupDataToUse = this.currentSearchTerm
+            ? this.applySearchFilterToConversations(groupConversations)
+            : groupConversations;
 
           if (page === 1) {
             this.conversations = dataToUse;
-            this.conversationsTemp = filteredData;
+            this.conversationsTemp = oneOnOneConversations;
+            this.groupConversations = groupDataToUse;
+            this.groupConversationsTemp = groupConversations;
           } else {
             this.conversations = [...this.conversations, ...dataToUse];
             this.conversationsTemp = [
               ...this.conversationsTemp,
-              ...filteredData,
+              ...oneOnOneConversations,
+            ];
+            this.groupConversations = [...this.groupConversations, ...groupDataToUse];
+            this.groupConversationsTemp = [
+              ...this.groupConversationsTemp,
+              ...groupConversations,
             ];
           }
 
@@ -208,6 +246,18 @@ export class ChatComponent implements OnInit, OnDestroy {
           );
         });
       });
+      this.groupConversations = this.groupConversationsTemp.filter((conver) => {
+        if (conver.title) {
+          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
+        }
+        return conver.users?.some((u) => {
+          const fullName = `${u.firstName} ${u.lastName}`;
+          return (
+            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
+            u.email.toLowerCase().includes(searchValue.toLowerCase())
+          );
+        });
+      });
       this.users = this.usersTemp.filter((usr) => {
         const fullName = `${usr.firstName} ${usr.lastName}`;
         return (
@@ -219,6 +269,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else {
       this.users = this.usersTemp;
       this.conversations = this.conversationsTemp;
+      this.groupConversations = this.groupConversationsTemp;
       this.filteredUsers = this.usersTemp;
     }
     this.cdr.markForCheck();
@@ -294,11 +345,20 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.conversationsTemp = updatedConversations;
 
+    const groupUpdatedConversations = this.groupConversationsTemp.filter(
+      (c) => c.id !== data.conversation.id,
+    );
+    groupUpdatedConversations.unshift(newConversation);
+    this.groupConversationsTemp = groupUpdatedConversations;
+
     if (this.currentSearchTerm) {
       this.conversations =
         this.applySearchFilterToConversations(updatedConversations);
+      this.groupConversations =
+        this.applySearchFilterToConversations(groupUpdatedConversations);
     } else {
       this.conversations = updatedConversations;
+      this.groupConversations = groupUpdatedConversations;
     }
     this.cdr.markForCheck();
   }
@@ -329,6 +389,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateConversation(data: Conversation) {
+    const isGroup = !!data.title || (data.users && data.users.length > 2);
+    
     let updated = this.conversationsTemp.map((conversation: Conversation) => {
       if (conversation.id === data.id) {
         return {
@@ -341,17 +403,40 @@ export class ChatComponent implements OnInit, OnDestroy {
       return conversation;
     });
 
+    let groupUpdated = this.groupConversationsTemp.map((conversation: Conversation) => {
+      if (conversation.id === data.id) {
+        return {
+          ...conversation,
+          title: data.title,
+          users: data.users,
+          lastMessage: data.lastMessage,
+        };
+      }
+      return conversation;
+    });
+
     const exists = updated.some((c: Conversation) => c.id === data.id);
-    if (!exists) {
+    const groupExists = groupUpdated.some((c: Conversation) => c.id === data.id);
+    
+    if (!exists && !isGroup) {
       updated = [data, ...updated];
+    }
+    if (!groupExists && isGroup) {
+      groupUpdated = [data, ...groupUpdated];
     }
 
     this.conversationsTemp = updated;
+    this.groupConversationsTemp = groupUpdated;
 
     const dataToUse = this.currentSearchTerm
       ? this.applySearchFilterToConversations(updated)
       : updated;
+    const groupDataToUse = this.currentSearchTerm
+      ? this.applySearchFilterToConversations(groupUpdated)
+      : groupUpdated;
+    
     this.conversations = dataToUse;
+    this.groupConversations = groupDataToUse;
 
     this.selectChat(data);
     this.cdr.markForCheck();

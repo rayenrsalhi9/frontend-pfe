@@ -14,27 +14,3 @@
 .content-wrapper {
   margin-top: 6rem;
 }
-
-.floating-i18n-widget {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 1050;
-  background: white;
-  border-radius: 2em;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  border: 1px solid #eee;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.floating-i18n-widget:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.floating-i18n-widget nav-i18n .language-menu {
-  top: auto;
-  bottom: calc(100% + 8px);
-  transform-origin: bottom;
-}

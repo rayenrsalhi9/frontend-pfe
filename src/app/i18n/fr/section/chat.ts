@@ -24,6 +24,7 @@ export const chat = {
       USERS_LIST: "Liste des utilisateurs",
       CONVERSATIONS: "Conversations",
       LATEST_CONVERSATIONS: "Dernières conversations",
+      GROUPS: "Groupes",
       USERS: "Utilisateurs",
       CLOSE: "Fermer",
       REMOVE_USER: "Supprimer l'utilisateur",

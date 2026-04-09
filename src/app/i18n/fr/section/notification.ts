@@ -7,10 +7,19 @@ export const notification = {
         "REMINDER": "Rappel",
         "DOCUMENT_NAME": "Nom du document",
         "SEND_MESSAGE": "a envoyé un message",
-        "CHAT": "message"
+        "CHAT": "message",
+        "EMPTY": "Aucune notification"
       },
       "BUTTONS": {
         "READ": "Marquer tout comme lu"
+      }
+    },
+    "MESSAGES":{
+      "LABELS":{
+        "TITLE":"Messages",
+        "VIEW_ALL":"Voir tout",
+        "EMPTY":"Aucune conversation",
+        "FILE_SENT":"Fichier envoyé"
       }
     }
   }

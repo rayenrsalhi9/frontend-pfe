@@ -24,6 +24,7 @@ export const chat = {
       USERS_LIST: "Users list",
       CONVERSATIONS: "Conversations",
       LATEST_CONVERSATIONS: "Latest conversations",
+      GROUPS: "Groups",
       USERS: "Users",
       CLOSE: "Close",
       REMOVE_USER: "Remove user",

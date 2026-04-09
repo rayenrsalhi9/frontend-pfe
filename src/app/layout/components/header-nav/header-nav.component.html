@@ -20,7 +20,9 @@
       </button>
     </div>
   </div>
-  <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  <div class="header-nav-right">
+    <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  </div>
 </ng-template>
 
 <ng-template #horizontal>
@@ -37,9 +39,16 @@
       </button>
     </div>
   </div>
-  <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  <div class="header-nav-right">
+    <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
+  </div>
 </ng-template>
 
 <ng-template #headerNavRight>
-  <nav-profile></nav-profile>
+  <div class="header-nav-right-items">
+    <nav-i18n-header></nav-i18n-header>
+    <nav-messages></nav-messages>
+    <nav-notification dropDirection="dropdown"></nav-notification>
+    <nav-profile></nav-profile>
+  </div>
 </ng-template>

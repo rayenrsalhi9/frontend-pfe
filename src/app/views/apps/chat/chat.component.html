@@ -30,9 +30,9 @@
           </button>
         </div>
 
-        <!-- Conversation List -->
+        <!-- All Lists in scrollable area -->
         <perfect-scrollbar class="chat-panel-body" (psScrollYReachEnd)="loadMoreConversations()">
-          <!-- Conversations List -->
+          <!-- Latest Conversations -->
           <ng-container *ngIf="conversations.length > 0">
             <div class="chat-conversations-header">
               <span>{{ "CHAT.LABELS.LATEST_CONVERSATIONS" | translate }}</span>
@@ -46,62 +46,78 @@
                 [class.unread]="isUnreadMessage(conversation)"
                 (click)="selectChat(conversation)"
               >
-                <!-- Avatar -->
                 <div class="chat-list-row-avatar">
-                  <!-- Group or 1-on-1 -->
-                  <ng-container *ngIf="isGroupConversation(conversation); else oneOnOne">
-                    <div class="collage">
-                      <div class="avatar-collage">
-                        <ng-container *ngFor="let avatar of getConversationAvatars(conversation); let i = index">
-                          <avatar
-                            *ngIf="i < 4"
-                            [tooltip]="avatar.tooltip"
-                            [ngClass]="'collage-img'"
-                            class="avatar"
-                            [size]="38"
-                            [src]="avatar.url"
-                          ></avatar>
-                        </ng-container>
-                      </div>
-                      <div *ngIf="conversation.users.length > 4" class="collage-rest">
-                        +{{ conversation.users.length - 4 }}
-                      </div>
-                    </div>
+                  <ng-container *ngIf="getOtherUser(conversation) as otherUser">
+                    <avatar
+                      class="avatar"
+                      [size]="38"
+                      [src]="getAvatarUrl(otherUser)"
+                    ></avatar>
                   </ng-container>
-                  <ng-template #oneOnOne>
-                    <ng-container *ngIf="getOtherUser(conversation) as otherUser">
-                      <avatar
-                        class="avatar"
-                        [size]="38"
-                        [src]="getAvatarUrl(otherUser)"
-                      ></avatar>
-                    </ng-container>
-                  </ng-template>
                 </div>
-
-                <!-- Content -->
                 <div class="chat-list-row-msg">
-                  <!-- Name -->
                   <h6 class="chat-list-name mb-0">
-                    <ng-container *ngIf="conversation.title">
-                      {{ conversation.title }}
-                    </ng-container>
-                    <ng-container *ngIf="!conversation.title">
-                      {{ getParticipantNames(conversation.users) }}
-                    </ng-container>
+                    {{ getParticipantNames(conversation.users) }}
                     <span *ngIf="conversation.lastMessage?.createdAt" class="chat-list-time-inline">
                       ({{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }})
                     </span>
                   </h6>
-
-                  <!-- Last message preview -->
                   <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
-                    <ng-container *ngIf="conversation.lastMessage; else noMessagesTpl">
+                    {{ conversation.lastMessage?.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+                    <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
+                  </p>
+                </div>
+              </button>
+            </ng-container>
+          </ng-container>
+
+          <!-- Groups -->
+          <ng-container *ngIf="groupConversations.length > 0">
+            <div class="chat-conversations-header">
+              <span>{{ "CHAT.LABELS.GROUPS" | translate }}</span>
+            </div>
+            <ng-container *ngFor="let conversation of groupConversations">
+              <button
+                *ngIf="conversation"
+                type="button"
+                class="chat-list-row"
+                [class.active]="conversation.id === selectedId"
+                [class.unread]="isUnreadMessage(conversation)"
+                (click)="selectChat(conversation)"
+              >
+                <div class="chat-list-row-avatar">
+                  <div class="collage">
+                    <div class="avatar-collage">
+                      <ng-container *ngFor="let avatar of getConversationAvatars(conversation); let i = index">
+                        <avatar
+                          *ngIf="i < 4"
+                          [tooltip]="avatar.tooltip"
+                          [ngClass]="'collage-img'"
+                          class="avatar"
+                          [size]="38"
+                          [src]="avatar.url"
+                        ></avatar>
+                      </ng-container>
+                    </div>
+                    <div *ngIf="conversation.users.length > 4" class="collage-rest">
+                      +{{ conversation.users.length - 4 }}
+                    </div>
+                  </div>
+                </div>
+                <div class="chat-list-row-msg">
+                  <h6 class="chat-list-name mb-0">
+                    {{ conversation.title }}
+                    <span *ngIf="conversation.lastMessage?.createdAt" class="chat-list-time-inline">
+                      ({{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }})
+                    </span>
+                  </h6>
+                  <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
+                    <ng-container *ngIf="conversation.lastMessage; else noGroupMessagesTpl">
                       {{ conversation.lastMessage?.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
                       <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
                     </ng-container>
-                    <ng-template #noMessagesTpl>
-                      <span *ngIf="conversation.title || conversation.users.length > 2" class="text-muted">
+                    <ng-template #noGroupMessagesTpl>
+                      <span class="text-muted">
                         {{ 'CHAT.LABELS.NO_MESSAGES_YET' | translate }}
                       </span>
                     </ng-template>
@@ -111,7 +127,7 @@
             </ng-container>
           </ng-container>
 
-          <!-- Users List (always visible) -->
+          <!-- Users -->
           <div *ngIf="filteredUsers.length > 0" class="chat-users-list-header">
             <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
           </div>

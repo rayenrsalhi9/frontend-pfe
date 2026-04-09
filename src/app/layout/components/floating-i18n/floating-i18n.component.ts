@@ -9,6 +9,8 @@ import {
   OnDestroy,
   ViewChildren,
   QueryList,
+  Output,
+  EventEmitter,
 } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
 import { AppConfig } from "@app/shared/types/app-config.interface";
@@ -17,21 +19,24 @@ import { UpdateCurrentLanguage } from "@app/store/app-config/app-config.action";
 import { supportedLanguages } from "@app/configs/i18n.config";
 import { TranslateService } from "@ngx-translate/core";
 
+interface LanguageItem {
+  key: string;
+  lang: any;
+}
+
 @Component({
-  selector: "nav-i18n",
-  templateUrl: "./nav-i18n.component.html",
-  styleUrls: ["./nav-i18n.component.scss"],
+  selector: "app-floating-i18n",
+  templateUrl: "./floating-i18n.component.html",
+  styleUrls: ["./floating-i18n.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    "[class.header-nav-item]": "true",
-  },
 })
-export class NavI18NComponent implements OnInit, OnDestroy {
+export class FloatingI18nComponent implements OnInit, OnDestroy {
   @Input() dropDirection: "dropdown" | "dropup" | "dropright" = "dropdown";
+  @Output() languageChanged = new EventEmitter<string>();
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
   private appSubscription: Subscription;
   currentLang: string;
-  languageList: { key: string; lang: any }[] = [];
+  languageList: LanguageItem[] = [];
   isMenuOpen = false;
   focusedIndex = -1;
 
@@ -67,7 +72,7 @@ export class NavI18NComponent implements OnInit, OnDestroy {
   }
 
   getLanguageList() {
-    let list = [];
+    const list: LanguageItem[] = [];
     for (const key in supportedLanguages) {
       if (Object.prototype.hasOwnProperty.call(supportedLanguages, key)) {
         const lang = supportedLanguages[key];
@@ -140,7 +145,9 @@ export class NavI18NComponent implements OnInit, OnDestroy {
       case "Tab":
         this.isMenuOpen = false;
         if (event.key === "Escape") {
-          this.elementRef.nativeElement.querySelector(".trigger-btn").focus();
+          this.elementRef.nativeElement
+            .querySelector(".language-trigger")
+            ?.focus();
           event.preventDefault();
         }
         break;
@@ -159,6 +166,11 @@ export class NavI18NComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UpdateCurrentLanguage(language));
     this.translateService.use(language);
     this.isMenuOpen = false;
+    this.languageChanged.emit(language);
     this.cdr.markForCheck();
+  }
+
+  getLanguageCode(key: string): string {
+    return key.split("_")[0].toUpperCase();
   }
 }

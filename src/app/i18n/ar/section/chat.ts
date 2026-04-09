@@ -23,6 +23,7 @@ export const chat = {
       USERS_LIST: "قائمة المستخدمين",
       CONVERSATIONS: "المحادثات",
       LATEST_CONVERSATIONS: "آخر المحادثات",
+      GROUPS: "المجموعات",
       USERS: "المستخدمون",
       CLOSE: "إغلاق",
       REMOVE_USER: "إزالة المستخدم",
