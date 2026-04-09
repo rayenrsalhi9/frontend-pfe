@@ -60,21 +60,17 @@
           <p class="user-email">{{ user.email }}</p>
           
           <div class="user-roles">
-            <ng-container *ngIf="getUserRoles(user.id).length > 0; else noRoles">
+            <ng-container *ngIf="getUserRoles(user.id) as roles">
               <span
-                *ngFor="let role of getUserRoles(user.id)"
+                *ngFor="let role of roles"
                 class="role-chip"
-                [style.background]="getRoleBadgeBg(role.name)"
-                [style.color]="getRoleBadgeColor(role.name)"
               >
                 {{ role.name }}
               </span>
-            </ng-container>
-            <ng-template #noRoles>
-              <span class="role-chip role-chip-empty">
+              <span *ngIf="roles.length === 0" class="role-chip role-chip-empty">
                 {{ "USERROLE.NO_ROLES_ASSIGNED" | translate }}
               </span>
-            </ng-template>
+            </ng-container>
           </div>
 
           <button
@@ -115,6 +111,7 @@
           class="pagination-btn"
           [disabled]="currentPage === 1"
           (click)="goToPage(currentPage - 1)"
+          [attr.aria-label]="'USERROLE.PAGINATION_PREVIOUS' | translate"
         >
           <i class="feather icon-chevron-left"></i>
         </button>
@@ -135,6 +132,7 @@
           class="pagination-btn"
           [disabled]="currentPage === totalPages"
           (click)="goToPage(currentPage + 1)"
+          [attr.aria-label]="'USERROLE.PAGINATION_NEXT' | translate"
         >
           <i class="feather icon-chevron-right"></i>
         </button>
@@ -165,7 +163,7 @@
         type="button"
         class="modal-close"
         (click)="closeModal()"
-        aria-label="Close"
+        [attr.aria-label]="'USERROLE.CLOSE' | translate"
       >
         <i class="feather icon-x"></i>
       </button>
@@ -202,28 +200,26 @@
         </p>
 
         <div class="roles-list" *ngIf="roles && roles.length > 0">
-          <div
+          <button
+            type="button"
             *ngFor="let role of roles"
             class="role-option"
             [class.role-option-selected]="hasRole(role.id)"
+            [attr.aria-pressed]="hasRole(role.id)"
             (click)="toggleRole(role)"
           >
             <div class="role-checkbox">
               <i *ngIf="hasRole(role.id)" class="feather icon-check"></i>
             </div>
             <div class="role-info">
-              <span 
-                class="role-badge-inline"
-                [style.background]="getRoleBadgeBg(role.name)"
-                [style.color]="getRoleBadgeColor(role.name)"
-              >
+              <span class="role-badge-inline">
                 {{ role.name }}
               </span>
               <span class="role-description" *ngIf="role.description">
                 {{ role.description }}
               </span>
             </div>
-          </div>
+          </button>
         </div>
 
         <div *ngIf="!roles || roles.length === 0" class="no-roles">

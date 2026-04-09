@@ -16,12 +16,15 @@ export const userRole = {
     ROLES_ASSIGNED: "rôles attribués",
     OF: "sur",
     CANCEL: "Annuler",
+    CLOSE: "Fermer",
     SAVING: "Enregistrement...",
     SAVE_CHANGES: "Enregistrer les modifications",
     BTN_EDIT_ROLES: "Modifier les rôles",
     PAGINATION_SHOWING: "Affichage de",
     PAGINATION_OF: "sur",
     PAGINATION_USERS: "utilisateurs",
+    PAGINATION_PREVIOUS: "Page précédente",
+    PAGINATION_NEXT: "Page suivante",
     TOAST: {
       NO_CHANGES: "Aucune modification effectuée",
       UPDATED_SUCCESS:

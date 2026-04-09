@@ -45,6 +45,5 @@ export const nav = {
     USERS: "المستخدمون والأدوار",
     USERS_LIST: "قائمة المستخدمين",
     USERS_ROLES_LIST: "الأدوار",
-    USERS_ROLES: "أدوار المستخدمين",
   },
 };

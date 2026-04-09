@@ -218,32 +218,6 @@ export class UserRolesComponent implements OnInit, OnDestroy {
     return userRoles;
   }
 
-  getRoleBadgeColor(roleName: string): string {
-    const colors = [
-      "#2563eb",
-      "#10b981",
-      "#f59e0b",
-      "#0ea5e9",
-      "#ef4444",
-      "#8b5cf6",
-      "#ec4899",
-      "#14b8a6",
-    ];
-
-    let hash = 0;
-    for (let i = 0; i < roleName.length; i++) {
-      hash = roleName.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    const index = Math.abs(hash) % colors.length;
-    return colors[index];
-  }
-
-  getRoleBadgeBg(roleName: string): string {
-    const color = this.getRoleBadgeColor(roleName);
-    return color + "15";
-  }
-
   getUserAvatar(user: User): string {
     if (user.avatar) {
       return environment.apiUrl + user.avatar;
@@ -379,11 +353,12 @@ export class UserRolesComponent implements OnInit, OnDestroy {
 
     Promise.all(updates)
       .then(() => {
+        const user = this.selectedUser;
         if (errorCount === 0) {
           this.toastrService.success(
             this.translate.instant("USERROLE.TOAST.UPDATED_SUCCESS", {
-              firstName: this.selectedUser.firstName,
-              lastName: this.selectedUser.lastName,
+              firstName: user?.firstName,
+              lastName: user?.lastName,
             }),
           );
         } else if (updateCount > 0) {
@@ -409,6 +384,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
   }
 
   closeModal(): void {
+    if (this.isSaving) return;
     this.isModalOpen = false;
     this.selectedUser = null;
     this.selectedUserRoleIds = [];
@@ -417,6 +393,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
   }
 
   onBackdropClick(event: MouseEvent): void {
+    if (this.isSaving) return;
     if (event.target === event.currentTarget) {
       this.closeModal();
     }
