@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { routes } from "./role-user.routing";
 import { SharedModule } from "@app/shared/shared.module";
-import { RoleUserComponent } from "./role-user.component";
+import { routes } from "./user-roles.routing";
+import { UserRolesComponent } from "./user-roles.component";
 
 @NgModule({
-  declarations: [RoleUserComponent],
+  declarations: [UserRolesComponent],
   imports: [SharedModule, RouterModule.forChild(routes)],
 })
-export class RoleUserModule {}
+export class UserRolesModule {}

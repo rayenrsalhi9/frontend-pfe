@@ -5,6 +5,8 @@ import {
   OnDestroy,
   OnInit,
 } from "@angular/core";
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 import { Role } from "@app/shared/enums/role";
 import { User } from "@app/shared/enums/user-auth";
 import { UserRoles } from "@app/shared/enums/user-roles";
@@ -12,41 +14,50 @@ import { CommonService } from "@app/shared/services/common.service";
 import { RoleService } from "@app/shared/services/role.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { forkJoin, of, Subject } from "rxjs";
+import { forkJoin, of, Subject as RxSubject } from "rxjs";
 import { catchError, finalize, switchMap, takeUntil } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 
 @Component({
-  selector: "app-role-user",
-  templateUrl: "./role-user.component.html",
-  styleUrls: ["./role-user.component.css"],
+  selector: "app-user-roles",
+  templateUrl: "./user-roles.component.html",
+  styleUrls: ["./user-roles.component.scss"],
 })
-export class RoleUserComponent implements OnInit, OnDestroy {
-  roles: Role[];
-  allUsers: User[];
-  selectedUser: User = null;
-  isModalOpen: boolean = false;
+export class UserRolesComponent implements OnInit, OnDestroy {
+  roles: Role[] = [];
+  allUsers: User[] = [];
+  filteredUsers: User[] = [];
 
   userRoleMapping: { [roleId: string]: UserRoles[] } = {};
   selectedUserRoleIds: string[] = [];
   initialSelectedUserRoleIds: string[] = [];
 
   searchText: string = "";
-  filteredUsers: User[] = [];
+  searchSubject: Subject<string> = new Subject<string>();
+
   isLoading: boolean = true;
   isSaving: boolean = false;
+  isModalOpen: boolean = false;
+  selectedUser: User = null;
 
-  private destroy$ = new Subject<void>();
+  currentPage: number = 1;
+  pageSize: number = 12;
+  totalPages: number = 1;
+  Math = Math;
+
+  private destroy$ = new RxSubject<void>();
 
   constructor(
     private commonService: CommonService,
     private roleService: RoleService,
-    private cdk: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     private toastrService: ToastrService,
     private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.initData();
+    this.initSearch();
   }
 
   ngOnDestroy(): void {
@@ -54,14 +65,82 @@ export class RoleUserComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  @HostListener("document:keydown.escape", ["$event"])
-  onEscapePress(event: KeyboardEvent) {
-    if (this.isModalOpen && !this.isSaving) {
-      this.closeModal();
+  private initSearch(): void {
+    this.searchSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.currentPage = 1;
+        this.applyFilter();
+      });
+  }
+
+  onSearchChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchText = value;
+    this.searchSubject.next(value);
+  }
+
+  private applyFilter(): void {
+    if (!this.allUsers) {
+      this.filteredUsers = [];
+      return;
+    }
+
+    if (!this.searchText.trim()) {
+      this.filteredUsers = this.allUsers;
+    } else {
+      const search = this.searchText.toLowerCase();
+      this.filteredUsers = (this.allUsers || []).filter(
+        (user) =>
+          (user.firstName || "").toLowerCase().includes(search) ||
+          (user.lastName || "").toLowerCase().includes(search) ||
+          (user.userName || "").toLowerCase().includes(search) ||
+          (user.email && user.email.toLowerCase().includes(search)),
+      );
+    }
+
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
+    this.cdr.markForCheck();
+  }
+
+  get paginatedUsers(): User[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.filteredUsers.slice(start, end);
+  }
+
+  get totalUsers(): number {
+    return this.filteredUsers.length;
+  }
+
+  get showPagination(): boolean {
+    return this.totalUsers > this.pageSize;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.cdr.markForCheck();
     }
   }
 
-  initData() {
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  initData(): void {
     this.isLoading = true;
 
     forkJoin({
@@ -85,6 +164,7 @@ export class RoleUserComponent implements OnInit, OnDestroy {
           this.roles = Array.isArray(roles) ? roles : [];
           this.allUsers = Array.isArray(users) ? users : [];
           this.filteredUsers = this.allUsers;
+          this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
 
           if (this.roles.length === 0) {
             return of([] as UserRoles[][]);
@@ -106,7 +186,7 @@ export class RoleUserComponent implements OnInit, OnDestroy {
         }),
         finalize(() => {
           this.isLoading = false;
-          this.cdk.markForCheck();
+          this.cdr.markForCheck();
         }),
         takeUntil(this.destroy$),
       )
@@ -125,27 +205,57 @@ export class RoleUserComponent implements OnInit, OnDestroy {
       });
   }
 
-  filterUsers() {
-    if (!this.allUsers) {
-      this.filteredUsers = [];
-      return;
+  getUserRoles(userId: string | number): Role[] {
+    const userRoles: Role[] = [];
+    if (!this.roles || !userId) return userRoles;
+
+    for (const role of this.roles) {
+      const usersInRole = this.userRoleMapping[role.id];
+      if (usersInRole && usersInRole.some((ur) => ur.userId === userId)) {
+        userRoles.push(role);
+      }
     }
-    if (!this.searchText.trim()) {
-      this.filteredUsers = this.allUsers;
-    } else {
-      const search = this.searchText.toLowerCase();
-      this.filteredUsers = (this.allUsers || []).filter(
-        (user) =>
-          (user.firstName || "").toLowerCase().includes(search) ||
-          (user.lastName || "").toLowerCase().includes(search) ||
-          (user.userName || "").toLowerCase().includes(search) ||
-          (user.email && user.email.toLowerCase().includes(search)),
-      );
-    }
-    this.cdk.markForCheck();
+    return userRoles;
   }
 
-  openRoleModal(user: User) {
+  getRoleBadgeColor(roleName: string): string {
+    const colors = [
+      "#2563eb",
+      "#10b981",
+      "#f59e0b",
+      "#0ea5e9",
+      "#ef4444",
+      "#8b5cf6",
+      "#ec4899",
+      "#14b8a6",
+    ];
+
+    let hash = 0;
+    for (let i = 0; i < roleName.length; i++) {
+      hash = roleName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  }
+
+  getRoleBadgeBg(roleName: string): string {
+    const color = this.getRoleBadgeColor(roleName);
+    return color + "15";
+  }
+
+  getUserAvatar(user: User): string {
+    if (user.avatar) {
+      return environment.apiUrl + user.avatar;
+    }
+    return "/assets/images/avatars/thumb-16.jpg";
+  }
+
+  getUserFullName(user: User): string {
+    return `${user.firstName || ""} ${user.lastName || ""}`.trim();
+  }
+
+  openRoleModal(user: User): void {
     this.selectedUser = user;
 
     this.selectedUserRoleIds = [];
@@ -160,14 +270,14 @@ export class RoleUserComponent implements OnInit, OnDestroy {
 
     this.initialSelectedUserRoleIds = [...this.selectedUserRoleIds];
     this.isModalOpen = true;
-    this.cdk.markForCheck();
+    this.cdr.markForCheck();
   }
 
   hasRole(roleId: string): boolean {
     return this.selectedUserRoleIds.includes(roleId);
   }
 
-  toggleRole(role: Role) {
+  toggleRole(role: Role): void {
     const hasRole = this.hasRole(role.id);
 
     if (hasRole) {
@@ -177,7 +287,7 @@ export class RoleUserComponent implements OnInit, OnDestroy {
     } else {
       this.selectedUserRoleIds.push(role.id);
     }
-    this.cdk.markForCheck();
+    this.cdr.markForCheck();
   }
 
   hasChanges(): boolean {
@@ -192,7 +302,7 @@ export class RoleUserComponent implements OnInit, OnDestroy {
     );
   }
 
-  saveUserRoles() {
+  saveUserRoles(): void {
     if (!this.selectedUser || this.isSaving) return;
 
     if (!this.hasChanges()) {
@@ -288,27 +398,33 @@ export class RoleUserComponent implements OnInit, OnDestroy {
           );
         }
 
-        // Only close modal if there was some success
         if (updateCount > 0 || errorCount === 0) {
           this.closeModal();
         }
       })
       .finally(() => {
         this.isSaving = false;
-        this.cdk.markForCheck();
+        this.cdr.markForCheck();
       });
   }
 
-  closeModal() {
+  closeModal(): void {
     this.isModalOpen = false;
     this.selectedUser = null;
     this.selectedUserRoleIds = [];
     this.initialSelectedUserRoleIds = [];
-    this.cdk.markForCheck();
+    this.cdr.markForCheck();
   }
 
-  onBackdropClick(event: MouseEvent) {
+  onBackdropClick(event: MouseEvent): void {
     if (event.target === event.currentTarget) {
+      this.closeModal();
+    }
+  }
+
+  @HostListener("document:keydown.escape", ["$event"])
+  onEscapePress(event: KeyboardEvent): void {
+    if (this.isModalOpen && !this.isSaving) {
       this.closeModal();
     }
   }
