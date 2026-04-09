@@ -121,6 +121,7 @@
             type="button"
             class="pagination-btn"
             [class.active]="page === currentPage"
+            [attr.aria-current]="page === currentPage ? 'page' : null"
             (click)="goToPage(page)"
           >
             {{ page }}
@@ -147,7 +148,7 @@
   class="modal-backdrop"
   (click)="onBackdropClick($event)"
 >
-  <div class="modal-container" role="dialog" aria-modal="true">
+  <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <!-- Modal Header -->
     <div class="modal-header">
       <div class="modal-title-section">
@@ -155,7 +156,7 @@
           <i class="feather icon-user-check"></i>
         </div>
         <div class="modal-title-text">
-          <h3>{{ "USERROLE.MANAGE_ROLES_FOR" | translate }}</h3>
+          <h3 id="modal-title">{{ "USERROLE.MANAGE_ROLES_FOR" | translate }}</h3>
           <p>{{ selectedUser?.firstName }} {{ selectedUser?.lastName }}</p>
         </div>
       </div>

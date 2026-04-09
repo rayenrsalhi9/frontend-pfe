@@ -5,8 +5,6 @@ import {
   OnDestroy,
   OnInit,
 } from "@angular/core";
-import { Subject } from "rxjs";
-import { debounceTime } from "rxjs/operators";
 import { Role } from "@app/shared/enums/role";
 import { User } from "@app/shared/enums/user-auth";
 import { UserRoles } from "@app/shared/enums/user-roles";
@@ -14,8 +12,14 @@ import { CommonService } from "@app/shared/services/common.service";
 import { RoleService } from "@app/shared/services/role.service";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { forkJoin, of, Subject as RxSubject } from "rxjs";
-import { catchError, finalize, switchMap, takeUntil } from "rxjs/operators";
+import { forkJoin, of, Subject } from "rxjs";
+import {
+  catchError,
+  finalize,
+  switchMap,
+  takeUntil,
+  debounceTime,
+} from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -33,19 +37,19 @@ export class UserRolesComponent implements OnInit, OnDestroy {
   initialSelectedUserRoleIds: string[] = [];
 
   searchText: string = "";
-  searchSubject: Subject<string> = new Subject<string>();
+  searchSubject = new Subject<string>();
 
   isLoading: boolean = true;
   isSaving: boolean = false;
   isModalOpen: boolean = false;
-  selectedUser: User = null;
+  selectedUser: User | null = null;
 
   currentPage: number = 1;
   pageSize: number = 12;
   totalPages: number = 1;
   Math = Math;
 
-  private destroy$ = new RxSubject<void>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private commonService: CommonService,
@@ -164,7 +168,9 @@ export class UserRolesComponent implements OnInit, OnDestroy {
           this.roles = Array.isArray(roles) ? roles : [];
           this.allUsers = Array.isArray(users) ? users : [];
           this.filteredUsers = this.allUsers;
-          this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
+          this.totalPages = Math.ceil(
+            this.filteredUsers.length / this.pageSize,
+          );
 
           if (this.roles.length === 0) {
             return of([] as UserRoles[][]);
@@ -218,14 +224,20 @@ export class UserRolesComponent implements OnInit, OnDestroy {
     return userRoles;
   }
 
-  getUserAvatar(user: User): string {
+  getUserAvatar(user: User | null): string {
+    if (!user) {
+      return "/assets/images/avatars/thumb-16.jpg";
+    }
     if (user.avatar) {
       return environment.apiUrl + user.avatar;
     }
     return "/assets/images/avatars/thumb-16.jpg";
   }
 
-  getUserFullName(user: User): string {
+  getUserFullName(user: User | null): string {
+    if (!user) {
+      return "";
+    }
     return `${user.firstName || ""} ${user.lastName || ""}`.trim();
   }
 
