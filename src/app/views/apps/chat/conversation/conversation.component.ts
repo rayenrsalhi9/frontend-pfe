@@ -2,11 +2,15 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  OnChanges,
+  AfterViewChecked,
   Input,
   ChangeDetectorRef,
   ViewChild,
   EventEmitter,
   Output,
+  ElementRef,
+  SimpleChanges,
 } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -39,8 +43,12 @@ import { TranslateService } from "@ngx-translate/core";
     },
   ],
 })
-export class ConversationComponent implements OnInit, OnDestroy {
+export class ConversationComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
   @ViewChild("chatPS") chatPS: PerfectScrollbarComponent;
+  @ViewChild("scrollContainer", { static: false })
+  scrollContainerRef: ElementRef;
 
   conversation: Conversation;
   message: string = "";
@@ -55,13 +63,18 @@ export class ConversationComponent implements OnInit, OnDestroy {
   showFlag: boolean = false;
   selectedImage: any = [];
   isSending: boolean = false;
+  composerDisabled: boolean = false;
 
   private destroy$ = new Subject<void>();
   private chatLoadCancel$ = new Subject<void>();
+  private shouldScrollToBottom: boolean = false;
 
   @Input() set chatId(id: number | string) {
-    this.fetchChatDetail(id as string);
     this._id = id;
+    if (id) {
+      this.shouldScrollToBottom = true;
+    }
+    this.fetchChatDetail(id as string);
   }
 
   @Input() user: User;
@@ -94,6 +107,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {}
+
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollToBottom && this.chatPS) {
+      this.shouldScrollToBottom = false;
+      this.scrollToBottom();
+    }
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -129,13 +149,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
     this.isOpen = !this.isOpen;
   }
 
-  ngAfterViewChecked() {
-    if (!this.isScrolled) {
-      this.scrollToBottom();
-      this.isScrolled = true;
-    }
-  }
-
   handlerRactionToggle(message: Message) {
     this.reactionToggle =
       this.reactionToggle !== null && this.reactionToggle === message.id
@@ -150,26 +163,21 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   fetchChatDetail(id: string) {
-    if (id == null) {
-      this.conversation = null;
-      this.message = "";
-      if (this._id) {
-        this.pusherService.unsubscribeFromChannel(
-          `private-conversation.${this._id}`,
-        );
-      }
-      return;
-    }
+    this.chatLoadCancel$.next();
+    this.conversation = null;
+    this.message = "";
+    this.isScrolled = false;
+    this.composerDisabled = true;
 
-    if (this._id && this._id !== id) {
+    if (this._id) {
       this.pusherService.unsubscribeFromChannel(
         `private-conversation.${this._id}`,
       );
     }
 
-    this.isScrolled = false;
-
-    this.chatLoadCancel$.next();
+    if (id == null) {
+      return;
+    }
 
     this.conversationService
       .getMessages(id)
@@ -177,6 +185,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: Conversation) => {
           this.conversation = data;
+          this.composerDisabled = false;
 
           if (this.conversation.title) {
             this.title = this.conversation.title;
@@ -195,11 +204,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
           this.initChannel(data.id);
           this.initMessageSeenEvent(data.id);
           this.initMessageReaction(data.id);
+          this.composerDisabled = false;
           this.cdr.detectChanges();
           this.scrollToBottom();
         },
         error: () => {
           this.conversation = null;
+          this.composerDisabled = false;
           this.translate
             .get("CHAT.ERROR.LOAD_MESSAGES_FAILED")
             .subscribe((msg: string) => {
@@ -337,7 +348,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
       });
   }
 
-  sendMessage(type = "msg", file = null) {
+  sendMessage(type = "msg", file = null, mime = null) {
     if (this.isSending) {
       return;
     }
@@ -355,6 +366,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
     const message: Message = {
       content: file ? file : trimmedMessage,
       type: type,
+      mime: mime,
       conversation: { id: this.conversation.id },
     };
 
@@ -393,7 +405,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.readAsDataURL(fileSelected);
     reader.onload = () => {
-      this.sendMessage(mimeType.split("/")[0], reader.result);
+      this.sendMessage(mimeType.split("/")[0], reader.result, mimeType);
     };
   }
 
@@ -428,9 +440,16 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
 
   scrollToBottom(): void {
-    try {
-      this.chatPS.directiveRef.scrollToBottom();
-    } catch (e) {}
+    setTimeout(() => {
+      try {
+        const ps = this.chatPS;
+        if (ps && ps.directiveRef) {
+          ps.directiveRef.scrollToBottom(0, 0);
+        }
+      } catch (e) {
+        console.error("Scroll error:", e);
+      }
+    }, 300);
   }
 
   onMobilePanelOpen() {

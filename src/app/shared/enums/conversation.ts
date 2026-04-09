@@ -5,6 +5,7 @@ export interface Message {
   conversation?: Conversation
   content: string
   type: string
+  mime?: string
   receiver?: User|User[]
   sender?: User
   document?: any

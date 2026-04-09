@@ -294,16 +294,14 @@
               <!-- Audio -->
               <div *ngIf="msg.type === 'audio'">
                 <audio controls class="bubble-audio">
-                  <source [src]="getHost() + msg.content" type="audio/ogg" />
-                  <source [src]="getHost() + msg.content" type="audio/mpeg" />
+                  <source [src]="getHost() + msg.content" [type]="msg.mime" />
                 </audio>
               </div>
 
               <!-- Video -->
               <div *ngIf="msg.type === 'video'">
                 <video class="bubble-video" controls>
-                  <source [src]="getHost() + msg.content" type="video/mp4" />
-                  <source [src]="getHost() + msg.content" type="video/ogg" />
+                  <source [src]="getHost() + msg.content" [type]="msg.mime" />
                 </video>
               </div>
             </div>
@@ -338,6 +336,7 @@
       class="form-control conv-message-input"
       [placeholder]="'CHAT.LABELS.PLACEHOLDER' | translate"
       [(ngModel)]="message"
+      [disabled]="composerDisabled"
       (focus)="onInputMessageFocus()"
       (keydown.enter)="sendMessage(); $event.preventDefault()"
     />
@@ -355,7 +354,8 @@
         type="button"
         class="conv-icon-btn"
         (click)="fileInput.click()"
-        [attr.aria-label]="'chat.attachFile' | translate"
+        [disabled]="composerDisabled"
+        [attr.aria-label]="'CHAT.attachFile' | translate"
       >
         <i class="las la-paperclip"></i>
       </button>
@@ -365,7 +365,8 @@
           type="button"
           class="conv-icon-btn"
           (click)="handleEmojiBar()"
-          [attr.aria-label]="'chat.emoji' | translate"
+          [disabled]="composerDisabled"
+          [attr.aria-label]="'CHAT.emoji' | translate"
         >
           <i class="las la-smile"></i>
         </button>
@@ -376,7 +377,7 @@
           [emojiTooltip]="false"
           [enableSearch]="false"
           [darkMode]="false"
-          [title]="'chat.pickEmoji' | translate"
+          [title]="'CHAT.pickEmoji' | translate"
           emoji="point_up"
         ></emoji-mart>
       </div>
@@ -385,6 +386,7 @@
     <button
       type="button"
       class="btn btn-primary conv-send-btn"
+      [disabled]="composerDisabled"
       (click)="sendMessage()"
     >
       <span>{{ "CHAT.BUTTONS.SEND" | translate }}</span>

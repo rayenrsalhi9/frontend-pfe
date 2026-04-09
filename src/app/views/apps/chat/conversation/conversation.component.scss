@@ -382,28 +382,6 @@
     }
   }
 
-  .bubble-react-picker {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    background: var(--card-bg);
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    padding: 6px 10px;
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-    white-space: nowrap;
-
-    &--left {
-      inset-inline-start: 0;
-    }
-
-    &--right {
-      inset-inline-end: 0;
-    }
-  }
-
   &--recv {
     right: -32px;
   }

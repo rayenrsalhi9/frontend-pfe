@@ -31,7 +31,7 @@
         </div>
 
         <!-- Conversation List -->
-        <perfect-scrollbar class="chat-panel-body">
+        <perfect-scrollbar class="chat-panel-body" (psScrollYReachEnd)="loadMoreConversations()">
           <!-- Conversations List -->
           <ng-container *ngIf="conversations.length > 0">
             <div class="chat-conversations-header">
