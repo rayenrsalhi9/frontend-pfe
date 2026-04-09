@@ -213,7 +213,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
 
   getUserRoles(userId: string | number): Role[] {
     const userRoles: Role[] = [];
-    if (!this.roles || !userId) return userRoles;
+    if (!this.roles || userId == null) return userRoles;
 
     for (const role of this.roles) {
       const usersInRole = this.userRoleMapping[role.id];
@@ -291,6 +291,14 @@ export class UserRolesComponent implements OnInit, OnDestroy {
   saveUserRoles(): void {
     if (!this.selectedUser || this.isSaving) return;
 
+    const user = this.selectedUser;
+    if (user.id == null) {
+      this.toastrService.error(
+        this.translate.instant("USERROLE.TOAST.UPDATE_ERROR"),
+      );
+      return;
+    }
+
     if (!this.hasChanges()) {
       this.toastrService.info(
         this.translate.instant("USERROLE.TOAST.NO_CHANGES"),
@@ -300,7 +308,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    const userId = this.selectedUser.id;
+    const userId = user.id;
     let updateCount = 0;
     let errorCount = 0;
     const updates: Promise<void>[] = [];
@@ -321,9 +329,9 @@ export class UserRolesComponent implements OnInit, OnDestroy {
             {
               userId: userId,
               roleId: role.id,
-              userName: this.selectedUser.userName,
-              firstName: this.selectedUser.firstName,
-              lastName: this.selectedUser.lastName,
+              userName: user.userName,
+              firstName: user.firstName,
+              lastName: user.lastName,
             } as UserRoles,
           ];
         } else {
