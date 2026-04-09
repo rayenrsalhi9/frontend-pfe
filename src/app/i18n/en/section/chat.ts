@@ -1,40 +1,102 @@
 export const chat = {
-  "CHAT":{
-    "LABELS":{
-      "PLACEHOLDER":"Enter your message here",
-      "WELCOME":"Say hi to your team",
-      "SEARCH":"Search for a user",
-      "CreateGroupConversation": "Create group conversation",
-      "AddUserToConversation": "Add user to conversation",
-      "TITLE":"Title",
-      "RECIVER":"Receiver",
+  CHAT: {
+    LABELS: {
+      PLACEHOLDER: "Enter your message here",
+      WELCOME:
+        "Select a conversation to begin chatting with your team or contacts.",
+      SEARCH: "Search for a user",
+      CREATE_GROUP_CONVERSATION: "Create group conversation",
+      ADD_USER_TO_CONVERSATION: "Add user to conversation",
+      TITLE: "Title",
+      RECEIVER: "Receiver",
+      GROUP_COUNT: "Group ({{count}} members)",
+      FILE_SENT: "File sent",
+      SEEN: "Seen",
+      NO_CONVERSATIONS: "No conversations yet",
+      NO_MESSAGES_YET: "No messages yet",
+      START_CHAT: "Welcome to your messages",
+      MEMBERS_LIST: "View members",
+      EDIT_CHAT: "Edit chat",
+      SELECT_USER: "Select User",
+      NO_USERS: "No users found",
+      GROUP_NAME: "Group Name",
+      SELECT_MEMBERS: "Select Members",
+      USERS_LIST: "Users list",
+      CONVERSATIONS: "Conversations",
+      LATEST_CONVERSATIONS: "Latest conversations",
+      USERS: "Users",
+      CLOSE: "Close",
+      REMOVE_USER: "Remove user",
+      REMOVE_USER_CONFIRM: "Are you sure you want to remove this member?",
+      DELETE_CONVERSATION: "Delete conversation",
+      MORE_ACTIONS: "More actions",
+      ADD_USER: "Add user",
+      SHOW_REACTIONS: "Show reactions",
+      REACT_HEART: "React with heart",
+      REACT_LIKE: "React with like",
+      REACT_DISLIKE: "React with dislike",
     },
-    "BUTTONS":{
-      "GROUP":"Add new group",
-      "USER": "Add new user",
-      "SEND":"Send",
-      "CREATE":"Create",
-      "ADD":"Add",
-      "CANCEL":"Cancel"
-    },
-    "TOAST":{
-      "SelectedUserEmpty": "Please select a user!",
-      "UserAddedSuccessfully": "User added successfully",
-      "GroupAddedSuccessfully": "Group added successfully"
-    },
-    "DELETE": {
-      "LABEL": {
-        "title": "Delete Conversation",
-        "message": "Are you sure you want to delete this conversation? the action is irreversible.",
-        "button": {
-          "cancel": "Cancel",
-          "confirm": "Confirm"
-        }
+    MODAL: {
+      ADD_USER: {
+        DESCRIPTION: "Select a user to add to the conversation",
       },
-      "ERROR": {},
-      "TOAST": {
-        "CONVERSATION_DELETED_SUCCESSFULLY": "Conversation deleted successfully"
-      }
+      CREATE_GROUP: {
+        DESCRIPTION: "Create a new group conversation and add members",
+      },
+      EDIT_GROUP: {
+        DESCRIPTION: "Edit the group name",
+      },
     },
-  }
-}
+    BUTTONS: {
+      GROUP: "Add new group",
+      USER: "Add new user",
+      SEND: "Send",
+      CREATE: "Create",
+      ADD: "Add",
+      CANCEL: "Cancel",
+      SELECT_ALL: "Select all",
+      DESELECT_ALL: "Deselect all",
+      CLOSE: "Close",
+      SAVE: "Save",
+    },
+    TOAST: {
+      PLEASE_SELECT_USER: "Please select a user",
+      USER_ADDED_SUCCESSFULLY: "User added successfully",
+      FAILED_TO_ADD_USER: "Failed to add user",
+      SELECTED_USER_EMPTY: "Please select a user!",
+      USER_ADDED: "User added successfully",
+      GROUP_ADDED_SUCCESSFULLY: "Group added successfully",
+      USER_REMOVED_SUCCESSFULLY: "User removed successfully",
+      FAILED_TO_REMOVE_USER: "Failed to remove user",
+      GROUP_UPDATED_SUCCESSFULLY: "Group updated successfully",
+      FAILED_TO_UPDATE_GROUP: "Failed to update group",
+      GROUP_NAME_REQUIRED: "Group name is required",
+      SELECT_AT_LEAST_ONE_MEMBER: "Please select at least one member",
+      FAILED_TO_CREATE_GROUP: "Failed to create group",
+    },
+    DELETE: {
+      LABEL: {
+        TITLE: "Delete Conversation",
+        MESSAGE:
+          "Are you sure you want to delete this conversation? The action is irreversible.",
+        BUTTON: {
+          CANCEL: "Cancel",
+          CONFIRM: "Confirm",
+        },
+      },
+      ERROR: {},
+      TOAST: {
+        CONVERSATION_DELETED_SUCCESSFULLY: "Conversation deleted successfully",
+      },
+    },
+    ERROR: {
+      LOAD_USERS_FAILED: "Failed to load users",
+      CREATE_CONVERSATION_FAILED: "Failed to create conversation",
+      LOAD_CONVERSATIONS_FAILED: "Failed to load conversations",
+      LOAD_MESSAGES_FAILED: "Failed to load messages",
+      DELETE_CONVERSATION_FAILED: "Failed to delete conversation",
+      SEND_MESSAGE_FAILED: "Failed to send message",
+      ADD_USER_FAILED: "Failed to add user",
+    },
+  },
+};

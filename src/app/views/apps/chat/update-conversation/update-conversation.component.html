@@ -1,28 +1,44 @@
-<div class="card">
-  <div class="card-header">
-    <h4>Update conversation</h4>
+<div class="modal-form-body">
+  <!-- Modal Header -->
+  <div class="modal-form-header">
+    <h2 class="modal-form-title">
+      {{ 'CHAT.LABELS.EDIT_CHAT' | translate }}
+    </h2>
+    <p class="modal-form-sub">
+      {{ 'CHAT.MODAL.EDIT_GROUP.DESCRIPTION' | translate }}
+    </p>
   </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-12">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" [(ngModel)]="conversation.title" name="title" placeholder="title">
-       <!--  <textarea [(ngModel)]="message" class="form-control" name="title" placeholder="Title..." id="" cols="30" rows="4"></textarea> -->
-      </div>
-      <div class="col-md-12">
-        <label class="form-label">Receiver</label>
-        <ng-select [multiple]="true" [(ngModel)]="selectedUsers">
-          <ng-container *ngFor="let user of users">
-            <ng-option  [value]="user.id">{{user.firstName}}
-              {{user.lastName}}</ng-option>
-          </ng-container>
 
-        </ng-select>
-      </div>
-      <div class="col-md-12 mt-3">
-        <button (click)="updateConversation()" type="button" class="btn btn-success" ><i class="feather icon-plus-circle"></i> Update</button>
-        <button (click)="closeConver()" style="margin-left: 5px;" type="button" class="btn btn-danger"><i class="feather icon-x-circle"></i> Cancel</button>
-      </div>
+  <!-- Form -->
+  <div class="form-body">
+    <!-- Group Name -->
+    <div class="field">
+      <label class="field-label" for="groupName">
+        {{ 'CHAT.LABELS.TITLE' | translate }}
+      </label>
+      <input
+        type="text"
+        id="groupName"
+        [(ngModel)]="conversation.title"
+        (ngModelChange)="onTitleChange()"
+        class="field-input"
+        [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
+      />
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="modal-form-footer">
+      <button type="button" class="btn btn-ghost" (click)="closeConver()">
+        {{ 'CHAT.BUTTONS.CANCEL' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="updateConversation()"
+        [disabled]="!conversation.title?.trim() || !hasTitleChanged"
+      >
+        {{ 'CHAT.BUTTONS.SAVE' | translate }}
+      </button>
     </div>
   </div>
 </div>

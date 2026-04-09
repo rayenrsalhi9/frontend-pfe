@@ -49,7 +49,7 @@ export class AddConversationComponent implements OnInit {
 
   getUsers() {
     this.commonService
-      .getUsersForDropdown()
+      .getUsersWithClaim('CHAT_VIEW_CHATS')
       .subscribe((users: User[]) => (this.users = users));
   }
   selectUser(event: any) {
@@ -63,45 +63,60 @@ export class AddConversationComponent implements OnInit {
   createConversation() {
 
     if (this.type == 'group') {
+      const selectedUsers = this.selectedUser || [];
+      if (!Array.isArray(selectedUsers) || selectedUsers.length === 0) {
+        this.translate.get('CHAT.TOAST.SELECT_AT_LEAST_ONE_MEMBER').subscribe((msg: string) => {
+          this.toastr.error(msg);
+        });
+        return;
+      }
 
-      const users = this.selectedUser.map((u) => {
+      const users = selectedUsers.map((u) => {
         return u.id
       })
 
       this.conversationService.createConversation({ users: [...users, this.currentUser.id], title: this.title, new: true }).subscribe(
         async (data: Conversation) => {
-          this.translate.get('CHAT.TOAST.GroupAddedSuccessfully').subscribe((translatedMessage: string) => {
+          this.translate.get('CHAT.TOAST.GROUP_ADDED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
             this.toastr.success(translatedMessage); 
           }); 
           await this.onClose.next(data);
           this.bsModalRef.hide()
+        },
+        (error) => {
+          this.translate.get('CHAT.ERROR.CREATE_CONVERSATION_FAILED').subscribe((msg: string) => {
+            this.toastr.error(msg);
+          });
         }
       )
-     
+    
 
     }
 
     if (this.type == 'user') {
 
       if (this.selectedUser === undefined || (Array.isArray(this.selectedUser) && this.selectedUser.length === 0)) {
-        // selectedUser is empty
-        this.translate.get('CHAT.TOAST.SelectedUserEmpty').subscribe((translatedMessage: string) => {
+        this.translate.get('CHAT.TOAST.SELECTED_USER_EMPTY').subscribe((translatedMessage: string) => {
           this.toastr.error(translatedMessage); 
         }); 
       } else {
-        // selectedUser is not empty
         this.conversationService.conversationAddUser({
           conversationId: this.conversationId,
           title: this.title,
           selectedUser: this.selectedUser
         }).subscribe(
           (data: any) => {
-            this.translate.get('CHAT.TOAST.UserAddedSuccessfully').subscribe((translatedMessage: string) => {
+            this.translate.get('CHAT.TOAST.USER_ADDED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
               this.toastr.success(translatedMessage); 
             }); 
             this.onClose.next(data);
             this.bsModalRef.hide()
           },
+          (error) => {
+            this.translate.get('CHAT.ERROR.ADD_USER_FAILED').subscribe((msg: string) => {
+              this.toastr.error(msg);
+            });
+          }
         )
       }
       

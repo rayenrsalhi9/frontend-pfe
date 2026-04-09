@@ -1,0 +1,108 @@
+<div class="modal-form-body">
+  <!-- Modal Header -->
+  <div class="modal-form-header">
+    <h2 class="modal-form-title">
+      {{ 'CHAT.LABELS.CREATE_GROUP_CONVERSATION' | translate }}
+    </h2>
+    <p class="modal-form-sub">
+      {{ 'CHAT.MODAL.CREATE_GROUP.DESCRIPTION' | translate }}
+    </p>
+  </div>
+
+  <!-- Form -->
+  <div class="form-body">
+    <!-- Group Name -->
+    <div class="field">
+      <label class="field-label" for="groupName">
+        {{ 'CHAT.LABELS.TITLE' | translate }}
+        <span class="required-mark">*</span>
+      </label>
+      <input
+        type="text"
+        id="groupName"
+        [(ngModel)]="groupName"
+        class="field-input"
+        [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
+      />
+    </div>
+
+    <!-- Users Selection -->
+    <div class="field">
+      <div class="users-header">
+        <div class="header-top">
+          <label class="field-label">
+            {{ 'CHAT.LABELS.SELECT_MEMBERS' | translate }}
+            <span class="selected-count" *ngIf="selectedCount > 0">
+              ({{ selectedCount }})
+            </span>
+          </label>
+          <div class="users-actions">
+            <button type="button" class="btn-link" (click)="selectAll()">
+              {{ 'CHAT.BUTTONS.SELECT_ALL' | translate }}
+            </button>
+            <button type="button" class="btn-link" (click)="deselectAll()">
+              {{ 'CHAT.BUTTONS.DESELECT_ALL' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="feather icon-search search-icon"></i>
+        <input
+          type="text"
+          class="field-input search-input"
+          [(ngModel)]="searchTerm"
+          (input)="filterUsers()"
+          [placeholder]="'CHAT.LABELS.SEARCH' | translate"
+        />
+      </div>
+
+      <!-- Users List -->
+      <div class="users-list">
+        <label
+          class="user-item"
+          *ngFor="let user of filteredUsers"
+          [class.selected]="isSelected(user)"
+        >
+          <input
+            type="checkbox"
+            [checked]="isSelected(user)"
+            (change)="toggleUser(user)"
+            class="user-checkbox"
+          />
+          <avatar
+            [src]="user.avatar ? getHost() + user.avatar : '/assets/images/avatars/thumb-16.jpg'"
+            [size]="32"
+          ></avatar>
+          <div class="user-info">
+            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </label>
+
+        <div class="empty-users" *ngIf="filteredUsers.length === 0">
+          <i class="feather icon-users"></i>
+          <span>{{ 'CHAT.LABELS.NO_USERS' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="modal-form-footer">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">
+        {{ 'CHAT.BUTTONS.CANCEL' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="createGroup()"
+        [disabled]="isLoading || !groupName.trim() || selectedCount === 0"
+      >
+        <span *ngIf="!isLoading">{{ 'CHAT.BUTTONS.CREATE' | translate }}</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+  </div>
+</div>

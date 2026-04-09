@@ -24,6 +24,13 @@ export class ConversationService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  findOrCreateDirectConversation(userId: number | string): Observable<Conversation | CommonError> {
+    const url = `conversations/find-or-create`;
+    return this.httpClient
+      .post<Conversation>(url, { userId })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   deleteConversation(id:any):Observable<Conversation | CommonError> {
     const url = `conversations/delete/${id}`;
     return this.httpClient
@@ -38,15 +45,22 @@ export class ConversationService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getConversations(): Observable<Conversation[] | CommonError> {
-    const url = `conversations`;
+  getConversations(page: number = 1, perPage: number = 20): Observable<any> {
+    const url = `conversations?page=${page}&per_page=${perPage}`;
     return this.httpClient
-      .get<Conversation[]>(url)
+      .get<any>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   conversationAddUser(data:any): Observable<any[] | CommonError> {
     const url = `conversations/addUser`;
+    return this.httpClient
+      .post<any[]>(url,data)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  conversationRemoveUser(data:any): Observable<any[] | CommonError> {
+    const url = `conversations/removeUser`;
     return this.httpClient
       .post<any[]>(url,data)
       .pipe(catchError(this.commonHttpErrorService.handleError));

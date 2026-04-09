@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <h4>{{ type === 'group' ? ('CHAT.LABELS.CreateGroupConversation' | translate) : ('CHAT.LABELS.AddUserToConversation' | translate) }}</h4>
+    <h4>{{ type === 'group' ? ('CHAT.LABELS.CREATE_GROUP_CONVERSATION' | translate) : ('CHAT.LABELS.ADD_USER_TO_CONVERSATION' | translate) }}</h4>
   </div>
   <div class="card-body">
     <form action="">
@@ -11,7 +11,7 @@
          <!--  <textarea [(ngModel)]="message" class="form-control" name="title" placeholder="Title..." id="" cols="30" rows="4"></textarea> -->
         </div>
         <div class="col-md-12">
-          <label class="form-label">{{'CHAT.LABELS.RECIVER' | translate}}</label>
+          <label class="form-label">{{'CHAT.LABELS.RECEIVER' | translate}}</label>
           <ng-select [multiple]="type == 'group'" (change)="selectUser($event)">
             <ng-container *ngFor="let user of users">
               <ng-option *ngIf="user.id != currentUser.id" [value]="user">{{user.firstName}}
@@ -22,7 +22,7 @@
         </div>
         <div class="col-md-12 mt-3">
           <button (click)="createConversation()" type="button" class="btn btn-success" ><i class="feather icon-plus-circle"></i> {{ type === 'group' ? ('CHAT.BUTTONS.CREATE' | translate) : ('CHAT.BUTTONS.ADD' | translate) }}</button>
-          <button (click)="closeConver()" style="margin-left: 5px;" type="button" class="btn btn-danger"><i class="feather icon-x-circle"></i> {{'CHAT.BUTTONS.CANCEL' | translate}}</button>
+          <button (click)="closeConver()" class="btn btn-danger ms-2"><i class="feather icon-x-circle"></i> {{'CHAT.BUTTONS.CANCEL' | translate}}</button>
         </div>
       </div>
     </form>
