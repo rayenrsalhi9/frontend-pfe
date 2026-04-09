@@ -64,11 +64,11 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: "role-user",
+    path: "user-roles",
     loadChildren: () =>
-      import("./role-user/role-user.module").then((m) => m.RoleUserModule),
+      import("./user-roles/user-roles.module").then((m) => m.UserRolesModule),
     data: {
-      title: "NAV.USERS_ROLES",
+      title: "NAV.USER_ROLES",
       hidePageHeader: true,
     },
     canLoad: [AuthGuard],

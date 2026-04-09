@@ -1,0 +1,260 @@
+<div class="user-roles-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-icon">
+        <i class="feather icon-users"></i>
+      </div>
+      <h1 class="hero-title">{{ "USERROLE.PAGE_TITLE" | translate }}</h1>
+      <p class="hero-subtitle">{{ "USERROLE.PAGE_DESCRIPTION" | translate }}</p>
+    </div>
+  </section>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <i class="feather icon-search"></i>
+      <input
+        type="text"
+        class="search-input"
+        (input)="onSearchChange($event)"
+        [placeholder]="'USERROLE.SEARCH_USER' | translate"
+        [attr.aria-label]="'USERROLE.SEARCH_USER' | translate"
+      />
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="content-section">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-grid">
+      <div *ngFor="let i of [1,2,3,4,5,6,7,8,9]" class="skeleton-card">
+        <div class="skeleton-content">
+          <div class="skeleton-line skeleton-name"></div>
+          <div class="skeleton-line skeleton-email"></div>
+          <div class="skeleton-badges">
+            <div class="skeleton-badge"></div>
+            <div class="skeleton-badge"></div>
+          </div>
+          <div class="skeleton-btn"></div>
+        </div>
+        <div class="skeleton-avatar"></div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && filteredUsers.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="feather icon-search"></i>
+      </div>
+      <h3 class="empty-title">{{ "USERROLE.NO_USERS_FOUND" | translate }}</h3>
+      <p class="empty-subtitle">{{ "USERROLE.NO_USERS_DESCRIPTION" | translate }}</p>
+    </div>
+
+    <!-- Users Grid -->
+    <div *ngIf="!isLoading && filteredUsers.length > 0" class="users-grid">
+      <div *ngFor="let user of paginatedUsers" class="user-card">
+        <!-- Left Side: Content -->
+        <div class="card-content">
+          <h4 class="user-name">{{ getUserFullName(user) }}</h4>
+          <p class="user-email">{{ user.email }}</p>
+          
+          <div class="user-roles">
+            <ng-container *ngIf="getUserRoles(user.id) as roles">
+              <span
+                *ngFor="let role of roles"
+                class="role-chip"
+              >
+                {{ role.name }}
+              </span>
+              <span *ngIf="roles.length === 0" class="role-chip role-chip-empty">
+                {{ "USERROLE.NO_ROLES_ASSIGNED" | translate }}
+              </span>
+            </ng-container>
+          </div>
+
+          <button
+            type="button"
+            class="btn-edit-roles"
+            (click)="openRoleModal(user)"
+          >
+            <i class="feather icon-settings"></i>
+            <span>{{ "USERROLE.BTN_EDIT_ROLES" | translate }}</span>
+          </button>
+        </div>
+
+        <!-- Right Side: Avatar -->
+        <div class="card-avatar">
+          <img 
+            [src]="getUserAvatar(user)" 
+            [alt]="getUserFullName(user)"
+            class="avatar-img"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!isLoading && showPagination" class="pagination-wrapper">
+      <div class="pagination-info">
+        {{ "USERROLE.PAGINATION_SHOWING" | translate }}
+        {{ (currentPage - 1) * pageSize + 1 }}
+        -
+        {{ Math.min(currentPage * pageSize, totalUsers) }}
+        {{ "USERROLE.PAGINATION_OF" | translate }}
+        {{ totalUsers }}
+      </div>
+      
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="pagination-btn"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)"
+          [attr.aria-label]="'USERROLE.PAGINATION_PREVIOUS' | translate"
+        >
+          <i class="feather icon-chevron-left"></i>
+        </button>
+        
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <button
+            type="button"
+            class="pagination-btn"
+            [class.active]="page === currentPage"
+            [attr.aria-current]="page === currentPage ? 'page' : null"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+        
+        <button
+          type="button"
+          class="pagination-btn"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)"
+          [attr.aria-label]="'USERROLE.PAGINATION_NEXT' | translate"
+        >
+          <i class="feather icon-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Role Assignment Modal -->
+<div
+  *ngIf="isModalOpen"
+  class="modal-backdrop"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-title-section">
+        <div class="modal-icon">
+          <i class="feather icon-user-check"></i>
+        </div>
+        <div class="modal-title-text">
+          <h3 id="modal-title">{{ "USERROLE.MANAGE_ROLES_FOR" | translate }}</h3>
+          <p>{{ selectedUser?.firstName }} {{ selectedUser?.lastName }}</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="modal-close"
+        (click)="closeModal()"
+        [attr.aria-label]="'USERROLE.CLOSE' | translate"
+      >
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- User Summary -->
+      <div class="user-summary">
+        <div class="user-summary-avatar">
+          <img 
+            [src]="getUserAvatar(selectedUser)" 
+            [alt]="getUserFullName(selectedUser)"
+            class="avatar-img"
+          />
+        </div>
+        <div class="user-summary-info">
+          <span class="user-summary-name">{{ selectedUser?.firstName }} {{ selectedUser?.lastName }}</span>
+          <span class="user-summary-email">{{ selectedUser?.email }}</span>
+        </div>
+      </div>
+
+      <!-- Roles Selection -->
+      <div class="roles-selection">
+        <div class="roles-selection-header">
+          <h4>{{ "USERROLE.SELECT_ROLES" | translate }}</h4>
+          <span class="roles-count">
+            {{ selectedUserRoleIds?.length || 0 }}/{{ roles.length }}
+          </span>
+        </div>
+        
+        <p class="roles-selection-help">
+          {{ "USERROLE.SELECT_ROLES_HELP" | translate }}
+        </p>
+
+        <div class="roles-list" *ngIf="roles && roles.length > 0">
+          <button
+            type="button"
+            *ngFor="let role of roles"
+            class="role-option"
+            [class.role-option-selected]="hasRole(role.id)"
+            [attr.aria-pressed]="hasRole(role.id)"
+            (click)="toggleRole(role)"
+          >
+            <div class="role-checkbox">
+              <i *ngIf="hasRole(role.id)" class="feather icon-check"></i>
+            </div>
+            <div class="role-info">
+              <span class="role-badge-inline">
+                {{ role.name }}
+              </span>
+              <span class="role-description" *ngIf="role.description">
+                {{ role.description }}
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <div *ngIf="!roles || roles.length === 0" class="no-roles">
+          <i class="feather icon-alert-circle"></i>
+          <span>{{ "USERROLE.NO_ROLES_AVAILABLE" | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-cancel"
+        (click)="closeModal()"
+        [disabled]="isSaving"
+      >
+        {{ "USERROLE.CANCEL" | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-save"
+        (click)="saveUserRoles()"
+        [disabled]="isSaving"
+      >
+        <span *ngIf="!isSaving">
+          <i class="feather icon-check-circle"></i>
+          {{ "USERROLE.SAVE_CHANGES" | translate }}
+        </span>
+        <span *ngIf="isSaving" class="btn-loading">
+          <i class="feather icon-loader"></i>
+          {{ "USERROLE.SAVING" | translate }}
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
