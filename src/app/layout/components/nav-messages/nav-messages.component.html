@@ -58,8 +58,8 @@
           </div>
           <div class="nav-messages-item-preview">
             <span class="nav-messages-item-text">
-              <ng-container *ngIf="conversation.lastMessage; else noMessageTpl">
-                {{ conversation.lastMessage.type !== 'msg' ? ('MESSAGES.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+              <ng-container *ngIf="getLastMessageContent(conversation); else noMessageTpl">
+                {{ getLastMessageContent(conversation) }}
               </ng-container>
               <ng-template #noMessageTpl>
                 <span class="text-muted"></span>

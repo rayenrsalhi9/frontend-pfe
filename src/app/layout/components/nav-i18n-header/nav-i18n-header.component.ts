@@ -74,8 +74,14 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu() {
+    if (this.languageList.length === 0) {
+      this.isMenuOpen = false;
+      this.focusedIndex = -1;
+      this.cdr.markForCheck();
+      return;
+    }
     this.isMenuOpen = !this.isMenuOpen;
-    if (this.isMenuOpen && this.languageList.length > 0) {
+    if (this.isMenuOpen) {
       this.focusedIndex = this.languageList.findIndex(
         (l) => l.key === this.currentLang,
       );
@@ -97,6 +103,9 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
     }
 
     if (this.languageList.length === 0) {
+      this.isMenuOpen = false;
+      this.focusedIndex = -1;
+      this.cdr.markForCheck();
       return;
     }
 

@@ -2,7 +2,11 @@
 
 $menu-offset: 8px;
 
-@mixin menu-transform($translateX: 0, $translateY: -$menu-offset, $origin: top) {
+@mixin menu-transform(
+  $translateX: 0,
+  $translateY: -$menu-offset,
+  $origin: top
+) {
   transform: translateX($translateX) translateY($translateY) scale(0.95);
   transform-origin: $origin;
 }
@@ -47,27 +51,6 @@ $menu-offset: 8px;
     &.is-open {
       @include menu-transform-open(-50%, 0, top);
     }
-
-    &.is-dropup {
-      top: auto;
-      bottom: 100%;
-      transform-origin: bottom;
-    }
-
-    &.is-dropright {
-      left: 100%;
-      right: auto;
-      top: 50%;
-      bottom: auto;
-      transform-origin: left;
-      @include menu-transform(0, -$menu-offset, left);
-
-      &.is-open {
-        @include menu-transform-open(0, 0, left);
-      }
-    }
-  }
-}
 
     &.is-dropup {
       top: auto;

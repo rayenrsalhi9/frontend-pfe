@@ -135,11 +135,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             (c): c is Conversation => !!c && !!c.id,
           );
 
-          const conversationsWithMessages = filteredData.filter(
-            (c) => !!c.lastMessage,
-          );
-
-          const oneOnOneConversations = conversationsWithMessages.filter(
+          const oneOnOneConversations = filteredData.filter(
             (c) => !this.isGroupConversation(c)
           );
 
@@ -297,7 +293,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateChat(data: Message) {
-    const isGroup = !!data.conversation.title || (data.conversation.users && data.conversation.users.length > 2);
+    const isGroup = this.isGroupConversation(data.conversation);
 
     const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
     const newConversation = {
@@ -377,7 +373,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateConversation(data: Conversation) {
-    const isGroup = !!data.title || (data.users && data.users.length > 2);
+    const isGroup = this.isGroupConversation(data);
     
     let updated = this.conversationsTemp.map((conversation: Conversation) => {
       if (conversation.id === data.id) {

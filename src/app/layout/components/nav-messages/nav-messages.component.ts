@@ -45,6 +45,11 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.momentLang = this.translateService.currentLang || this.translateService.getDefaultLang() || "en";
+    this.translateService.onLangChange.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+      this.momentLang = event.lang;
+      this.cdr.markForCheck();
+    });
     this.loadConversations();
   }
 
@@ -118,7 +123,7 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
   }
 
   trackByConversationId(index: number, conversation: Conversation): string | number {
-    return conversation.id;
+    return conversation.id ?? `conversation-${index}`;
   }
 
   viewAllConversations(): void {
