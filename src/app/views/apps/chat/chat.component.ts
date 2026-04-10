@@ -140,11 +140,11 @@ export class ChatComponent implements OnInit, OnDestroy {
           );
 
           const oneOnOneConversations = conversationsWithMessages.filter(
-            (c) => !c.title && (!c.users || c.users.length <= 2)
+            (c) => !this.isGroupConversation(c)
           );
 
           const groupConversations = filteredData.filter(
-            (c) => !!c.title || (c.users && c.users.length > 2)
+            (c) => this.isGroupConversation(c)
           );
 
           const dataToUse = this.currentSearchTerm
@@ -225,30 +225,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   private applySearch(searchValue: string) {
     this.currentSearchTerm = searchValue;
     if (searchValue) {
-      this.conversations = this.conversationsTemp.filter((conver) => {
-        if (conver.title) {
-          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
-        }
-        return conver.users?.some((u) => {
-          const fullName = `${u.firstName} ${u.lastName}`;
-          return (
-            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchValue.toLowerCase())
-          );
-        });
-      });
-      this.groupConversations = this.groupConversationsTemp.filter((conver) => {
-        if (conver.title) {
-          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
-        }
-        return conver.users?.some((u) => {
-          const fullName = `${u.firstName} ${u.lastName}`;
-          return (
-            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchValue.toLowerCase())
-          );
-        });
-      });
+      this.conversations = this.applySearchFilterToConversations(this.conversationsTemp, searchValue);
+      this.groupConversations = this.applySearchFilterToConversations(this.groupConversationsTemp, searchValue);
       this.users = this.usersTemp.filter((usr) => {
         const fullName = `${usr.firstName} ${usr.lastName}`;
         return (
@@ -345,8 +323,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       if (this.currentSearchTerm) {
         this.groupConversations = this.applySearchFilterToConversations(groupUpdatedConversations);
+        this.conversations = this.applySearchFilterToConversations(this.conversationsTemp);
       } else {
         this.groupConversations = groupUpdatedConversations;
+        this.conversations = this.conversationsTemp;
       }
     } else {
       let updatedConversations = this.conversationsTemp.filter(
@@ -361,8 +341,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       if (this.currentSearchTerm) {
         this.conversations = this.applySearchFilterToConversations(updatedConversations);
+        this.groupConversations = this.applySearchFilterToConversations(this.groupConversationsTemp);
       } else {
         this.conversations = updatedConversations;
+        this.groupConversations = this.groupConversationsTemp;
       }
     }
     this.cdr.markForCheck();
@@ -370,18 +352,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private applySearchFilterToConversations(
     conversations: Conversation[],
+    searchValue?: string,
   ): Conversation[] {
-    const searchValue = this.getCurrentSearchTerm();
-    if (searchValue) {
+    const search = searchValue !== undefined ? searchValue : this.getCurrentSearchTerm();
+    if (search) {
       return conversations.filter((conver) => {
         if (conver.title) {
-          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
+          return conver.title.toLowerCase().includes(search.toLowerCase());
         }
         return conver.users?.some((u) => {
           const fullName = `${u.firstName} ${u.lastName}`;
           return (
-            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchValue.toLowerCase())
+            fullName.toLowerCase().includes(search.toLowerCase()) ||
+            u.email.toLowerCase().includes(search.toLowerCase())
           );
         });
       });

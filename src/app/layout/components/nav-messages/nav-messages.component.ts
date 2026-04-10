@@ -117,6 +117,10 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
     this.router.navigate(["/apps/chat"], { queryParams: { conversationId: conversation.id } });
   }
 
+  trackByConversationId(index: number, conversation: Conversation): string | number {
+    return conversation.id;
+  }
+
   viewAllConversations(): void {
     this.router.navigate(["/apps/chat"]);
   }

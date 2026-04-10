@@ -38,7 +38,7 @@
         type="button"
         class="nav-messages-item"
         [class.unread]="isUnread(conversation)"
-        *ngFor="let conversation of conversations"
+        *ngFor="let conversation of conversations; trackBy: trackByConversationId"
         (click)="openChat(conversation)"
       >
         <div class="nav-messages-item-avatar">

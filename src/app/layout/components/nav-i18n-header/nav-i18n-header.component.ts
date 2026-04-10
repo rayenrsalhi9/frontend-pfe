@@ -67,22 +67,15 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   }
 
   getLanguageList() {
-    const list: { key: string; lang: string }[] = [];
-    for (const key in supportedLanguages) {
-      if (Object.prototype.hasOwnProperty.call(supportedLanguages, key)) {
-        const lang = supportedLanguages[key];
-        list.push({
-          key: key,
-          lang: lang,
-        });
-      }
-    }
-    this.languageList = list;
+    this.languageList = Object.entries(supportedLanguages).map(([key, lang]) => ({
+      key,
+      lang,
+    }));
   }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
-    if (this.isMenuOpen) {
+    if (this.isMenuOpen && this.languageList.length > 0) {
       this.focusedIndex = this.languageList.findIndex(
         (l) => l.key === this.currentLang,
       );
@@ -100,6 +93,10 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
         this.toggleMenu();
         event.preventDefault();
       }
+      return;
+    }
+
+    if (this.languageList.length === 0) {
       return;
     }
 
