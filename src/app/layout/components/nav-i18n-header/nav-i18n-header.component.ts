@@ -1,37 +1,38 @@
 import {
   Component,
   OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  ChangeDetectorRef,
-  ElementRef,
-  HostListener,
   OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  HostListener,
+  ElementRef,
   ViewChildren,
   QueryList,
 } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { AppConfig } from "@app/shared/types/app-config.interface";
-import { Observable, Subscription } from "rxjs";
 import { UpdateCurrentLanguage } from "@app/store/app-config/app-config.action";
 import { supportedLanguages } from "@app/configs/i18n.config";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: "nav-i18n",
-  templateUrl: "./nav-i18n.component.html",
-  styleUrls: ["./nav-i18n.component.scss"],
+  selector: "nav-i18n-header",
+  templateUrl: "./nav-i18n-header.component.html",
+  styleUrls: ["./nav-i18n-header.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[class.header-nav-item]": "true",
   },
 })
-export class NavI18NComponent implements OnInit, OnDestroy {
-  @Input() dropDirection: "dropdown" | "dropup" | "dropright" = "dropdown";
+export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
-  private appSubscription: Subscription;
-  currentLang: string;
-  languageList: { key: string; lang: any }[] = [];
+  
+  private destroy$ = new Subject<void>();
+
+  currentLang: string = "";
+  languageList: { key: string; lang: string }[] = [];
   isMenuOpen = false;
   focusedIndex = -1;
 
@@ -45,7 +46,7 @@ export class NavI18NComponent implements OnInit, OnDestroy {
   ) {}
 
   @HostListener("document:click", ["$event"])
-  clickout(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
       this.cdr.markForCheck();
@@ -54,33 +55,31 @@ export class NavI18NComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getLanguageList();
-    this.appSubscription = this.app$.subscribe((app) => {
+    this.app$.pipe(takeUntil(this.destroy$)).subscribe((app) => {
       this.currentLang = app.lang;
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
-    if (this.appSubscription) {
-      this.appSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getLanguageList() {
-    let list = [];
-    for (const key in supportedLanguages) {
-      if (Object.prototype.hasOwnProperty.call(supportedLanguages, key)) {
-        const lang = supportedLanguages[key];
-        list.push({
-          key: key,
-          lang: lang,
-        });
-      }
-    }
-    this.languageList = list;
+    this.languageList = Object.entries(supportedLanguages).map(([key, lang]) => ({
+      key,
+      lang,
+    }));
   }
 
   toggleMenu() {
+    if (this.languageList.length === 0) {
+      this.isMenuOpen = false;
+      this.focusedIndex = -1;
+      this.cdr.markForCheck();
+      return;
+    }
     this.isMenuOpen = !this.isMenuOpen;
     if (this.isMenuOpen) {
       this.focusedIndex = this.languageList.findIndex(
@@ -100,6 +99,13 @@ export class NavI18NComponent implements OnInit, OnDestroy {
         this.toggleMenu();
         event.preventDefault();
       }
+      return;
+    }
+
+    if (this.languageList.length === 0) {
+      this.isMenuOpen = false;
+      this.focusedIndex = -1;
+      this.cdr.markForCheck();
       return;
     }
 
@@ -140,7 +146,8 @@ export class NavI18NComponent implements OnInit, OnDestroy {
       case "Tab":
         this.isMenuOpen = false;
         if (event.key === "Escape") {
-          this.elementRef.nativeElement.querySelector(".trigger-btn").focus();
+          const btn = this.elementRef.nativeElement.querySelector(".language-trigger");
+          if (btn) btn.focus();
           event.preventDefault();
         }
         break;

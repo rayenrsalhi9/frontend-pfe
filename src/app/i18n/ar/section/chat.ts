@@ -23,6 +23,7 @@ export const chat = {
       USERS_LIST: "قائمة المستخدمين",
       CONVERSATIONS: "المحادثات",
       LATEST_CONVERSATIONS: "آخر المحادثات",
+      GROUPS: "المجموعات",
       USERS: "المستخدمون",
       CLOSE: "إغلاق",
       REMOVE_USER: "إزالة المستخدم",
@@ -95,6 +96,7 @@ export const chat = {
       DELETE_CONVERSATION_FAILED: "فشل في حذف المحادثة",
       SEND_MESSAGE_FAILED: "فشل في إرسال الرسالة",
       ADD_USER_FAILED: "فشل في إضافة المستخدم",
+      CONVERSATION_NOT_FOUND: "المحادثة غير موجودة",
     },
   },
 };

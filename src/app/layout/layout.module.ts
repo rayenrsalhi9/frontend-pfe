@@ -22,6 +22,9 @@ import { FooterComponent } from "./components/footer/footer.component";
 import { PageHeaderComponent } from "./components/page-header/page-header.component";
 import { NavNotificationComponent } from "./components/nav-notification/nav-notification.component";
 import { NavI18NComponent } from "./components/nav-i18n/nav-i18n.component";
+import { NavI18NHeaderComponent } from "./components/nav-i18n-header/nav-i18n-header.component";
+import { FloatingI18nComponent } from "./components/floating-i18n/floating-i18n.component";
+import { NavMessagesComponent } from "./components/nav-messages/nav-messages.component";
 import { NavProfileComponent } from "./components/nav-profile/nav-profile.component";
 import { VerticalMenuContentComponent } from "./components/vertical-menu-content/vertical-menu-content.component";
 import { MobileNavComponent } from "./components/mobile-nav/mobile-nav.component";
@@ -52,6 +55,9 @@ const optionalComponents = [
   NavNotificationComponent,
   NavProfileComponent,
   NavI18NComponent,
+  NavI18NHeaderComponent,
+  NavMessagesComponent,
+  FloatingI18nComponent,
 ];
 
 @NgModule({

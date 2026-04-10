@@ -70,7 +70,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
           `user.${user.user.id}`,
           "notification",
           (data) => {
-            if (data.type === NotificationType.Message) {
+            if (data.type !== NotificationType.Message) {
               this.getNotification();
               this.notificationSystem.sendNotification(data.data.message);
             }
@@ -90,10 +90,13 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
       .getNotification()
       .pipe(takeUntil(this.destroy$))
       .subscribe((notifications: UserNotification[]) => {
-        this.newNotificationCount = notifications.filter(
+        const eventNotifications = notifications.filter(
+          (n) => n.type !== NotificationType.Message,
+        );
+        this.newNotificationCount = eventNotifications.filter(
           (c) => !c.isRead,
         ).length;
-        this.notifications = notifications.sort(
+        this.notifications = eventNotifications.sort(
           (a, b) =>
             new Date(b.createdDate).getTime() -
             new Date(a.createdDate).getTime(),
@@ -115,7 +118,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
   }
 
   markAllAsReadNotification() {
-    this.notificationService.markAllAsRead().subscribe(() => {
+    this.notificationService.markAllAsRead({ excludeTypes: [NotificationType.Message] }).subscribe(() => {
       this.getNotification();
     });
   }

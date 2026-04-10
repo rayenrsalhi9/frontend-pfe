@@ -1,5 +1,21 @@
 @use "../../../../assets/scss/variables.scss" as *;
 
+$menu-offset: 8px;
+
+@mixin menu-transform(
+  $translateX: 0,
+  $translateY: -$menu-offset,
+  $origin: top
+) {
+  transform: translateX($translateX) translateY($translateY) scale(0.95);
+  transform-origin: $origin;
+}
+
+@mixin menu-transform-open($translateX: 0, $translateY: 0, $origin: top) {
+  transform: translateX($translateX) translateY($translateY) scale(1);
+  transform-origin: $origin;
+}
+
 :host {
   display: inline-block;
   position: relative;
@@ -27,19 +43,32 @@
   }
 
   .language-menu {
-    top: $header-nav-height;
+    top: 100%;
     right: auto;
     left: 50%;
-    transform: translateX(-50%) translateY(-8px) scale(0.95);
+    @include menu-transform(-50%, -$menu-offset, top);
 
     &.is-open {
-      transform: translateX(-50%) translateY(0) scale(1);
+      @include menu-transform-open(-50%, 0, top);
     }
 
     &.is-dropup {
       top: auto;
-      bottom: $header-nav-height;
+      bottom: 100%;
       transform-origin: bottom;
+    }
+
+    &.is-dropright {
+      left: 100%;
+      right: auto;
+      top: 50%;
+      bottom: auto;
+      transform-origin: left;
+      @include menu-transform(0, -$menu-offset, left);
+
+      &.is-open {
+        @include menu-transform-open(0, 0, left);
+      }
     }
   }
 }
@@ -83,7 +112,7 @@
 
 .language-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + $menu-offset);
   right: 0;
   min-width: 140px;
   background: var(--card-bg);
@@ -93,7 +122,7 @@
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px) scale(0.95);
+  @include menu-transform(0, -$menu-offset, top);
   transition: all 0.15s ease;
   z-index: 1000;
   display: flex;
@@ -103,17 +132,17 @@
   &.is-open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0) scale(1);
+    @include menu-transform-open(0, 0, top);
   }
 
   &.is-dropup {
     top: auto;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + $menu-offset);
     transform-origin: bottom;
   }
 
   &.is-dropright {
-    left: calc(100% + 8px);
+    left: calc(100% + $menu-offset);
     right: auto;
     top: auto;
     bottom: 0;

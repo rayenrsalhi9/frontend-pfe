@@ -1,0 +1,75 @@
+<dropdown
+  [dropDirection]="dropDirection"
+  dropdownClass="header-nav-item-select nav-messages"
+>
+  <button
+    class="toggle-wrapper messages-trigger"
+    type="button"
+    aria-haspopup="true"
+    [attr.aria-expanded]="navMessages.visible"
+    [attr.aria-label]="'MESSAGES.LABELS.TITLE' | translate"
+    (click)="navMessages.toggle($event)"
+  >
+    <div class="icon-badge-container">
+      <i class="feather icon-message-square"></i>
+      <div *ngIf="hasUnreadConversations" class="notification-badge"></div>
+    </div>
+  </button>
+  <dropdown-menu #navMessages alignment="right">
+    <div class="nav-messages-header">
+      <h5 class="nav-messages-title">
+        {{ "MESSAGES.LABELS.TITLE" | translate }}
+      </h5>
+      <a
+        [routerLink]="['/apps/chat']"
+        class="nav-messages-view-all"
+      >
+        {{ "MESSAGES.LABELS.VIEW_ALL" | translate }}
+      </a>
+    </div>
+    <perfect-scrollbar class="nav-messages-body">
+      <div *ngIf="conversations.length === 0 && !isLoading" class="nav-messages-empty">
+        {{ "MESSAGES.LABELS.EMPTY" | translate }}
+      </div>
+      <div *ngIf="isLoading" class="nav-messages-loading">
+        <i class="feather icon-loader"></i>
+      </div>
+      <button
+        type="button"
+        class="nav-messages-item"
+        [class.unread]="isUnread(conversation)"
+        *ngFor="let conversation of conversations; trackBy: trackByConversationId"
+        (click)="openChat(conversation)"
+      >
+        <div class="nav-messages-item-avatar">
+          <avatar
+            [size]="40"
+            [src]="getAvatarUrl(getOtherUser(conversation))"
+          ></avatar>
+        </div>
+        <div class="nav-messages-item-content">
+          <div class="nav-messages-item-header">
+            <span class="nav-messages-item-name">
+              {{ getConversationName(conversation) }}
+            </span>
+            <span class="nav-messages-item-time" *ngIf="conversation.lastMessage?.createdAt">
+              {{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }}
+            </span>
+            <span class="nav-messages-item-time" *ngIf="!conversation.lastMessage?.createdAt"></span>
+          </div>
+          <div class="nav-messages-item-preview">
+            <span class="nav-messages-item-text">
+              <ng-container *ngIf="getLastMessageContent(conversation) as last; else noMessageTpl">
+                {{ last }}
+              </ng-container>
+              <ng-template #noMessageTpl>
+                <span class="text-muted"></span>
+              </ng-template>
+            </span>
+            <span *ngIf="isUnread(conversation)" class="nav-messages-unread-dot"></span>
+          </div>
+        </div>
+      </button>
+    </perfect-scrollbar>
+  </dropdown-menu>
+</dropdown>

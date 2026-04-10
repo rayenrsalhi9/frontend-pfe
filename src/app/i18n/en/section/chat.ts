@@ -24,6 +24,7 @@ export const chat = {
       USERS_LIST: "Users list",
       CONVERSATIONS: "Conversations",
       LATEST_CONVERSATIONS: "Latest conversations",
+      GROUPS: "Groups",
       USERS: "Users",
       CLOSE: "Close",
       REMOVE_USER: "Remove user",
@@ -97,6 +98,7 @@ export const chat = {
       DELETE_CONVERSATION_FAILED: "Failed to delete conversation",
       SEND_MESSAGE_FAILED: "Failed to send message",
       ADD_USER_FAILED: "Failed to add user",
+      CONVERSATION_NOT_FOUND: "Conversation not found",
     },
   },
 };

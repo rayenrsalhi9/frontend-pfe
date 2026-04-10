@@ -32,73 +32,79 @@
     flex: 1;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 0 1.5rem;
 
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
-
-    .header-nav-left,
-    .header-nav-right {
-      list-style-type: none;
-      padding-left: 0;
-      margin-bottom: 0;
-      align-items: stretch;
-      display: flex;
-    }
-
-    .header-nav-item {
-      text-decoration: none;
-      color: var(--text-secondary);
+    .header-nav-left {
       display: flex;
       align-items: center;
-      position: relative;
-      transition: color 0.15s;
+      gap: 0.5rem;
+    }
 
-      .sidenav-toggle-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 38px;
-        height: 38px;
-        cursor: pointer;
-        border-radius: var(--radius-md);
-        background: transparent;
-        border: none;
+    .header-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-nav-right-items {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .header-nav-item {
+    text-decoration: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: color 0.15s;
+
+    .sidenav-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      transition:
+        background 0.15s,
+        color 0.15s;
+
+      i {
         color: var(--text-primary);
-        transition:
-          background 0.15s,
-          color 0.15s;
+      }
+
+      &:hover {
+        background: var(--primary-glow);
+        color: var(--primary);
 
         i {
-          color: var(--text-primary);
-        }
-
-        &:hover {
-          background: var(--primary-glow);
           color: var(--primary);
-
-          i {
-            color: var(--primary);
-          }
         }
       }
-
-      .nav-icon {
-        font-size: $font-size-body-lg + 0.125rem;
-      }
     }
 
-    .desktop-toggle {
-      @include screen-tablet {
-        display: none;
-      }
+    .nav-icon {
+      font-size: $font-size-body-lg + 0.125rem;
     }
+  }
 
-    .mobile-toggle {
-      @include screen-tablet-above {
-        display: none;
-      }
+  .desktop-toggle {
+    @include screen-tablet {
+      display: none;
+    }
+  }
+
+  .mobile-toggle {
+    @include screen-tablet-above {
+      display: none;
     }
   }
 

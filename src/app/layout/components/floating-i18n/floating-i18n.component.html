@@ -1,0 +1,42 @@
+<div class="floating-i18n-widget" (keydown)="onKeyDown($event)">
+  <button
+    type="button"
+    class="language-trigger"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="isMenuOpen"
+    aria-haspopup="listbox"
+    aria-controls="language-menu"
+    [attr.aria-label]="'Language selector'"
+  >
+    <i class="feather icon-globe globe-icon"></i>
+  </button>
+  <span class="lang-badge">{{ getLanguageCode(currentLang || 'en') }}</span>
+
+  <div
+    id="language-menu"
+    class="language-menu"
+    [ngClass]="{ 'is-open': isMenuOpen }"
+    role="listbox"
+    aria-label="Select language"
+  >
+    <div class="menu-list">
+      <button
+        #optionBtn
+        *ngFor="let language of languageList; let i = index"
+        type="button"
+        class="menu-item"
+        [class.active]="currentLang === language.key"
+        [class.focused]="focusedIndex === i"
+        (click)="setLanguage(language.key)"
+        role="option"
+        [attr.aria-selected]="currentLang === language.key"
+        [tabindex]="isMenuOpen ? (focusedIndex === i ? 0 : -1) : -1"
+      >
+        <span class="lang-name">
+          {{ "LANG." + getLanguageCode(language.key) | translate }}
+        </span>
+        <i class="feather icon-check active-check"></i>
+      </button>
+    </div>
+  </div>
+</div>

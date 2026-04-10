@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { Message } from "@app/shared/enums/conversation";
@@ -26,6 +27,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   filteredUsers: User[] = [];
   conversations: Conversation[] = [];
   conversationsTemp: Conversation[] = [];
+  groupConversations: Conversation[] = [];
+  groupConversationsTemp: Conversation[] = [];
   selectedId: number | string | null = null;
   oldSelectedId: number | string | null = null;
   mobilePanelOpen: boolean = false;
@@ -39,6 +42,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private searchTerm$ = new Subject<string>();
   private currentSearchTerm: string = "";
+  private pendingConversationId: number | string | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -49,6 +53,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private commonService: CommonService,
     private translateService: TranslateService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   getHost(): string {
@@ -63,6 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.initConversations();
     this.initChatChannel();
     this.initSearch();
+    this.initQueryParams();
   }
 
   ngOnDestroy(): void {
@@ -120,27 +127,50 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          const safeData = Array.isArray(response)
-            ? response
-            : Array.isArray(response?.data)
-              ? response.data
-              : [];
+          let safeData: any[] = [];
+          if (Array.isArray(response)) {
+            safeData = response;
+          } else if (response && Array.isArray(response.data)) {
+            safeData = response.data;
+          } else if (response && typeof response === 'object') {
+            safeData = [response];
+          }
+
           const filteredData = safeData.filter(
             (c): c is Conversation => !!c && !!c.id,
+          ).map(c => ({ ...c, users: c.users ?? [] }));
+
+          const oneOnOneConversations = filteredData.filter(
+            (c) => !this.isGroupConversation(c)
+          );
+
+          const groupConversations = filteredData.filter(
+            (c) => this.isGroupConversation(c)
           );
 
           const dataToUse = this.currentSearchTerm
-            ? this.applySearchFilterToConversations(filteredData)
-            : filteredData;
+            ? this.applySearchFilterToConversations(oneOnOneConversations)
+            : oneOnOneConversations;
+
+          const groupDataToUse = this.currentSearchTerm
+            ? this.applySearchFilterToConversations(groupConversations)
+            : groupConversations;
 
           if (page === 1) {
             this.conversations = dataToUse;
-            this.conversationsTemp = filteredData;
+            this.conversationsTemp = oneOnOneConversations;
+            this.groupConversations = groupDataToUse;
+            this.groupConversationsTemp = groupConversations;
           } else {
             this.conversations = [...this.conversations, ...dataToUse];
             this.conversationsTemp = [
               ...this.conversationsTemp,
-              ...filteredData,
+              ...oneOnOneConversations,
+            ];
+            this.groupConversations = [...this.groupConversations, ...groupDataToUse];
+            this.groupConversationsTemp = [
+              ...this.groupConversationsTemp,
+              ...groupConversations,
             ];
           }
 
@@ -150,6 +180,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           }
 
           this.isLoadingConversations = false;
+          this.applyPendingConversationId();
           this.cdr.markForCheck();
         },
         error: () => {
@@ -186,6 +217,45 @@ export class ChatComponent implements OnInit, OnDestroy {
       .subscribe((term) => this.applySearch(term));
   }
 
+  /** Handle conversation ID from URL query params */
+  private initQueryParams() {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const conversationId = params["conversationId"];
+      if (conversationId) {
+        const convIdStr = String(conversationId);
+        const selectedIdStr = String(this.selectedId || '');
+        if (convIdStr !== selectedIdStr) {
+          this.pendingConversationId = conversationId;
+          if (!this.isLoadingConversations) {
+            this.applyPendingConversationId();
+          }
+        }
+      }
+    });
+  }
+
+  private applyPendingConversationId() {
+    if (!this.pendingConversationId) return;
+
+    const conversationId = this.pendingConversationId;
+    this.pendingConversationId = null;
+
+    const found = this.conversationsTemp.find((c) => c.id === conversationId)
+      || this.groupConversationsTemp.find((c) => c.id === conversationId);
+
+    if (found) {
+      this.selectedId = found.id;
+      this.cdr.markForCheck();
+    } else {
+      this.translateService
+        .get("CHAT.ERROR.CONVERSATION_NOT_FOUND")
+        .subscribe((msg: string) => {
+          this.toastrService.error(msg);
+        });
+      this.router.navigate([], { queryParams: {} });
+    }
+  }
+
   /** Called from (input) on the search field */
   onSearch(event: Event) {
     const term = (event.target as HTMLInputElement).value;
@@ -196,18 +266,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   private applySearch(searchValue: string) {
     this.currentSearchTerm = searchValue;
     if (searchValue) {
-      this.conversations = this.conversationsTemp.filter((conver) => {
-        if (conver.title) {
-          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
-        }
-        return conver.users.some((u) => {
-          const fullName = `${u.firstName} ${u.lastName}`;
-          return (
-            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchValue.toLowerCase())
-          );
-        });
-      });
+      this.conversations = this.applySearchFilterToConversations(this.conversationsTemp, searchValue);
+      this.groupConversations = this.applySearchFilterToConversations(this.groupConversationsTemp, searchValue);
       this.users = this.usersTemp.filter((usr) => {
         const fullName = `${usr.firstName} ${usr.lastName}`;
         return (
@@ -219,6 +279,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else {
       this.users = this.usersTemp;
       this.conversations = this.conversationsTemp;
+      this.groupConversations = this.groupConversationsTemp;
       this.filteredUsers = this.usersTemp;
     }
     this.cdr.markForCheck();
@@ -263,6 +324,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     this.oldSelectedId = this.selectedId;
     this.mobilePanelOpen = false;
+    this.router.navigate([], {
+      queryParams: { conversationId: item.id },
+      queryParamsHandling: "merge",
+    });
+    this.cdr.markForCheck();
   }
 
   createGroup() {
@@ -277,46 +343,85 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateChat(data: Message) {
-    const newConversation = {
-      ...this.conversationsTemp.find((c) => c.id === data.conversation.id),
-      id: data.conversation.id,
-      createdAt: data.conversation.createdAt,
-      updatedAt: data.conversation.updatedAt,
-      title: data.conversation.title,
-      users: data.conversation.users,
+    const storedGroup = this.groupConversationsTemp.find((c) => c.id === data.conversation.id);
+    const storedOneOnOne = this.conversationsTemp.find((c) => c.id === data.conversation.id);
+    const stored = storedGroup || storedOneOnOne;
+
+    const mergedConversation: Conversation = {
+      ...stored,
+      ...data.conversation,
+      users: data.conversation.users ?? [],
       lastMessage: data,
     };
 
-    let updatedConversations = this.conversationsTemp.filter(
-      (c) => c.id !== data.conversation.id,
-    );
-    updatedConversations.unshift(newConversation);
+    const isGroup = this.isGroupConversation(mergedConversation);
 
-    this.conversationsTemp = updatedConversations;
+    const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
+    const newConversation = {
+      ...source.find((c) => c.id === data.conversation.id),
+      id: mergedConversation.id,
+      createdAt: mergedConversation.createdAt,
+      updatedAt: mergedConversation.updatedAt,
+      title: mergedConversation.title,
+      users: mergedConversation.users ?? [],
+      lastMessage: data,
+    };
 
-    if (this.currentSearchTerm) {
-      this.conversations =
-        this.applySearchFilterToConversations(updatedConversations);
+    if (isGroup) {
+      const groupUpdatedConversations = this.groupConversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+      groupUpdatedConversations.unshift(newConversation);
+      this.groupConversationsTemp = groupUpdatedConversations;
+
+      this.conversationsTemp = this.conversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+
+      if (this.currentSearchTerm) {
+        this.groupConversations = this.applySearchFilterToConversations(groupUpdatedConversations);
+        this.conversations = this.applySearchFilterToConversations(this.conversationsTemp);
+      } else {
+        this.groupConversations = groupUpdatedConversations;
+        this.conversations = this.conversationsTemp;
+      }
     } else {
-      this.conversations = updatedConversations;
+      let updatedConversations = this.conversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+      updatedConversations.unshift(newConversation);
+      this.conversationsTemp = updatedConversations;
+
+      this.groupConversationsTemp = this.groupConversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+
+      if (this.currentSearchTerm) {
+        this.conversations = this.applySearchFilterToConversations(updatedConversations);
+        this.groupConversations = this.applySearchFilterToConversations(this.groupConversationsTemp);
+      } else {
+        this.conversations = updatedConversations;
+        this.groupConversations = this.groupConversationsTemp;
+      }
     }
     this.cdr.markForCheck();
   }
 
   private applySearchFilterToConversations(
     conversations: Conversation[],
+    searchValue?: string,
   ): Conversation[] {
-    const searchValue = this.getCurrentSearchTerm();
-    if (searchValue) {
+    const search = searchValue !== undefined ? searchValue : this.getCurrentSearchTerm();
+    if (search) {
       return conversations.filter((conver) => {
         if (conver.title) {
-          return conver.title.toLowerCase().includes(searchValue.toLowerCase());
+          return conver.title.toLowerCase().includes(search.toLowerCase());
         }
-        return conver.users.some((u) => {
+        return conver.users?.some((u) => {
           const fullName = `${u.firstName} ${u.lastName}`;
           return (
-            fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchValue.toLowerCase())
+            fullName.toLowerCase().includes(search.toLowerCase()) ||
+            u.email.toLowerCase().includes(search.toLowerCase())
           );
         });
       });
@@ -329,6 +434,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateConversation(data: Conversation) {
+    const isGroup = this.isGroupConversation(data);
+    
     let updated = this.conversationsTemp.map((conversation: Conversation) => {
       if (conversation.id === data.id) {
         return {
@@ -341,17 +448,46 @@ export class ChatComponent implements OnInit, OnDestroy {
       return conversation;
     });
 
+    let groupUpdated = this.groupConversationsTemp.map((conversation: Conversation) => {
+      if (conversation.id === data.id) {
+        return {
+          ...conversation,
+          title: data.title,
+          users: data.users,
+          lastMessage: data.lastMessage,
+        };
+      }
+      return conversation;
+    });
+
     const exists = updated.some((c: Conversation) => c.id === data.id);
-    if (!exists) {
+    const groupExists = groupUpdated.some((c: Conversation) => c.id === data.id);
+    
+    if (!exists && !isGroup) {
       updated = [data, ...updated];
+    }
+    if (!groupExists && isGroup) {
+      groupUpdated = [data, ...groupUpdated];
+    }
+
+    if (isGroup) {
+      updated = updated.filter((c: Conversation) => c.id !== data.id);
+    } else {
+      groupUpdated = groupUpdated.filter((c: Conversation) => c.id !== data.id);
     }
 
     this.conversationsTemp = updated;
+    this.groupConversationsTemp = groupUpdated;
 
     const dataToUse = this.currentSearchTerm
       ? this.applySearchFilterToConversations(updated)
       : updated;
+    const groupDataToUse = this.currentSearchTerm
+      ? this.applySearchFilterToConversations(groupUpdated)
+      : groupUpdated;
+    
     this.conversations = dataToUse;
+    this.groupConversations = groupDataToUse;
 
     this.selectChat(data);
     this.cdr.markForCheck();
