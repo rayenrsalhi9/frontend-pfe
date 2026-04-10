@@ -96,6 +96,7 @@ export const chat = {
       DELETE_CONVERSATION_FAILED: "فشل في حذف المحادثة",
       SEND_MESSAGE_FAILED: "فشل في إرسال الرسالة",
       ADD_USER_FAILED: "فشل في إضافة المستخدم",
+      CONVERSATION_NOT_FOUND: "المحادثة غير موجودة",
     },
   },
 };

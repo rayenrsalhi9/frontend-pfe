@@ -5,8 +5,8 @@
     gap: 0.5rem;
     border-radius: var(--radius-md);
     padding: 0.35rem 0.75rem 0.35rem 0.35rem;
-    background: transparent;
-    border: 0.5px solid var(--border-color);
+    background: #f8f9fa;
+    border: none;
     color: var(--text-primary);
     cursor: pointer;
     font-weight: 500;
@@ -36,7 +36,6 @@
     &:hover,
     &:focus-visible {
       background: var(--primary-glow);
-      border-color: var(--primary);
     }
 
     .icon-chevron-down {

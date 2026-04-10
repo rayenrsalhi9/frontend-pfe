@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { Message } from "@app/shared/enums/conversation";
@@ -41,6 +42,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private searchTerm$ = new Subject<string>();
   private currentSearchTerm: string = "";
+  private pendingConversationId: number | string | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -51,6 +53,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private commonService: CommonService,
     private translateService: TranslateService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   getHost(): string {
@@ -65,6 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.initConversations();
     this.initChatChannel();
     this.initSearch();
+    this.initQueryParams();
   }
 
   ngOnDestroy(): void {
@@ -133,7 +138,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
           const filteredData = safeData.filter(
             (c): c is Conversation => !!c && !!c.id,
-          );
+          ).map(c => ({ ...c, users: c.users ?? [] }));
 
           const oneOnOneConversations = filteredData.filter(
             (c) => !this.isGroupConversation(c)
@@ -175,6 +180,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           }
 
           this.isLoadingConversations = false;
+          this.applyPendingConversationId();
           this.cdr.markForCheck();
         },
         error: () => {
@@ -209,6 +215,45 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.searchTerm$
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((term) => this.applySearch(term));
+  }
+
+  /** Handle conversation ID from URL query params */
+  private initQueryParams() {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const conversationId = params["conversationId"];
+      if (conversationId) {
+        const convIdStr = String(conversationId);
+        const selectedIdStr = String(this.selectedId || '');
+        if (convIdStr !== selectedIdStr) {
+          this.pendingConversationId = conversationId;
+          if (!this.isLoadingConversations) {
+            this.applyPendingConversationId();
+          }
+        }
+      }
+    });
+  }
+
+  private applyPendingConversationId() {
+    if (!this.pendingConversationId) return;
+
+    const conversationId = this.pendingConversationId;
+    this.pendingConversationId = null;
+
+    const found = this.conversationsTemp.find((c) => c.id === conversationId)
+      || this.groupConversationsTemp.find((c) => c.id === conversationId);
+
+    if (found) {
+      this.selectedId = found.id;
+      this.cdr.markForCheck();
+    } else {
+      this.translateService
+        .get("CHAT.ERROR.CONVERSATION_NOT_FOUND")
+        .subscribe((msg: string) => {
+          this.toastrService.error(msg);
+        });
+      this.router.navigate([], { queryParams: {} });
+    }
   }
 
   /** Called from (input) on the search field */
@@ -279,6 +324,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     this.oldSelectedId = this.selectedId;
     this.mobilePanelOpen = false;
+    this.router.navigate([], {
+      queryParams: { conversationId: item.id },
+      queryParamsHandling: "merge",
+    });
+    this.cdr.markForCheck();
   }
 
   createGroup() {
@@ -293,16 +343,27 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateChat(data: Message) {
-    const isGroup = this.isGroupConversation(data.conversation);
+    const storedGroup = this.groupConversationsTemp.find((c) => c.id === data.conversation.id);
+    const storedOneOnOne = this.conversationsTemp.find((c) => c.id === data.conversation.id);
+    const stored = storedGroup || storedOneOnOne;
+
+    const mergedConversation: Conversation = {
+      ...stored,
+      ...data.conversation,
+      users: data.conversation.users ?? [],
+      lastMessage: data,
+    };
+
+    const isGroup = this.isGroupConversation(mergedConversation);
 
     const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
     const newConversation = {
       ...source.find((c) => c.id === data.conversation.id),
-      id: data.conversation.id,
-      createdAt: data.conversation.createdAt,
-      updatedAt: data.conversation.updatedAt,
-      title: data.conversation.title,
-      users: data.conversation.users,
+      id: mergedConversation.id,
+      createdAt: mergedConversation.createdAt,
+      updatedAt: mergedConversation.updatedAt,
+      title: mergedConversation.title,
+      users: mergedConversation.users ?? [],
       lastMessage: data,
     };
 

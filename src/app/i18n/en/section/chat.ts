@@ -98,6 +98,7 @@ export const chat = {
       DELETE_CONVERSATION_FAILED: "Failed to delete conversation",
       SEND_MESSAGE_FAILED: "Failed to send message",
       ADD_USER_FAILED: "Failed to add user",
+      CONVERSATION_NOT_FOUND: "Conversation not found",
     },
   },
 };

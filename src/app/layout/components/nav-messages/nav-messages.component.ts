@@ -27,6 +27,7 @@ import { TranslateService } from "@ngx-translate/core";
 export class NavMessagesComponent implements OnInit, OnDestroy {
   @Input() dropDirection = "dropdown";
   private destroy$ = new Subject<void>();
+  private currentUserId: string | number | undefined;
 
   conversations: Conversation[] = [];
   isLoading = false;
@@ -45,6 +46,7 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.currentUserId = this.securityService.getUserDetail()?.user?.id;
     this.momentLang = this.translateService.currentLang || this.translateService.getDefaultLang() || "en";
     this.translateService.onLangChange.pipe(takeUntil(this.destroy$)).subscribe((event) => {
       this.momentLang = event.lang;
@@ -60,7 +62,7 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          const allConversations = data.data || [];
+          const allConversations = Array.isArray(data.data) ? data.data : [];
           
           this.conversations = allConversations.filter(
             (c: Conversation) => !!c.lastMessage && (!c.title && (!c.users || c.users.length <= 2))
@@ -94,19 +96,17 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
   }
 
   getOtherUser(conversation: Conversation): User | undefined {
-    const currentUserId = this.securityService.getUserDetail()?.user?.id;
-    if (!currentUserId) return undefined;
-    return conversation.users?.find((u) => u.id !== currentUserId);
+    if (!this.currentUserId) return undefined;
+    return conversation.users?.find((u) => u.id !== this.currentUserId);
   }
 
   isUnread(conversation: Conversation): boolean {
     if (!conversation.lastMessage) {
       return false;
     }
-    const currentUserId = this.securityService.getUserDetail()?.user?.id;
     return (
       conversation.lastMessage.isRead == null &&
-      conversation.lastMessage.sender?.id !== currentUserId
+      conversation.lastMessage.sender?.id !== this.currentUserId
     );
   }
 

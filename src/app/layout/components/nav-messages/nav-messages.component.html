@@ -52,14 +52,15 @@
             <span class="nav-messages-item-name">
               {{ getConversationName(conversation) }}
             </span>
-            <span class="nav-messages-item-time">
-              {{ conversation.lastMessage?.createdAt | amLocale: momentLang | amTimeAgo: true }}
+            <span class="nav-messages-item-time" *ngIf="conversation.lastMessage?.createdAt">
+              {{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }}
             </span>
+            <span class="nav-messages-item-time" *ngIf="!conversation.lastMessage?.createdAt"></span>
           </div>
           <div class="nav-messages-item-preview">
             <span class="nav-messages-item-text">
-              <ng-container *ngIf="getLastMessageContent(conversation); else noMessageTpl">
-                {{ getLastMessageContent(conversation) }}
+              <ng-container *ngIf="getLastMessageContent(conversation) as last; else noMessageTpl">
+                {{ last }}
               </ng-container>
               <ng-template #noMessageTpl>
                 <span class="text-muted"></span>
