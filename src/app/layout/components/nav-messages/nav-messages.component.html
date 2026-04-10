@@ -6,7 +6,7 @@
     class="toggle-wrapper messages-trigger"
     type="button"
     aria-haspopup="true"
-    [attr.aria-expanded]="navMessages.isOpen"
+    [attr.aria-expanded]="navMessages.visible"
     [attr.aria-label]="'MESSAGES.LABELS.TITLE' | translate"
     (click)="navMessages.toggle($event)"
   >

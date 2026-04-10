@@ -10,7 +10,7 @@ import {
   QueryList,
 } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
-import { Observable, Subject, Subscription } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { AppConfig } from "@app/shared/types/app-config.interface";
 import { UpdateCurrentLanguage } from "@app/store/app-config/app-config.action";
@@ -30,11 +30,9 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
   
   private destroy$ = new Subject<void>();
-  private appSubscription: Subscription;
-  private clickListener: (event: MouseEvent) => void;
 
   currentLang: string = "";
-  languageList: { key: string; lang: any }[] = [];
+  languageList: { key: string; lang: string }[] = [];
   isMenuOpen = false;
   focusedIndex = -1;
 
@@ -45,23 +43,19 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private cdr: ChangeDetectorRef,
     private elementRef: ElementRef,
-  ) {
-    this.clickListener = (event: MouseEvent) => {
-      if (!this.elementRef.nativeElement.contains(event.target)) {
-        this.isMenuOpen = false;
-        this.cdr.markForCheck();
-      }
-    };
-  }
+  ) {}
 
   @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent) {
-    this.clickListener(event);
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isMenuOpen = false;
+      this.cdr.markForCheck();
+    }
   }
 
   ngOnInit(): void {
     this.getLanguageList();
-    this.appSubscription = this.app$.subscribe((app) => {
+    this.app$.pipe(takeUntil(this.destroy$)).subscribe((app) => {
       this.currentLang = app.lang;
       this.cdr.markForCheck();
     });
@@ -70,13 +64,10 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    if (this.appSubscription) {
-      this.appSubscription.unsubscribe();
-    }
   }
 
   getLanguageList() {
-    const list: { key: string; lang: any }[] = [];
+    const list: { key: string; lang: string }[] = [];
     for (const key in supportedLanguages) {
       if (Object.prototype.hasOwnProperty.call(supportedLanguages, key)) {
         const lang = supportedLanguages[key];
@@ -170,17 +161,5 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
     this.translateService.use(language);
     this.isMenuOpen = false;
     this.cdr.markForCheck();
-  }
-
-  getFlagEmoji(langKey: string): string {
-    const flags: { [key: string]: string } = {
-      "en": "🇬🇧",
-      "en_US": "🇬🇧",
-      "fr": "🇫🇷",
-      "fr_FR": "🇫🇷",
-      "ar": "🇸🇦",
-      "ar_SA": "🇸🇦",
-    };
-    return flags[langKey] || "🌐";
   }
 }

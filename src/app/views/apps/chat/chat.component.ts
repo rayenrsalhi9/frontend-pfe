@@ -321,8 +321,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   updateChat(data: Message) {
     const isGroup = !!data.conversation.title || (data.conversation.users && data.conversation.users.length > 2);
 
+    const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
     const newConversation = {
-      ...this.conversationsTemp.find((c) => c.id === data.conversation.id),
+      ...source.find((c) => c.id === data.conversation.id),
       id: data.conversation.id,
       createdAt: data.conversation.createdAt,
       updatedAt: data.conversation.updatedAt,
@@ -338,6 +339,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       groupUpdatedConversations.unshift(newConversation);
       this.groupConversationsTemp = groupUpdatedConversations;
 
+      this.conversationsTemp = this.conversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+
       if (this.currentSearchTerm) {
         this.groupConversations = this.applySearchFilterToConversations(groupUpdatedConversations);
       } else {
@@ -349,6 +354,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       );
       updatedConversations.unshift(newConversation);
       this.conversationsTemp = updatedConversations;
+
+      this.groupConversationsTemp = this.groupConversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
 
       if (this.currentSearchTerm) {
         this.conversations = this.applySearchFilterToConversations(updatedConversations);
@@ -419,6 +428,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     if (!groupExists && isGroup) {
       groupUpdated = [data, ...groupUpdated];
+    }
+
+    if (isGroup) {
+      updated = updated.filter((c: Conversation) => c.id !== data.id);
+    } else {
+      groupUpdated = groupUpdated.filter((c: Conversation) => c.id !== data.id);
     }
 
     this.conversationsTemp = updated;
