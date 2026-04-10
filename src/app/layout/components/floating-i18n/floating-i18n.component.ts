@@ -21,7 +21,12 @@ import { TranslateService } from "@ngx-translate/core";
 
 interface LanguageItem {
   key: string;
-  lang: any;
+  lang: {
+    code: string;
+    name: string;
+    nativeName?: string;
+    dir?: 'ltr' | 'rtl';
+  };
 }
 
 @Component({

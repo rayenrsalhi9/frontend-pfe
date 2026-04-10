@@ -77,6 +77,7 @@
   letter-spacing: 0.02em;
   z-index: 10;
   transform: translate(25%, -25%);
+  pointer-events: none;
 }
 
 .language-menu {
@@ -217,7 +218,7 @@
 }
 
 @media (max-width: 640px) {
-  .floating-i18n-widget {
+  :host {
     bottom: 16px;
     right: 16px;
   }

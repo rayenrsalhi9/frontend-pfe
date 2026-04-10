@@ -14,6 +14,7 @@ import { Conversation } from "@app/shared/enums/conversation";
 import { User } from "@app/shared/enums/user-auth";
 import { ConversationService } from "@app/shared/services/conversation.service";
 import { environment } from "src/environments/environment";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "nav-messages",
@@ -26,7 +27,6 @@ import { environment } from "src/environments/environment";
 export class NavMessagesComponent implements OnInit, OnDestroy {
   @Input() dropDirection = "dropdown";
   private destroy$ = new Subject<void>();
-  private currentUser: User | null = null;
 
   conversations: Conversation[] = [];
   isLoading = false;
@@ -37,7 +37,12 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private translateService: TranslateService,
   ) {}
+
+  get hasUnreadConversations(): boolean {
+    return this.conversations.some((c) => this.isUnread(c));
+  }
 
   ngOnInit(): void {
     this.loadConversations();
@@ -100,21 +105,16 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
     );
   }
 
-  getLastMessageTime(createdAt: Date | string | undefined): string {
-    if (!createdAt) return "";
-    return createdAt as string;
-  }
-
   getLastMessageContent(conversation: Conversation): string {
     if (!conversation.lastMessage) return "";
     if (conversation.lastMessage.type !== "msg") {
-      return "File sent";
+      return this.translateService.instant("MESSAGES.LABELS.FILE_SENT");
     }
     return conversation.lastMessage.content || "";
   }
 
   openChat(conversation: Conversation): void {
-    this.router.navigate(["/apps/chat"]);
+    this.router.navigate(["/apps/chat"], { queryParams: { conversationId: conversation.id } });
   }
 
   viewAllConversations(): void {

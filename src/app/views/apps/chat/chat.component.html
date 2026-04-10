@@ -63,7 +63,12 @@
                     </span>
                   </h6>
                   <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
-                    {{ conversation.lastMessage?.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+                    <ng-container *ngIf="conversation.lastMessage; else noMessagesTpl">
+                      {{ conversation.lastMessage.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage.content }}
+                    </ng-container>
+                    <ng-template #noMessagesTpl>
+                      <span class="text-muted">{{ 'CHAT.LABELS.NO_MESSAGES_YET' | translate }}</span>
+                    </ng-template>
                     <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
                   </p>
                 </div>

@@ -12,7 +12,7 @@
   >
     <div class="icon-badge-container">
       <i class="feather icon-message-square"></i>
-      <div *ngIf="conversations.length > 0" class="notification-badge"></div>
+      <div *ngIf="hasUnreadConversations" class="notification-badge"></div>
     </div>
   </button>
   <dropdown-menu #navMessages alignment="right">
@@ -53,12 +53,17 @@
               {{ getConversationName(conversation) }}
             </span>
             <span class="nav-messages-item-time">
-              {{ getLastMessageTime(conversation.lastMessage?.createdAt) | amLocale: momentLang | amTimeAgo: true }}
+              {{ conversation.lastMessage?.createdAt | amLocale: momentLang | amTimeAgo: true }}
             </span>
           </div>
           <div class="nav-messages-item-preview">
             <span class="nav-messages-item-text">
-              {{ conversation.lastMessage?.type !== 'msg' ? ('MESSAGES.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+              <ng-container *ngIf="conversation.lastMessage; else noMessageTpl">
+                {{ conversation.lastMessage.type !== 'msg' ? ('MESSAGES.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
+              </ng-container>
+              <ng-template #noMessageTpl>
+                <span class="text-muted"></span>
+              </ng-template>
             </span>
             <span *ngIf="isUnread(conversation)" class="nav-messages-unread-dot"></span>
           </div>

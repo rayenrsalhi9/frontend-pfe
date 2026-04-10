@@ -4,7 +4,6 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Input,
   HostListener,
   ElementRef,
   ViewChildren,
@@ -28,7 +27,6 @@ import { TranslateService } from "@ngx-translate/core";
   },
 })
 export class NavI18NHeaderComponent implements OnInit, OnDestroy {
-  @Input() dropDirection: "dropdown" | "dropup" | "dropright" = "dropdown";
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
   
   private destroy$ = new Subject<void>();
@@ -151,7 +149,7 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
       case "Tab":
         this.isMenuOpen = false;
         if (event.key === "Escape") {
-          const btn = this.elementRef.nativeElement.querySelector(".trigger-btn");
+          const btn = this.elementRef.nativeElement.querySelector(".language-trigger");
           if (btn) btn.focus();
           event.preventDefault();
         }

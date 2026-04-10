@@ -66,9 +66,9 @@ export class NotificationService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  markAllAsRead() {
+  markAllAsRead(body?: { excludeTypes?: string[] }) {
     const url = `UserNotification/MarkAllAsRead`;
-    return this.httpClient.post<void>(url, null)
+    return this.httpClient.post<void>(url, body || null)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 }

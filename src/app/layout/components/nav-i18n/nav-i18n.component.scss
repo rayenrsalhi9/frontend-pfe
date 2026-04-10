@@ -1,5 +1,15 @@
 @use "../../../../assets/scss/variables.scss" as *;
 
+@mixin menu-transform($translateX: 0, $translateY: -8px, $origin: top) {
+  transform: translateX($translateX) translateY($translateY) scale(0.95);
+  transform-origin: $origin;
+}
+
+@mixin menu-transform-open($translateX: 0, $translateY: 0, $origin: top) {
+  transform: translateX($translateX) translateY($translateY) scale(1);
+  transform-origin: $origin;
+}
+
 :host {
   display: inline-block;
   position: relative;
@@ -30,10 +40,10 @@
     top: 100%;
     right: auto;
     left: 50%;
-    transform: translateX(-50%) translateY(-8px) scale(0.95);
+    @include menu-transform(-50%, -8px, top);
 
     &.is-open {
-      transform: translateX(-50%) translateY(0) scale(1);
+      @include menu-transform-open(-50%, 0, top);
     }
 
     &.is-dropup {
@@ -48,10 +58,10 @@
       top: 50%;
       bottom: auto;
       transform-origin: left;
-      transform: translateY(-50%) translateX(-8px) scale(0.95);
+      @include menu-transform(-50%, -8px, left);
 
       &.is-open {
-        transform: translateY(-50%) translateX(0) scale(1);
+        @include menu-transform-open(-50%, 0, left);
       }
     }
   }
@@ -106,7 +116,7 @@
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px) scale(0.95);
+  @include menu-transform(0, -8px, top);
   transition: all 0.15s ease;
   z-index: 1000;
   display: flex;
@@ -116,7 +126,7 @@
   &.is-open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0) scale(1);
+    @include menu-transform-open(0, 0, top);
   }
 
   &.is-dropup {

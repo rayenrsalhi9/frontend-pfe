@@ -130,19 +130,10 @@ export class ChatComponent implements OnInit, OnDestroy {
           } else if (response && typeof response === 'object') {
             safeData = [response];
           }
-          console.log('Conversations response:', safeData);
-          
+
           const filteredData = safeData.filter(
             (c): c is Conversation => !!c && !!c.id,
           );
-          console.log('Filtered conversations:', filteredData.length);
-          
-          if (filteredData.length > 0) {
-            const first = filteredData[0];
-            console.log('First conversation keys:', Object.keys(first));
-            console.log('lastMessage exists:', 'lastMessage' in first);
-            console.log('lastMessage value:', first.lastMessage);
-          }
 
           const conversationsWithMessages = filteredData.filter(
             (c) => !!c.lastMessage,
@@ -238,7 +229,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (conver.title) {
           return conver.title.toLowerCase().includes(searchValue.toLowerCase());
         }
-        return conver.users.some((u) => {
+        return conver.users?.some((u) => {
           const fullName = `${u.firstName} ${u.lastName}`;
           return (
             fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -328,6 +319,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateChat(data: Message) {
+    const isGroup = !!data.conversation.title || (data.conversation.users && data.conversation.users.length > 2);
+
     const newConversation = {
       ...this.conversationsTemp.find((c) => c.id === data.conversation.id),
       id: data.conversation.id,
@@ -338,27 +331,30 @@ export class ChatComponent implements OnInit, OnDestroy {
       lastMessage: data,
     };
 
-    let updatedConversations = this.conversationsTemp.filter(
-      (c) => c.id !== data.conversation.id,
-    );
-    updatedConversations.unshift(newConversation);
+    if (isGroup) {
+      const groupUpdatedConversations = this.groupConversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+      groupUpdatedConversations.unshift(newConversation);
+      this.groupConversationsTemp = groupUpdatedConversations;
 
-    this.conversationsTemp = updatedConversations;
-
-    const groupUpdatedConversations = this.groupConversationsTemp.filter(
-      (c) => c.id !== data.conversation.id,
-    );
-    groupUpdatedConversations.unshift(newConversation);
-    this.groupConversationsTemp = groupUpdatedConversations;
-
-    if (this.currentSearchTerm) {
-      this.conversations =
-        this.applySearchFilterToConversations(updatedConversations);
-      this.groupConversations =
-        this.applySearchFilterToConversations(groupUpdatedConversations);
+      if (this.currentSearchTerm) {
+        this.groupConversations = this.applySearchFilterToConversations(groupUpdatedConversations);
+      } else {
+        this.groupConversations = groupUpdatedConversations;
+      }
     } else {
-      this.conversations = updatedConversations;
-      this.groupConversations = groupUpdatedConversations;
+      let updatedConversations = this.conversationsTemp.filter(
+        (c) => c.id !== data.conversation.id,
+      );
+      updatedConversations.unshift(newConversation);
+      this.conversationsTemp = updatedConversations;
+
+      if (this.currentSearchTerm) {
+        this.conversations = this.applySearchFilterToConversations(updatedConversations);
+      } else {
+        this.conversations = updatedConversations;
+      }
     }
     this.cdr.markForCheck();
   }
@@ -372,7 +368,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (conver.title) {
           return conver.title.toLowerCase().includes(searchValue.toLowerCase());
         }
-        return conver.users.some((u) => {
+        return conver.users?.some((u) => {
           const fullName = `${u.firstName} ${u.lastName}`;
           return (
             fullName.toLowerCase().includes(searchValue.toLowerCase()) ||

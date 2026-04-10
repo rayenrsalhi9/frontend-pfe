@@ -118,7 +118,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
   }
 
   markAllAsReadNotification() {
-    this.notificationService.markAllAsRead().subscribe(() => {
+    this.notificationService.markAllAsRead({ excludeTypes: [NotificationType.Message] }).subscribe(() => {
       this.getNotification();
     });
   }
