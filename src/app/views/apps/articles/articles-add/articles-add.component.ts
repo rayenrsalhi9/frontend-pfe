@@ -282,7 +282,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
             .subscribe((message) => {
               this.toastrService.success(message);
             });
-          this.router.navigate(["/apps/news"]);
+          this.router.navigate(["/apps/articles"]);
         },
         error: (error) => {
           this.isLoading = false;
@@ -310,7 +310,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
             .subscribe((message) => {
               this.toastrService.success(message);
             });
-          this.router.navigate(["/apps/news"]);
+          this.router.navigate(["/apps/articles"]);
         },
         error: (error) => {
           this.isLoading = false;
@@ -348,7 +348,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigate(["/apps/news"]);
+    this.router.navigate(["/apps/articles"]);
   }
 
   // Getters for form controls
