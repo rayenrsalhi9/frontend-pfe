@@ -1,29 +1,29 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { CommonError } from '@app/core/error-handler/common-error';
-import { CommonHttpErrorService } from '@app/core/error-handler/common-http-error.service';
-import { CalenderReminderDto } from '@app/shared/enums/calender-reminder';
-import { DocumentByCategory } from '@app/shared/enums/document-by-category';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { CommonError } from "@app/core/error-handler/common-error";
+import { CommonHttpErrorService } from "@app/core/error-handler/common-http-error.service";
+import { CalenderReminderDto } from "@app/shared/enums/calender-reminder";
+import { DocumentByCategory } from "@app/shared/enums/document-by-category";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class DashboradService {
   constructor(
     private httpClient: HttpClient,
-    private commonHttpErrorService: CommonHttpErrorService
+    private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
   getDocumentByCategory(): Observable<DocumentByCategory[]> {
-    const url = `Dashboard/GetDocumentByCategory`;
+    const url = `dashboard/get-document-by-category`;
     return this.httpClient.get<DocumentByCategory[]>(url);
   }
 
   getDailyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/dailyreminder/${month}/${year}`;
+    const url = `dashboard/daily-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -31,9 +31,9 @@ export class DashboradService {
 
   getWeeklyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/weeklyreminder/${month}/${year}`;
+    const url = `dashboard/weekly-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -41,9 +41,9 @@ export class DashboradService {
 
   getMonthlyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/monthlyreminder/${month}/${year}`;
+    const url = `dashboard/monthly-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -51,9 +51,9 @@ export class DashboradService {
 
   getQuarterlyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/quarterlyreminder/${month}/${year}`;
+    const url = `dashboard/quarterly-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -61,9 +61,9 @@ export class DashboradService {
 
   getHalfYearlyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/halfyearlyreminder/${month}/${year}`;
+    const url = `dashboard/half-yearly-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -71,9 +71,9 @@ export class DashboradService {
 
   getYearlyReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/yearlyreminder/${month}/${year}`;
+    const url = `dashboard/yearly-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -81,9 +81,9 @@ export class DashboradService {
 
   getOneTimeReminders(
     month,
-    year
+    year,
   ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/onetimereminder/${month}/${year}`;
+    const url = `dashboard/one-time-reminder/${month}/${year}`;
     return this.httpClient
       .get<CalenderReminderDto[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));

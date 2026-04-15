@@ -19,7 +19,7 @@ export class LoginAuditService {
   getLoginAudits(
     resource: LoginAuditResource,
   ): Observable<HttpResponse<LoginAudit[]> | CommonError> {
-    const url = `loginAudit`;
+    const url = `login-audit`;
     const customParams = new HttpParams()
       .set("fields", resource.fields)
       .set("orderBy", resource.orderBy)

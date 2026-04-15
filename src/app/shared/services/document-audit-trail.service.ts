@@ -19,7 +19,7 @@ export class DocumentAuditTrailService {
   getDocumentAuditTrials(
     resource: DocumentResource,
   ): Observable<HttpResponse<DocumentAuditTrail[]> | CommonError> {
-    const url = `documentAuditTrail`;
+    const url = `document-audit-trail`;
     const customParams = new HttpParams()
       .set("fields", resource.fields)
       .set("orderBy", resource.orderBy)
