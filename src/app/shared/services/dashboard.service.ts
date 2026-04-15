@@ -8,7 +8,7 @@ import { CommonError } from "../enums/common-error";
 import { DocumentByCategory } from "../enums/document-by-category";
 
 @Injectable({ providedIn: "root" })
-export class DashboradService {
+export class DashboardService {
   private observeChange = new BehaviorSubject<any>(null);
   emitter$ = this.observeChange.asObservable();
 

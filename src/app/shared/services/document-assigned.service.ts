@@ -44,10 +44,10 @@ export class DocumentAssignedService {
   }
 
   getDocumentLibrary(id: string): Observable<DocumentInfo> {
-    return this.httpClient.get<DocumentInfo>("document/" + id);
+    return this.httpClient.get<DocumentInfo>(`document/${id}`);
   }
 
   getDocumentViewLibrary(id: string): Observable<DocumentInfo> {
-    return this.httpClient.get<DocumentInfo>("document/view/" + id);
+    return this.httpClient.get<DocumentInfo>(`document/view/${id}`);
   }
 }

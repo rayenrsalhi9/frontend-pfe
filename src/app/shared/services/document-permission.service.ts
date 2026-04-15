@@ -18,7 +18,7 @@ export class DocumentPermissionService {
     private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
-  getDoucmentPermission(
+  getDocumentPermission(
     id: string,
   ): Observable<DocumentPermission[] | CommonError> {
     const url = `document-role-permission/${id}`;

@@ -141,7 +141,7 @@ export class DocumentService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getdocumentMetadataById(id: string) {
+  getDocumentMetadataById(id: string) {
     const url = `document/${id}/get-metatag`;
     return this.httpClient
       .get(url)

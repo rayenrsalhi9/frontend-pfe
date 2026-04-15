@@ -19,7 +19,7 @@ export class NotificationService {
     private commonHttpErrorService: CommonHttpErrorService,
   ) {}
 
-  refrshNotifications(isRefreshing: any) {
+  refreshNotifications(isRefreshing: any) {
     this.observeChange.next(isRefreshing);
   }
 

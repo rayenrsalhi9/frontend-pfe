@@ -1,31 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DocumentAuditTrail } from '@app/shared/enums/document-audit-trail';
-import { DocumentInfo } from '@app/shared/enums/document-info';
-import { DocumentOperation } from '@app/shared/enums/document-operation';
-import { DocumentMetaData } from '@app/shared/enums/documentMetaData';
-import { CommonService } from '@app/shared/services/common.service';
-import { DocumentService } from '@app/shared/services/document.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
+import { Component, OnInit } from "@angular/core";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
+import { DocumentInfo } from "@app/shared/enums/document-info";
+import { DocumentOperation } from "@app/shared/enums/document-operation";
+import { DocumentMetaData } from "@app/shared/enums/documentMetaData";
+import { CommonService } from "@app/shared/services/common.service";
+import { DocumentService } from "@app/shared/services/document.service";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-document-edit',
-  templateUrl: './document-edit.component.html',
-  styleUrls: ['./document-edit.component.css']
+  selector: "app-document-edit",
+  templateUrl: "./document-edit.component.html",
+  styleUrls: ["./document-edit.component.css"],
 })
 export class DocumentEditComponent implements OnInit {
-
   document: any;
   categories: any;
   documentForm: FormGroup;
-  extension = '';
+  extension = "";
 
   get documentMetaTagsArray(): FormArray {
-    return <FormArray>this.documentForm.get('documentMetaTags');
+    return <FormArray>this.documentForm.get("documentMetaTags");
   }
-
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -33,9 +31,8 @@ export class DocumentEditComponent implements OnInit {
     private toastrService: ToastrService,
     private documentService: DocumentService,
     private commonService: CommonService,
-    private translate: TranslateService
-  ) {
-  }
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.createDocumentForm();
@@ -54,9 +51,9 @@ export class DocumentEditComponent implements OnInit {
 
   createDocumentForm() {
     this.documentForm = this.fb.group({
-      name: ['', [Validators.required]],
-      description: [''],
-      categoryId: ['', [Validators.required]],
+      name: ["", [Validators.required]],
+      description: [""],
+      categoryId: ["", [Validators.required]],
       documentMetaTags: this.fb.array([]),
     });
   }
@@ -66,9 +63,11 @@ export class DocumentEditComponent implements OnInit {
       this.documentService
         .updateDocument(this.buildDocumentObject())
         .subscribe((c) => {
-          this.translate.get('DOCUMENTS.EDIT.TOAST.DOCUMENT_UPDATE_SUCCESSFULLY').subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage); 
-          });
+          this.translate
+            .get("DOCUMENTS.EDIT.TOAST.DOCUMENT_UPDATE_SUCCESSFULLY")
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.success(translatedMessage);
+            });
           this.addDocumentTrail();
         });
     } else {
@@ -105,28 +104,28 @@ export class DocumentEditComponent implements OnInit {
     const documentMetaTags = this.documentMetaTagsArray.value;
     const document: DocumentInfo = {
       id: this.document.id,
-      categoryId: this.documentForm.get('categoryId').value,
-      description: this.documentForm.get('description').value,
-      name: this.documentForm.get('name').value,
+      categoryId: this.documentForm.get("categoryId").value,
+      description: this.documentForm.get("description").value,
+      name: this.documentForm.get("name").value,
       documentMetaDatas: [...documentMetaTags],
     };
     return document;
   }
   onDocumentCancel() {
-    this.bsModalRef.content = null
-    this.bsModalRef.hide()
+    this.bsModalRef.content = null;
+    this.bsModalRef.hide();
     this.bsModalRef.hide();
   }
 
   onAddAnotherMetaTag() {
     const documentMetaTag: DocumentMetaData = {
-      id: '',
-      documentId: this.document && this.document.id ? this.document.id : '',
-      metatag: '',
+      id: "",
+      documentId: this.document && this.document.id ? this.document.id : "",
+      metatag: "",
     };
     this.documentMetaTagsArray.insert(
       0,
-      this.editDocmentMetaData(documentMetaTag)
+      this.editDocmentMetaData(documentMetaTag),
     );
   }
 
@@ -136,20 +135,20 @@ export class DocumentEditComponent implements OnInit {
 
   buildDocumentMetaTag(): FormGroup {
     return this.fb.group({
-      id: [''],
-      documentId: [''],
-      metatag: [''],
+      id: [""],
+      documentId: [""],
+      metatag: [""],
     });
   }
 
   pushValuesDocumentMetatagArray() {
     this.documentService
-      .getdocumentMetadataById(this.document.id)
+      .getDocumentMetadataById(this.document.id)
       .subscribe((result: DocumentMetaData[]) => {
         if (result.length > 0) {
           result.map((documentMetatag) => {
             this.documentMetaTagsArray.push(
-              this.editDocmentMetaData(documentMetatag)
+              this.editDocmentMetaData(documentMetatag),
             );
           });
         } else {
@@ -159,11 +158,11 @@ export class DocumentEditComponent implements OnInit {
   }
 
   onMetatagChange(event: any, index: number) {
-    const email = this.documentMetaTagsArray.at(index).get('metatag').value;
+    const email = this.documentMetaTagsArray.at(index).get("metatag").value;
     if (!email) {
       return;
     }
-    const emailControl = this.documentMetaTagsArray.at(index).get('metatag');
+    const emailControl = this.documentMetaTagsArray.at(index).get("metatag");
     emailControl.setValidators([Validators.required]);
     emailControl.updateValueAndValidity();
   }
@@ -175,5 +174,4 @@ export class DocumentEditComponent implements OnInit {
       metatag: [documentMetatag.metatag],
     });
   }
-
 }

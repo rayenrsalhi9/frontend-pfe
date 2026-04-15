@@ -92,7 +92,7 @@ export class CommonService {
     documentId: string,
     isVersion: boolean,
   ): Observable<HttpEvent<Blob>> {
-    const url = `document/${documentId}/download/${isVersion} `;
+    const url = `document/${documentId}/download/${isVersion}`;
     return this.httpClient.get(url, {
       reportProgress: true,
       observe: "events",

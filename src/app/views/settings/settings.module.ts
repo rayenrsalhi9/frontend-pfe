@@ -32,7 +32,6 @@ import { QuillModule } from "ngx-quill";
     NgxDatatableModule,
     RatingModule,
     PerfectScrollbarModule,
-    CheckboxModule,
     QuillModule.forRoot(),
   ],
 })
