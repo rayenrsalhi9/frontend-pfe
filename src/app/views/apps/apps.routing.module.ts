@@ -32,7 +32,7 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: "news",
+    path: "articles",
     loadChildren: () =>
       import("./articles/articles.module").then((m) => m.ArticlesModule),
     data: {

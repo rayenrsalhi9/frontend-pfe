@@ -10,7 +10,7 @@
       </div>
       <button
         *hasClaim="'ARTICLE_ADD_ARTICLE'"
-        routerLink="/apps/news/add"
+        routerLink="/apps/articles/add"
         class="btn-create"
       >
         <i class="feather icon-plus"></i>
@@ -229,7 +229,7 @@
                   <button
                     class="dropdown-item-modern"
                     *hasClaim="'ARTICLE_EDIT_ARTICLE'"
-                    [routerLink]="'/apps/news/edit/' + row.id"
+                    [routerLink]="'/apps/articles/edit/' + row.id"
                   >
                     <i class="feather icon-edit-2 text-info"></i>
                     <span>{{ "ARTICLES.LIST.BUTTONS.EDIT" | translate }}</span>

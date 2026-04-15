@@ -28,7 +28,8 @@ export const preview = {
         DELETE: "Delete comment",
         DELETE_CONFIRM: {
           TITLE: "Delete Comment",
-          MESSAGE: "Are you sure you want to delete this comment? This action cannot be undone.",
+          MESSAGE:
+            "Are you sure you want to delete this comment? This action cannot be undone.",
           CANCEL: "Cancel",
           CONFIRM: "Delete",
         },
@@ -49,7 +50,7 @@ export const preview = {
         AUTHOR: "Topic started by",
         COMMENTS: "Discussion Thread",
         ADD_COMMENT: "Add Reply",
-        NO_COMMENTS: "No replies yet — be the first to join the discussion!",
+        NO_COMMENTS: "No replies yet, be the first to join the discussion!",
         CLOSED_NOTICE:
           "This discussion is closed and no longer accepting new replies.",
       },
@@ -72,7 +73,8 @@ export const preview = {
         DELETE: "Delete comment",
         DELETE_CONFIRM: {
           TITLE: "Delete Comment",
-          MESSAGE: "Are you sure you want to delete this comment? This action cannot be undone.",
+          MESSAGE:
+            "Are you sure you want to delete this comment? This action cannot be undone.",
           CANCEL: "Cancel",
           CONFIRM: "Delete",
         },
@@ -93,7 +95,7 @@ export const preview = {
         AUTHOR: "Written by",
         COMMENTS: "Community Responses",
         ADD_COMMENT: "Leave a Response",
-        NO_COMMENTS: "No responses yet — be the first to leave one!",
+        NO_COMMENTS: "No responses yet, be the first to leave one!",
         CLOSED_NOTICE: "Comments are disabled for this post.",
       },
     },

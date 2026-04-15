@@ -28,7 +28,8 @@ export const preview = {
         DELETE: "Supprimer le commentaire",
         DELETE_CONFIRM: {
           TITLE: "Supprimer le commentaire",
-          MESSAGE: "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+          MESSAGE:
+            "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
           CANCEL: "Annuler",
           CONFIRM: "Supprimer",
         },
@@ -50,7 +51,7 @@ export const preview = {
         COMMENTS: "Fil de discussion",
         ADD_COMMENT: "Ajouter une réponse",
         NO_COMMENTS:
-          "Aucune réponse pour l'instant — soyez le premier à rejoindre la discussion !",
+          "Aucune réponse pour l'instant, soyez le premier à rejoindre la discussion !",
         CLOSED_NOTICE:
           "Cette discussion est fermée et n'accepte plus de nouvelles réponses.",
       },
@@ -73,7 +74,8 @@ export const preview = {
         DELETE: "Supprimer le commentaire",
         DELETE_CONFIRM: {
           TITLE: "Supprimer le commentaire",
-          MESSAGE: "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+          MESSAGE:
+            "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
           CANCEL: "Annuler",
           CONFIRM: "Supprimer",
         },
@@ -95,7 +97,7 @@ export const preview = {
         COMMENTS: "Réponses de la communauté",
         ADD_COMMENT: "Laisser une réponse",
         NO_COMMENTS:
-          "Aucune réponse pour l'instant — soyez le premier à en laisser une !",
+          "Aucune réponse pour l'instant, soyez le premier à en laisser une !",
         CLOSED_NOTICE: "Les commentaires sont fermés pour cet article.",
       },
     },

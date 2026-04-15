@@ -169,23 +169,24 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   private confirmDeleteComment(id: string): void {
     this.forumService.deleteComment(id).subscribe({
       next: (response: any) => {
-        if (Array.isArray(response)) {
-          this.forum.comments = response;
+        if (response?.success) {
+          this.forum.comments = this.forum.comments.filter((c: any) => c.id !== id);
           this.cdr.markForCheck();
           this.toastr.success(
             this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.SUCCESS"),
           );
         } else {
           this.toastr.error(
-            response.friendlyMessage ||
-              response.messages?.[0] ||
+            response?.message ||
+              response?.friendlyMessage ||
               this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
           );
         }
       },
       error: (err: any) => {
         this.toastr.error(
-          err?.friendlyMessage ||
+          err?.error?.message ||
+            err?.friendlyMessage ||
             err?.messages?.[0] ||
             this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
         );
