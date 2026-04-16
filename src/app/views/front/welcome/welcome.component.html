@@ -54,7 +54,7 @@
                 <span>{{ blog?.createdAt | utcToLocalTime: "shortDate" }}</span>
                 <span class="meta-separator">·</span>
                 <i class="feather icon-user"></i>
-                <span>{{ (blog?.creator?.firstName || '') + (blog?.creator?.lastName ? ' ' + blog?.creator?.lastName : '') || blog?.creator?.userName }}</span>
+                <span>{{ displayName(blog?.creator) }}</span>
               </span>
             </div>
           </a>
@@ -112,7 +112,7 @@
                 <span>{{ article?.createdAt | utcToLocalTime: "shortDate" }}</span>
                 <span class="meta-separator">·</span>
                 <i class="feather icon-user"></i>
-                <span>{{ (article?.creator?.firstName || '') + (article?.creator?.lastName ? ' ' + article?.creator?.lastName : '') || article?.creator?.userName }}</span>
+                <span>{{ displayName(article?.creator) }}</span>
               </span>
             </div>
           </a>
@@ -222,7 +222,7 @@
                 <span>{{ forum?.createdAt | utcToLocalTime: "shortDate" }}</span>
                 <span class="meta-separator">·</span>
                 <i class="feather icon-user"></i>
-                <span>{{ (forum?.creator?.firstName || '') + (forum?.creator?.lastName ? ' ' + forum?.creator?.lastName : '') || forum?.creator?.userName }}</span>
+                <span>{{ displayName(forum?.creator) }}</span>
                 <span class="meta-separator">·</span>
                 <i class="feather icon-message-circle"></i>
                 <span>{{ forum?.commentsCount || 0 }}</span>

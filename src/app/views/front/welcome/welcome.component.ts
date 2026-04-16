@@ -97,6 +97,14 @@ export class WelcomeComponent implements OnInit {
     return environment.apiUrl;
   }
 
+  displayName(creator: any): string {
+    const name = [creator?.firstName, creator?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    return name || creator?.userName || "";
+  }
+
   getLatestBlogs() {
     this.blogService
       .allBlogs({ banner: 0, limit: 5 })
@@ -113,7 +121,19 @@ export class WelcomeComponent implements OnInit {
     });
   }
 
-  normalizeForum(forum: any) {
+  normalizeForum(
+    forum: Partial<Record<string, any>> & {
+      reactionsCount?: number;
+      reactions_count?: number;
+      reactions?: any[];
+      reactionsUp?: any[];
+      reactionsDown?: any[];
+      reactionsHeart?: any[];
+      commentsCount?: number;
+      comments_count?: number;
+      comments?: any[];
+    }
+  ) {
     const reactionsCount =
       forum?.reactionsCount ??
       forum?.reactions_count ??
@@ -129,21 +149,25 @@ export class WelcomeComponent implements OnInit {
 
     return {
       ...forum,
-      reactionsCount: reactionsCount ?? 0,
-      commentsCount: commentsCount ?? 0,
+      reactionsCount,
+      commentsCount,
     };
   }
 
   getLatestSurvey() {
     this.surveyService.getLatestSurvey().subscribe({
       next: (data: any) => {
-        this.survey = data && Object.keys(data).length > 0 ? data : null;
+        const isValidSurvey =
+          data &&
+          typeof data.type === "string" &&
+          ["simple", "rating", "satisfaction"].includes(data.type);
+        this.survey = isValidSurvey ? data : null;
         this.cdr.markForCheck();
       },
       error: () => {
         this.survey = null;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
