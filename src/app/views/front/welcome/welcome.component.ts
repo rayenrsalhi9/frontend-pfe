@@ -97,6 +97,14 @@ export class WelcomeComponent implements OnInit {
     return environment.apiUrl;
   }
 
+  displayName(creator: any): string {
+    const name = [creator?.firstName, creator?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    return name || creator?.userName || "";
+  }
+
   getLatestBlogs() {
     this.blogService
       .allBlogs({ banner: 0, limit: 5 })
@@ -108,15 +116,58 @@ export class WelcomeComponent implements OnInit {
 
   getLastForums() {
     this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = data;
+      this.latestForums = (data || []).map((forum: any) => this.normalizeForum(forum));
       this.cdr.markForCheck();
     });
   }
 
+  normalizeForum(
+    forum: Partial<Record<string, any>> & {
+      reactionsCount?: number;
+      reactions_count?: number;
+      reactions?: any[];
+      reactionsUp?: any[];
+      reactionsDown?: any[];
+      reactionsHeart?: any[];
+      commentsCount?: number;
+      comments_count?: number;
+      comments?: any[];
+    }
+  ) {
+    const reactionsCount =
+      forum?.reactionsCount ??
+      forum?.reactions_count ??
+      (Array.isArray(forum?.reactions) ? forum.reactions.length : 0) +
+        (Array.isArray(forum?.reactionsUp) ? forum.reactionsUp.length : 0) +
+        (Array.isArray(forum?.reactionsDown) ? forum.reactionsDown.length : 0) +
+        (Array.isArray(forum?.reactionsHeart) ? forum.reactionsHeart.length : 0);
+
+    const commentsCount =
+      forum?.commentsCount ??
+      forum?.comments_count ??
+      (Array.isArray(forum?.comments) ? forum.comments.length : 0);
+
+    return {
+      ...forum,
+      reactionsCount,
+      commentsCount,
+    };
+  }
+
   getLatestSurvey() {
-    this.surveyService.getLatestSurvey().subscribe((data: any) => {
-      this.survey = data && Object.keys(data).length > 0 ? data : null;
-      this.cdr.markForCheck();
+    this.surveyService.getLatestSurvey().subscribe({
+      next: (data: any) => {
+        const isValidSurvey =
+          data &&
+          typeof data.type === "string" &&
+          ["simple", "rating", "satisfaction"].includes(data.type);
+        this.survey = isValidSurvey ? data : null;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.survey = null;
+        this.cdr.markForCheck();
+      },
     });
   }
 

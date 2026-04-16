@@ -29,6 +29,7 @@ export const welcome = {
     NO_ARTICLES: "Aucun article publié pour le moment",
     NO_FORUMS: "Aucune discussion disponible",
     NO_SURVEY: "Aucun sondage actif pour le moment",
+    LOGIN_FOR_SURVEY: "Connectez-vous pour voir et répondre aux sondages",
 
     ARTICLE_LOAD_ERROR: "Impossible de charger les articles",
   },
@@ -39,6 +40,7 @@ export const welcome = {
     NEUTRAL: "Neutre",
     SATISFIED: "Satisfait",
     NOT_SATISFIED: "Non satisfait",
+    LOGIN: "Connexion",
   },
 
   COMMON: {

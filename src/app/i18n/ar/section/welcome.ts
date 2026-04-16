@@ -28,6 +28,7 @@ export const welcome = {
     NO_ARTICLES: "لا توجد مقالات منشورة حالياً",
     NO_FORUMS: "لا توجد مناقشات حالياً",
     NO_SURVEY: "لا يوجد استبيان نشط حالياً",
+    LOGIN_FOR_SURVEY: "سجّل الدخول لعرض الاستبيانات والإجابة عليها",
 
     ARTICLE_LOAD_ERROR: "تعذر تحميل المقالات",
   },
@@ -38,6 +39,7 @@ export const welcome = {
     NEUTRAL: "محايد",
     SATISFIED: "راضٍ",
     NOT_SATISFIED: "غير راضٍ",
+    LOGIN: "تسجيل الدخول",
   },
 
   COMMON: {
