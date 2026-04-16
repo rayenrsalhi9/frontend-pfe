@@ -23,7 +23,7 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { DocumentService } from "@app/shared/services/document.service";
 import { DocumentResource } from "@app/shared/enums/document-resource";
 import { CommonService } from "@app/shared/services/common.service";
-import { DashboradService } from "./dashboards.service";
+import { DashboardService } from "@app/shared/services/dashboard.service";
 import { environment } from "src/environments/environment";
 import { ArticleService } from "@app/shared/services/article.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private articleService: ArticleService,
     private commonService: CommonService,
     private documentService: DocumentService,
-    private dashboardService: DashboradService,
+    private dashboardService: DashboardService,
     private translate: TranslateService,
     private rtlService: RtlService,
   ) {

@@ -72,7 +72,7 @@
             ngx-datatable-cell-template
             let-value="value"
           >
-            <a [routerLink]="['/apps/survey/detail']" class="text-dark font-weight-bold d-block">
+            <a [routerLink]="['/apps/surveys', row.id]" class="text-dark font-weight-bold d-block">
               {{ value }}
             </a>
             <span

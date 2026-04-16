@@ -41,9 +41,11 @@ export class CommonService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getUsersWithClaim(claimType: string = 'CHAT_VIEW_CHATS'): Observable<User[] | CommonError> {
+  getUsersWithClaim(
+    claimType: string = "CHAT_VIEW_CHATS",
+  ): Observable<User[] | CommonError> {
     const url = `user-with-claim`;
-    const params = new HttpParams().set('claim', claimType);
+    const params = new HttpParams().set("claim", claimType);
     return this.httpClient
       .get<User[]>(url, { params })
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -64,7 +66,7 @@ export class CommonService {
   }
 
   getMyReminder(id: string): Observable<Reminder | CommonError> {
-    const url = `reminder/${id}/myreminder`;
+    const url = `reminder/${id}/my-reminder`;
     return this.httpClient
       .get<Reminder>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -80,7 +82,7 @@ export class CommonService {
   addDocumentAuditTrail(
     documentAuditTrail: DocumentAuditTrail,
   ): Observable<DocumentAuditTrail | CommonError> {
-    const url = `documentAuditTrail`;
+    const url = `document-audit-trail`;
     return this.httpClient
       .post<DocumentAuditTrail>(url, documentAuditTrail)
       .pipe(catchError(this.commonHttpErrorService.handleError));
@@ -90,7 +92,7 @@ export class CommonService {
     documentId: string,
     isVersion: boolean,
   ): Observable<HttpEvent<Blob>> {
-    const url = `document/${documentId}/download/${isVersion} `;
+    const url = `document/${documentId}/download/${isVersion}`;
     return this.httpClient.get(url, {
       reportProgress: true,
       observe: "events",
@@ -102,17 +104,17 @@ export class CommonService {
     documentId: string,
     isPermission: boolean,
   ): Observable<boolean> {
-    const url = `document/${documentId}/isDownloadFlag/isPermission/${isPermission}`;
+    const url = `document/${documentId}/is-download-flag/is-permission/${isPermission}`;
     return this.httpClient.get<boolean>(url);
   }
 
   getDocumentToken(documentId: string): Observable<{ [key: string]: string }> {
-    const url = `documentToken/${documentId}/token`;
+    const url = `document-token/${documentId}/token`;
     return this.httpClient.get<{ [key: string]: string }>(url);
   }
 
   deleteDocumentToken(token: string): Observable<boolean> {
-    const url = `documentToken/${token}`;
+    const url = `document-token/${token}`;
     return this.httpClient.delete<boolean>(url);
   }
 
@@ -120,7 +122,7 @@ export class CommonService {
     documentId: string,
     isVersion: boolean,
   ): Observable<{ [key: string]: string[] }> {
-    const url = `document/${documentId}/readText/${isVersion}`;
+    const url = `document/${documentId}/read-text/${isVersion}`;
     return this.httpClient.get<{ [key: string]: string[] }>(url);
   }
 

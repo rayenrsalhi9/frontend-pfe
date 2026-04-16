@@ -54,21 +54,21 @@ export class UserService {
     userClaims: UserClaim[],
     userId: string,
   ): Observable<User | CommonError> {
-    const url = `userClaim/${userId}`;
+    const url = `user-claim/${userId}`;
     return this.httpClient
       .put<User>(url, { userClaims })
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   resetPassword(user: User): Observable<User | CommonError> {
-    const url = `user/resetpassword`;
+    const url = `user/reset-password`;
     return this.httpClient
       .post<User>(url, user)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   changePassword(user: User): Observable<User | CommonError> {
-    const url = `user/changepassword`;
+    const url = `user/change-password`;
     return this.httpClient
       .post<User>(url, user)
       .pipe(catchError(this.commonHttpErrorService.handleError));

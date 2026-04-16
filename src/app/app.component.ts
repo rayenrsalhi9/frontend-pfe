@@ -5,10 +5,7 @@ import { AppConfig } from "@app/shared/types/app-config.interface";
 import { Observable, Subscription } from "rxjs";
 import { en_US } from "./i18n/en/index";
 import { fr_FR } from "./i18n/fr/index";
-import Pusher from "pusher-js";
-import { PusherService } from "./shared/services/pusher.service";
 import { ar_AR } from "./i18n/ar";
-import { DashboradService } from "./shared/services/dashboard.service";
 import { NotificationSystem } from "./shared/services/notification-system.service";
 
 const storageKey = "lang";
@@ -24,7 +21,6 @@ export class AppComponent implements OnInit, OnDestroy {
   currentLang: string;
 
   constructor(
-    private dash: DashboradService,
     private translateService: TranslateService,
     private notificationSystem: NotificationSystem,
   ) {

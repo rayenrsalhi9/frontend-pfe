@@ -83,7 +83,7 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: "responses-audits",
+    path: "response-audits",
     loadChildren: () =>
       import("./responses-audit/responses-audit.module").then(
         (m) => m.ResponsesAuditModule,

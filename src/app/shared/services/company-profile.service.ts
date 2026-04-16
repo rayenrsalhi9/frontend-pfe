@@ -25,13 +25,13 @@ export class CompanyProfileService {
   }
 
   getCompanyProfile(): Observable<CompanyProfile | CommonError> {
-    const url = `companyProfile`;
+    const url = `company-profile`;
     return this.http.get<CompanyProfile>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   updateCompanyProfile(companyProfile): Observable<CompanyProfile | CommonError> {
-    const url = `companyProfile`;
+    const url = `company-profile`;
     return this.http.post<CompanyProfile>(url, companyProfile)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }

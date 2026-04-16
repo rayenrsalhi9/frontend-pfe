@@ -115,7 +115,7 @@ export class WelcomeComponent implements OnInit {
 
   getLatestSurvey() {
     this.surveyService.getLatestSurvey().subscribe((data: any) => {
-      this.survey = Object.keys(data).length ? data : null;
+      this.survey = data && Object.keys(data).length > 0 ? data : null;
       this.cdr.markForCheck();
     });
   }
@@ -133,6 +133,7 @@ export class WelcomeComponent implements OnInit {
             .subscribe(
               (data: any) => {
                 this.toastr.success(translatedMessage["SUCCESS"]);
+                this.getLatestSurvey();
               },
               (error: any) => {
                 this.toastr.error(translatedMessage["ERROR"]);

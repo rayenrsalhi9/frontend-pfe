@@ -37,12 +37,13 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: "detail/:id",
+    path: ":id",
     data: {
       title: "SURVEY.BUTTONS.VIEW",
       hidePageHeader: true,
     },
     component: SurveyDetailComponent,
+    canActivate: [AuthGuard],
   },
 ];
 

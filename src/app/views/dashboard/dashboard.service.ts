@@ -1,49 +1,59 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { 
-    ChartSeries, 
-    RegionData, 
-    OverviewData, 
-    RecentTransactionData,
-    RecentReviewData,
-    DeviceStatisticData,
-    CountriesData
-} from './dashboard.type';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import {
+  ChartSeries,
+  RegionData,
+  OverviewData,
+  RecentTransactionData,
+  RecentReviewData,
+  DeviceStatisticData,
+  CountriesData,
+} from "./dashboard.type";
+import { DocumentByCategory } from "@app/shared/enums/document-by-category";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class DashboardService {
+  apiUrl = `/api/dashboard`;
 
-    apiUrl = `/api/dashboard`;
- 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    getMonthlyRevenueChartData() {
-        return this.http.get<Array<ChartSeries>>(`${this.apiUrl}/monthly-revenue`)
-    }
+  getMonthlyRevenueChartData() {
+    return this.http.get<Array<ChartSeries>>(`${this.apiUrl}/monthly-revenue`);
+  }
 
-    getRegionMapData() {
-        return this.http.get<Array<RegionData>>(`${this.apiUrl}/region-data`)
-    }
+  getRegionMapData() {
+    return this.http.get<Array<RegionData>>(`${this.apiUrl}/region-data`);
+  }
 
-    getOverviewData() {
-        return this.http.get<OverviewData>(`${this.apiUrl}/overview`)
-    }
+  getOverviewData() {
+    return this.http.get<OverviewData>(`${this.apiUrl}/overview`);
+  }
 
-    getRecentTransactionData() {
-        return this.http.get<Array<RecentTransactionData>>(`${this.apiUrl}/recent-transaction`)
-    }
+  getRecentTransactionData() {
+    return this.http.get<Array<RecentTransactionData>>(
+      `${this.apiUrl}/recent-transaction`,
+    );
+  }
 
-    getRecentRatingData() {
-        return this.http.get<Array<RecentReviewData>>(`${this.apiUrl}/recent-rating`)
-    }
+  getRecentRatingData() {
+    return this.http.get<Array<RecentReviewData>>(
+      `${this.apiUrl}/recent-rating`,
+    );
+  }
 
-    getDeviceSatisticData() {
-        return this.http.get<Array<DeviceStatisticData>>(`${this.apiUrl}/device`)
-    }
+  getDeviceSatisticData() {
+    return this.http.get<Array<DeviceStatisticData>>(`${this.apiUrl}/device`);
+  }
 
-    getCountriesData() {
-        return this.http.get<Array<CountriesData>>(`${this.apiUrl}/countries`)
-    }
+  getCountriesData() {
+    return this.http.get<Array<CountriesData>>(`${this.apiUrl}/countries`);
+  }
+
+  getDocumentByCategory() {
+    return this.http.get<Array<DocumentByCategory>>(
+      `${this.apiUrl}/get-document-by-category`,
+    );
+  }
 }
