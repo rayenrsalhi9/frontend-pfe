@@ -35,16 +35,27 @@ export class NotificationService {
     resource: DocumentResource,
   ): Observable<HttpResponse<UserNotification[]> | CommonError> {
     const url = `user-notification/notifications`;
-    const customParams = new HttpParams()
+    let customParams = new HttpParams()
       .set("fields", resource.fields)
       .set("orderBy", resource.orderBy)
-      .set("pageSize", resource.pageSize.toString())
-      .set("skip", resource.skip.toString())
-      .set("searchQuery", resource.searchQuery)
-      .set("categoryId", resource.categoryId)
-      .set("name", resource.name)
-      .set("id", resource.id.toString())
-      .set("createdBy", resource.createdBy.toString());
+      .set("pageSize", resource.pageSize)
+      .set("skip", resource.skip);
+
+    if (resource.searchQuery && resource.searchQuery !== '') {
+      customParams = customParams.set("searchQuery", resource.searchQuery);
+    }
+    if (resource.categoryId && resource.categoryId !== '') {
+      customParams = customParams.set("categoryId", resource.categoryId);
+    }
+    if (resource.name && resource.name !== '') {
+      customParams = customParams.set("name", resource.name);
+    }
+    if (resource.id !== undefined && resource.id !== null && resource.id !== '') {
+      customParams = customParams.set("id", resource.id);
+    }
+    if (resource.createdBy && resource.createdBy !== '') {
+      customParams = customParams.set("createdBy", resource.createdBy);
+    }
 
     return this.httpClient
       .get<UserNotification[]>(url, {
@@ -54,9 +65,10 @@ export class NotificationService {
       .pipe(
         map((response) => {
           if (response.body) {
-            (response as any).body = response.body.map(
+            const transformedBody = response.body.map(
               (n) => new UserNotification(n),
             );
+            return response.clone({ body: transformedBody });
           }
           return response;
         }),

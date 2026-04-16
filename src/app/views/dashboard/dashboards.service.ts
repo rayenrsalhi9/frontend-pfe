@@ -8,7 +8,7 @@ import { CalenderReminderDto } from "@app/shared/enums/calender-reminder";
 import { DocumentByCategory } from "@app/shared/enums/document-by-category";
 
 @Injectable({ providedIn: "root" })
-export class DashboardService {
+export class DashboardsService {
   constructor(
     private httpClient: HttpClient,
     private commonHttpErrorService: CommonHttpErrorService,

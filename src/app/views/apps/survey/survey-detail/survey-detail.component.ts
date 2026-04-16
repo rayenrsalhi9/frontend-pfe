@@ -98,7 +98,7 @@ export class SurveyDetailComponent implements OnInit {
           "فبراير",
           "مارس",
           "أبريل",
-          "مايو",
+          "��ايو",
           "يونيو",
           "يوليو",
           "أغسطس",
@@ -123,40 +123,70 @@ export class SurveyDetailComponent implements OnInit {
         ],
       };
 
+      const normalizeLang = (lang: string): string => {
+        if (!lang) return 'en_US';
+        const normalized = lang.replace(/-/g, '_');
+        const langMap: { [key: string]: string } = {
+          'en': 'en_US',
+          'fr': 'fr_FR',
+          'ar': 'ar_AR',
+        };
+        return langMap[normalized.substring(0, 2)] || (months[normalized] ? normalized : 'en_US');
+      };
+
       this.surveyService.getStatistics(id).subscribe((data: any) => {
         let type: string = null;
-        let duration = [];
-        let zero = [];
-        let one = [];
-        let two = [];
-        let three = [];
-        let four = [];
-        let five = [];
+        const duration: string[] = [];
+        const zero: number[] = [];
+        const one: number[] = [];
+        const two: number[] = [];
+        const three: number[] = [];
+        const four: number[] = [];
+        const five: number[] = [];
 
         data.sort((a, b) => a.month - b.month);
 
-        console.log(this.translate.currentLang);
+        const safeLang = normalizeLang(this.translate.currentLang);
+        const monthLabels = months[safeLang] || months['en_US'];
+
+        const monthMap = new Map<number, { zero: number; one: number; two: number; three: number; four: number; five: number }>();
 
         data.forEach((item) => {
-          duration.push(months[this.translate.currentLang][item.month - 1]);
+          const month = item.month;
+          if (!monthMap.has(month)) {
+            monthMap.set(month, { zero: 0, one: 0, two: 0, three: 0, four: 0, five: 0 });
+          }
+          const entry = monthMap.get(month)!;
 
           type = item.type;
           if (item.type == "simple") {
-            if (parseInt(item.answer) == 0) zero.push(parseInt(item.count));
-            if (parseInt(item.answer) == 1) one.push(parseInt(item.count));
+            if (parseInt(item.answer) == 0) entry.zero = (entry.zero || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 1) entry.one = (entry.one || 0) + parseInt(item.count);
           }
           if (item.type == "rating") {
-            if (parseInt(item.answer) == 1) one.push(parseInt(item.count));
-            if (parseInt(item.answer) == 2) two.push(parseInt(item.count));
-            if (parseInt(item.answer) == 3) three.push(parseInt(item.count));
-            if (parseInt(item.answer) == 4) four.push(parseInt(item.count));
-            if (parseInt(item.answer) == 5) five.push(parseInt(item.count));
+            if (parseInt(item.answer) == 1) entry.one = (entry.one || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 2) entry.two = (entry.two || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 3) entry.three = (entry.three || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 4) entry.four = (entry.four || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 5) entry.five = (entry.five || 0) + parseInt(item.count);
           }
           if (item.type == "satisfaction") {
-            if (parseInt(item.answer) == 0) zero.push(parseInt(item.count));
-            if (parseInt(item.answer) == 1) one.push(parseInt(item.count));
-            if (parseInt(item.answer) == 2) two.push(parseInt(item.count));
+            if (parseInt(item.answer) == 0) entry.zero = (entry.zero || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 1) entry.one = (entry.one || 0) + parseInt(item.count);
+            if (parseInt(item.answer) == 2) entry.two = (entry.two || 0) + parseInt(item.count);
           }
+        });
+
+        const sortedMonths = Array.from(monthMap.keys()).sort((a, b) => a - b);
+        sortedMonths.forEach((month) => {
+          const entry = monthMap.get(month)!;
+          duration.push(monthLabels[month - 1] || '');
+          zero.push(entry.zero);
+          one.push(entry.one);
+          two.push(entry.two);
+          three.push(entry.three);
+          four.push(entry.four);
+          five.push(entry.five);
         });
 
         this.overviewData = {

@@ -25,6 +25,7 @@ export class DocumentShareComponent implements OnInit {
   data: any;
 
   documentPermissions: DocumentPermission[] = [];
+  documentPermissionsFiltered: DocumentPermission[] = [];
   document: DocumentInfo;
   users: User[] = [];
   roles: Role[] = [];
@@ -41,13 +42,15 @@ export class DocumentShareComponent implements OnInit {
     this.document = this.data;
     this.getUsers();
     this.getRoles();
+    this.loadDocumentPermissions();
   }
 
-  getDocumentPrmission() {
+  loadDocumentPermissions() {
     this.documentPermissionService
       .getDocumentPermission(this.document.id)
       .subscribe((permission: DocumentPermission[]) => {
         this.documentPermissions = permission;
+        this.documentPermissionsFiltered = permission;
       });
   }
 
@@ -72,7 +75,7 @@ export class DocumentShareComponent implements OnInit {
           .subscribe((translatedMessage: string) => {
             this.toastrService.success(translatedMessage);
           });
-        this.getDocumentPrmission();
+        this.loadDocumentPermissions();
       });
   }
 
@@ -85,13 +88,13 @@ export class DocumentShareComponent implements OnInit {
           .subscribe((translatedMessage: string) => {
             this.toastrService.success(translatedMessage);
           });
-        this.getDocumentPrmission();
+        this.loadDocumentPermissions();
       });
   }
 
   applyPermissionFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim();
-    const userPermissions = this.documentPermissions.filter(
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLocaleLowerCase();
+    this.documentPermissionsFiltered = this.documentPermissions.filter(
       (d: any) =>
         (d.type == "User" &&
           (d.user.firstName.toLocaleLowerCase().includes(filterValue) ||

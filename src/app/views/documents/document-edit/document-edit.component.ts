@@ -62,14 +62,24 @@ export class DocumentEditComponent implements OnInit {
     if (this.documentForm.valid) {
       this.documentService
         .updateDocument(this.buildDocumentObject())
-        .subscribe((c) => {
-          this.translate
-            .get("DOCUMENTS.EDIT.TOAST.DOCUMENT_UPDATE_SUCCESSFULLY")
-            .subscribe((translatedMessage: string) => {
-              this.toastrService.success(translatedMessage);
-            });
-          this.addDocumentTrail();
-        });
+        .subscribe(
+          () => {
+            this.translate
+              .get("DOCUMENTS.EDIT.TOAST.DOCUMENT_UPDATE_SUCCESSFULLY")
+              .subscribe((translatedMessage: string) => {
+                this.toastrService.success(translatedMessage);
+              });
+            this.addDocumentTrail();
+          },
+          (error) => {
+            this.translate
+              .get("DOCUMENTS.EDIT.TOAST.DOCUMENT_UPDATE_FAILED")
+              .subscribe((translatedMessage: string) => {
+                this.toastrService.error(translatedMessage);
+              });
+            console.error(error);
+          }
+        );
     } else {
       this.markFormGroupTouched(this.documentForm);
     }
@@ -114,7 +124,6 @@ export class DocumentEditComponent implements OnInit {
   onDocumentCancel() {
     this.bsModalRef.content = null;
     this.bsModalRef.hide();
-    this.bsModalRef.hide();
   }
 
   onAddAnotherMetaTag() {
@@ -125,7 +134,7 @@ export class DocumentEditComponent implements OnInit {
     };
     this.documentMetaTagsArray.insert(
       0,
-      this.editDocmentMetaData(documentMetaTag),
+      this.editDocumentMetaData(documentMetaTag),
     );
   }
 
@@ -148,7 +157,7 @@ export class DocumentEditComponent implements OnInit {
         if (result.length > 0) {
           result.map((documentMetatag) => {
             this.documentMetaTagsArray.push(
-              this.editDocmentMetaData(documentMetatag),
+              this.editDocumentMetaData(documentMetatag),
             );
           });
         } else {
@@ -167,7 +176,7 @@ export class DocumentEditComponent implements OnInit {
     emailControl.updateValueAndValidity();
   }
 
-  editDocmentMetaData(documentMetatag: DocumentMetaData): FormGroup {
+  editDocumentMetaData(documentMetatag: DocumentMetaData): FormGroup {
     return this.fb.group({
       id: [documentMetatag.id],
       documentId: [documentMetatag.documentId],

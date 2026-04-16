@@ -9,6 +9,7 @@ import {
     DeviceStatisticData,
     CountriesData
 } from './dashboard.type';
+import { DocumentByCategory } from '@app/shared/enums/document-by-category';
 
 @Injectable({
     providedIn: 'root'
@@ -45,5 +46,9 @@ export class DashboardService {
 
     getCountriesData() {
         return this.http.get<Array<CountriesData>>(`${this.apiUrl}/countries`)
+    }
+
+    getDocumentByCategory() {
+        return this.http.get<Array<DocumentByCategory>>(`dashboard/get-document-by-category`)
     }
 }
