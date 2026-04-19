@@ -1,31 +1,99 @@
 export const calendar = {
-  "CALENDAR":{
-    "BUTTONS":{
-      "ADD":"Add new event",
+  CALENDAR: {
+    TITLE: "Calendar",
+    BUTTONS: {
+      ADD: "Add new event",
     },
-    "LABELS":{
-      "TODAY":"Today",
-      "MONTH":"Month",
-      "WEEK":"Week",
-      "DAY":"Day",
+    LABELS: {
+      TODAY: "Today",
+      MONTH: "Month",
+      WEEK: "Week",
+      DAY: "Day",
     },
-    "MODAL":{
-      "ADD":{
-        "LABEL_ADD":"Add new event",
-        "LABEL_EDIT":"Edit event",
-        "TITLE":"Event name",
-        "DATETIME":"Date & Time",
-        "CATEGORY":"Category",
-        "USERS":"Users",
-        "DESCRIPTION":"Description",
-        "ADD":"Add event",
-        "EDIT":"Edit event",
-      }
+    PRESETS: {
+      TODAY: "Today",
+      TOMORROW: "Tomorrow",
+      IN_3_DAYS: "In 3 days",
+      IN_A_WEEK: "In a week",
+      IN_2_WEEKS: "In 2 weeks",
     },
-    "TOAST":{
-      "REMINDER_CREATED":"Reminder created",
-      "REMINDER_UPDATED":"Reminder updated",
-      "REMINDER_DELETED":"Reminder deleted"
-    }
-  }
-}
+    EVENTS: {
+      TITLE: "Events",
+      NO_EVENTS: "No events are available for this day",
+    },
+    MODAL: {
+      ADD: {
+        LABEL_ADD: "Add new event",
+        LABEL_EDIT: "Edit event",
+        TITLE: "Event name",
+        DATETIME: "Date & Time",
+        START: "Start",
+        END: "End",
+        DATE: "Date",
+        START_TIME: "Start time",
+        END_TIME: "End time",
+        CATEGORY: "Category",
+        FREQUENCY: "Frequency",
+        DAY_OF_WEEK: "Day of Week",
+        DOCUMENT: "Link Document",
+        SELECT_DOCUMENT: "Select document (optional)",
+        EMAIL_NOTIFICATION: "Send email notification",
+        USERS: "Users",
+        DESCRIPTION: "Description",
+        ADD: "Add event",
+        EDIT: "Edit event",
+      },
+    },
+    ARIA: {
+      PREVIOUS_MONTH: "Previous month",
+      NEXT_MONTH: "Next month",
+    },
+    TOAST: {
+      EVENT_CREATED: "Event created",
+      EVENT_UPDATED: "Event updated",
+      EVENT_DELETED: "Event deleted",
+      ERROR_CREATED: "Failed to create event",
+      ERROR_UPDATED: "Failed to update event",
+      ERROR_DELETED: "Failed to delete event",
+    },
+    DELETE_EVENT: {
+      TITLE: "Are you sure you want to delete this event? This action cannot be undone.",
+      BUTTON: {
+        CANCEL: "Cancel",
+        CONFIRM: "Delete",
+      },
+    },
+    FREQUENCIES: {
+      ONE_TIME: "One Time",
+      DAILY: "Daily",
+      WEEKLY: "Weekly",
+      MONTHLY: "Monthly",
+      QUARTERLY: "Quarterly",
+      HALF_YEARLY: "Half Yearly",
+      YEARLY: "Yearly",
+    },
+    WEEK_DAYS: {
+      SUNDAY: "Sunday",
+      MONDAY: "Monday",
+      TUESDAY: "Tuesday",
+      WEDNESDAY: "Wednesday",
+      THURSDAY: "Thursday",
+      FRIDAY: "Friday",
+      SATURDAY: "Saturday",
+    },
+    COLORS: {
+      RED: "Red",
+      BLUE: "Blue",
+      YELLOW: "Yellow",
+    },
+    PRIORITY: {
+      URGENT: "Urgent",
+      NORMAL: "Normal",
+      MINOR: "Minor",
+    },
+  },
+  VALIDATION: {
+    FIELD_REQUIRED: "This field is required",
+    END_DATE_BEFORE_START: "End date cannot be before start date",
+  },
+};

@@ -1,33 +1,99 @@
 export const calendar = {
-  "CALENDAR":{
-    "BUTTONS":{
-      "ADD":"Ajouter un nouvel événement",
+  CALENDAR: {
+    TITLE: "Calendrier",
+    BUTTONS: {
+      ADD: "Ajouter un nouvel événement",
     },
-    "LABELS":{
-      "TODAY":"Aujourd'hui",
-      "MONTH":"Mois",
-      "WEEK":"Semaine",
-      "DAY":"Jour",
+    LABELS: {
+      TODAY: "Aujourd'hui",
+      MONTH: "Mois",
+      WEEK: "Semaine",
+      DAY: "Jour",
     },
-    "MODAL":{
-      "ADD":{
-        "LABEL_ADD":"Ajouter un nouvel événement",
-        "LABEL_EDIT":"Modifier l'événement",
-        "TITLE":"Nom de l'événement",
-        "DATETIME":"Date et heure",
-        "CATEGORY":"Catégorie",
-        "USERS":"Utilisateurs",
-        "DESCRIPTION":"Description",
-        "ADD":"Ajouter un événement",
-        "EDIT":"Modifier l'événement",
-      }
+    PRESETS: {
+      TODAY: "Aujourd'hui",
+      TOMORROW: "Demain",
+      IN_3_DAYS: "Dans 3 jours",
+      IN_A_WEEK: "Dans une semaine",
+      IN_2_WEEKS: "Dans deux semaines",
     },
-    "TOAST": {
-      "REMINDER_CREATED": "Rappel créé",
-      "REMINDER_UPDATED": "Rappel mis à jour",
-      "REMINDER_DELETED": "Rappel supprimé"
-    }
-
-    
-  }
-}
+    EVENTS: {
+      TITLE: "Événements",
+      NO_EVENTS: "Aucun événement disponible pour ce jour",
+    },
+    MODAL: {
+      ADD: {
+        LABEL_ADD: "Ajouter un nouvel événement",
+        LABEL_EDIT: "Modifier l'événement",
+        TITLE: "Nom de l'événement",
+        DATETIME: "Date et heure",
+        START: "Début",
+        END: "Fin",
+        DATE: "Date",
+        START_TIME: "Heure de début",
+        END_TIME: "Heure de fin",
+        CATEGORY: "Catégorie",
+        FREQUENCY: "Fréquence",
+        DAY_OF_WEEK: "Jour de la semaine",
+        DOCUMENT: "Lier un document",
+        SELECT_DOCUMENT: "Sélectionner un document (optionnel)",
+        EMAIL_NOTIFICATION: "Envoyer une notification par email",
+        USERS: "Utilisateurs",
+        DESCRIPTION: "Description",
+        ADD: "Ajouter un événement",
+        EDIT: "Modifier l'événement",
+      },
+    },
+    ARIA: {
+      PREVIOUS_MONTH: "Mois précédent",
+      NEXT_MONTH: "Mois suivant",
+    },
+    TOAST: {
+      EVENT_CREATED: "Événement créé",
+      EVENT_UPDATED: "Événement mis à jour",
+      EVENT_DELETED: "Événement supprimé",
+      ERROR_CREATED: "Échec de la création de l'événement",
+      ERROR_UPDATED: "Échec de la mise à jour de l'événement",
+      ERROR_DELETED: "Échec de la suppression de l'événement",
+    },
+    DELETE_EVENT: {
+      TITLE: "Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.",
+      BUTTON: {
+        CANCEL: "Annuler",
+        CONFIRM: "Supprimer",
+      },
+    },
+    FREQUENCIES: {
+      ONE_TIME: "Une fois",
+      DAILY: "Quotidien",
+      WEEKLY: "Hebdomadaire",
+      MONTHLY: "Mensuel",
+      QUARTERLY: "Trimestriel",
+      HALF_YEARLY: "Semestriel",
+      YEARLY: "Annuel",
+    },
+    WEEK_DAYS: {
+      SUNDAY: "Dimanche",
+      MONDAY: "Lundi",
+      TUESDAY: "Mardi",
+      WEDNESDAY: "Mercredi",
+      THURSDAY: "Jeudi",
+      FRIDAY: "Vendredi",
+      SATURDAY: "Samedi",
+    },
+    COLORS: {
+      RED: "Rouge",
+      BLUE: "Bleu",
+      YELLOW: "Jaune",
+    },
+    PRIORITY: {
+      URGENT: "Urgent",
+      NORMAL: "Normal",
+      MINOR: "Mineur",
+    },
+  },
+  VALIDATION: {
+    FIELD_REQUIRED: "Ce champ est obligatoire",
+    END_DATE_BEFORE_START: "La date de fin ne peut pas être antérieure à la date de début",
+  },
+};
