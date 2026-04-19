@@ -21,7 +21,7 @@
     <span *ngFor="let day of weekDays" class="cal-weekday">{{ day }}</span>
   </div>
 
-  <div class="cal-grid" role="grid" aria-label="Calendar days">
+  <div class="cal-grid" role="grid" [attr.aria-label]="'CALENDAR.ARIA.GRID_LABEL' | translate">
     <button
       *ngFor="let day of calendarDays; trackBy: trackByDate"
       class="cal-day"
@@ -30,7 +30,7 @@
       [class.selected]="day.isSelected"
       [class.has-events]="day.events.length > 0"
       (click)="selectDate(day.date)"
-      [attr.aria-label]="day.date.toDateString()"
+      [attr.aria-label]="formatDateLocale(day.date)"
       [attr.aria-selected]="day.isSelected"
       role="gridcell"
     >

@@ -22,7 +22,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
             takeUntil(this.destroy$)
         ).subscribe((translations: any) => {
             this.notificationModel = {
-                'product': [
+                [translations.PRODUCT]: [
                     {
                         icon: 'icon-message-circle',
                         title: translations.COMMENTS,
@@ -48,7 +48,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
                         value: false
                     }
                 ],
-                'promo': [
+                [translations.PROMO]: [
                     {
                         icon: 'icon-box',
                         title: translations.NEW_PRODUCT,

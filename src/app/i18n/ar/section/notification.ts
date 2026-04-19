@@ -28,7 +28,6 @@ export const notification = {
         "FOLLOWS": "المتابعات",
         "FOLLOWS_DESC": "تلقي إشعارات عندما يتابعك شخص ما.",
         "PROMO": "العروض",
-        "PROMO_DESC": "تلقي إشعارات حول العروض الترويجية.",
         "NEW_PRODUCT": "منتج جديد",
         "NEW_PRODUCT_DESC": "تلقي إشعار عند وصول منتج جديد.",
         "PRODUCT_DISCOUNT": "خصم المنتج",

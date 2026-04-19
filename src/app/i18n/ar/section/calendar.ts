@@ -47,6 +47,7 @@ export const calendar = {
     ARIA: {
       PREVIOUS_MONTH: "الشهر السابق",
       NEXT_MONTH: "الشهر التالي",
+      GRID_LABEL: "أيام التقويم",
     },
     TOAST: {
       EVENT_CREATED: "تم إنشاء الحدث",

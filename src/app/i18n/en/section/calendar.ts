@@ -47,6 +47,7 @@ export const calendar = {
     ARIA: {
       PREVIOUS_MONTH: "Previous month",
       NEXT_MONTH: "Next month",
+      GRID_LABEL: "Calendar days",
     },
     TOAST: {
       EVENT_CREATED: "Event created",

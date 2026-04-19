@@ -149,6 +149,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getReminders();
     this.getUsers();
     this.getDocuments();
+
+    this.formGroup.get("frequency").valueChanges.subscribe((freq) => {
+      const dayOfWeekControl = this.formGroup.get("dayOfWeek");
+      if (freq === 1) {
+        dayOfWeekControl.setValidators([Validators.required]);
+      } else {
+        dayOfWeekControl.setValidators([]);
+      }
+      dayOfWeekControl.updateValueAndValidity({ emitEvent: false });
+    });
   }
 
   initTranslations() {
@@ -386,6 +396,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       selected.push(userId);
     }
     this.formGroup.patchValue({ reminderUsers: selected });
+    this.formGroup.markAsDirty();
   }
 
   get isTitleInvalid(): boolean {
@@ -430,16 +441,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const d = new Date(date);
-    const utcDate = Date.UTC(
-      d.getUTCFullYear(),
-      d.getUTCMonth(),
-      d.getUTCDate(),
+    const localDate = new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
       hours,
       minutes,
       0,
       0,
     );
-    return new Date(utcDate).toISOString();
+    return localDate.toISOString();
   }
 
   private getCurrentUserId(): string | undefined {
@@ -459,7 +470,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private buildReminderPayload(data: any, userId: string | undefined): any {
-    console.log(data);
     const startDateTime = this.combineDateAndTime(
       data.startDate,
       data.startTime,
@@ -482,7 +492,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return {
       dailyReminders:
-        isRecurring && data.frequency === 0
+        isRecurring && data.frequency === 1
           ? [{ dayOfWeek: data.dayOfWeek, isActive: true }]
           : [],
       dayOfWeek: data.dayOfWeek,
@@ -706,7 +716,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         category: data.category || "normal",
         frequency: data.frequency !== null ? data.frequency : 6,
         dayOfWeek:
-          data.dayOfWeek !== null ? data.dayOfWeek : startDate.getDay(),
+          data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
         documentId: data.documentId || null,
         isEmailNotification: data.isEmailNotification || false,
         description: data.message,
@@ -717,7 +727,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       this.originalEventData = { ...data };
-      this.formGroup.markAsPristine();
     });
   }
 

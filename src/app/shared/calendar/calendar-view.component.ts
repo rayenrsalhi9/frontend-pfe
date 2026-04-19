@@ -180,4 +180,13 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   trackByEvent(index: number, event: CalendarEvent): any {
     return event.id;
   }
+
+  formatDateLocale(date: Date): string {
+    return new Intl.DateTimeFormat(this.locale, {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(date);
+  }
 }
