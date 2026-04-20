@@ -14,6 +14,8 @@ import {
   endOfMonth,
   startOfWeek,
   endOfWeek,
+  startOfDay,
+  endOfDay,
   eachDayOfInterval,
   isSameMonth,
   isSameDay,
@@ -42,6 +44,7 @@ interface CalendarEvent {
     primary: string;
     secondary?: string;
   };
+  category?: string;
   description?: string;
   allDay?: boolean;
   draggable?: boolean;
@@ -135,7 +138,10 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   getEventsForDate(date: Date): CalendarEvent[] {
     return this.events.filter((event) => {
       const eventStart = new Date(event.start);
-      return isSameDay(eventStart, date);
+      const eventEnd = event.end ? new Date(event.end) : eventStart;
+      const dayStart = startOfDay(date);
+      const dayEnd = endOfDay(date);
+      return (eventStart <= dayEnd && eventEnd >= dayStart);
     });
   }
 
@@ -170,7 +176,7 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   }
 
   getEventColor(event: CalendarEvent): string {
-    return event.color?.primary || "#2563eb";
+    return event.color?.primary ?? event.category ?? "#2563eb";
   }
 
   trackByDate(index: number, day: CalendarDay): number {

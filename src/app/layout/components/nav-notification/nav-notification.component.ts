@@ -107,7 +107,7 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
       .subscribe((notifications: UserNotification[]) => {
         const eventNotifications = notifications;
         this.newNotificationCount = eventNotifications.filter(
-          (c) => !c.isRead,
+          (c) => !c.isRead && c.type !== NotificationType.Message,
         ).length;
         this.notifications = eventNotifications.sort(
           (a, b) =>

@@ -108,7 +108,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedDayEvents: CalendarAppEvent[] = [];
   users: User[];
   documents: any[] = [];
-  locale: string = "";
+  locale: "en" | "ar" | "fr" = "en";
   isLoading = false;
   isSubmitted = false;
   confirmingDeleteId: string | number | null = null;
@@ -133,12 +133,15 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reminderResource = new ReminderResourceParameter();
     this.reminderResource.pageSize = 100;
     this.reminderResource.orderBy = "startDate desc";
-    if (localStorage.getItem("lang") === "en_US") {
+    const lang = localStorage.getItem("lang");
+    if (lang === "en_US") {
       this.locale = "en";
-    } else if (localStorage.getItem("lang") === "fr_FR") {
+    } else if (lang === "fr_FR") {
       this.locale = "fr";
-    } else if (localStorage.getItem("lang") === "ar_AR") {
+    } else if (lang === "ar_AR") {
       this.locale = "ar";
+    } else {
+      this.locale = "en";
     }
   }
 
@@ -297,7 +300,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!dateStr) return new Date();
     const str = String(dateStr).trim();
     const isoStr = str.replace(' ', 'T');
-    const date = new Date(isoStr);
+    const date = new Date(isoStr + 'Z');
     return isNaN(date.getTime()) ? new Date() : date;
   }
 
@@ -308,18 +311,21 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
           this.events = [];
           data.body.forEach((el: any) => {
             const startDate = this.parsePlainDateTime(el.startDate);
-            const endDate = el.endDate ? this.parsePlainDateTime(el.endDate) : null;
+            const endDate = el.endDate
+              ? this.parsePlainDateTime(el.endDate)
+              : startDate;
 
             this.events = [
               ...this.events,
               {
                 id: el.id,
                 title: el.subject,
-                description: el.description,
+                description: el.message,
                 start: startDate,
                 end: endDate,
                 allDay: false,
-                category: colors[el.category] || colors.normal,
+                category:
+                  colors[el.category] || el.category || colors.normal,
               },
             ];
           });
@@ -346,7 +352,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   updateSelectedDayEvents() {
     this.selectedDayEvents = this.events.filter((event) => {
       const eventStart = new Date(event.start);
-      return isSameDay(eventStart, this.selectedDate);
+      const eventEnd = event.end ? new Date(event.end) : eventStart;
+      const dayStart = startOfDay(this.selectedDate);
+      const dayEnd = endOfDay(this.selectedDate);
+      return (eventStart <= dayEnd && eventEnd >= dayStart);
     });
   }
 
@@ -440,12 +449,19 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       const parts = time.split(":");
       hours = parseInt(parts[0], 10);
       minutes = parseInt(parts[1], 10);
+      if (isNaN(hours) || isNaN(minutes)) {
+        return "";
+      }
     } else if (time instanceof Date) {
       hours = time.getHours();
       minutes = time.getMinutes();
     } else {
       hours = 9;
       minutes = 0;
+    }
+
+    if (isNaN(hours) || isNaN(minutes)) {
+      return "";
     }
 
     const d = new Date(date);
@@ -491,18 +507,27 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     const endDateTime = this.combineDateAndTime(data.endDate, data.endTime);
 
     const isRecurring = data.frequency !== 6;
+    const isActive = data.isActive !== undefined ? data.isActive : true;
 
     let reminderUsers = data.reminderUsers;
     if (!reminderUsers || reminderUsers.length === 0) {
-      reminderUsers = [userId];
+      if (userId) {
+        reminderUsers = [userId];
+      } else {
+        reminderUsers = [];
+      }
     }
 
-    reminderUsers = reminderUsers.map((u: any) => {
-      return {
-        reminderId: data.id,
-        userId: u,
-      };
-    });
+    reminderUsers = reminderUsers
+      .filter((u: any) => u !== undefined && u !== null)
+      .map((u: any) => {
+        return {
+          reminderId: data.id,
+          userId: u,
+        };
+      });
+
+    const reminderDate = new Date(data.startDate);
 
     return {
       dailyReminders:
@@ -510,8 +535,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
           ? [{ dayOfWeek: data.dayOfWeek, isActive: true }]
           : [],
       dayOfWeek: data.dayOfWeek,
-      documentId: data.documentId,
       frequency: data.frequency,
+      frequencyId: String(data.frequency),
       halfYearlyReminders:
         isRecurring && data.frequency === 4
           ? [
@@ -543,13 +568,15 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
             ]
           : [],
       isEmailNotification: data.isEmailNotification || false,
+      isActive: isActive,
       isRepeated: isRecurring,
       category: data.category,
       id: data.id,
       subject: data.title,
-      message: data.description,
+      description: data.description,
       startDate: startDateTime,
       endDate: endDateTime,
+      reminderDate: reminderDate,
       reminderUsers: reminderUsers,
     };
   }
@@ -563,6 +590,28 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const data = this.formGroup.value;
+
+    const startTimeValue = data.startTime;
+    const endTimeValue = data.endTime;
+
+    const startDateTime = this.combineDateAndTime(data.startDate, startTimeValue);
+    const endDateTime = this.combineDateAndTime(data.endDate, endTimeValue);
+
+    if (!startDateTime || isNaN(Date.parse(startDateTime))) {
+      this.formGroup.get('startTime')?.setErrors({ invalid: true });
+      return;
+    }
+
+    if (!endDateTime || isNaN(Date.parse(endDateTime))) {
+      this.formGroup.get('endTime')?.setErrors({ invalid: true });
+      return;
+    }
+
+    if (this.isEndDateInvalid) {
+      this.formGroup.get('endDate')?.setErrors({ invalid: true });
+      return;
+    }
+
     const userId = this.getCurrentUserId();
     const formData = this.buildReminderPayload(data, userId);
 
@@ -600,6 +649,28 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const data = this.formGroup.value;
+
+    const startTimeValue = data.startTime;
+    const endTimeValue = data.endTime;
+
+    const startDateTime = this.combineDateAndTime(data.startDate, startTimeValue);
+    const endDateTime = this.combineDateAndTime(data.endDate, endTimeValue);
+
+    if (!startDateTime || isNaN(Date.parse(startDateTime))) {
+      this.formGroup.get('startTime')?.setErrors({ invalid: true });
+      return;
+    }
+
+    if (!endDateTime || isNaN(Date.parse(endDateTime))) {
+      this.formGroup.get('endTime')?.setErrors({ invalid: true });
+      return;
+    }
+
+    if (this.isEndDateInvalid) {
+      this.formGroup.get('endDate')?.setErrors({ invalid: true });
+      return;
+    }
+
     const userId = this.getCurrentUserId();
     const formData = this.buildReminderPayload(data, userId);
 
@@ -701,18 +772,18 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const startTime =
         data.startDate
-          ? this.getTimeString(startDate.getHours(), startDate.getMinutes())
+          ? this.getTimeString(startDate.getUTCHours(), startDate.getUTCMinutes())
           : this.getTimeString(
-              new Date().getHours(),
-              new Date().getMinutes() + 30,
+              new Date().getUTCHours(),
+              new Date().getUTCMinutes() + 30,
             );
 
       const endTime =
         data.endDate && endDate
-          ? this.getTimeString(endDate.getHours(), endDate.getMinutes())
+          ? this.getTimeString(endDate.getUTCHours(), endDate.getUTCMinutes())
           : this.getTimeString(
-              new Date().getHours() + 1,
-              new Date().getMinutes() + 30,
+              new Date().getUTCHours() + 1,
+              new Date().getUTCMinutes() + 30,
             );
 
       this.formGroup.setValue({
@@ -723,7 +794,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         startTime: startTime,
         endTime: endTime,
         category: data.category || "normal",
-        frequency: data.frequency !== null ? data.frequency : 6,
+        frequency: data.frequencyId !== undefined && data.frequencyId !== null ? Number(data.frequencyId) : data.frequency,
         dayOfWeek:
           data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
         documentId: data.documentId || null,

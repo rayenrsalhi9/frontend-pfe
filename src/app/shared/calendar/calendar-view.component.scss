@@ -93,16 +93,6 @@
       }
     }
 
-    &:focus:not(.other-month) {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-      background: var(--bg-app);
-
-      .day-number {
-        font-weight: 600;
-      }
-    }
-
     &:focus-visible:not(.other-month) {
       outline: 2px solid var(--primary);
       outline-offset: 2px;

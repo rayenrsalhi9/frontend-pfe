@@ -78,11 +78,7 @@
                 <ng-container *ngIf="notification.documentId">
                   <b>{{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b>: {{ notification.documentName }} {{ "NOTIFICATION.LABELS.SEPARATOR" | translate }}
                 </ng-container>
-                <span class="user-name">
-                  {{ notification.user?.firstName }} {{ notification.user?.lastName }}
-                </span>
-                {{ "NOTIFICATION.LABELS.FROM_USER" | translate }}
-                <span class="action-text">{{ "NOTIFICATION.LABELS.SEND_MESSAGE" | translate }}</span>
+                {{ "NOTIFICATION.LABELS.MESSAGE_FROM_USER" | translate:{name: notification.user?.firstName + ' ' + notification.user?.lastName} }}
                 <div class="message-preview">{{ notification.message }}</div>
               </ng-container>
             </a>

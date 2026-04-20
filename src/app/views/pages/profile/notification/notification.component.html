@@ -4,7 +4,7 @@
 </div>
 <div class="mt-4">
     <div class="mb-4" *ngFor="let obj of notificationModel | keyvalue">
-        <h5 class="mb-3">{{obj.key | translate}}</h5>
+        <h5 class="mb-3">{{obj.key}}</h5>
         <ng-container *ngFor="let item of obj.value; let last = last">
             <ng-template #action>
                 <switch name="switch" [(ngModel)]="item.value"></switch>

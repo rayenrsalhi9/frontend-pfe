@@ -35,22 +35,32 @@
             *ngFor="let event of selectedDayEvents"
             class="event-card"
             [class.is-confirming]="confirmingDeleteId === event.id"
+            role="button"
+            tabindex="0"
             (click)="
+              confirmingDeleteId !== event.id &&
+                openEditEventModal(eventModal, event.id)
+            "
+            (keydown.enter)="
+              confirmingDeleteId !== event.id &&
+                openEditEventModal(eventModal, event.id)
+            "
+            (keydown.space)="
               confirmingDeleteId !== event.id &&
                 openEditEventModal(eventModal, event.id)
             "
           >
             <span
               class="event-color"
-              [ngStyle]="{ 'background-color': event.category?.primary }"
+              [ngStyle]="{ 'background-color': event.category?.primary || event.category }"
             ></span>
             <div class="event-content">
               <div class="event-info">
                 <h6 class="event-title">{{ event.title }}</h6>
                 <span class="event-time">
                   <i class="feather icon-clock"></i>
-                  {{ event.start | date: "shortTime" }} -
-                  {{ event.end | date: "shortTime" }}
+                  {{ event.start | date: "shortTime":'UTC' }} -
+                  {{ event.end | date: "shortTime":'UTC' }}
                 </span>
               </div>
             </div>
@@ -59,6 +69,7 @@
             <div class="event-actions" *ngIf="confirmingDeleteId !== event.id">
               <button
                 class="action-btn"
+                aria-label="Edit event {{event.title}}"
                 (click)="
                   openEditEventModal(eventModal, event.id);
                   $event.stopPropagation()
@@ -68,6 +79,7 @@
               </button>
               <button
                 class="action-btn delete"
+                aria-label="Delete event {{event.title}}"
                 (click)="deleteEvent(event.id); $event.stopPropagation()"
               >
                 <i class="feather icon-trash-2"></i>
