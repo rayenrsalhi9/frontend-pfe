@@ -335,7 +335,10 @@
     font-size: 0.875rem;
     font-family: inherit;
     outline: none;
-    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.15s,
+      background 0.15s,
+      box-shadow 0.15s;
 
     &:focus {
       border-color: var(--primary);
@@ -483,6 +486,14 @@
   input:checked + .checkbox-custom {
     border-color: var(--primary);
     background: var(--primary);
+  }
+
+  input:focus-visible + .checkbox-custom {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 2px var(--card-bg),
+      0 0 0 4px var(--primary);
   }
 
   .user-name {

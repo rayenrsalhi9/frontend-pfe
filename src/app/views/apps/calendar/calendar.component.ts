@@ -9,11 +9,7 @@ import {
   ChangeDetectorRef,
 } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import { Subject, Subscription } from "rxjs";
@@ -76,7 +72,7 @@ const colors: any = {
 const prioritySelection: string[] = ["urgent", "normal", "minor"];
 
 interface FrequencyOption {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -155,7 +151,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.formGroup.get("frequency").valueChanges.subscribe((freq) => {
       const dayOfWeekControl = this.formGroup.get("dayOfWeek");
-      if (freq === 1) {
+      if (freq === "weekly") {
         dayOfWeekControl.setValidators([Validators.required]);
       } else {
         dayOfWeekControl.setValidators([]);
@@ -169,13 +165,13 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       .get("CALENDAR.FREQUENCIES")
       .subscribe((translations: any) => {
         this.frequencies = [
-          { id: 6, name: translations.ONE_TIME },
-          { id: 0, name: translations.DAILY },
-          { id: 1, name: translations.WEEKLY },
-          { id: 2, name: translations.MONTHLY },
-          { id: 3, name: translations.QUARTERLY },
-          { id: 4, name: translations.HALF_YEARLY },
-          { id: 5, name: translations.YEARLY },
+          { id: "once", name: translations.ONE_TIME },
+          { id: "daily", name: translations.DAILY },
+          { id: "weekly", name: translations.WEEKLY },
+          { id: "monthly", name: translations.MONTHLY },
+          { id: "quarterly", name: translations.QUARTERLY },
+          { id: "half_yearly", name: translations.HALF_YEARLY },
+          { id: "yearly", name: translations.YEARLY },
         ];
       });
 
@@ -209,14 +205,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   initFormGroup() {
     const now = new Date();
-    const defaultStart = this.getTimeString(
-      now.getHours(),
-      now.getMinutes(),
-    );
-    const defaultEnd = this.getTimeString(
-      now.getHours() + 1,
-      now.getMinutes(),
-    );
+    const defaultStart = this.getTimeString(now.getHours(), now.getMinutes());
+    const defaultEnd = this.getTimeString(now.getHours() + 1, now.getMinutes());
 
     this.formGroup = this.formBuilder.group({
       id: [""],
@@ -226,7 +216,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       startTime: [defaultStart],
       endTime: [defaultEnd],
       category: ["normal", Validators.required],
-      frequency: [6, Validators.required],
+      frequency: ["once", Validators.required],
       dayOfWeek: [now.getDay(), Validators.required],
       documentId: [null],
       isEmailNotification: [false],
@@ -249,23 +239,27 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   private getStoredHours(dateValue: any): number {
     if (!dateValue) return 0;
     const dateStr = String(dateValue);
-    const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/);
+    const match = dateStr.match(
+      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
+    );
     if (match) {
       return parseInt(match[4], 10);
     }
     const date = new Date(dateValue);
-    return isNaN(date.getTime()) ? 0 : date.getUTCHours();
+    return isNaN(date.getTime()) ? 0 : date.getHours();
   }
 
   private getStoredMinutes(dateValue: any): number {
     if (!dateValue) return 0;
     const dateStr = String(dateValue);
-    const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/);
+    const match = dateStr.match(
+      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
+    );
     if (match) {
       return parseInt(match[5], 10);
     }
     const date = new Date(dateValue);
-    return isNaN(date.getTime()) ? 0 : date.getUTCMinutes();
+    return isNaN(date.getTime()) ? 0 : date.getMinutes();
   }
 
   private parseToLocalDate(utcDateString: string): Date {
@@ -273,17 +267,18 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       return new Date();
     }
     const dateStr = String(utcDateString).trim();
-    const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/);
+    const match = dateStr.match(
+      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
+    );
     if (match) {
-      const utcDate = Date.UTC(
+      return new Date(
         parseInt(match[1], 10),
         parseInt(match[2], 10) - 1,
         parseInt(match[3], 10),
         parseInt(match[4], 10),
         parseInt(match[5], 10),
-        parseInt(match[6] || '0', 10)
+        parseInt(match[6] || "0", 10),
       );
-      return new Date(utcDate);
     }
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
@@ -299,8 +294,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   private parsePlainDateTime(dateStr: string | null): Date {
     if (!dateStr) return new Date();
     const str = String(dateStr).trim();
-    const isoStr = str.replace(' ', 'T');
-    const date = new Date(isoStr + 'Z');
+    const isoStr = str.replace(" ", "T");
+    const date = new Date(isoStr);
     return isNaN(date.getTime()) ? new Date() : date;
   }
 
@@ -313,7 +308,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
             const startDate = this.parsePlainDateTime(el.startDate);
             const endDate = el.endDate
               ? this.parsePlainDateTime(el.endDate)
-              : startDate;
+              : null;
 
             this.events = [
               ...this.events,
@@ -322,10 +317,9 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
                 title: el.subject,
                 description: el.message,
                 start: startDate,
-                end: endDate,
+                end: endDate || startDate,
                 allDay: false,
-                category:
-                  colors[el.category] || el.category || colors.normal,
+                category: colors[el.category] || el.category || colors.normal,
               },
             ];
           });
@@ -355,7 +349,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       const eventEnd = event.end ? new Date(event.end) : eventStart;
       const dayStart = startOfDay(this.selectedDate);
       const dayEnd = endOfDay(this.selectedDate);
-      return (eventStart <= dayEnd && eventEnd >= dayStart);
+      return eventStart <= dayEnd && eventEnd >= dayStart;
     });
   }
 
@@ -385,12 +379,12 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get isWeekly(): boolean {
-    return this.formGroup?.get("frequency")?.value === 1;
+    return this.formGroup?.get("frequency")?.value === "weekly";
   }
 
   get isRecurring(): boolean {
     const freq = this.formGroup?.get("frequency")?.value;
-    return freq !== null && freq !== 6;
+    return freq !== null && freq !== "once";
   }
 
   getUsers() {
@@ -475,11 +469,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       0,
     );
     const year = localDate.getFullYear();
-    const month = String(localDate.getMonth() + 1).padStart(2, '0');
-    const day = String(localDate.getDate()).padStart(2, '0');
-    const hour = String(localDate.getHours()).padStart(2, '0');
-    const minute = String(localDate.getMinutes()).padStart(2, '0');
-    const second = String(localDate.getSeconds()).padStart(2, '0');
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const day = String(localDate.getDate()).padStart(2, "0");
+    const hour = String(localDate.getHours()).padStart(2, "0");
+    const minute = String(localDate.getMinutes()).padStart(2, "0");
+    const second = String(localDate.getSeconds()).padStart(2, "0");
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 
@@ -506,7 +500,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     const endDateTime = this.combineDateAndTime(data.endDate, data.endTime);
 
-    const isRecurring = data.frequency !== 6;
+    const isRecurring = data.frequency !== "once";
     const isActive = data.isActive !== undefined ? data.isActive : true;
 
     let reminderUsers = data.reminderUsers;
@@ -531,14 +525,14 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return {
       dailyReminders:
-        isRecurring && data.frequency === 1
+        isRecurring && data.frequency === "weekly"
           ? [{ dayOfWeek: data.dayOfWeek, isActive: true }]
           : [],
       dayOfWeek: data.dayOfWeek,
       frequency: data.frequency,
-      frequencyId: String(data.frequency),
+      frequencyId: data.frequency,
       halfYearlyReminders:
-        isRecurring && data.frequency === 4
+        isRecurring && data.frequency === "half_yearly"
           ? [
               {
                 day: new Date(data.startDate).getDate(),
@@ -553,7 +547,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
             ]
           : [],
       quarterlyReminders:
-        isRecurring && data.frequency === 3
+        isRecurring && data.frequency === "quarterly"
           ? [
               {
                 day: new Date(data.startDate).getDate(),
@@ -594,21 +588,24 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     const startTimeValue = data.startTime;
     const endTimeValue = data.endTime;
 
-    const startDateTime = this.combineDateAndTime(data.startDate, startTimeValue);
+    const startDateTime = this.combineDateAndTime(
+      data.startDate,
+      startTimeValue,
+    );
     const endDateTime = this.combineDateAndTime(data.endDate, endTimeValue);
 
     if (!startDateTime || isNaN(Date.parse(startDateTime))) {
-      this.formGroup.get('startTime')?.setErrors({ invalid: true });
+      this.formGroup.get("startTime")?.setErrors({ invalid: true });
       return;
     }
 
     if (!endDateTime || isNaN(Date.parse(endDateTime))) {
-      this.formGroup.get('endTime')?.setErrors({ invalid: true });
+      this.formGroup.get("endTime")?.setErrors({ invalid: true });
       return;
     }
 
     if (this.isEndDateInvalid) {
-      this.formGroup.get('endDate')?.setErrors({ invalid: true });
+      this.formGroup.get("endDate")?.setErrors({ invalid: true });
       return;
     }
 
@@ -653,21 +650,24 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     const startTimeValue = data.startTime;
     const endTimeValue = data.endTime;
 
-    const startDateTime = this.combineDateAndTime(data.startDate, startTimeValue);
+    const startDateTime = this.combineDateAndTime(
+      data.startDate,
+      startTimeValue,
+    );
     const endDateTime = this.combineDateAndTime(data.endDate, endTimeValue);
 
     if (!startDateTime || isNaN(Date.parse(startDateTime))) {
-      this.formGroup.get('startTime')?.setErrors({ invalid: true });
+      this.formGroup.get("startTime")?.setErrors({ invalid: true });
       return;
     }
 
     if (!endDateTime || isNaN(Date.parse(endDateTime))) {
-      this.formGroup.get('endTime')?.setErrors({ invalid: true });
+      this.formGroup.get("endTime")?.setErrors({ invalid: true });
       return;
     }
 
     if (this.isEndDateInvalid) {
-      this.formGroup.get('endDate')?.setErrors({ invalid: true });
+      this.formGroup.get("endDate")?.setErrors({ invalid: true });
       return;
     }
 
@@ -750,7 +750,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       startTime: defaultStart,
       endTime: defaultEnd,
       category: "normal",
-      frequency: 6,
+      frequency: "once",
       dayOfWeek: now.getDay(),
       documentId: null,
       isEmailNotification: false,
@@ -768,22 +768,23 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       const startDate = this.parsePlainDateTime(data.startDate);
-      const endDate = data.endDate ? this.parsePlainDateTime(data.endDate) : null;
+      const endDate = data.endDate
+        ? this.parsePlainDateTime(data.endDate)
+        : null;
 
-      const startTime =
-        data.startDate
-          ? this.getTimeString(startDate.getUTCHours(), startDate.getUTCMinutes())
-          : this.getTimeString(
-              new Date().getUTCHours(),
-              new Date().getUTCMinutes() + 30,
-            );
+      const startTime = data.startDate
+        ? this.getTimeString(startDate.getHours(), startDate.getMinutes())
+        : this.getTimeString(
+            new Date().getHours(),
+            new Date().getMinutes() + 30,
+          );
 
       const endTime =
         data.endDate && endDate
-          ? this.getTimeString(endDate.getUTCHours(), endDate.getUTCMinutes())
+          ? this.getTimeString(endDate.getHours(), endDate.getMinutes())
           : this.getTimeString(
-              new Date().getUTCHours() + 1,
-              new Date().getUTCMinutes() + 30,
+              new Date().getHours() + 1,
+              new Date().getMinutes() + 30,
             );
 
       this.formGroup.setValue({
@@ -794,9 +795,23 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         startTime: startTime,
         endTime: endTime,
         category: data.category || "normal",
-        frequency: data.frequencyId !== undefined && data.frequencyId !== null ? Number(data.frequencyId) : data.frequency,
-        dayOfWeek:
-          data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
+        frequency: (() => {
+          const rawFreq =
+            data.frequencyId !== undefined && data.frequencyId !== null
+              ? data.frequencyId
+              : data.frequency;
+          const legacyMap: any = {
+            "0": "daily",
+            "1": "weekly",
+            "2": "monthly",
+            "3": "quarterly",
+            "4": "half_yearly",
+            "5": "yearly",
+            "6": "once",
+          };
+          return legacyMap[rawFreq] || rawFreq || "once";
+        })(),
+        dayOfWeek: data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
         documentId: data.documentId || null,
         isEmailNotification: data.isEmailNotification || false,
         description: data.message,

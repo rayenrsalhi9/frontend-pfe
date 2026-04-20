@@ -44,7 +44,7 @@ interface CalendarEvent {
     primary: string;
     secondary?: string;
   };
-  category?: string;
+  category?: string | { primary: string; secondary?: string };
   description?: string;
   allDay?: boolean;
   draggable?: boolean;
@@ -141,7 +141,7 @@ export class CalendarViewComponent implements OnInit, OnChanges {
       const eventEnd = event.end ? new Date(event.end) : eventStart;
       const dayStart = startOfDay(date);
       const dayEnd = endOfDay(date);
-      return (eventStart <= dayEnd && eventEnd >= dayStart);
+      return eventStart <= dayEnd && eventEnd >= dayStart;
     });
   }
 
@@ -176,7 +176,19 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   }
 
   getEventColor(event: CalendarEvent): string {
-    return event.color?.primary ?? event.category ?? "#2563eb";
+    if (event.color?.primary) {
+      return event.color.primary;
+    }
+
+    if (typeof event.category === "string") {
+      return event.category;
+    }
+
+    if (event.category && typeof event.category === "object") {
+      return event.category.primary ?? event.category.secondary ?? "#2563eb";
+    }
+
+    return "#2563eb";
   }
 
   trackByDate(index: number, day: CalendarDay): number {

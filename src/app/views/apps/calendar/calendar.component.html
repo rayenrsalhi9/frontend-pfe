@@ -45,22 +45,21 @@
               confirmingDeleteId !== event.id &&
                 openEditEventModal(eventModal, event.id)
             "
-            (keydown.space)="
-              confirmingDeleteId !== event.id &&
-                openEditEventModal(eventModal, event.id)
-            "
+            (keydown.space)="confirmingDeleteId !== event.id && openEditEventModal(eventModal, event.id); $event?.preventDefault()"
           >
             <span
               class="event-color"
-              [ngStyle]="{ 'background-color': event.category?.primary || event.category }"
+              [ngStyle]="{
+                'background-color': event.category?.primary || event.category
+              }"
             ></span>
             <div class="event-content">
               <div class="event-info">
                 <h6 class="event-title">{{ event.title }}</h6>
                 <span class="event-time">
                   <i class="feather icon-clock"></i>
-                  {{ event.start | date: "shortTime":'UTC' }} -
-                  {{ event.end | date: "shortTime":'UTC' }}
+                  {{ event.start | date: "shortTime" }} -
+                  {{ event.end | date: "shortTime" }}
                 </span>
               </div>
             </div>
@@ -69,7 +68,9 @@
             <div class="event-actions" *ngIf="confirmingDeleteId !== event.id">
               <button
                 class="action-btn"
-                aria-label="Edit event {{event.title}}"
+                [attr.aria-label]="
+                  'CALENDAR.EDIT_EVENT' | translate: { title: event.title }
+                "
                 (click)="
                   openEditEventModal(eventModal, event.id);
                   $event.stopPropagation()
@@ -79,7 +80,9 @@
               </button>
               <button
                 class="action-btn delete"
-                aria-label="Delete event {{event.title}}"
+                [attr.aria-label]="
+                  'CALENDAR.DELETE_EVENT' | translate: { title: event.title }
+                "
                 (click)="deleteEvent(event.id); $event.stopPropagation()"
               >
                 <i class="feather icon-trash-2"></i>
@@ -292,10 +295,7 @@
 
         <div class="field">
           <label class="checkbox-label email-notification-label">
-            <input
-              type="checkbox"
-              formControlName="isEmailNotification"
-            />
+            <input type="checkbox" formControlName="isEmailNotification" />
             <span class="checkbox-custom">
               <i
                 class="feather icon-check"
@@ -352,7 +352,12 @@
           <button
             class="btn btn-primary"
             type="submit"
-            [disabled]="isLoading || formGroup.invalid || isEndDateInvalid || !hasFormChanged"
+            [disabled]="
+              isLoading ||
+              formGroup.invalid ||
+              isEndDateInvalid ||
+              !hasFormChanged
+            "
           >
             {{
               (modalMode === "add"

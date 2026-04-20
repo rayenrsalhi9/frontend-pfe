@@ -23,7 +23,10 @@
     <span *ngFor="let day of weekDays" class="cal-weekday">{{ day }}</span>
   </div>
 
-  <div class="cal-grid" role="grid" [attr.aria-label]="'CALENDAR.ARIA.GRID_LABEL' | translate">
+  <div
+    class="cal-grid"
+    [attr.aria-label]="'CALENDAR.ARIA.GRID_LABEL' | translate"
+  >
     <button
       type="button"
       *ngFor="let day of calendarDays; trackBy: trackByDate"
@@ -34,8 +37,7 @@
       [class.has-events]="day.events.length > 0"
       (click)="selectDate(day.date)"
       [attr.aria-label]="formatDateLocale(day.date)"
-      [attr.aria-selected]="day.isSelected"
-      role="gridcell"
+      role="button"
     >
       <span class="day-number">{{ day.dayNumber }}</span>
       <span *ngIf="day.events.length > 0" class="event-indicator">
@@ -54,16 +56,32 @@
       <i class="feather icon-calendar"></i>
       <span>{{ "CALENDAR.PRESETS.TODAY" | translate }}</span>
     </button>
-    <button type="button" class="preset-btn" (click)="selectDate(addDays(today, 1))">
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 1))"
+    >
       {{ "CALENDAR.PRESETS.TOMORROW" | translate }}
     </button>
-    <button type="button" class="preset-btn" (click)="selectDate(addDays(today, 3))">
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 3))"
+    >
       {{ "CALENDAR.PRESETS.IN_3_DAYS" | translate }}
     </button>
-    <button type="button" class="preset-btn" (click)="selectDate(addDays(today, 7))">
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 7))"
+    >
       {{ "CALENDAR.PRESETS.IN_A_WEEK" | translate }}
     </button>
-    <button type="button" class="preset-btn" (click)="selectDate(addDays(today, 14))">
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 14))"
+    >
       {{ "CALENDAR.PRESETS.IN_2_WEEKS" | translate }}
     </button>
   </div>
