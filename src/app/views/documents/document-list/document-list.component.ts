@@ -23,7 +23,6 @@ import { DocumentVersion } from "@app/shared/enums/documentVersion";
 import { DocumentUploadNewVersionComponent } from "../document-upload-new-version/document-upload-new-version.component";
 import { DocumentHistoryComponent } from "../document-history/document-history.component";
 import { DocumentSendEmailComponent } from "../document-send-email/document-send-email.component";
-import { DocumentReminderComponent } from "../document-reminder/document-reminder.component";
 import { DocumentCommentComponent } from "../document-comment/document-comment.component";
 import { DocumentShareComponent } from "../document-share/document-share.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
@@ -305,15 +304,6 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     };
 
     this.modalService.show(DocumentSendEmailComponent, { initialState });
-  }
-
-  addReminder(documentInfo: DocumentInfo) {
-    const initialState = {
-      data: documentInfo,
-      width: "80vw",
-      height: "80vh",
-    };
-    this.modalService.show(DocumentReminderComponent, { initialState });
   }
 
   addComment(document: Document) {

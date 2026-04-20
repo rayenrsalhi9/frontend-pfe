@@ -42,12 +42,6 @@ export class ReminderService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  addDocumentReminder(reminder: Reminder): Observable<Reminder | CommonError> {
-    const url = `reminder/document`;
-    return this.httpClient.post<Reminder>(url, reminder)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
-  }
-
   updateReminder(reminder: Reminder): Observable<Reminder | CommonError> {
     const url = `reminder/${reminder.id}`;
     return this.httpClient.put<Reminder>(url, reminder)

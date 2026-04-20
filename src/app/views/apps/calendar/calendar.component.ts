@@ -293,14 +293,22 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     return startOfDay(date);
   }
 
+  private parsePlainDateTime(dateStr: string | null): Date {
+    if (!dateStr) return new Date();
+    const str = String(dateStr).trim();
+    const isoStr = str.replace(' ', 'T');
+    const date = new Date(isoStr);
+    return isNaN(date.getTime()) ? new Date() : date;
+  }
+
   getReminders() {
     this.reminderService.getReminders(this.reminderResource).subscribe({
       next: (data: HttpResponse<any>) => {
         if (data && data.body) {
           this.events = [];
           data.body.forEach((el: any) => {
-            const startDate = this.parseToLocalDate(el.startDate);
-            const endDate = this.parseToLocalDate(el.endDate);
+            const startDate = this.parsePlainDateTime(el.startDate);
+            const endDate = el.endDate ? this.parsePlainDateTime(el.endDate) : null;
 
             this.events = [
               ...this.events,
@@ -450,7 +458,13 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       0,
       0,
     );
-    return localDate.toISOString();
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const hour = String(localDate.getHours()).padStart(2, '0');
+    const minute = String(localDate.getMinutes()).padStart(2, '0');
+    const second = String(localDate.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 
   private getCurrentUserId(): string | undefined {
@@ -682,25 +696,20 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         backdrop: "static",
       });
 
-      const startDateHours = this.getStoredHours(data.startDate);
-      const startDateMinutes = this.getStoredMinutes(data.startDate);
-      const endDateHours = this.getStoredHours(data.endDate);
-      const endDateMinutes = this.getStoredMinutes(data.endDate);
-
-      const startDate = this.parseToLocalDate(data.startDate);
-      const endDate = this.parseToLocalDate(data.endDate);
+      const startDate = this.parsePlainDateTime(data.startDate);
+      const endDate = data.endDate ? this.parsePlainDateTime(data.endDate) : null;
 
       const startTime =
-        data.startDate && startDateHours >= 0
-          ? this.getTimeString(startDateHours, startDateMinutes)
+        data.startDate
+          ? this.getTimeString(startDate.getHours(), startDate.getMinutes())
           : this.getTimeString(
               new Date().getHours(),
               new Date().getMinutes() + 30,
             );
 
       const endTime =
-        data.endDate && endDateHours >= 0
-          ? this.getTimeString(endDateHours, endDateMinutes)
+        data.endDate && endDate
+          ? this.getTimeString(endDate.getHours(), endDate.getMinutes())
           : this.getTimeString(
               new Date().getHours() + 1,
               new Date().getMinutes() + 30,
