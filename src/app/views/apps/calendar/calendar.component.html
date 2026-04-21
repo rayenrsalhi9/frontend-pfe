@@ -24,7 +24,7 @@
               selectedDate | date: "fullDate"
             }}</span>
           </h5>
-          <button class="btn btn-ghost" (click)="openAddEventModal(eventModal)">
+          <button class="btn btn-ghost" (click)="openAddEventModal(eventModal)" *ngIf="canCreateEvent()">
             <i class="feather icon-plus"></i>
             <span>{{ "CALENDAR.BUTTONS.ADD" | translate }}</span>
           </button>
@@ -41,11 +41,10 @@
               confirmingDeleteId !== event.id &&
                 openEditEventModal(eventModal, event.id)
             "
-            (keydown.enter)="
-              confirmingDeleteId !== event.id &&
+            (keydown.enter)="$event.target === $event.currentTarget && confirmingDeleteId !== event.id &&
                 openEditEventModal(eventModal, event.id)
             "
-            (keydown.space)="confirmingDeleteId !== event.id && openEditEventModal(eventModal, event.id); $event?.preventDefault()"
+            (keydown.space)="$event.target === $event.currentTarget && confirmingDeleteId !== event.id && openEditEventModal(eventModal, event.id); $event?.preventDefault()"
           >
             <span
               class="event-color"
@@ -65,8 +64,9 @@
             </div>
 
             <!-- Normal actions (shown when not confirming) -->
-            <div class="event-actions" *ngIf="confirmingDeleteId !== event.id">
+            <div class="event-actions" *ngIf="confirmingDeleteId !== event.id && (canEditEvent() || canDeleteEvent())">
               <button
+                *ngIf="canEditEvent()"
                 class="action-btn"
                 [attr.aria-label]="
                   'CALENDAR.EDIT_EVENT' | translate: { title: event.title }
@@ -79,6 +79,7 @@
                 <i class="feather icon-edit-2"></i>
               </button>
               <button
+                *ngIf="canDeleteEvent()"
                 class="action-btn delete"
                 [attr.aria-label]="
                   'CALENDAR.DELETE_EVENT' | translate: { title: event.title }
@@ -127,6 +128,7 @@
           <button
             class="btn btn-primary btn-add-event"
             (click)="openAddEventModal(eventModal)"
+            *ngIf="canCreateEvent()"
           >
             <i class="feather icon-plus"></i>
             {{ "CALENDAR.BUTTONS.ADD" | translate }}

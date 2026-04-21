@@ -201,6 +201,10 @@
 
 [dir="rtl"] {
   .cal-header {
+    .cal-title {
+      order: 1;
+    }
+
     .cal-nav-btn:first-child {
       order: 2;
     }

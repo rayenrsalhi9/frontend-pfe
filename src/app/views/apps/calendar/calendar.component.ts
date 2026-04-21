@@ -11,7 +11,7 @@ import {
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
-import { startOfDay, endOfDay, isSameDay } from "date-fns";
+import { startOfDay, endOfDay } from "date-fns";
 import { Subject, Subscription } from "rxjs";
 import { PopoverDirective } from "ngx-bootstrap/popover";
 import { combineLatest } from "rxjs";
@@ -113,6 +113,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   frequencies: FrequencyOption[] = [];
   weekDays: WeekDayOption[] = [];
   private modalSubscriptions: Subscription | null = null;
+  private langChangeSubscription: Subscription | null = null;
 
   constructor(
     private modalService: BsModalService,
@@ -148,6 +149,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getReminders();
     this.getUsers();
     this.getDocuments();
+
+    this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
+      this.locale = this.translate.currentLang.split("_")[0] as
+        | "en"
+        | "ar"
+        | "fr";
+      this.bsLocaleService.use(this.translate.currentLang.split("_")[0]);
+      this.initTranslations();
+      this.cdr.markForCheck();
+    });
 
     this.formGroup.get("frequency").valueChanges.subscribe((freq) => {
       const dayOfWeekControl = this.formGroup.get("dayOfWeek");
@@ -851,5 +862,20 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.modalSubscriptions) {
       this.modalSubscriptions.unsubscribe();
     }
+    if (this.langChangeSubscription) {
+      this.langChangeSubscription.unsubscribe();
+    }
+  }
+
+  canEditEvent(): boolean {
+    return this.securityService.hasClaim("REMINDER_EDIT_REMINDER");
+  }
+
+  canDeleteEvent(): boolean {
+    return this.securityService.hasClaim("REMINDER_DELETE_REMINDER");
+  }
+
+  canCreateEvent(): boolean {
+    return this.securityService.hasClaim("REMINDER_CREATE_REMINDER");
   }
 }

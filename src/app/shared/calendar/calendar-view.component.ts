@@ -71,6 +71,9 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   weekDays: string[] = [];
   currentMonthYear: string = "";
 
+  private supportedLocales = ["en", "ar", "fr"];
+  private safeLocale: "en" | "ar" | "fr" = "en";
+
   private locales: any = {
     en: enUS,
     ar: arSA,
@@ -79,15 +82,23 @@ export class CalendarViewComponent implements OnInit, OnChanges {
 
   private weekDaysMap: any = {
     en: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-    ar: ["أحد", "إثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+    ar: ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
     fr: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
   };
+
+  private normalizeLocale(locale: string): "en" | "ar" | "fr" {
+    if (this.supportedLocales.includes(locale)) {
+      return locale as "en" | "ar" | "fr";
+    }
+    return "en";
+  }
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.safeLocale = this.normalizeLocale(this.locale);
     this.viewDate = new Date(this.selectedDate);
-    this.weekDays = this.weekDaysMap[this.locale] || this.weekDaysMap.en;
+    this.weekDays = this.weekDaysMap[this.safeLocale] || this.weekDaysMap.en;
     this.generateCalendar();
     this.updateMonthYear();
   }
@@ -102,8 +113,10 @@ export class CalendarViewComponent implements OnInit, OnChanges {
       this.generateCalendar();
     }
     if (changes["locale"] && !changes["locale"].firstChange) {
-      this.weekDays = this.weekDaysMap[this.locale] || this.weekDaysMap.en;
+      this.safeLocale = this.normalizeLocale(this.locale);
+      this.weekDays = this.weekDaysMap[this.safeLocale] || this.weekDaysMap.en;
       this.updateMonthYear();
+      this.cdr.markForCheck();
     }
   }
 
@@ -129,7 +142,7 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   }
 
   updateMonthYear(): void {
-    const localeObj = this.locales[this.locale] || this.locales.en;
+    const localeObj = this.locales[this.safeLocale] || this.locales.en;
     this.currentMonthYear = format(this.viewDate, "MMMM yyyy", {
       locale: localeObj,
     });
@@ -200,7 +213,7 @@ export class CalendarViewComponent implements OnInit, OnChanges {
   }
 
   formatDateLocale(date: Date): string {
-    return new Intl.DateTimeFormat(this.locale, {
+    return new Intl.DateTimeFormat(this.safeLocale, {
       weekday: "long",
       year: "numeric",
       month: "long",
