@@ -3,7 +3,6 @@ import {
   ViewChildren,
   TemplateRef,
   OnInit,
-  AfterViewInit,
   OnDestroy,
   QueryList,
   ChangeDetectorRef,
@@ -13,7 +12,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { startOfDay, endOfDay } from "date-fns";
 import { Subject, Subscription } from "rxjs";
-import { PopoverDirective } from "ngx-bootstrap/popover";
+import { takeUntil } from "rxjs/operators";
+
 import { combineLatest } from "rxjs";
 import { CommonService } from "@app/shared/services/common.service";
 import { ReminderService } from "@app/shared/services/reminder.service";
@@ -85,8 +85,7 @@ interface WeekDayOption {
   selector: "calendar",
   templateUrl: "./calendar.component.html",
 })
-export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren(PopoverDirective) popovers: QueryList<PopoverDirective>;
+export class CalendarComponent implements OnInit, OnDestroy {
   viewDate: Date = new Date();
   selectedDate: Date = new Date();
   reminderResource: ReminderResourceParameter;
@@ -100,6 +99,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   colorsSelection: any[] = [];
   refresh: Subject<any> = new Subject();
+  destroy$: Subject<void> = new Subject();
   events: CalendarAppEvent[] = [];
   selectedDayEvents: CalendarAppEvent[] = [];
   users: User[];
@@ -160,7 +160,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck();
     });
 
-    this.formGroup.get("frequency").valueChanges.subscribe((freq) => {
+    this.formGroup.get("frequency").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((freq) => {
       const dayOfWeekControl = this.formGroup.get("dayOfWeek");
       if (freq === "weekly") {
         dayOfWeekControl.setValidators([Validators.required]);
@@ -174,6 +174,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   initTranslations() {
     this.translate
       .get("CALENDAR.FREQUENCIES")
+      .pipe(takeUntil(this.destroy$))
       .subscribe((translations: any) => {
         this.frequencies = [
           { id: "once", name: translations.ONE_TIME },
@@ -186,7 +187,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
       });
 
-    this.translate.get("CALENDAR.WEEK_DAYS").subscribe((translations: any) => {
+    this.translate.get("CALENDAR.WEEK_DAYS").pipe(takeUntil(this.destroy$)).subscribe((translations: any) => {
       this.weekDays = [
         { id: 0, name: translations.SUNDAY },
         { id: 1, name: translations.MONDAY },
@@ -198,7 +199,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       ];
     });
 
-    this.translate.get("CALENDAR.PRIORITY").subscribe((translations: any) => {
+    this.translate.get("CALENDAR.PRIORITY").pipe(takeUntil(this.destroy$)).subscribe((translations: any) => {
       this.colorsSelection = [
         { id: "urgent", name: translations.URGENT, category: colors.urgent },
         { id: "normal", name: translations.NORMAL, category: colors.normal },
@@ -313,16 +314,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.popovers) {
-      this.popovers.forEach((popover: PopoverDirective) => {
-        popover.onShown.subscribe(() => {
-          this.popovers.filter((p) => p !== popover).forEach((p) => p.hide());
-        });
-      });
-    }
-  }
-
   onDateSelected(date: Date): void {
     this.selectedDate = date;
     this.viewDate = date;
@@ -395,7 +386,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.formGroup.dirty;
   }
 
-  private combineDateAndTime(date: Date, time: any): string {
+  private combineDateAndTime(date: Date | null | undefined, time: any): string {
+    if (!date || isNaN(date.getTime())) {
+      return "";
+    }
     let hours: number;
     let minutes: number;
 
@@ -490,19 +484,14 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
           : [],
       dayOfWeek: data.dayOfWeek,
       frequency: data.frequency,
-      frequencyId: data.frequency,
       halfYearlyReminders:
         isRecurring && data.frequency === "half_yearly"
           ? [
               {
                 day: new Date(data.startDate).getDate(),
-                month: String(new Date(data.startDate).getMonth() + 1).padStart(
-                  2,
-                  "0",
-                ),
-                quarter: Math.floor(
-                  (new Date(data.startDate).getMonth() + 3) / 3,
-                ),
+                month: new Date(data.startDate).getMonth() + 1,
+                quarter:
+                  new Date(data.startDate).getMonth() < 6 ? 1 : 2,
               },
             ]
           : [],
@@ -511,10 +500,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
           ? [
               {
                 day: new Date(data.startDate).getDate(),
-                month: String(new Date(data.startDate).getMonth() + 1).padStart(
-                  2,
-                  "0",
-                ),
+                month: new Date(data.startDate).getMonth() + 1,
                 quarter: Math.floor(
                   (new Date(data.startDate).getMonth() + 3) / 3,
                 ),
@@ -751,26 +737,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         id: data.id,
         event_name: data.eventName,
         startDate: this.getDateOnly(startDate),
-        endDate: this.getDateOnly(endDate),
+        endDate: endDate ? this.getDateOnly(endDate) : null,
         startTime: startTime,
         endTime: endTime,
         category: data.category || "normal",
-        frequency: (() => {
-          const rawFreq =
-            data.frequencyId !== undefined && data.frequencyId !== null
-              ? data.frequencyId
-              : data.frequency;
-          const legacyMap: any = {
-            "0": "daily",
-            "1": "weekly",
-            "2": "monthly",
-            "3": "quarterly",
-            "4": "half_yearly",
-            "5": "yearly",
-            "6": "once",
-          };
-          return legacyMap[rawFreq] || rawFreq || "once";
-        })(),
+        frequency: data.frequency || "once",
         dayOfWeek: data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
         documentId: data.documentId || null,
         isEmailNotification: data.isEmailNotification || false,
@@ -814,6 +785,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.langChangeSubscription) {
       this.langChangeSubscription.unsubscribe();
     }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   canEditEvent(): boolean {

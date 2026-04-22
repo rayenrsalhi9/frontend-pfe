@@ -21,7 +21,7 @@
           <h5 class="events-title">
             {{ "CALENDAR.EVENTS.TITLE" | translate }}
             <span class="events-date">{{
-              selectedDate | date: "fullDate"
+              selectedDate | date:"fullDate":"":locale
             }}</span>
           </h5>
           <button class="btn btn-ghost" (click)="openAddEventModal(eventModal)" *ngIf="canCreateEvent()">
@@ -57,8 +57,8 @@
                 <h6 class="event-title">{{ event.title }}</h6>
                 <span class="event-time">
                   <i class="feather icon-clock"></i>
-                  {{ event.start | date: "shortTime" }} -
-                  {{ event.end | date: "shortTime" }}
+                  {{ event.start | date:"shortTime":"":locale }} -
+                  {{ event.end | date:"shortTime":"":locale }}
                 </span>
                 <p class="event-description" *ngIf="event.description">{{ event.description }}</p>
               </div>
