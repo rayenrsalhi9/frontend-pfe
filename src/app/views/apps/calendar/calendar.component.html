@@ -60,6 +60,7 @@
                   {{ event.start | date: "shortTime" }} -
                   {{ event.end | date: "shortTime" }}
                 </span>
+                <p class="event-description" *ngIf="event.description">{{ event.description }}</p>
               </div>
             </div>
 
@@ -165,10 +166,10 @@
           <input
             type="text"
             class="field-input"
-            [class.has-error]="isTitleInvalid"
-            formControlName="title"
+            [class.has-error]="isEventNameInvalid"
+            formControlName="event_name"
           />
-          <div class="field-error" *ngIf="isTitleInvalid">
+          <div class="field-error" *ngIf="isEventNameInvalid">
             <i class="feather icon-alert-circle"></i>
             {{ "VALIDATION.FIELD_REQUIRED" | translate }}
           </div>

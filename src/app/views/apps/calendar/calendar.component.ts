@@ -221,7 +221,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.formGroup = this.formBuilder.group({
       id: [""],
-      title: ["", Validators.required],
+      event_name: ["", Validators.required],
       startDate: [startOfDay(this.selectedDate), Validators.required],
       endDate: [endOfDay(this.selectedDate), Validators.required],
       startTime: [defaultStart],
@@ -245,57 +245,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     const h = hours.toString().padStart(2, "0");
     const m = minutes.toString().padStart(2, "0");
     return `${h}:${m}`;
-  }
-
-  private getStoredHours(dateValue: any): number {
-    if (!dateValue) return 0;
-    const dateStr = String(dateValue);
-    const match = dateStr.match(
-      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
-    );
-    if (match) {
-      return parseInt(match[4], 10);
-    }
-    const date = new Date(dateValue);
-    return isNaN(date.getTime()) ? 0 : date.getHours();
-  }
-
-  private getStoredMinutes(dateValue: any): number {
-    if (!dateValue) return 0;
-    const dateStr = String(dateValue);
-    const match = dateStr.match(
-      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
-    );
-    if (match) {
-      return parseInt(match[5], 10);
-    }
-    const date = new Date(dateValue);
-    return isNaN(date.getTime()) ? 0 : date.getMinutes();
-  }
-
-  private parseToLocalDate(utcDateString: string): Date {
-    if (!utcDateString) {
-      return new Date();
-    }
-    const dateStr = String(utcDateString).trim();
-    const match = dateStr.match(
-      /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):?(\d{2})?/,
-    );
-    if (match) {
-      return new Date(
-        parseInt(match[1], 10),
-        parseInt(match[2], 10) - 1,
-        parseInt(match[3], 10),
-        parseInt(match[4], 10),
-        parseInt(match[5], 10),
-        parseInt(match[6] || "0", 10),
-      );
-    }
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) {
-      return new Date();
-    }
-    return date;
   }
 
   private getDateOnly(date: Date): Date {
@@ -325,8 +274,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
               ...this.events,
               {
                 id: el.id,
-                title: el.subject,
-                description: el.message,
+                title: el.eventName,
+                description: el.description,
                 start: startDate,
                 end: endDate || startDate,
                 allDay: false,
@@ -421,8 +370,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formGroup.markAsDirty();
   }
 
-  get isTitleInvalid(): boolean {
-    const ctrl = this.formGroup.get("title");
+  get isEventNameInvalid(): boolean {
+    const ctrl = this.formGroup.get("event_name");
     return ctrl ? ctrl.invalid && (ctrl.dirty || this.isSubmitted) : false;
   }
 
@@ -577,7 +526,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       isRepeated: isRecurring,
       category: data.category,
       id: data.id,
-      subject: data.title,
+      event_name: data.eventName,
       description: data.description,
       startDate: startDateTime,
       endDate: endDateTime,
@@ -755,7 +704,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.formGroup.setValue({
       id: "",
-      title: "",
+      event_name: "",
       startDate: startOfDay(this.selectedDate),
       endDate: endOfDay(this.selectedDate),
       startTime: defaultStart,
@@ -800,7 +749,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.formGroup.setValue({
         id: data.id,
-        title: data.subject,
+        event_name: data.eventName,
         startDate: this.getDateOnly(startDate),
         endDate: this.getDateOnly(endDate),
         startTime: startTime,
@@ -825,7 +774,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         dayOfWeek: data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
         documentId: data.documentId || null,
         isEmailNotification: data.isEmailNotification || false,
-        description: data.message,
+        description: data.description,
         reminderUsers:
           data.reminderUsers && data.reminderUsers.length > 0
             ? data.reminderUsers.map((u: any) => u.userId)

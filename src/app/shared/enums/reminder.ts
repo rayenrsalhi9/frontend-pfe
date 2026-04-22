@@ -2,7 +2,7 @@ import { ReminderUsers } from "./reminder-users";
 
 export class Reminder {
   id?: string;
-  subject: string;
+  eventName: string;
   description: string;
   startDate?: Date;
   endDate?: Date;
