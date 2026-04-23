@@ -57,6 +57,21 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
     return time;
   }
 
+  isNewNotification(notification: UserNotification): boolean {
+    if (!notification.createdDate) {
+      return false;
+    }
+    const createdDate = new Date(notification.createdDate);
+    if (isNaN(createdDate.getTime())) {
+      return false;
+    }
+    const createdTime = createdDate.getTime();
+    const now = new Date().getTime();
+    const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+    const diff = now - createdTime;
+    return diff >= 0 && diff <= twentyFourHoursInMs;
+  }
+
   ngOnInit(): void {
     this.securityService.SecurityObject.pipe(
       takeUntil(this.destroy$),
@@ -90,11 +105,9 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
       .getNotification()
       .pipe(takeUntil(this.destroy$))
       .subscribe((notifications: UserNotification[]) => {
-        const eventNotifications = notifications.filter(
-          (n) => n.type !== NotificationType.Message,
-        );
+        const eventNotifications = notifications;
         this.newNotificationCount = eventNotifications.filter(
-          (c) => !c.isRead,
+          (c) => !c.isRead && c.type !== NotificationType.Message,
         ).length;
         this.notifications = eventNotifications.sort(
           (a, b) =>

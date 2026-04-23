@@ -26,8 +26,8 @@ export class ReminderService {
       .set('pageSize', resourceParams.pageSize.toString())
       .set('skip', resourceParams.skip.toString())
       .set('searchQuery', resourceParams.searchQuery ? resourceParams.searchQuery : '')
-      .set('subject', resourceParams.subject ? resourceParams.subject : '')
-      .set('message', resourceParams.message ? resourceParams.message : '')
+      .set('eventName', resourceParams.eventName ? resourceParams.eventName : '')
+      .set('description', resourceParams.description ? resourceParams.description : '')
       .set('frequency', resourceParams.frequency ? resourceParams.frequency : '');
 
     return this.httpClient.get<Reminder[]>(url, {
@@ -38,12 +38,6 @@ export class ReminderService {
 
   addReminder(reminder: Reminder): Observable<Reminder | CommonError> {
     const url = `reminder`;
-    return this.httpClient.post<Reminder>(url, reminder)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
-  }
-
-  addDocumentReminder(reminder: Reminder): Observable<Reminder | CommonError> {
-    const url = `reminder/document`;
     return this.httpClient.post<Reminder>(url, reminder)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }

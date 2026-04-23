@@ -44,5 +44,6 @@ export const welcome = {
 
   COMMON: {
     TOTAL: "الإجمالي",
+    CANCEL: "إلغاء",
   },
 };

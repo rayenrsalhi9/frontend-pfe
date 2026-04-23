@@ -14,7 +14,6 @@ import { QuillModule } from "ngx-quill";
 import { DocumentHistoryComponent } from "./document-history/document-history.component";
 import { DocumentUploadNewVersionComponent } from "./document-upload-new-version/document-upload-new-version.component";
 import { CheckboxModule } from "@app/shared/components/checkbox/checkbox.module";
-import { DocumentReminderComponent } from "./document-reminder/document-reminder.component";
 import { DocumentSendEmailComponent } from "./document-send-email/document-send-email.component";
 import { DocumentShareComponent } from "./document-share/document-share.component";
 import { DocumentCommentComponent } from "./document-comment/document-comment.component";
@@ -28,7 +27,6 @@ import { TimepickerModule } from "ngx-bootstrap/timepicker";
     DocumentEditComponent,
     DocumentHistoryComponent,
     DocumentUploadNewVersionComponent,
-    DocumentReminderComponent,
     DocumentSendEmailComponent,
     DocumentShareComponent,
     DocumentCommentComponent,

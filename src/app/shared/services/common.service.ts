@@ -143,8 +143,8 @@ export class CommonService {
         "searchQuery",
         resourceParams.searchQuery ? resourceParams.searchQuery : "",
       )
-      .set("subject", resourceParams.subject ? resourceParams.subject : "")
-      .set("message", resourceParams.message ? resourceParams.message : "")
+      .set("eventName", resourceParams.eventName ? resourceParams.eventName : "")
+      .set("description", resourceParams.description ? resourceParams.description : "")
       .set(
         "frequency",
         resourceParams.frequency ? resourceParams.frequency : "",

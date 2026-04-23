@@ -38,44 +38,50 @@
         *ngFor="let notification of notifications"
       >
         <div class="nav-notification-item-content">
-          <div class="nav-notification-item-text">
-            <span *ngIf="!notification.isRead" class="nav-notification-badge">
-              {{ "NOTIFICATION.LABELS.NEW" | translate }}
-            </span>
+          <!-- Top section: Badge and Time -->
+          <div class="nav-notification-meta">
+            <div class="nav-notification-badges">
+              <span *ngIf="notification.type === NotificationType.Reminder" class="notification-type-badge reminder">
+                {{ "NOTIFICATION.LABELS.REMINDER" | translate }}
+              </span>
+              <span *ngIf="notification.type === NotificationType.Message" class="notification-type-badge message">
+                {{ "NOTIFICATION.LABELS.CHAT" | translate }}
+              </span>
+              <span *ngIf="isNewNotification(notification)" class="nav-notification-status-badge">
+                {{ "NOTIFICATION.LABELS.NEW" | translate }}
+              </span>
+            </div>
+            <div class="nav-notification-time">
+              <i class="feather icon-clock"></i>
+              <span>{{
+                notification.createdDate | amLocale: momentLang | amTimeAgo: true
+              }}</span>
+            </div>
+          </div>
+
+          <!-- Bottom section: Message/Text -->
+          <div class="nav-notification-text">
             <ng-container *ngIf="!notification.message">
-              <b>{{ notification.documentName }}</b
-              >:
-              {{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}
+              <span class="document-name">{{ notification.documentName }}</span>:
+              <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}</span>
             </ng-container>
 
             <a
               *ngIf="notification.message"
-              [routerLink]="['/apps/chat']"
+              [routerLink]="notification.type === NotificationType.Reminder ? ['/apps/calendar'] : ['/apps/chat']"
               class="nav-notification-link"
             >
-              <ng-container *ngIf="notification.type != NotificationType.Message">
-                <b>{{ "NOTIFICATION.LABELS.REMINDER" | translate }}</b> ::
+              <ng-container *ngIf="notification.type === NotificationType.Reminder">
+                {{ notification.message }}
               </ng-container>
-              <ng-container *ngIf="notification.type == NotificationType.Message">
-                <b>{{ "NOTIFICATION.LABELS.CHAT" | translate }}</b> ::
+              <ng-container *ngIf="notification.type !== NotificationType.Reminder">
+                <ng-container *ngIf="notification.documentId">
+                  <b>{{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b>: {{ notification.documentName }} {{ "NOTIFICATION.LABELS.SEPARATOR" | translate }}
+                </ng-container>
+                {{ "NOTIFICATION.LABELS.MESSAGE_FROM_USER" | translate:{name: notification.user?.firstName + ' ' + notification.user?.lastName} }}
+                <div class="message-preview">{{ notification.message }}</div>
               </ng-container>
-              <ng-container *ngIf="notification.documentId">
-                <b>{{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b
-                >: {{ notification.documentName }} ::
-              </ng-container>
-              {{ notification.user?.firstName }}
-              {{ notification.user?.lastName }}
-              {{ "NOTIFICATION.LABELS.SEND_MESSAGE" | translate }} <br />
-              <span class="nav-notification-link-msg">{{
-                notification.message
-              }}</span>
             </a>
-          </div>
-          <div class="nav-notification-item-time">
-            <i class="feather icon-clock"></i>
-            <span>{{
-              notification.createdDate | amLocale: momentLang | amTimeAgo: true
-            }}</span>
           </div>
         </div>
       </div>

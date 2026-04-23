@@ -2,7 +2,7 @@ import { ReminderUsers } from "./reminder-users";
 
 export class Reminder {
   id?: string;
-  subject: string;
+  eventName: string;
   description: string;
   startDate?: Date;
   endDate?: Date;
@@ -12,7 +12,6 @@ export class Reminder {
   reminderDate: Date;
   isRepeated: boolean;
   isEmailNotification: boolean;
-  isActive: boolean;
   reminderUsers: ReminderUsers[];
   dailyReminders: DailyReminders[];
   quarterlyReminders: QuarterlyReminders[];

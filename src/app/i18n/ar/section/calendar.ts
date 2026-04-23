@@ -1,31 +1,100 @@
 export const calendar = {
-  "CALENDAR":{
-    "BUTTONS":{
-      "ADD":"إضافة حدث جديد",
+  CALENDAR: {
+    TITLE: "التقويم",
+    BUTTONS: {
+      ADD: "إضافة حدث جديد",
     },
-    "LABELS":{
-      "TODAY":"اليوم",
-      "MONTH":"شهر",
-      "WEEK":"أسبوع",
-      "DAY":"يوم",
+    LABELS: {
+      TODAY: "اليوم",
+      MONTH: "شهر",
+      WEEK: "أسبوع",
+      DAY: "يوم",
     },
-    "MODAL":{
-      "ADD":{
-        "LABEL_ADD":"إضافة حدث جديد",
-        "LABEL_EDIT":"تعديل حدث",
-        "TITLE":"اسم الحدث",
-        "DATETIME":"التاريخ والوقت",
-        "CATEGORY":"فئة",
-        "USERS":"المستخدمين",
-        "DESCRIPTION":"وصف",
-        "ADD":"إضافة الحدث",
-        "EDIT":"تعديل الحدث"
-      }
+    PRESETS: {
+      TODAY: "اليوم",
+      TOMORROW: "غداً",
+      IN_3_DAYS: "بعد 3 أيام",
+      IN_A_WEEK: "بعد أسبوع",
+      IN_2_WEEKS: "بعد أسبوعين",
     },
-    "TOAST":{
-      "REMINDER_CREATED": "تم إنشاء التذكير",
-      "REMINDER_UPDATED": "تم تحديث التذكير",
-      "REMINDER_DELETED": "تم حذف التذكير"
-    }
-  }
-}
+    EVENTS: {
+      TITLE: "الأحداث",
+      NO_EVENTS: "لا توجد أحداث متاحة لهذا اليوم",
+    },
+    MODAL: {
+      ADD: {
+        LABEL_ADD: "إضافة حدث جديد",
+        LABEL_EDIT: "تعديل حدث",
+        TITLE: "اسم الحدث",
+        DATETIME: "التاريخ والوقت",
+        START: "البداية",
+        END: "النهاية",
+        DATE: "التاريخ",
+        START_TIME: "وقت البدء",
+        END_TIME: "وقت الانتهاء",
+        CATEGORY: "فئة",
+        FREQUENCY: "التكرار",
+        DAY_OF_WEEK: "يوم الأسبوع",
+        DOCUMENT: "ربط مستند",
+        SELECT_DOCUMENT: "اختر مستند (اختياري)",
+        EMAIL_NOTIFICATION: "إرسال إشعار بالبريد الإلكتروني",
+        USERS: "المستخدمين",
+        DESCRIPTION: "وصف",
+        ADD: "إضافة الحدث",
+        EDIT: "تعديل الحدث",
+      },
+    },
+    ARIA: {
+      PREVIOUS_MONTH: "الشهر السابق",
+      NEXT_MONTH: "الشهر التالي",
+      GRID_LABEL: "أيام التقويم",
+    },
+    TOAST: {
+      EVENT_CREATED: "تم إنشاء الحدث",
+      EVENT_UPDATED: "تم تحديث الحدث",
+      EVENT_DELETED: "تم حذف الحدث",
+      ERROR_CREATED: "فشل في إنشاء الحدث",
+      ERROR_UPDATED: "فشل في تحديث الحدث",
+      ERROR_DELETED: "فشل في حذف الحدث",
+    },
+    DELETE_EVENT: {
+      TITLE: "هل أنت متأكد من حذف هذا الحدث؟ لا يمكن التراجع عن هذا الإجراء.",
+      BUTTON: {
+        CANCEL: "إلغاء",
+        CONFIRM: "حذف",
+      },
+    },
+    FREQUENCIES: {
+      ONE_TIME: "مرة واحدة",
+      DAILY: "يومي",
+      WEEKLY: "أسبوعي",
+      MONTHLY: "شهري",
+      QUARTERLY: "ربع سنوي",
+      HALF_YEARLY: "نصف سنوي",
+      YEARLY: "سنوي",
+    },
+    WEEK_DAYS: {
+      SUNDAY: "الأحد",
+      MONDAY: "الإثنين",
+      TUESDAY: "الثلاثاء",
+      WEDNESDAY: "الأربعاء",
+      THURSDAY: "الخميس",
+      FRIDAY: "الجمعة",
+      SATURDAY: "السبت",
+    },
+    COLORS: {
+      RED: "أحمر",
+      BLUE: "أزرق",
+      YELLOW: "أصفر",
+    },
+    PRIORITY: {
+      URGENT: "عاجل",
+      NORMAL: "عادي",
+      MINOR: "ثانوي",
+    },
+  },
+  VALIDATION: {
+    FIELD_REQUIRED: "هذا الحقل مطلوب",
+    END_DATE_BEFORE_START: "لا يمكن أن يكون تاريخ الانتهاء قبل تاريخ البدء",
+  },
+};

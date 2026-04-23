@@ -1,0 +1,88 @@
+<div class="custom-calendar" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'">
+  <div class="cal-header">
+    <button
+      type="button"
+      class="cal-nav-btn"
+      (click)="previousMonth()"
+      [attr.aria-label]="'CALENDAR.ARIA.PREVIOUS_MONTH' | translate"
+    >
+      <i class="feather icon-chevron-left"></i>
+    </button>
+    <span class="cal-title">{{ currentMonthYear }}</span>
+    <button
+      type="button"
+      class="cal-nav-btn"
+      (click)="nextMonth()"
+      [attr.aria-label]="'CALENDAR.ARIA.NEXT_MONTH' | translate"
+    >
+      <i class="feather icon-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="cal-weekdays">
+    <span *ngFor="let day of weekDays" class="cal-weekday">{{ day }}</span>
+  </div>
+
+  <div
+    class="cal-grid"
+    [attr.aria-label]="'CALENDAR.ARIA.GRID_LABEL' | translate"
+  >
+    <button
+      type="button"
+      *ngFor="let day of calendarDays; trackBy: trackByDate"
+      class="cal-day"
+      [class.other-month]="!day.isCurrentMonth"
+      [class.today]="day.isToday"
+      [class.selected]="day.isSelected"
+      [class.has-events]="day.events.length > 0"
+      (click)="selectDate(day.date)"
+      [attr.aria-label]="formatDateLocale(day.date)"
+      role="button"
+    >
+      <span class="day-number">{{ day.dayNumber }}</span>
+      <span *ngIf="day.events.length > 0" class="event-indicator">
+        <span
+          *ngFor="let event of day.events.slice(0, 3); trackBy: trackByEvent"
+          class="event-dot"
+          [style.background-color]="getEventColor(event)"
+        >
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <div class="cal-presets">
+    <button type="button" class="preset-btn" (click)="goToToday()">
+      <i class="feather icon-calendar"></i>
+      <span>{{ "CALENDAR.PRESETS.TODAY" | translate }}</span>
+    </button>
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 1))"
+    >
+      {{ "CALENDAR.PRESETS.TOMORROW" | translate }}
+    </button>
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 3))"
+    >
+      {{ "CALENDAR.PRESETS.IN_3_DAYS" | translate }}
+    </button>
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 7))"
+    >
+      {{ "CALENDAR.PRESETS.IN_A_WEEK" | translate }}
+    </button>
+    <button
+      type="button"
+      class="preset-btn"
+      (click)="selectDate(addDays(today, 14))"
+    >
+      {{ "CALENDAR.PRESETS.IN_2_WEEKS" | translate }}
+    </button>
+  </div>
+</div>

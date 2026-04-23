@@ -24,8 +24,12 @@ export class NotificationService {
   }
 
   getNotification(): Observable<UserNotification[] | CommonError> {
-    const url = `user-notification/notification`;
-    return this.httpClient.get<UserNotification[]>(url).pipe(
+    const url = `user-notifications`;
+    const params = new HttpParams()
+      .set("pageSize", "10")
+      .set("skip", "0")
+      .set("orderBy", "createdDate desc");
+    return this.httpClient.get<UserNotification[]>(url, { params }).pipe(
       map((notifications) => notifications.map((n) => new UserNotification(n))),
       catchError(this.commonHttpErrorService.handleError),
     );
@@ -34,7 +38,7 @@ export class NotificationService {
   getNotifications(
     resource: DocumentResource,
   ): Observable<HttpResponse<UserNotification[]> | CommonError> {
-    const url = `user-notification/notifications`;
+    const url = `user-notifications`;
     let customParams = new HttpParams()
       .set("fields", resource.fields)
       .set("orderBy", resource.orderBy)
