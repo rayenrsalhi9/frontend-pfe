@@ -26,7 +26,7 @@ export class ReminderService {
       .set('pageSize', resourceParams.pageSize.toString())
       .set('skip', resourceParams.skip.toString())
       .set('searchQuery', resourceParams.searchQuery ? resourceParams.searchQuery : '')
-      .set('event_name', resourceParams.event_name ? resourceParams.event_name : '')
+      .set('eventName', resourceParams.eventName ? resourceParams.eventName : '')
       .set('description', resourceParams.description ? resourceParams.description : '')
       .set('frequency', resourceParams.frequency ? resourceParams.frequency : '');
 

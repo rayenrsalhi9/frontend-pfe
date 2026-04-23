@@ -1,10 +1,8 @@
 import {
   Component,
-  ViewChildren,
   TemplateRef,
   OnInit,
   OnDestroy,
-  QueryList,
   ChangeDetectorRef,
 } from "@angular/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -13,7 +11,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { startOfDay, endOfDay } from "date-fns";
 import { Subject, Subscription } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-
 import { combineLatest } from "rxjs";
 import { CommonService } from "@app/shared/services/common.service";
 import { ReminderService } from "@app/shared/services/reminder.service";
@@ -28,8 +25,6 @@ import {
   enGbLocale,
 } from "ngx-bootstrap/chronos";
 import { BsLocaleService } from "ngx-bootstrap/datepicker";
-import { DocumentService } from "@app/shared/services/document.service";
-import { DocumentResource } from "@app/shared/enums/document-resource";
 import { SecurityService } from "@app/core/security/security.service";
 
 interface CalendarAppEvent {
@@ -103,7 +98,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
   events: CalendarAppEvent[] = [];
   selectedDayEvents: CalendarAppEvent[] = [];
   users: User[];
-  documents: any[] = [];
   locale: "en" | "ar" | "fr" = "en";
   isLoading = false;
   isSubmitted = false;
@@ -121,7 +115,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private commonService: CommonService,
     private reminderService: ReminderService,
-    private documentService: DocumentService,
     private toastrService: ToastrService,
     private translate: TranslateService,
     private bsLocaleService: BsLocaleService,
@@ -144,31 +137,29 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initFormGroup();
-    this.bsLocaleService.use(this.translate.currentLang.split("_")[0]);
+    this.initLocale();
     this.initTranslations();
     this.getReminders();
     this.getUsers();
-    this.getDocuments();
 
     this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
-      this.locale = this.translate.currentLang.split("_")[0] as
-        | "en"
-        | "ar"
-        | "fr";
-      this.bsLocaleService.use(this.translate.currentLang.split("_")[0]);
+      this.initLocale();
       this.initTranslations();
       this.cdr.markForCheck();
     });
 
-    this.formGroup.get("frequency").valueChanges.pipe(takeUntil(this.destroy$)).subscribe((freq) => {
-      const dayOfWeekControl = this.formGroup.get("dayOfWeek");
-      if (freq === "weekly") {
-        dayOfWeekControl.setValidators([Validators.required]);
-      } else {
-        dayOfWeekControl.setValidators([]);
-      }
-      dayOfWeekControl.updateValueAndValidity({ emitEvent: false });
-    });
+    this.formGroup
+      .get("frequency")
+      .valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((freq) => {
+        const dayOfWeekControl = this.formGroup.get("dayOfWeek");
+        if (freq === "weekly") {
+          dayOfWeekControl.setValidators([Validators.required]);
+        } else {
+          dayOfWeekControl.setValidators([]);
+        }
+        dayOfWeekControl.updateValueAndValidity({ emitEvent: false });
+      });
   }
 
   initTranslations() {
@@ -187,32 +178,38 @@ export class CalendarComponent implements OnInit, OnDestroy {
         ];
       });
 
-    this.translate.get("CALENDAR.WEEK_DAYS").pipe(takeUntil(this.destroy$)).subscribe((translations: any) => {
-      this.weekDays = [
-        { id: 0, name: translations.SUNDAY },
-        { id: 1, name: translations.MONDAY },
-        { id: 2, name: translations.TUESDAY },
-        { id: 3, name: translations.WEDNESDAY },
-        { id: 4, name: translations.THURSDAY },
-        { id: 5, name: translations.FRIDAY },
-        { id: 6, name: translations.SATURDAY },
-      ];
-    });
+    this.translate
+      .get("CALENDAR.WEEK_DAYS")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((translations: any) => {
+        this.weekDays = [
+          { id: 0, name: translations.SUNDAY },
+          { id: 1, name: translations.MONDAY },
+          { id: 2, name: translations.TUESDAY },
+          { id: 3, name: translations.WEDNESDAY },
+          { id: 4, name: translations.THURSDAY },
+          { id: 5, name: translations.FRIDAY },
+          { id: 6, name: translations.SATURDAY },
+        ];
+      });
 
-    this.translate.get("CALENDAR.PRIORITY").pipe(takeUntil(this.destroy$)).subscribe((translations: any) => {
-      this.colorsSelection = [
-        { id: "urgent", name: translations.URGENT, category: colors.urgent },
-        { id: "normal", name: translations.NORMAL, category: colors.normal },
-        { id: "minor", name: translations.MINOR, category: colors.minor },
-      ];
-      if (
-        this.formGroup &&
-        this.modalMode === "add" &&
-        !this.formGroup.get("category").value
-      ) {
-        this.formGroup.get("category").setValue("normal");
-      }
-    });
+    this.translate
+      .get("CALENDAR.PRIORITY")
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((translations: any) => {
+        this.colorsSelection = [
+          { id: "urgent", name: translations.URGENT, category: colors.urgent },
+          { id: "normal", name: translations.NORMAL, category: colors.normal },
+          { id: "minor", name: translations.MINOR, category: colors.minor },
+        ];
+        if (
+          this.formGroup &&
+          this.modalMode === "add" &&
+          !this.formGroup.get("category").value
+        ) {
+          this.formGroup.get("category").setValue("normal");
+        }
+      });
   }
 
   initFormGroup() {
@@ -222,7 +219,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     this.formGroup = this.formBuilder.group({
       id: [""],
-      event_name: ["", Validators.required],
+      eventName: ["", Validators.required],
       startDate: [startOfDay(this.selectedDate), Validators.required],
       endDate: [endOfDay(this.selectedDate), Validators.required],
       startTime: [defaultStart],
@@ -230,11 +227,22 @@ export class CalendarComponent implements OnInit, OnDestroy {
       category: ["normal", Validators.required],
       frequency: ["once", Validators.required],
       dayOfWeek: [now.getDay(), Validators.required],
-      documentId: [null],
       isEmailNotification: [false],
       description: [""],
       reminderUsers: [[]],
     });
+  }
+
+  initLocale(): void {
+    const lang =
+      this.translate.currentLang ||
+      this.translate.defaultLang ||
+      localStorage.getItem("lang") ||
+      "en";
+    const baseLang = (lang.split("_")[0] || "en") as "en" | "ar" | "fr";
+    const allowedLang = ["en", "ar", "fr"].includes(baseLang) ? baseLang : "en";
+    this.bsLocaleService.use(allowedLang);
+    this.locale = allowedLang;
   }
 
   getTimeString(hours: number, minutes: number): string {
@@ -292,16 +300,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
         console.error("Error fetching reminders:", err);
       },
     });
-  }
-
-  getDocuments() {
-    const params = new DocumentResource();
-    params.pageSize = 1000;
-    this.documentService
-      .getDocuments(params)
-      .subscribe((data: HttpResponse<any>) => {
-        this.documents = data.body || [];
-      });
   }
 
   updateSelectedDayEvents() {
@@ -362,7 +360,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   get isEventNameInvalid(): boolean {
-    const ctrl = this.formGroup.get("event_name");
+    const ctrl = this.formGroup.get("eventName");
     return ctrl ? ctrl.invalid && (ctrl.dirty || this.isSubmitted) : false;
   }
 
@@ -455,7 +453,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const endDateTime = this.combineDateAndTime(data.endDate, data.endTime);
 
     const isRecurring = data.frequency !== "once";
-    const isActive = data.isActive !== undefined ? data.isActive : true;
 
     let reminderUsers = data.reminderUsers;
     if (!reminderUsers || reminderUsers.length === 0) {
@@ -490,8 +487,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
               {
                 day: new Date(data.startDate).getDate(),
                 month: new Date(data.startDate).getMonth() + 1,
-                quarter:
-                  new Date(data.startDate).getMonth() < 6 ? 1 : 2,
+                quarter: new Date(data.startDate).getMonth() < 6 ? 1 : 2,
               },
             ]
           : [],
@@ -508,11 +504,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
             ]
           : [],
       isEmailNotification: data.isEmailNotification || false,
-      isActive: isActive,
       isRepeated: isRecurring,
       category: data.category,
       id: data.id,
-      event_name: data.eventName,
+      eventName: data.eventName,
       description: data.description,
       startDate: startDateTime,
       endDate: endDateTime,
@@ -690,7 +685,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     this.formGroup.setValue({
       id: "",
-      event_name: "",
+      eventName: "",
       startDate: startOfDay(this.selectedDate),
       endDate: endOfDay(this.selectedDate),
       startTime: defaultStart,
@@ -698,7 +693,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       category: "normal",
       frequency: "once",
       dayOfWeek: now.getDay(),
-      documentId: null,
       isEmailNotification: false,
       description: "",
       reminderUsers: [],
@@ -712,6 +706,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         class: "modal-md modal-dialog-centered",
         backdrop: "static",
       });
+      this.onModalClose();
 
       const startDate = this.parsePlainDateTime(data.startDate);
       const endDate = data.endDate
@@ -735,7 +730,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
       this.formGroup.setValue({
         id: data.id,
-        event_name: data.eventName,
+        eventName: data.eventName,
         startDate: this.getDateOnly(startDate),
         endDate: endDate ? this.getDateOnly(endDate) : null,
         startTime: startTime,
@@ -743,7 +738,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
         category: data.category || "normal",
         frequency: data.frequency || "once",
         dayOfWeek: data.dayOfWeek != null ? data.dayOfWeek : startDate.getDay(),
-        documentId: data.documentId || null,
         isEmailNotification: data.isEmailNotification || false,
         description: data.description,
         reminderUsers:
@@ -763,6 +757,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       class: "modal-md modal-dialog-centered",
       backdrop: "static",
     });
+    this.onModalClose();
   }
 
   onModalClose() {

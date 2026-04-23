@@ -12,7 +12,6 @@ export class Reminder {
   reminderDate: Date;
   isRepeated: boolean;
   isEmailNotification: boolean;
-  isActive: boolean;
   reminderUsers: ReminderUsers[];
   dailyReminders: DailyReminders[];
   quarterlyReminders: QuarterlyReminders[];

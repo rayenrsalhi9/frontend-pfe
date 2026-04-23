@@ -167,7 +167,7 @@
             type="text"
             class="field-input"
             [class.has-error]="isEventNameInvalid"
-            formControlName="event_name"
+            formControlName="eventName"
           />
           <div class="field-error" *ngIf="isEventNameInvalid">
             <i class="feather icon-alert-circle"></i>
@@ -277,21 +277,6 @@
             formControlName="dayOfWeek"
             bindLabel="name"
             bindValue="id"
-          >
-          </ng-select>
-        </div>
-
-        <div class="field">
-          <label class="field-label">{{
-            "CALENDAR.MODAL.ADD.DOCUMENT" | translate
-          }}</label>
-          <ng-select
-            [items]="documents"
-            formControlName="documentId"
-            bindLabel="name"
-            bindValue="id"
-            [clearable]="true"
-            [placeholder]="'CALENDAR.MODAL.ADD.SELECT_DOCUMENT' | translate"
           >
           </ng-select>
         </div>
