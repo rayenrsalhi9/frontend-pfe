@@ -5,6 +5,7 @@ import { SurveyService } from "../survey.service";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { CommonService } from "@app/shared/services/common.service";
+import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
@@ -19,6 +20,7 @@ type SurveyType = "simple" | "rating" | "satisfaction";
 export class SurveyAddComponent implements OnInit, OnDestroy {
   surveyForm: FormGroup;
   users: User[] = [];
+  allUsers: User[] = [];
   isLoading = false;
   isEdit = false;
   isSubmitted = false;
@@ -34,6 +36,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private surveyService: SurveyService,
     private commonService: CommonService,
+    private securityService: SecurityService,
     private toastr: ToastrService,
     private translate: TranslateService,
   ) {}
@@ -69,16 +72,31 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          this.isLoading = false;
-          this.surveyForm.patchValue({
-            title: data.title,
-            type: data.type,
-            forum: data.forum,
-            blog: data.blog,
-            private: data.privacy === "private",
-            users: data.users || [],
-          });
-          this.cdr.markForCheck();
+          const selectedUserIds = data.users || [];
+          this.commonService
+            .getUsers()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (allUsers: User[]) => {
+                this.isLoading = false;
+                const currentUserId =
+                  this.securityService.securityObject?.user?.id;
+                const selectedUsers = allUsers.filter((u) =>
+                  selectedUserIds.includes(u.id) && u.id !== currentUserId,
+                );
+                this.allUsers = allUsers;
+                this.users = allUsers.filter((u) => u.id !== currentUserId);
+                this.surveyForm.patchValue({
+                  title: data.title,
+                  type: data.type,
+                  forum: data.forum,
+                  blog: data.blog,
+                  private: data.privacy === "private",
+                  users: selectedUsers,
+                });
+                this.cdr.markForCheck();
+              },
+            });
         },
         error: (err) => {
           this.isLoading = false;
@@ -91,12 +109,14 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
   }
 
   loadUsers() {
+    const currentUserId = this.securityService.securityObject?.user?.id;
     this.commonService
       .getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (users: User[]) => {
-          this.users = users;
+          this.allUsers = users;
+          this.users = users.filter((user) => user.id !== currentUserId);
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -139,10 +159,16 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     if (this.surveyForm.valid) {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
+      
+      const users = formValue.users?.map((u: User) => u.id) || [];
+      const requestData = {
+        ...formValue,
+        users: users,
+      };
 
       const request = this.isEdit
-        ? this.surveyService.updateSurvey(this.surveyId, formValue)
-        : this.surveyService.addSurvey(formValue);
+        ? this.surveyService.updateSurvey(this.surveyId, requestData)
+        : this.surveyService.addSurvey(requestData);
 
       request.pipe(takeUntil(this.destroy$)).subscribe({
         next: (res) => {
