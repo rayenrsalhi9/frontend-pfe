@@ -337,9 +337,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getUsers() {
-    this.commonService
-      .getUsersWithClaim("REMINDER_VIEW_REMINDERS")
-      .subscribe((users: User[]) => (this.users = users));
+    this.commonService.getUsersWithClaim("REMINDER_VIEW_REMINDERS").subscribe({
+      next: (users) => {
+        if (Array.isArray(users)) {
+          this.users = users as any;
+        }
+      },
+      error: (err) => {
+        console.error("Error loading users:", err);
+      },
+    });
   }
 
   isUserSelected(userId: string): boolean {

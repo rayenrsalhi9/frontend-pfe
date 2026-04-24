@@ -139,7 +139,8 @@
               [multiple]="true"
               [placeholder]="'ADD.SURVEY.PLACEHOLDERS.USERS' | translate"
               [labelForId]="'users'"
-              [bindLabel]="'firstName'"
+              [bindLabel]="'fullName'"
+              [compareWith]="compareUsersById"
             >
               <ng-option *ngFor="let user of users" [value]="user">
                 {{ user.firstName }} {{ user.lastName }}

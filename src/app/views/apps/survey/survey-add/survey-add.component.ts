@@ -2,13 +2,14 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SurveyService } from "../survey.service";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject, of, forkJoin } from "rxjs";
+import { takeUntil, switchMap, catchError, map } from "rxjs/operators";
 import { CommonService } from "@app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { EMPTY } from "rxjs";
 
 type SurveyType = "simple" | "rating" | "satisfaction";
 
@@ -69,41 +70,56 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.surveyService
       .getSurvey(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data: any) => {
-          const selectedUserIds = data.users || [];
-          this.commonService
-            .getUsers()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: (allUsers: User[]) => {
-                this.isLoading = false;
-                const currentUserId =
-                  this.securityService.securityObject?.user?.id;
-                const selectedUsers = allUsers.filter((u) =>
-                  selectedUserIds.includes(u.id) && u.id !== currentUserId,
-                );
-                this.allUsers = allUsers;
-                this.users = allUsers.filter((u) => u.id !== currentUserId);
-                this.surveyForm.patchValue({
-                  title: data.title,
-                  type: data.type,
-                  forum: data.forum,
-                  blog: data.blog,
-                  private: data.privacy === "private",
-                  users: selectedUsers,
-                });
-                this.cdr.markForCheck();
-              },
-            });
-        },
-        error: (err) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((data: any) => {
+          if (this.allUsers && this.allUsers.length > 0) {
+            return of({ data, allUsers: this.allUsers });
+          }
+          return this.commonService.getUsers().pipe(
+            map((allUsers: User[]) => ({ data, allUsers })),
+            catchError((err) => {
+              console.error("Error loading users:", err);
+              this.toastr.error(
+                this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+              );
+              return of({ data, allUsers: [] });
+            }),
+          );
+        }),
+        catchError((err) => {
           this.isLoading = false;
           console.error("Error loading survey:", err);
           this.toastr.error(
             this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
           );
+          this.cdr.markForCheck();
+          return EMPTY;
+        }),
+      )
+      .subscribe({
+        next: ({ data, allUsers }) => {
+          this.isLoading = false;
+          const selectedUserIds = data.users || [];
+          const currentUserId = this.securityService.securityObject?.user?.id;
+          const selectedUsers = allUsers.filter(
+            (u) => selectedUserIds.includes(u.id) && u.id !== currentUserId,
+          );
+          this.allUsers = allUsers;
+          this.users = allUsers.filter((u) => u.id !== currentUserId);
+          this.surveyForm.patchValue({
+            title: data.title,
+            type: data.type,
+            forum: data.forum,
+            blog: data.blog,
+            private: data.privacy === "private",
+            users: selectedUsers,
+          });
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -121,6 +137,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.error("Error loading users:", err);
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
+          this.cdr.markForCheck();
         },
       });
   }
@@ -159,10 +179,14 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     if (this.surveyForm.valid) {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
-      
+
       const users = formValue.users?.map((u: User) => u.id) || [];
       const requestData = {
-        ...formValue,
+        title: formValue.title,
+        type: formValue.type,
+        forum: formValue.forum,
+        blog: formValue.blog,
+        privacy: formValue.private ? "private" : "public",
         users: users,
       };
 
@@ -199,4 +223,6 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
   onCancel() {
     this.router.navigate(["/apps/surveys"]);
   }
+
+  compareUsersById = (a: User, b: User): boolean => a?.id === b?.id;
 }

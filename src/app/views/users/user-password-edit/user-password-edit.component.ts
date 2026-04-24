@@ -1,55 +1,52 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { SecurityService } from '@app/core/security/security.service';
-import { UserService } from '@app/shared/services/user.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core'; 
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { UserService } from "@app/shared/services/user.service";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
+import { User } from "@app/shared/enums/user-auth";
 
 @Component({
-  selector: 'app-user-password-edit',
-  templateUrl: './user-password-edit.component.html',
-  styleUrls: ['./user-password-edit.component.css']
+  selector: "app-user-password-edit",
+  templateUrl: "./user-password-edit.component.html",
+  styleUrls: ["./user-password-edit.component.css"],
 })
 export class UserPasswordEditComponent implements OnInit {
-
   changePasswordForm: FormGroup;
-  data:any
+  data: any;
 
   constructor(
     private userService: UserService,
     private fb: FormBuilder,
     private toastrService: ToastrService,
-    private securityService: SecurityService,
     public bsModalRef: BsModalRef,
-    private cdr:ChangeDetectorRef,
-    private translate: TranslateService
-  ) {
-  }
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.createChangePasswordForm();
-    this.changePasswordForm.get('email').setValue(this.data.email);
-    this.cdr.detectChanges()
+    this.changePasswordForm.get("email").setValue(this.data.email);
+    this.cdr.detectChanges();
   }
 
   createChangePasswordForm() {
     this.changePasswordForm = this.fb.group(
       {
-        email: [{ value: '', disabled: true }],
+        email: [{ value: "", disabled: true }],
         //oldPasswordPassword: ['', [Validators.required]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', [Validators.required]],
+        password: ["", [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ["", [Validators.required]],
       },
       {
         validator: this.checkPasswords,
-      }
+      },
     );
   }
 
   checkPasswords(group: FormGroup) {
-    let pass = group.get('password').value;
-    let confirmPass = group.get('confirmPassword').value;
+    let pass = group.get("password").value;
+    let confirmPass = group.get("confirmPassword").value;
     return pass === confirmPass ? null : { notSame: true };
   }
 
@@ -58,9 +55,11 @@ export class UserPasswordEditComponent implements OnInit {
       this.userService
         .resetPassword(this.createBuildObject())
         .subscribe((d) => {
-          this.translate.get('USERS.PASSWORD.TOAST.SUCCESSFULLY_CHANGED_PASSWORD').subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage); 
-          }); 
+          this.translate
+            .get("USERS.PASSWORD.TOAST.SUCCESSFULLY_CHANGED_PASSWORD")
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.success(translatedMessage);
+            });
           //this.securityService.logout();
           this.bsModalRef.hide();
         });
@@ -71,14 +70,14 @@ export class UserPasswordEditComponent implements OnInit {
 
   createBuildObject() {
     return {
-      email: this.changePasswordForm.get('email').value,
-      password: this.changePasswordForm.get('password').value,
-      userName: this.changePasswordForm.get('email').value,
-    };
+      email: this.changePasswordForm.get("email").value,
+      password: this.changePasswordForm.get("password").value,
+      userName: this.changePasswordForm.get("email").value,
+      fullName: "",
+    } as User;
   }
 
   onNoClick(): void {
     this.bsModalRef.hide();
   }
-
 }

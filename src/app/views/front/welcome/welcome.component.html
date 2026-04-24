@@ -136,7 +136,7 @@
         </h2>
       </div>
       <div class="card-body survey-body">
-        <ng-container *ngIf="vm.auth !== null">
+        <ng-container *ngIf="vm.auth !== null; else authLoading">
           <ng-container *ngIf="vm.auth; else notLoggedIn">
             <div *ngIf="survey; else noSurvey" class="survey-content">
               <p class="survey-question">{{ survey?.title }}</p>
@@ -193,6 +193,11 @@
             </div>
           </ng-template>
         </ng-container>
+        <ng-template #authLoading>
+          <div class="survey-loading">
+            <div class="loading-spinner"></div>
+          </div>
+        </ng-template>
       </div>
     </div>
 

@@ -19,6 +19,39 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     private router: Router,
     private toastrService: ToastrService,
   ) {}
+
+  private handleApiError(err: HttpErrorResponse): void {
+    if (err.status === 401) {
+      this.router.navigate(["login"]);
+    } else if (err.status === 403) {
+      this.toastrService.error(
+        `you don't have permission to perform this access.`,
+      );
+    } else if (err.status === 409) {
+      this.toastrService.error(
+        err.error?.messages?.[0] || err.error?.message || "An error occurred",
+      );
+    } else if (err.error && Object.entries(err.error)?.length > 0) {
+      const errors: string[] = [];
+      for (const [key, value] of Object.entries(err.error)) {
+        if (value) {
+          if (Array.isArray(value)) {
+            errors.push(...value);
+          } else {
+            errors.push(String(value));
+          }
+        }
+      }
+      if (errors.length > 0) {
+        this.toastrService.error(errors.join("\n"));
+      }
+    } else {
+      this.toastrService.error(
+        err.error?.message || err.message || "An error occurred",
+      );
+    }
+  }
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
@@ -42,33 +75,10 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       });
       return next.handle(newReq).pipe(
         tap(
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           () => {},
           (err: any) => {
             if (err instanceof HttpErrorResponse) {
-              if (err.status === 401) {
-                this.router.navigate(["login"]);
-              } else if (err.status === 403) {
-                this.toastrService.error(
-                  `you don't have permission to perform this access.`,
-                );
-              } else if (
-                err.error &&
-                Array.isArray(err.error) &&
-                err.error.length >= 0
-              ) {
-                this.toastrService.error(err.error[0]);
-              } else if (err.error && Object.entries(err.error)?.length > 0) {
-                const errors = [];
-                for (const [key, value] of Object.entries(err.error)) {
-                  if (value) {
-                    errors.push(value);
-                  }
-                }
-                //this.toastrService.error(errors.join('\n'));
-              } else if (err.message) {
-                this.toastrService.error(err.message);
-              }
+              this.handleApiError(err);
             }
           },
         ),
@@ -79,21 +89,10 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       });
       return next.handle(newReq).pipe(
         tap(
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           () => {},
           (err: any) => {
             if (err instanceof HttpErrorResponse) {
-              if (err.status === 401) {
-                this.router.navigate(["login"]);
-              } else if (err.status === 403) {
-                this.toastrService.error(
-                  `you don't have permission to perform this access.`,
-                );
-              } else if (err.status === 409) {
-                this.toastrService.error(
-                  err.error.message || err.error.messages?.[0],
-                );
-              }
+              this.handleApiError(err);
             }
           },
         ),
