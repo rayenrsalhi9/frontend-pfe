@@ -73,8 +73,7 @@ export class UserPasswordEditComponent implements OnInit {
       email: this.changePasswordForm.get("email").value,
       password: this.changePasswordForm.get("password").value,
       userName: this.changePasswordForm.get("email").value,
-      fullName: "",
-    } as User;
+    };
   }
 
   onNoClick(): void {

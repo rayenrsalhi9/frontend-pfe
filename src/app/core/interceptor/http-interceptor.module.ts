@@ -10,45 +10,15 @@ import {
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
 import { environment } from "src/environments/environment";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-  constructor(
-    private router: Router,
-    private toastrService: ToastrService,
-  ) {}
+  constructor(private router: Router) {}
 
   private handleApiError(err: HttpErrorResponse): void {
     if (err.status === 401) {
       this.router.navigate(["login"]);
-    } else if (err.status === 403) {
-      this.toastrService.error(
-        `you don't have permission to perform this access.`,
-      );
-    } else if (err.status === 409) {
-      this.toastrService.error(
-        err.error?.messages?.[0] || err.error?.message || "An error occurred",
-      );
-    } else if (err.error && Object.entries(err.error)?.length > 0) {
-      const errors: string[] = [];
-      for (const [key, value] of Object.entries(err.error)) {
-        if (value) {
-          if (Array.isArray(value)) {
-            errors.push(...value);
-          } else {
-            errors.push(String(value));
-          }
-        }
-      }
-      if (errors.length > 0) {
-        this.toastrService.error(errors.join("\n"));
-      }
-    } else {
-      this.toastrService.error(
-        err.error?.message || err.message || "An error occurred",
-      );
     }
   }
 

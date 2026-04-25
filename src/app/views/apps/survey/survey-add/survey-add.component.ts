@@ -44,8 +44,11 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createSurveyForm();
-    this.loadUsers();
-    this.checkEditMode();
+    this.checkEditMode().then(() => {
+      if (!this.isEdit) {
+        this.loadUsers();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -53,17 +56,20 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private checkEditMode(): void {
-    this.activatedRoute.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        const id = params.get("id");
-        if (id) {
-          this.isEdit = true;
-          this.surveyId = id;
-          this.loadSurvey(id);
-        }
-      });
+  private checkEditMode(): Promise<void> {
+    return new Promise((resolve) => {
+      this.activatedRoute.paramMap
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((params) => {
+          const id = params.get("id");
+          if (id) {
+            this.isEdit = true;
+            this.surveyId = id;
+            this.loadSurvey(id);
+          }
+          resolve();
+        });
+    });
   }
 
   private loadSurvey(id: string): void {
@@ -86,15 +92,6 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
               return of({ data, allUsers: [] });
             }),
           );
-        }),
-        catchError((err) => {
-          this.isLoading = false;
-          console.error("Error loading survey:", err);
-          this.toastr.error(
-            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
-          );
-          this.cdr.markForCheck();
-          return EMPTY;
         }),
       )
       .subscribe({
@@ -119,6 +116,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isLoading = false;
+          console.error("Error loading survey:", err);
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
           this.cdr.markForCheck();
         },
       });

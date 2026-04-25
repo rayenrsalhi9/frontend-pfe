@@ -21,6 +21,7 @@ interface UserData {
   id?: string;
   firstName?: string;
   lastName?: string;
+  fullName?: string;
   phoneNumber?: string;
   email?: string;
   userName?: string;
@@ -342,6 +343,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private prepareFormData(): UpdateUserProfilePayload {
     const formValue = this.userForm.getRawValue();
+    const fullName = [formValue.firstName, formValue.lastName]
+      .filter((name) => name && name.trim())
+      .join(" ")
+      .trim();
     return {
       id: formValue.id,
       firstName: formValue.firstName,
@@ -350,7 +355,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       userName: formValue.email,
       email: formValue.email,
       avatar: this.newPicture || null,
-      fullName: "",
+      fullName: fullName || undefined,
     };
   }
 

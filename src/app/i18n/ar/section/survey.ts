@@ -6,9 +6,11 @@ export const survey = {
     },
     TABLE: {
       TITLE: "العنوان",
+      STATS: "الإحصائيات",
       DESCRIPTION: "الوصف",
       TYPE: "النوع",
       CATEGORY: "التصنيف",
+      PRIVACY: "الخصوصية",
       CREATOR: "المنشئ",
       TOTAL: "الإجمالي",
       CREATED: "تاريخ الإنشاء",
@@ -23,6 +25,7 @@ export const survey = {
       ADD: "إضافة استبيان",
       EDIT: "تعديل",
       DELETE: "حذف",
+      STATS: "الإحصائيات",
     },
     ADD: {
       LABELS: {

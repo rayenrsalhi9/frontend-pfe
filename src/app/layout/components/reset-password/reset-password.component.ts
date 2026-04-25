@@ -75,8 +75,7 @@ export class ResetPasswordComponent implements OnInit {
       newPassword: this.changePasswordForm.get("password").value,
       oldPassword: this.changePasswordForm.get("oldPassword").value,
       userName: this.changePasswordForm.get("email").value,
-      fullName: "",
-    } as User;
+    };
   }
 
   onNoClick(): void {
