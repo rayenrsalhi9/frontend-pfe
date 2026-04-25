@@ -1,142 +1,189 @@
-<div class="bento-main-container">
+<!-- Survey List - Clean & Elegant Design -->
+<div class="survey-list-container">
   <!-- Header Section -->
-  <div class="header-section">
-    <div class="header-actions">
-      <div class="header-content">
-        <h1 class="page-title">{{ "SURVEY.LIST.TITLE" | translate }}</h1>
-        <p class="page-description">
-          {{ "SURVEY.LIST.DESCRIPTION" | translate }}
-        </p>
-      </div>
-      <button routerLink="/apps/surveys/add" class="btn-create">
-        <i class="feather icon-plus"></i>
-        <span>{{ "SURVEY.BUTTONS.ADD" | translate }}</span>
-      </button>
+  <header class="survey-list-header">
+    <div class="survey-header-left">
+      <h1 class="survey-list-title">{{ "SURVEY.LIST.TITLE" | translate }}</h1>
+      <p class="survey-list-desc">{{ "SURVEY.LIST.DESCRIPTION" | translate }}</p>
     </div>
-  </div>
+    <button routerLink="/apps/surveys/add" class="survey-btn-add">
+      <span>{{ "SURVEY.BUTTONS.ADD" | translate }}</span>
+      <i class="feather icon-plus survey-btn-add__icon"></i>
+    </button>
+  </header>
 
   <!-- Filters Section -->
-  <div class="bento-item filters-section">
-    <div class="filters-grid">
-      <div class="filter-group">
-        <div class="input-modern">
-          <i class="prefix-icon feather icon-search"></i>
-          <input
-            type="text"
-            class="form-control"
-            (input)="onNameChange($event)"
-            [placeholder]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
-            [attr.aria-label]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
-          />
-        </div>
-      </div>
-      <div class="filter-group">
-        <div class="input-modern">
-          <i class="prefix-icon feather icon-calendar"></i>
-          <input
-            type="text"
-            class="form-control"
-            bsDatepicker
-            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
-            (bsValueChange)="onDateChange($event)"
-            [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
-          />
-        </div>
-      </div>
+  <div class="survey-filters">
+    <div class="survey-search-wrapper">
+      <i class="feather icon-search survey-search-icon"></i>
+      <input
+        type="text"
+        class="survey-search-input"
+        (input)="onNameChange($event)"
+        [placeholder]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
+        [attr.aria-label]="'SURVEY.TABLE.SEARCH_BY_TITLE' | translate"
+      />
+    </div>
+    <div class="survey-date-wrapper">
+      <i class="feather icon-calendar survey-date-icon"></i>
+      <input
+        type="text"
+        class="survey-date-input"
+        bsDatepicker
+        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', adaptivePosition: true }"
+        (bsValueChange)="onDateChange($event)"
+        [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
+      />
     </div>
   </div>
 
   <!-- Table Section -->
-  <div class="bento-item table-section">
-    <div class="modern-table-wrapper">
-      <ngx-datatable
-        class="modern-table"
-        [messages]="{
-          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
-          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
-          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
-        }"
-        [rows]="rows"
-        [columnMode]="ColumnMode.force"
-        [headerHeight]="60"
-        [footerHeight]="60"
-        rowHeight="auto"
-        [limit]="10"
+  <div class="survey-table-wrapper">
+    <ngx-datatable
+      class="survey-table"
+      [messages]="{
+        emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+        selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+        totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+      }"
+      [rows]="rows"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="55"
+      [footerHeight]="55"
+      rowHeight="auto"
+      [limit]="10"
+    >
+      <!-- Title Column -->
+      <ngx-datatable-column
+        [name]="'SURVEY.TABLE.TITLE' | translate"
+        prop="title"
+        [flexGrow]="2"
       >
-        <ngx-datatable-column
-          [name]="'SURVEY.TABLE.TITLE' | translate"
-          prop="title"
+        <ng-template
+          let-row="row"
+          ngx-datatable-cell-template
+          let-value="value"
         >
-          <ng-template
-            let-row="row"
-            ngx-datatable-cell-template
-            let-value="value"
+          <span class="survey-cell-title">
+            {{ value }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Statistics Column - Only show if user has claim -->
+      <ngx-datatable-column
+        *ngIf="canViewStats"
+        name="Stats"
+        [sortable]="false"
+        [width]="80"
+      >
+        <ng-template
+          let-row="row"
+          ngx-datatable-cell-template
+        >
+          <a
+            class="survey-btn-stats"
+            [routerLink]="['/apps/surveys', row.id]"
+            title="View Statistics"
           >
-            <a [routerLink]="['/apps/surveys', row.id]" class="text-dark font-weight-bold d-block">
-              {{ value }}
+            <i class="feather icon-bar-chart-2"></i>
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Type Column -->
+      <ngx-datatable-column
+        [name]="'SURVEY.TABLE.TYPE' | translate"
+        prop="type"
+        [width]="120"
+      >
+        <ng-template
+          let-row="row"
+          ngx-datatable-cell-template
+          let-value="value"
+        >
+          <span class="survey-cell-type">{{ value }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Privacy Column -->
+      <ngx-datatable-column
+        [name]="'SURVEY.TABLE.PRIVACY' | translate"
+        prop="privacy"
+        [width]="120"
+      >
+        <ng-template
+          let-row="row"
+          ngx-datatable-cell-template
+          let-value="value"
+        >
+          <span
+            class="survey-cell-privacy"
+            [ngClass]="{
+              'survey-cell-privacy--public': value === 'public',
+              'survey-cell-privacy--private': value === 'private'
+            }"
+          >
+            {{ value }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Creator Column -->
+      <ngx-datatable-column
+        [name]="'SURVEY.TABLE.CREATOR' | translate"
+        prop="creator"
+        [width]="180"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <span *ngIf="value" class="survey-cell-creator">{{ value.firstName }} {{ value.lastName }}</span>
+          <span *ngIf="!value" class="survey-cell-creator-empty">-</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Created Column -->
+      <ngx-datatable-column
+        [name]="'SURVEY.TABLE.CREATED' | translate"
+        prop="createdAt"
+        [width]="130"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <span class="survey-cell-date">{{ value | utcToLocalTime: "shortDate" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- Actions Column -->
+      <ngx-datatable-column
+        *ngIf="canPerformAnyAction"
+        [name]="'SURVEY.TABLE.ACTIONS' | translate"
+        [sortable]="false"
+        [width]="110"
+        cellClass="survey-actions-cell"
+      >
+        <ng-template
+          let-row="row"
+          ngx-datatable-cell-template
+        >
+          <div class="survey-actions">
+            <a
+              *ngIf="canEdit"
+              class="survey-btn-action survey-btn-action--edit"
+              [routerLink]="'/apps/surveys/edit/' + row.id"
+              [title]="'SURVEY.BUTTONS.EDIT' | translate"
+            >
+              <i class="feather icon-edit-2"></i>
             </a>
-            <span
-              class="badge badge-pill mt-1"
-              [ngClass]="{
-                'badge-soft-success': row.status === 'Active',
-                'badge-soft-secondary': row.status === 'Inactive'
-              }"
+            <button
+              *ngIf="canDelete"
+              class="survey-btn-action survey-btn-action--delete"
+              (click)="deleteSurvey(row)"
+              [title]="'SURVEY.BUTTONS.DELETE' | translate"
             >
-              {{ row.status }}
-            </span>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column
-          [name]="'SURVEY.TABLE.CREATED' | translate"
-          prop="createdAt"
-        >
-          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-            <span class="badge badge-soft-primary">{{ value | utcToLocalTime: "shortDate" }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column
-          [name]="'SURVEY.TABLE.ACTIONS' | translate"
-          [sortable]="false"
-          cellClass="overflow-visible"
-        >
-          <ng-template
-            let-row="row"
-            ngx-datatable-cell-template
-          >
-            <div
-              class="btn-group"
-              dropdown
-              [insideClick]="true"
-              container="body"
-            >
-              <button dropdownToggle type="button" class="btn-action-trigger">
-                <i class="feather icon-more-horizontal"></i>
-              </button>
-              <div
-                *dropdownMenu
-                class="dropdown-menu dropdown-menu-right dropdown-menu-modern"
-                role="menu"
-              >
-                <button
-                  class="dropdown-item-modern"
-                  [routerLink]="'/apps/surveys/edit/' + row.id"
-                >
-                  <i class="feather icon-edit-2 text-info"></i>
-                  <span>{{ "SURVEY.BUTTONS.EDIT" | translate }}</span>
-                </button>
-                <div class="dropdown-divider-modern"></div>
-                <button
-                  class="dropdown-item-modern text-danger"
-                  (click)="deleteSurvey(row)"
-                >
-                  <i class="feather icon-trash-2"></i>
-                  <span>{{ "SURVEY.BUTTONS.DELETE" | translate }}</span>
-                </button>
-              </div>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
+              <i class="feather icon-trash-2"></i>
+            </button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>

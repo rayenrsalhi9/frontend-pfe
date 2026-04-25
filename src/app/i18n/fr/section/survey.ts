@@ -6,9 +6,11 @@ export const survey = {
     },
     TABLE: {
       TITLE: "Titre",
+      STATS: "Statistiques",
       DESCRIPTION: "Description",
       TYPE: "Type",
       CATEGORY: "Catégorie",
+      PRIVACY: "Confidentialité",
       CREATOR: "Créateur",
       TOTAL: "Total",
       CREATED: "Créé le",
@@ -23,6 +25,7 @@ export const survey = {
       ADD: "Ajouter un sondage",
       EDIT: "Modifier",
       DELETE: "Supprimer",
+      STATS: "Statistiques",
     },
     ADD: {
       LABELS: {

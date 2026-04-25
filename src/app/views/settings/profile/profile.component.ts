@@ -17,6 +17,17 @@ import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
 import { environment } from "src/environments/environment";
 
+interface UserData {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  phoneNumber?: string;
+  email?: string;
+  userName?: string;
+  avatar?: any;
+}
+
 interface UpdateUserProfilePayload {
   id: string;
   firstName: string;
@@ -25,6 +36,7 @@ interface UpdateUserProfilePayload {
   userName: string;
   email: string;
   avatar: string | null;
+  fullName?: string;
 }
 
 interface ProfileFormValues {
@@ -34,7 +46,9 @@ interface ProfileFormValues {
 }
 
 function isCommonError(response: any): response is CommonError {
-  return response && typeof response === "object" && "friendlyMessage" in response;
+  return (
+    response && typeof response === "object" && "friendlyMessage" in response
+  );
 }
 
 @Component({
@@ -67,7 +81,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private buildAvatarPreview(avatar: string | null | undefined): string | null {
     if (!avatar) return null;
     if (avatar.startsWith("data:image")) return avatar;
-    if (avatar.startsWith("http://") || avatar.startsWith("https://")) return avatar;
+    if (avatar.startsWith("http://") || avatar.startsWith("https://"))
+      return avatar;
     return this.hostBase + avatar;
   }
 
@@ -200,7 +215,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     this.user = userAuth;
-    const userData = userAuth.user ?? {};
+    const userData: UserData = userAuth.user ?? {
+      id: "",
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      userName: "",
+      avatar: null,
+    };
 
     this.userForm.patchValue({
       id: userData.id || "",
@@ -320,6 +343,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private prepareFormData(): UpdateUserProfilePayload {
     const formValue = this.userForm.getRawValue();
+    const fullName = [formValue.firstName, formValue.lastName]
+      .filter((name) => name && name.trim())
+      .join(" ")
+      .trim();
     return {
       id: formValue.id,
       firstName: formValue.firstName,
@@ -328,13 +355,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
       userName: formValue.email,
       email: formValue.email,
       avatar: this.newPicture || null,
+      fullName: fullName || undefined,
     };
   }
 
   private updateLocalUser(userData: any): void {
     if (!this.user) return;
 
-    this.user.user = this.user.user ?? {};
+    if (!this.user.user) {
+      this.user.user = {
+        id: "",
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        email: "",
+        userName: "",
+        avatar: null,
+        fullName: "",
+      };
+    }
     const target = this.user.user;
 
     target.firstName = userData.firstName;

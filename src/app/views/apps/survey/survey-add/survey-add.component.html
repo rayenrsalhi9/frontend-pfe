@@ -139,10 +139,15 @@
               [multiple]="true"
               [placeholder]="'ADD.SURVEY.PLACEHOLDERS.USERS' | translate"
               [labelForId]="'users'"
+              [compareWith]="compareUsersById"
             >
-              <ng-option *ngFor="let user of users" [value]="user.id">
+              <ng-option *ngFor="let user of users" [value]="user">
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <span class="ng-value-icon left" (click)="clear(item)" style="margin-right: 5px;">&times;</span>
+                <span>{{ item.firstName }} {{ item.lastName }}</span>
+              </ng-template>
             </ng-select>
           </div>
         </div>

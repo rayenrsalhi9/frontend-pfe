@@ -1,80 +1,57 @@
-import { Injectable, NgModule } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, NgModule } from "@angular/core";
+import { Observable } from "rxjs";
 import {
   HttpEvent,
   HttpInterceptor,
   HttpHandler,
   HttpRequest,
   HttpErrorResponse,
-} from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
+} from "@angular/common/http";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { tap } from "rxjs/operators";
+import { Router } from "@angular/router";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-  /**
-   *
-   */
-  constructor(
-    private router: Router,
-    private toastrService: ToastrService,
-  ) {}
+  constructor(private router: Router) {}
+
+  private handleApiError(err: HttpErrorResponse): void {
+    if (err.status === 401) {
+      this.router.navigate(["login"]);
+    }
+  }
+
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('bearerToken');
-    const guestToken = localStorage.getItem('guestToken')
+    const token = localStorage.getItem("bearerToken");
+    const guestToken = localStorage.getItem("guestToken");
     const baseUrl = environment.apiUrl;
-    if (req.url.lastIndexOf('i18n') > -1) {
+    if (req.url.lastIndexOf("i18n") > -1) {
       return next.handle(req);
     }
-    let url = req.url.lastIndexOf('api') > -1 ? req.url : 'api/' + req.url;
+    let url = req.url.lastIndexOf("api") > -1 ? req.url : "api/" + req.url;
     const lastChar = url.substring(url.length - 1);
-    if (lastChar == '/') {
+    if (lastChar == "/") {
       url = url.substring(0, url.length - 1);
     }
     if (token || guestToken) {
-      let usedToken = token?token:guestToken
+      let usedToken = token ? token : guestToken;
       const newReq = req.clone({
-        headers: req.headers.set('Authorization', 'Bearer ' + usedToken),
+        headers: req.headers.set("Authorization", "Bearer " + usedToken),
         url: `${baseUrl}${url}`,
       });
       return next.handle(newReq).pipe(
         tap(
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           () => {},
           (err: any) => {
             if (err instanceof HttpErrorResponse) {
-              if (err.status === 401) {
-                this.router.navigate(['login']);
-              } else if (err.status === 403) {
-                this.toastrService.error(
-                  `you don't have permission to perform this access.`
-                );
-              } else if (
-                err.error &&
-                Array.isArray(err.error) &&
-                err.error.length >= 0
-              ) {
-                this.toastrService.error(err.error[0]);
-              } else if (err.error && Object.entries(err.error)?.length > 0) {
-                const errors = [];
-                for (const [key, value] of Object.entries(err.error)) {
-                  if (value) {
-                    errors.push(value);
-                  }
-                }
-                //this.toastrService.error(errors.join('\n'));
-              } else if (err.message) {
-                this.toastrService.error(err.message);
-              }
+              this.handleApiError(err);
             }
-          }
-        )
+          },
+        ),
       );
     } else {
       const newReq = req.clone({
@@ -82,22 +59,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       });
       return next.handle(newReq).pipe(
         tap(
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           () => {},
           (err: any) => {
             if (err instanceof HttpErrorResponse) {
-              if (err.status === 401) {
-                this.router.navigate(['login']);
-              } else if (err.status === 403) {
-                this.toastrService.error(
-                  `you don't have permission to perform this access.`
-                );
-              } else if (err.status === 409) {
-                this.toastrService.error(err.error.messages[0]);
-              }
+              this.handleApiError(err);
             }
-          }
-        )
+          },
+        ),
       );
     }
   }

@@ -15,6 +15,7 @@ import {
   first,
 } from "rxjs/operators";
 import { SurveyResource } from "@app/shared/enums/survey-resource";
+import { SecurityService } from "@app/core/security/security.service";
 
 @Component({
   selector: "app-survey-list",
@@ -33,8 +34,12 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   bsModalRef: BsModalRef;
   surveyResource: SurveyResource;
   searchSubject: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject<void>();
   isLoadingResults = false;
-  private destroy$ = new Subject<void>();
+  canViewStats = false;
+  canEdit = false;
+  canDelete = false;
+  canPerformAnyAction = false;
 
   constructor(
     private surveyService: SurveyService,
@@ -42,11 +47,17 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private translateService: TranslateService,
     private toastr: ToastrService,
+    private securityService: SecurityService,
   ) {
     this.surveyResource = new SurveyResource();
   }
 
   ngOnInit(): void {
+    this.canViewStats = this.securityService.hasClaim('SURVEY_VIEW_STATISTICS');
+    this.canEdit = this.securityService.hasClaim('SURVEY_EDIT_SURVEY');
+    this.canDelete = this.securityService.hasClaim('SURVEY_DELETE_SURVEY');
+    this.canPerformAnyAction = this.canEdit || this.canDelete;
+
     this.searchSubject
       .pipe(
         debounceTime(300),
@@ -148,5 +159,9 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.surveyResource.createdAt = event ? new Date(event).toDateString() : "";
     this.surveyResource.skip = 0;
     this.searchSubject.next();
+  }
+
+  hasClaim(claimType: string): boolean {
+    return this.securityService.hasClaim(claimType);
   }
 }

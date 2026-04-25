@@ -275,6 +275,7 @@ export class SecurityService {
         phoneNumber: "",
         userName: "",
         email: "",
+        fullName: "",
       },
       status: "",
       authorisation: {
