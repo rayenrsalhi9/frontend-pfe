@@ -1,7 +1,7 @@
-<div class="card" *ngIf="!isLoading">
+<div class="card" *ngIf="!isLoading && survey">
   <div class="card-header">
     <h4 class="mb-0">{{ survey?.title }}</h4>
-    <span class="badge" [ngClass]="{'badge-success': survey?.privacy === 'public', 'badge-primary': survey?.privacy === 'private'}">
+    <span class="badge" [ngClass]="{'bg-success': survey?.privacy === 'public', 'bg-primary': survey?.privacy === 'private'}">
       {{ ('SURVEY.PRIVACY.' + (survey?.privacy | uppercase)) | translate }}
     </span>
   </div>
@@ -50,6 +50,8 @@
 
 <div class="card" *ngIf="isLoading">
   <div class="card-body loading-state">
-    <div class="spinner-border"></div>
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">{{ 'SURVEY.DETAIL.LOADING' | translate }}</span>
+    </div>
   </div>
 </div>

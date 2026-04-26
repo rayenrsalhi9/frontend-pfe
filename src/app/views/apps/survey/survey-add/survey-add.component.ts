@@ -55,7 +55,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private checkEditMode(): Promise<void> {
+  private checkEditMode(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.activatedRoute.paramMap.pipe(take(1)).subscribe({
         next: (params) => {
@@ -63,9 +63,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
           if (id) {
             this.isEdit = true;
             this.surveyId = id;
-            this.loadSurvey(id);
+            this.loadSurvey(id).then(() => resolve(true)).catch((err) => reject(err));
+          } else {
+            resolve(false);
           }
-          resolve();
         },
         error: (err) => {
           console.error("Error checking edit mode:", err);
@@ -75,10 +76,11 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadSurvey(id: string): void {
-    this.isLoading = true;
-    this.surveyService
-      .getSurvey(id)
+  private loadSurvey(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.isLoading = true;
+      this.surveyService
+        .getSurvey(id)
       .pipe(
         takeUntil(this.destroy$),
         switchMap((data: any) => {
@@ -116,6 +118,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
             users: selectedUsers,
           });
           this.cdr.markForCheck();
+          resolve();
         },
         error: (err) => {
           this.isLoading = false;
@@ -124,8 +127,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
             this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
           );
           this.cdr.markForCheck();
+          reject(err);
         },
       });
+    });
   }
 
   loadUsers() {
@@ -184,9 +189,9 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
 
-      const currentUserId = this.securityService.securityObject?.user?.id;
       let users = formValue.users?.map((u: User) => u.id) || [];
-      if (currentUserId && !users.includes(currentUserId)) {
+      const currentUserId = this.securityService.securityObject?.user?.id;
+      if (formValue.private && currentUserId && !users.includes(currentUserId)) {
         users = [currentUserId, ...users];
       }
       const requestData = {

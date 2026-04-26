@@ -35,6 +35,7 @@ import {
 import { SurveyService } from "../survey.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -85,6 +86,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private translate: TranslateService,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +103,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((params) => params.get("id")),
-        switchMap((id) => this.surveyService.getSurveyWithDetails(id)),
+        switchMap((id) => this.surveyService.getSurvey(id)),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -111,8 +113,12 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
           this.getStatistics();
           this.cdr.markForCheck();
         },
-        error: () => {
+        error: (err) => {
           this.isLoading = false;
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+            err?.message || ""
+          );
           this.cdr.markForCheck();
         },
       });
@@ -120,11 +126,12 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
   getStatistics() {
     if (!this.survey?.id) return;
-    
+
     this.surveyService
       .getStatistics(this.survey.id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: any) => {
+      .subscribe({
+        next: (data: any) => {
         const months = {
           fr_FR: [
             "Janvier",
@@ -364,7 +371,6 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
                 },
                 animations: {
                   enabled: true,
-                  easing: "easeinout",
                   speed: 800,
                   animateGradually: {
                     enabled: true,
@@ -379,7 +385,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
                   columnWidth: "55%",
                   distributed: false,
                   barHeight: "70%",
-                  endingShape: "rounded",
+                  borderRadius: 4,
                   dataLabels: {
                     position: "top",
                   },
@@ -474,22 +480,6 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
               fill: {
                 opacity: 0.95,
                 type: "solid",
-                gradient: {
-                  shade: "light",
-                  type: "horizontal",
-                  shadeIntensity: 0.15,
-                  gradientToColors: undefined,
-                  inverseColors: false,
-                  opacityFrom: 1,
-                  opacityTo: 1,
-                  stops: [0, 100],
-                },
-                pattern: {
-                  style: "slantedLines",
-                  width: 6,
-                  height: 6,
-                  strokeWidth: 2,
-                },
               },
               tooltip: {
                 theme: "light",
@@ -526,8 +516,6 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
                   useSeriesColors: false,
                 },
                 markers: {
-                  width: 12,
-                  height: 12,
                   radius: 3,
                   offsetX: 0,
                   offsetY: 2,
@@ -542,6 +530,15 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
 
         this.cdr.markForCheck();
         this.cdr.detectChanges();
-      });
+      },
+      error: (err) => {
+        console.error("Error loading statistics:", err);
+        this.toastr.error(
+          this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          err?.message || ""
+        );
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

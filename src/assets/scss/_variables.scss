@@ -64,6 +64,40 @@ $theme-colors: (
   "dark": $dark,
 );
 
+// Required for Bootstrap 5 utilities
+$theme-colors-rgb: (
+  "primary": to-rgb($primary),
+  "secondary": to-rgb($secondary),
+  "success": to-rgb($success),
+  "info": to-rgb($info),
+  "warning": to-rgb($warning),
+  "danger": to-rgb($danger),
+  "light": to-rgb($light),
+  "dark": to-rgb($dark),
+);
+
+$utilities-border-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+);
+
+$utilities-border-subtle: (
+  "primary": rgba($primary, 0.5),
+  "secondary": rgba($secondary, 0.5),
+  "success": rgba($success, 0.5),
+  "info": rgba($info, 0.5),
+  "warning": rgba($warning, 0.5),
+  "danger": rgba($danger, 0.5),
+  "light": rgba($light, 0.5),
+  "dark": rgba($dark, 0.5),
+);
+
 // Semantic Theme Variables
 // Note: $background-primary and $text-on-primary are canonical.
 // Previously aliased vars $color-primary and $color-on-primary have been removed.

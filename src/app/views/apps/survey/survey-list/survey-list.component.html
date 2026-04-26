@@ -159,6 +159,7 @@
               class="survey-btn-action survey-btn-action--edit"
               [routerLink]="'/apps/surveys/edit/' + row.id"
               [title]="'SURVEY.BUTTONS.EDIT' | translate"
+              [attr.aria-label]="'SURVEY.BUTTONS.EDIT' | translate"
             >
               <i class="feather icon-edit-2"></i>
             </a>
@@ -167,6 +168,7 @@
               class="survey-btn-action survey-btn-action--delete"
               (click)="deleteSurvey(row)"
               [title]="'SURVEY.BUTTONS.DELETE' | translate"
+              [attr.aria-label]="'SURVEY.BUTTONS.DELETE' | translate"
             >
               <i class="feather icon-trash-2"></i>
             </button>
@@ -175,6 +177,7 @@
               class="survey-btn-action survey-btn-action--stats"
               [routerLink]="['/apps/surveys', row.id]"
               [title]="'SURVEY.BUTTONS.STATS' | translate"
+              [attr.aria-label]="'SURVEY.BUTTONS.STATS' | translate"
             >
               <i class="feather icon-eye"></i>
             </a>

@@ -33,13 +33,6 @@ export class SurveyService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getSurveyWithDetails(id:any): Observable<any | CommonError> {
-    const url = `surveys/get/${id}`;
-    return this.httpClient
-      .get<any>(url)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
-  }
-
   getLatestSurvey(): Observable<any[] | CommonError> {
     const url = `surveys/latest`;
     return this.httpClient

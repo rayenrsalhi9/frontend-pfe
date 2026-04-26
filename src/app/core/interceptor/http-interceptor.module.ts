@@ -18,7 +18,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
   private handleApiError(err: HttpErrorResponse): void {
     if (err.status === 401) {
-      this.router.navigate(["login"]);
+      const currentUrl = this.router.url;
+      this.router.navigate(["login"], { queryParams: { returnUrl: currentUrl } });
     }
   }
 
@@ -52,10 +53,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     }
 
     return next.handle(newReq).pipe(
-      tap((err: any) => {
-        if (err instanceof HttpErrorResponse) {
-          this.handleApiError(err);
-        }
+      tap({
+        error: (err: any) => {
+          if (err instanceof HttpErrorResponse) {
+            this.handleApiError(err);
+          }
+        },
       }),
     );
   }
