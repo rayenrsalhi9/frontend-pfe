@@ -5,7 +5,7 @@ import { SurveyService } from "../survey.service";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { Subject, of } from "rxjs";
+import { Subject, of, Subscription } from "rxjs";
 import {
   debounceTime,
   switchMap,
@@ -34,7 +34,8 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   bsModalRef: BsModalRef;
   surveyResource: SurveyResource;
   searchSubject: Subject<void> = new Subject<void>();
-  destroy$: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
+  private claimsSubscription?: Subscription;
   isLoadingResults = false;
   canViewStats = false;
   canEdit = false;
@@ -53,9 +54,20 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canViewStats = this.securityService.hasClaim('SURVEY_VIEW_STATISTICS');
-    this.canEdit = this.securityService.hasClaim('SURVEY_EDIT_SURVEY');
-    this.canDelete = this.securityService.hasClaim('SURVEY_DELETE_SURVEY');
+    this.claimsSubscription = this.securityService.SecurityObject.subscribe(
+      () => {
+        this.canViewStats = this.securityService.hasClaim(
+          "SURVEY_VIEW_STATISTICS",
+        );
+        this.canEdit = this.securityService.hasClaim("SURVEY_EDIT_SURVEY");
+        this.canDelete = this.securityService.hasClaim("SURVEY_DELETE_SURVEY");
+        this.canPerformAnyAction = this.canEdit || this.canDelete;
+      },
+    );
+
+    this.canViewStats = this.securityService.hasClaim("SURVEY_VIEW_STATISTICS");
+    this.canEdit = this.securityService.hasClaim("SURVEY_EDIT_SURVEY");
+    this.canDelete = this.securityService.hasClaim("SURVEY_DELETE_SURVEY");
     this.canPerformAnyAction = this.canEdit || this.canDelete;
 
     this.searchSubject
@@ -88,6 +100,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.claimsSubscription?.unsubscribe();
   }
 
   getAllSurveys(data = this.surveyResource) {
@@ -159,9 +172,5 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.surveyResource.createdAt = event ? new Date(event).toDateString() : "";
     this.surveyResource.skip = 0;
     this.searchSubject.next();
-  }
-
-  hasClaim(claimType: string): boolean {
-    return this.securityService.hasClaim(claimType);
   }
 }

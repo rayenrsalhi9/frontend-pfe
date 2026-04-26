@@ -30,6 +30,7 @@ import {
   ApexXAxis,
   ApexYAxis,
   ChartComponent,
+  ApexGrid,
 } from "ng-apexcharts";
 import { SurveyService } from "../survey.service";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -46,21 +47,36 @@ export type ChartOptions = {
   tooltip: ApexTooltip;
   stroke: ApexStroke;
   legend: ApexLegend;
+  grid: ApexGrid;
+  colors?: string[];
 };
 
 @Component({
   selector: "app-survey-detail",
   templateUrl: "./survey-detail.component.html",
-  styleUrls: [],
+  styleUrls: ["./survey-detail.component.scss"],
   host: {
     "[class.card]": "true",
   },
 })
 export class SurveyDetailComponent implements OnInit, OnDestroy {
   @ViewChild("overviewChart") chart: ChartComponent;
-  public overviewChartOptions: Partial<ChartOptions>;
+  public overviewChartOptions: Partial<ChartOptions> = {
+    series: [],
+    chart: { type: "bar" },
+    dataLabels: {},
+    plotOptions: {},
+    yaxis: {},
+    xaxis: {},
+    fill: {},
+    tooltip: {},
+    stroke: {},
+    legend: {},
+  };
 
   overviewData: OverviewDataRating;
+  survey: any;
+  isLoading = true;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -72,7 +88,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getSurvey();
+    this.getSurveyDetails();
   }
 
   ngOnDestroy(): void {
@@ -80,14 +96,34 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  getSurvey() {
+  getSurveyDetails() {
     this.activeRoute.paramMap
       .pipe(
         takeUntil(this.destroy$),
         map((params) => params.get("id")),
-        switchMap((id) => this.surveyService.getStatistics(id)),
+        switchMap((id) => this.surveyService.getSurveyWithDetails(id)),
         takeUntil(this.destroy$),
       )
+      .subscribe({
+        next: (data: any) => {
+          this.survey = data;
+          this.isLoading = false;
+          this.getStatistics();
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  getStatistics() {
+    if (!this.survey?.id) return;
+    
+    this.surveyService
+      .getStatistics(this.survey.id)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data: any) => {
         const months = {
           fr_FR: [
@@ -317,19 +353,188 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
               chart: {
                 ...ApexChartDefault,
                 type: "bar",
-                height: 350,
-              },
-              plotOptions: ApexBarDefault,
-              dataLabels: ApexDataLabelDefault,
-              stroke: { show: true, width: 2, colors: ["transparent"] },
-              xaxis: { categories: this.overviewData.duration },
-              yaxis: { title: { text: "" } },
-              fill: { opacity: 1 },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return "" + val + "";
+                height: 380,
+                foreColor: "#64748b",
+                background: "transparent",
+                toolbar: {
+                  show: false,
+                },
+                sparkline: {
+                  enabled: false,
+                },
+                animations: {
+                  enabled: true,
+                  easing: "easeinout",
+                  speed: 800,
+                  animateGradually: {
+                    enabled: true,
+                    delay: 150,
                   },
+                },
+                fontFamily: "Cairo, Inter, sans-serif",
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  columnWidth: "55%",
+                  distributed: false,
+                  barHeight: "70%",
+                  endingShape: "rounded",
+                  dataLabels: {
+                    position: "top",
+                  },
+                },
+              },
+              colors: [COLOR_1, COLOR_4, COLOR_3, COLOR_2, COLOR_5],
+              dataLabels: {
+                enabled: true,
+                formatter: function (val: number) {
+                  return val > 0 ? val.toString() : "";
+                },
+                textAnchor: "middle",
+                offsetY: -8,
+                style: {
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  colors: ["#fff"],
+                },
+                dropShadow: {
+                  enabled: false,
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+                lineCap: "round",
+                curve: "smooth",
+              },
+              grid: {
+                show: true,
+                borderColor: "#e2e8f0",
+                strokeDashArray: 4,
+                xaxis: {
+                  lines: {
+                    show: false,
+                  },
+                },
+                yaxis: {
+                  lines: {
+                    show: true,
+                  },
+                },
+                padding: {
+                  top: 0,
+                  right: 8,
+                  bottom: 0,
+                  left: 8,
+                },
+              },
+              xaxis: {
+                categories: this.overviewData.duration,
+                axisBorder: {
+                  show: true,
+                  color: "#e2e8f0",
+                  offsetX: 0,
+                  offsetY: 0,
+                },
+                axisTicks: {
+                  show: false,
+                },
+                labels: {
+                  style: {
+                    colors: "#64748b",
+                    fontSize: "11px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                    fontWeight: 500,
+                  },
+                },
+              },
+              yaxis: {
+                title: {
+                  text: "",
+                  style: {
+                    color: "#64748b",
+                    fontSize: "12px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                    fontWeight: 500,
+                  },
+                },
+                labels: {
+                  style: {
+                    colors: "#64748b",
+                    fontSize: "11px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                  },
+                  formatter: function (val: number) {
+                    return Math.round(val).toString();
+                  },
+                },
+              },
+              fill: {
+                opacity: 0.95,
+                type: "solid",
+                gradient: {
+                  shade: "light",
+                  type: "horizontal",
+                  shadeIntensity: 0.15,
+                  gradientToColors: undefined,
+                  inverseColors: false,
+                  opacityFrom: 1,
+                  opacityTo: 1,
+                  stops: [0, 100],
+                },
+                pattern: {
+                  style: "slantedLines",
+                  width: 6,
+                  height: 6,
+                  strokeWidth: 2,
+                },
+              },
+              tooltip: {
+                theme: "light",
+                shared: true,
+                intersect: false,
+                x: {
+                  show: true,
+                },
+                y: {
+                  formatter: function (val: number) {
+                    return val.toString();
+                  },
+                  title: {
+                    formatter: function () {
+                      return "";
+                    },
+                  },
+                },
+                marker: {
+                  show: true,
+                },
+              },
+              legend: {
+                show: true,
+                position: "top",
+                horizontalAlign: "center",
+                floating: false,
+                offsetY: 16,
+                fontSize: "12px",
+                fontWeight: 600,
+                fontFamily: "Cairo, Inter, sans-serif",
+                labels: {
+                  colors: "#64748b",
+                  useSeriesColors: false,
+                },
+                markers: {
+                  width: 12,
+                  height: 12,
+                  radius: 3,
+                  offsetX: 0,
+                  offsetY: 2,
+                },
+                itemMargin: {
+                  horizontal: 12,
+                  vertical: 8,
                 },
               },
             };

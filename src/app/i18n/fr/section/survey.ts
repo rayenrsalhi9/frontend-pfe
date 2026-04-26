@@ -91,5 +91,19 @@ export const survey = {
       ACTIVE: "Actif",
       INACTIVE: "Inactif",
     },
+    PRIVACY: {
+      PUBLIC: "Public",
+      PRIVATE: "Privé",
+    },
+    TYPE: {
+      SIMPLE: "Simple",
+      RATING: "Évaluation",
+      SATISFACTION: "Satisfaction",
+    },
+    DETAIL: {
+      TITLE: "Détails du sondage",
+      ANSWERS: "Réponses",
+      NO_DATA: "Aucune donnée disponible",
+    },
   },
 };

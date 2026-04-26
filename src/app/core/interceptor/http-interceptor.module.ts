@@ -37,37 +37,27 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     if (lastChar == "/") {
       url = url.substring(0, url.length - 1);
     }
+
+    let newReq: HttpRequest<any>;
     if (token || guestToken) {
       let usedToken = token ? token : guestToken;
-      const newReq = req.clone({
+      newReq = req.clone({
         headers: req.headers.set("Authorization", "Bearer " + usedToken),
         url: `${baseUrl}${url}`,
       });
-      return next.handle(newReq).pipe(
-        tap(
-          () => {},
-          (err: any) => {
-            if (err instanceof HttpErrorResponse) {
-              this.handleApiError(err);
-            }
-          },
-        ),
-      );
     } else {
-      const newReq = req.clone({
+      newReq = req.clone({
         url: `${baseUrl}${url}`,
       });
-      return next.handle(newReq).pipe(
-        tap(
-          () => {},
-          (err: any) => {
-            if (err instanceof HttpErrorResponse) {
-              this.handleApiError(err);
-            }
-          },
-        ),
-      );
     }
+
+    return next.handle(newReq).pipe(
+      tap((err: any) => {
+        if (err instanceof HttpErrorResponse) {
+          this.handleApiError(err);
+        }
+      }),
+    );
   }
 }
 

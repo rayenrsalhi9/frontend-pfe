@@ -2,14 +2,13 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SurveyService } from "../survey.service";
-import { Subject, of, forkJoin } from "rxjs";
-import { takeUntil, switchMap, catchError, map } from "rxjs/operators";
+import { Subject, of } from "rxjs";
+import { takeUntil, switchMap, catchError, map, take } from "rxjs/operators";
 import { CommonService } from "@app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
-import { EMPTY } from "rxjs";
 
 type SurveyType = "simple" | "rating" | "satisfaction";
 
@@ -57,10 +56,9 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
   }
 
   private checkEditMode(): Promise<void> {
-    return new Promise((resolve) => {
-      this.activatedRoute.paramMap
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((params) => {
+    return new Promise((resolve, reject) => {
+      this.activatedRoute.paramMap.pipe(take(1)).subscribe({
+        next: (params) => {
           const id = params.get("id");
           if (id) {
             this.isEdit = true;
@@ -68,7 +66,12 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
             this.loadSurvey(id);
           }
           resolve();
-        });
+        },
+        error: (err) => {
+          console.error("Error checking edit mode:", err);
+          reject(err);
+        },
+      });
     });
   }
 
@@ -181,7 +184,11 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
 
-      const users = formValue.users?.map((u: User) => u.id) || [];
+      const currentUserId = this.securityService.securityObject?.user?.id;
+      let users = formValue.users?.map((u: User) => u.id) || [];
+      if (currentUserId && !users.includes(currentUserId)) {
+        users = [currentUserId, ...users];
+      }
       const requestData = {
         title: formValue.title,
         type: formValue.type,

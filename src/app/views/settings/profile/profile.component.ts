@@ -223,6 +223,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       email: "",
       userName: "",
       avatar: null,
+      fullName: "",
     };
 
     this.userForm.patchValue({
@@ -380,6 +381,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     target.lastName = userData.lastName;
     target.phoneNumber = userData.phoneNumber;
     target.avatar = userData.avatar;
+    target.fullName = userData.fullName || `${userData.firstName} ${userData.lastName}`.trim();
 
     this.avatar = userData.avatar;
     this.avatarPreview = this.buildAvatarPreview(userData.avatar);

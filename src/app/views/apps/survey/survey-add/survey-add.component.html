@@ -145,7 +145,7 @@
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
               <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <span class="ng-value-icon left" (click)="clear(item)" style="margin-right: 5px;">&times;</span>
+                <button type="button" class="ng-value-icon left" (click)="clear(item)" (keydown.enter)="clear(item); $event.preventDefault()" (keydown.space)="clear(item); $event.preventDefault()" [attr.aria-label]="'Remove ' + item.firstName + ' ' + item.lastName" style="margin-right: 5px;">&times;</button>
                 <span>{{ item.firstName }} {{ item.lastName }}</span>
               </ng-template>
             </ng-select>

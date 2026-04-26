@@ -91,5 +91,19 @@ export const survey = {
       ACTIVE: "نشط",
       INACTIVE: "غير نشط",
     },
+    PRIVACY: {
+      PUBLIC: "عام",
+      PRIVATE: "خاص",
+    },
+    TYPE: {
+      SIMPLE: "بسيط",
+      RATING: "تقييم",
+      SATISFACTION: "رضا",
+    },
+    DETAIL: {
+      TITLE: "تفاصيل الاستطلاع",
+      ANSWERS: "الإجابات",
+      NO_DATA: "لا تتوفر بيانات",
+    },
   },
 };
