@@ -109,6 +109,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           this.survey = data;
+          this.survey.answersCount = this.survey.answers_count;
           this.isLoading = false;
           this.getStatistics();
           this.cdr.markForCheck();
@@ -116,8 +117,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.isLoading = false;
           this.toastr.error(
-            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
-            err?.message || ""
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR")
           );
           this.cdr.markForCheck();
         },
@@ -199,8 +199,6 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
         const three: number[] = [];
         const four: number[] = [];
         const five: number[] = [];
-
-        data.sort((a, b) => a.month - b.month);
 
         const safeLang = normalizeLang(this.translate.currentLang);
         const monthLabels = months[safeLang] || months["en_US"];
@@ -285,21 +283,26 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
         this.translate
           .get("SURVEY.CHART")
           .pipe(takeUntil(this.destroy$))
-          .subscribe((translatedMessage: string) => {
+          .subscribe((translatedMessage: any) => {
             const safeType = type || "simple";
+            const typeKey = safeType.toUpperCase();
+            const defaults: Record<string, Record<string, string>> = {
+              SIMPLE: { ZERO_STARS: "0 Stars", ONE_STARS: "1 Star" },
+              RATING: { ONE_STARS: "1 Star", TWO_STARS: "2 Stars", THREE_STARS: "3 Stars", FOUR_STARS: "4 Stars", FIVE_STARS: "5 Stars" },
+              SATISFACTION: { ZERO_STARS: "Unsatisfied", ONE_STARS: "Neutral", TWO_STARS: "Satisfied" }
+            };
+            const getLabel = (key: string) => translatedMessage?.[typeKey]?.[key] || defaults[safeType]?.[key] || key;
             this.overviewChartOptions = {
               series:
                 safeType == "simple"
                   ? [
                       {
-                        name: translatedMessage[safeType.toUpperCase()]
-                          .ZERO_STARS,
+                        name: getLabel("ZERO_STARS"),
                         data: this.overviewData.zero,
                         color: COLOR_1,
                       },
                       {
-                        name: translatedMessage[safeType.toUpperCase()]
-                          .ONE_STARS,
+                        name: getLabel("ONE_STARS"),
                         data: this.overviewData.one,
                         color: COLOR_2,
                       },
@@ -307,52 +310,44 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
                   : safeType == "rating"
                     ? [
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ONE_STARS,
+                          name: getLabel("ONE_STARS"),
                           data: this.overviewData.one,
                           color: COLOR_4,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .TWO_STARS,
+                          name: getLabel("TWO_STARS"),
                           data: this.overviewData.two,
                           color: COLOR_5,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .THREE_STARS,
+                          name: getLabel("THREE_STARS"),
                           data: this.overviewData.three,
                           color: COLOR_3,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .FOUR_STARS,
+                          name: getLabel("FOUR_STARS"),
                           data: this.overviewData.four,
                           color: COLOR_1,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .FIVE_STARS,
+                          name: getLabel("FIVE_STARS"),
                           data: this.overviewData.five,
                           color: COLOR_2,
                         },
                       ]
                     : [
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ZERO_STARS,
+                          name: getLabel("ZERO_STARS"),
                           data: this.overviewData.zero,
                           color: COLOR_5,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ONE_STARS,
+                          name: getLabel("ONE_STARS"),
                           data: this.overviewData.one,
                           color: COLOR_3,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .TWO_STARS,
+                          name: getLabel("TWO_STARS"),
                           data: this.overviewData.two,
                           color: COLOR_2,
                         },
@@ -529,13 +524,11 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
           });
 
         this.cdr.markForCheck();
-        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Error loading statistics:", err);
         this.toastr.error(
-          this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
-          err?.message || ""
+          this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR")
         );
         this.cdr.markForCheck();
       },

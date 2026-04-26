@@ -47,7 +47,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
       if (!this.isEdit) {
         this.loadUsers();
       }
-    });
+    }).catch(() => {});
   }
 
   ngOnDestroy(): void {

@@ -51,7 +51,6 @@
       [headerHeight]="55"
       [footerHeight]="55"
       rowHeight="auto"
-      [limit]="10"
     >
       <!-- Title Column -->
       <ngx-datatable-column
@@ -117,10 +116,10 @@
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
           <ng-container *ngIf="value">
             <ng-container *ngIf="value.firstName || value.lastName; else fallbackName">
-              <span class="survey-cell-creator">{{ value.firstName }} {{ value.lastName }}</span>
+              <span class="survey-cell-creator">{{ formatCreatorName(value) }}</span>
             </ng-container>
             <ng-template #fallbackName>
-              <span *ngIf="value.fullName; else emptyCreator" class="survey-cell-creator">{{ value.fullName }}</span>
+              <span *ngIf="value.fullName; else emptyCreator" class="survey-cell-creator">{{ formatCreatorName(value) }}</span>
             </ng-template>
             <ng-template #emptyCreator>
               <span class="survey-cell-creator-empty">-</span>

@@ -173,4 +173,9 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.surveyResource.skip = 0;
     this.searchSubject.next();
   }
+
+  formatCreatorName(value: any): string {
+    if (!value) return "-";
+    return [value.firstName, value.lastName].filter(Boolean).join(" ") || value.fullName || "-";
+  }
 }

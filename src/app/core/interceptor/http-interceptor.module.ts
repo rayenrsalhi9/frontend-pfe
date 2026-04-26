@@ -19,7 +19,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   private handleApiError(err: HttpErrorResponse): void {
     if (err.status === 401) {
       const currentUrl = this.router.url;
-      this.router.navigate(["login"], { queryParams: { returnUrl: currentUrl } });
+      if (currentUrl.startsWith('/login')) {
+        return;
+      }
+      const returnUrl = new URL(currentUrl, window.location.origin).searchParams.get('returnUrl');
+      if (returnUrl && returnUrl === currentUrl) {
+        return;
+      }
+      this.router.navigate(["/login"], { queryParams: { returnUrl: currentUrl } });
     }
   }
 
