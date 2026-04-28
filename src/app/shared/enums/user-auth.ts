@@ -25,4 +25,5 @@ export class User {
   avatar?: any;
   userRoles?: any;
   claims?: string[];
+  fullName?: string;
 }

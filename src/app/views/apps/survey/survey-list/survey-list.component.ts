@@ -5,7 +5,7 @@ import { SurveyService } from "../survey.service";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { Subject, of } from "rxjs";
+import { Subject, of, Subscription } from "rxjs";
 import {
   debounceTime,
   switchMap,
@@ -15,6 +15,7 @@ import {
   first,
 } from "rxjs/operators";
 import { SurveyResource } from "@app/shared/enums/survey-resource";
+import { SecurityService } from "@app/core/security/security.service";
 
 @Component({
   selector: "app-survey-list",
@@ -33,8 +34,13 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   bsModalRef: BsModalRef;
   surveyResource: SurveyResource;
   searchSubject: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
+  private claimsSubscription?: Subscription;
   isLoadingResults = false;
-  private destroy$ = new Subject<void>();
+  canViewStats = false;
+  canEdit = false;
+  canDelete = false;
+  canPerformAnyAction = false;
 
   constructor(
     private surveyService: SurveyService,
@@ -42,11 +48,28 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private translateService: TranslateService,
     private toastr: ToastrService,
+    private securityService: SecurityService,
   ) {
     this.surveyResource = new SurveyResource();
   }
 
   ngOnInit(): void {
+    this.claimsSubscription = this.securityService.SecurityObject.subscribe(
+      () => {
+        this.canViewStats = this.securityService.hasClaim(
+          "SURVEY_VIEW_STATISTICS",
+        );
+        this.canEdit = this.securityService.hasClaim("SURVEY_EDIT_SURVEY");
+        this.canDelete = this.securityService.hasClaim("SURVEY_DELETE_SURVEY");
+        this.canPerformAnyAction = this.canEdit || this.canDelete;
+      },
+    );
+
+    this.canViewStats = this.securityService.hasClaim("SURVEY_VIEW_STATISTICS");
+    this.canEdit = this.securityService.hasClaim("SURVEY_EDIT_SURVEY");
+    this.canDelete = this.securityService.hasClaim("SURVEY_DELETE_SURVEY");
+    this.canPerformAnyAction = this.canEdit || this.canDelete;
+
     this.searchSubject
       .pipe(
         debounceTime(300),
@@ -77,6 +100,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.claimsSubscription?.unsubscribe();
   }
 
   getAllSurveys(data = this.surveyResource) {
@@ -148,5 +172,10 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.surveyResource.createdAt = event ? new Date(event).toDateString() : "";
     this.surveyResource.skip = 0;
     this.searchSubject.next();
+  }
+
+  formatCreatorName(value: any): string {
+    if (!value) return "-";
+    return [value.firstName, value.lastName].filter(Boolean).join(" ") || value.fullName || "-";
   }
 }

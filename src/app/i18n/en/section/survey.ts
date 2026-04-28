@@ -6,9 +6,11 @@ export const survey = {
     },
     TABLE: {
       TITLE: "Title",
+      STATS: "Statistics",
       DESCRIPTION: "Description",
       TYPE: "Type",
       CATEGORY: "Category",
+      PRIVACY: "Privacy",
       CREATOR: "Creator",
       TOTAL: "Total",
       CREATED: "Created At",
@@ -23,6 +25,7 @@ export const survey = {
       ADD: "Add Survey",
       EDIT: "Edit",
       DELETE: "Delete",
+      STATS: "Statistics",
     },
     ADD: {
       LABELS: {
@@ -87,6 +90,20 @@ export const survey = {
     STATUS: {
       ACTIVE: "Active",
       INACTIVE: "Inactive",
+    },
+    PRIVACY: {
+      PUBLIC: "Public",
+      PRIVATE: "Private",
+    },
+    TYPE: {
+      SIMPLE: "Simple",
+      RATING: "Rating",
+      SATISFACTION: "Satisfaction",
+    },
+    DETAIL: {
+      TITLE: "Survey Details",
+      ANSWERS: "Answers",
+      NO_DATA: "No data available",
     },
   },
 };

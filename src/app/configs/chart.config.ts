@@ -69,7 +69,6 @@ export const ApexBarDefault: ApexPlotOptions = {
   bar: {
     horizontal: false,
     columnWidth: '25px',
-    startingShape: 'rounded',
-    endingShape: 'rounded'
+    borderRadius: 4
   },
 }

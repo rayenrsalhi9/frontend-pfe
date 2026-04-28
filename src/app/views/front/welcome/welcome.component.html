@@ -136,59 +136,66 @@
         </h2>
       </div>
       <div class="card-body survey-body">
-        <ng-container *ngIf="vm.auth; else notLoggedIn">
-          <div *ngIf="survey; else noSurvey" class="survey-content">
-            <p class="survey-question">{{ survey?.title }}</p>
-            <div class="survey-actions">
-              <ng-container *ngIf="survey?.type === 'simple'">
-                <button (click)="surveyAnswer(1)" class="btn-survey">
-                  {{ "BUTTONS.YES" | translate }}
-                </button>
-                <button (click)="surveyAnswer(0)" class="btn-survey">
-                  {{ "BUTTONS.NO" | translate }}
-                </button>
-              </ng-container>
-              <ng-container *ngIf="survey?.type === 'rating'">
-                <rating
-                  [max]="5"
-                  [(ngModel)]="selectedRating"
-                  (ngModelChange)="surveyAnswer($event)"
-                ></rating>
-              </ng-container>
-              <ng-container *ngIf="survey?.type === 'satisfaction'">
-                <button
-                  (click)="surveyAnswer(0)"
-                  class="btn-survey satisfied"
-                >
-                  {{ "BUTTONS.SATISFIED" | translate }}
-                </button>
-                <button
-                  (click)="surveyAnswer(1)"
-                  class="btn-survey neutral"
-                >
-                  {{ "BUTTONS.NEUTRAL" | translate }}
-                </button>
-                <button
-                  (click)="surveyAnswer(2)"
-                  class="btn-survey unsatisfied"
-                >
-                  {{ "BUTTONS.NOT_SATISFIED" | translate }}
-                </button>
-              </ng-container>
+        <ng-container *ngIf="vm.auth !== null; else authLoading">
+          <ng-container *ngIf="vm.auth; else notLoggedIn">
+            <div *ngIf="survey; else noSurvey" class="survey-content">
+              <p class="survey-question">{{ survey?.title }}</p>
+              <div class="survey-actions">
+                <ng-container *ngIf="survey?.type === 'simple'">
+                  <button (click)="surveyAnswer(1)" class="btn-survey">
+                    {{ "BUTTONS.YES" | translate }}
+                  </button>
+                  <button (click)="surveyAnswer(0)" class="btn-survey">
+                    {{ "BUTTONS.NO" | translate }}
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="survey?.type === 'rating'">
+                  <rating
+                    [max]="5"
+                    [(ngModel)]="selectedRating"
+                    (ngModelChange)="surveyAnswer($event)"
+                  ></rating>
+                </ng-container>
+                <ng-container *ngIf="survey?.type === 'satisfaction'">
+                  <button
+                    (click)="surveyAnswer(0)"
+                    class="btn-survey satisfied"
+                  >
+                    {{ "BUTTONS.SATISFIED" | translate }}
+                  </button>
+                  <button
+                    (click)="surveyAnswer(1)"
+                    class="btn-survey neutral"
+                  >
+                    {{ "BUTTONS.NEUTRAL" | translate }}
+                  </button>
+                  <button
+                    (click)="surveyAnswer(2)"
+                    class="btn-survey unsatisfied"
+                  >
+                    {{ "BUTTONS.NOT_SATISFIED" | translate }}
+                  </button>
+                </ng-container>
+              </div>
             </div>
-          </div>
-          <ng-template #noSurvey>
-            <div class="empty-state">
-              <i class="feather icon-bar-chart-2"></i>
-              <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
+            <ng-template #noSurvey>
+              <div class="empty-state">
+                <i class="feather icon-bar-chart-2"></i>
+                <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-template #notLoggedIn>
+            <div class="survey-login-prompt">
+              <i class="feather icon-log-in"></i>
+              <p>{{ "WELCOME.LOGIN_FOR_SURVEY" | translate }}</p>
+              <a routerLink="/login" class="btn-survey">{{ "BUTTONS.LOGIN" | translate }}</a>
             </div>
           </ng-template>
         </ng-container>
-        <ng-template #notLoggedIn>
-          <div class="survey-login-prompt">
-            <i class="feather icon-log-in"></i>
-            <p>{{ "WELCOME.LOGIN_FOR_SURVEY" | translate }}</p>
-            <a routerLink="/login" class="btn-survey">{{ "BUTTONS.LOGIN" | translate }}</a>
+        <ng-template #authLoading>
+          <div class="survey-loading">
+            <div class="loading-spinner"></div>
           </div>
         </ng-template>
       </div>

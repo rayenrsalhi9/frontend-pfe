@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SurveyService } from "../survey.service";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject, of } from "rxjs";
+import { takeUntil, switchMap, catchError, map, take } from "rxjs/operators";
 import { CommonService } from "@app/shared/services/common.service";
+import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
@@ -19,6 +20,7 @@ type SurveyType = "simple" | "rating" | "satisfaction";
 export class SurveyAddComponent implements OnInit, OnDestroy {
   surveyForm: FormGroup;
   users: User[] = [];
+  allUsers: User[] = [];
   isLoading = false;
   isEdit = false;
   isSubmitted = false;
@@ -34,14 +36,18 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private surveyService: SurveyService,
     private commonService: CommonService,
+    private securityService: SecurityService,
     private toastr: ToastrService,
     private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.createSurveyForm();
-    this.loadUsers();
-    this.checkEditMode();
+    this.checkEditMode().then(() => {
+      if (!this.isEdit) {
+        this.loadUsers();
+      }
+    }).catch(() => {});
   }
 
   ngOnDestroy(): void {
@@ -49,36 +55,70 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private checkEditMode(): void {
-    this.activatedRoute.paramMap
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        const id = params.get("id");
-        if (id) {
-          this.isEdit = true;
-          this.surveyId = id;
-          this.loadSurvey(id);
-        }
+  private checkEditMode(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.activatedRoute.paramMap.pipe(take(1)).subscribe({
+        next: (params) => {
+          const id = params.get("id");
+          if (id) {
+            this.isEdit = true;
+            this.surveyId = id;
+            this.loadSurvey(id).then(() => resolve(true)).catch((err) => reject(err));
+          } else {
+            resolve(false);
+          }
+        },
+        error: (err) => {
+          console.error("Error checking edit mode:", err);
+          reject(err);
+        },
       });
+    });
   }
 
-  private loadSurvey(id: string): void {
-    this.isLoading = true;
-    this.surveyService
-      .getSurvey(id)
-      .pipe(takeUntil(this.destroy$))
+  private loadSurvey(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.isLoading = true;
+      this.surveyService
+        .getSurvey(id)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((data: any) => {
+          if (this.allUsers && this.allUsers.length > 0) {
+            return of({ data, allUsers: this.allUsers });
+          }
+          return this.commonService.getUsers().pipe(
+            map((allUsers: User[]) => ({ data, allUsers })),
+            catchError((err) => {
+              console.error("Error loading users:", err);
+              this.toastr.error(
+                this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+              );
+              return of({ data, allUsers: [] });
+            }),
+          );
+        }),
+      )
       .subscribe({
-        next: (data: any) => {
+        next: ({ data, allUsers }) => {
           this.isLoading = false;
+          const selectedUserIds = data.users || [];
+          const currentUserId = this.securityService.securityObject?.user?.id;
+          const selectedUsers = allUsers.filter(
+            (u) => selectedUserIds.includes(u.id) && u.id !== currentUserId,
+          );
+          this.allUsers = allUsers;
+          this.users = allUsers.filter((u) => u.id !== currentUserId);
           this.surveyForm.patchValue({
             title: data.title,
             type: data.type,
             forum: data.forum,
             blog: data.blog,
             private: data.privacy === "private",
-            users: data.users || [],
+            users: selectedUsers,
           });
           this.cdr.markForCheck();
+          resolve();
         },
         error: (err) => {
           this.isLoading = false;
@@ -86,21 +126,30 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
           this.toastr.error(
             this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
           );
+          this.cdr.markForCheck();
+          reject(err);
         },
       });
+    });
   }
 
   loadUsers() {
+    const currentUserId = this.securityService.securityObject?.user?.id;
     this.commonService
       .getUsers()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (users: User[]) => {
-          this.users = users;
+          this.allUsers = users;
+          this.users = users.filter((user) => user.id !== currentUserId);
           this.cdr.markForCheck();
         },
         error: (err) => {
           console.error("Error loading users:", err);
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
+          this.cdr.markForCheck();
         },
       });
   }
@@ -140,9 +189,23 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       const formValue = this.surveyForm.value;
 
+      let users = formValue.users?.map((u: User) => u.id) || [];
+      const currentUserId = this.securityService.securityObject?.user?.id;
+      if (formValue.private && currentUserId && !users.includes(currentUserId)) {
+        users = [currentUserId, ...users];
+      }
+      const requestData = {
+        title: formValue.title,
+        type: formValue.type,
+        forum: formValue.forum,
+        blog: formValue.blog,
+        privacy: formValue.private ? "private" : "public",
+        users: users,
+      };
+
       const request = this.isEdit
-        ? this.surveyService.updateSurvey(this.surveyId, formValue)
-        : this.surveyService.addSurvey(formValue);
+        ? this.surveyService.updateSurvey(this.surveyId, requestData)
+        : this.surveyService.addSurvey(requestData);
 
       request.pipe(takeUntil(this.destroy$)).subscribe({
         next: (res) => {
@@ -173,4 +236,6 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
   onCancel() {
     this.router.navigate(["/apps/surveys"]);
   }
+
+  compareUsersById = (a: User, b: User): boolean => a?.id === b?.id;
 }

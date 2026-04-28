@@ -30,10 +30,12 @@ import {
   ApexXAxis,
   ApexYAxis,
   ChartComponent,
+  ApexGrid,
 } from "ng-apexcharts";
 import { SurveyService } from "../survey.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -46,21 +48,36 @@ export type ChartOptions = {
   tooltip: ApexTooltip;
   stroke: ApexStroke;
   legend: ApexLegend;
+  grid: ApexGrid;
+  colors?: string[];
 };
 
 @Component({
   selector: "app-survey-detail",
   templateUrl: "./survey-detail.component.html",
-  styleUrls: [],
+  styleUrls: ["./survey-detail.component.scss"],
   host: {
     "[class.card]": "true",
   },
 })
 export class SurveyDetailComponent implements OnInit, OnDestroy {
   @ViewChild("overviewChart") chart: ChartComponent;
-  public overviewChartOptions: Partial<ChartOptions>;
+  public overviewChartOptions: Partial<ChartOptions> = {
+    series: [],
+    chart: { type: "bar" },
+    dataLabels: {},
+    plotOptions: {},
+    yaxis: {},
+    xaxis: {},
+    fill: {},
+    tooltip: {},
+    stroke: {},
+    legend: {},
+  };
 
   overviewData: OverviewDataRating;
+  survey: any;
+  isLoading = true;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -69,10 +86,11 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private translate: TranslateService,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
-    this.getSurvey();
+    this.getSurveyDetails();
   }
 
   ngOnDestroy(): void {
@@ -80,15 +98,40 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  getSurvey() {
+  getSurveyDetails() {
     this.activeRoute.paramMap
       .pipe(
         takeUntil(this.destroy$),
         map((params) => params.get("id")),
-        switchMap((id) => this.surveyService.getStatistics(id)),
+        switchMap((id) => this.surveyService.getSurvey(id)),
         takeUntil(this.destroy$),
       )
-      .subscribe((data: any) => {
+      .subscribe({
+        next: (data: any) => {
+          this.survey = data;
+          this.survey.answersCount = this.survey.answers_count;
+          this.isLoading = false;
+          this.getStatistics();
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.toastr.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR")
+          );
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  getStatistics() {
+    if (!this.survey?.id) return;
+
+    this.surveyService
+      .getStatistics(this.survey.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
         const months = {
           fr_FR: [
             "Janvier",
@@ -156,8 +199,6 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
         const three: number[] = [];
         const four: number[] = [];
         const five: number[] = [];
-
-        data.sort((a, b) => a.month - b.month);
 
         const safeLang = normalizeLang(this.translate.currentLang);
         const monthLabels = months[safeLang] || months["en_US"];
@@ -242,21 +283,26 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
         this.translate
           .get("SURVEY.CHART")
           .pipe(takeUntil(this.destroy$))
-          .subscribe((translatedMessage: string) => {
+          .subscribe((translatedMessage: any) => {
             const safeType = type || "simple";
+            const typeKey = safeType.toUpperCase();
+            const defaults: Record<string, Record<string, string>> = {
+              SIMPLE: { ZERO_STARS: "0 Stars", ONE_STARS: "1 Star" },
+              RATING: { ONE_STARS: "1 Star", TWO_STARS: "2 Stars", THREE_STARS: "3 Stars", FOUR_STARS: "4 Stars", FIVE_STARS: "5 Stars" },
+              SATISFACTION: { ZERO_STARS: "Unsatisfied", ONE_STARS: "Neutral", TWO_STARS: "Satisfied" }
+            };
+            const getLabel = (key: string) => translatedMessage?.[typeKey]?.[key] || defaults[safeType]?.[key] || key;
             this.overviewChartOptions = {
               series:
                 safeType == "simple"
                   ? [
                       {
-                        name: translatedMessage[safeType.toUpperCase()]
-                          .ZERO_STARS,
+                        name: getLabel("ZERO_STARS"),
                         data: this.overviewData.zero,
                         color: COLOR_1,
                       },
                       {
-                        name: translatedMessage[safeType.toUpperCase()]
-                          .ONE_STARS,
+                        name: getLabel("ONE_STARS"),
                         data: this.overviewData.one,
                         color: COLOR_2,
                       },
@@ -264,52 +310,44 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
                   : safeType == "rating"
                     ? [
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ONE_STARS,
+                          name: getLabel("ONE_STARS"),
                           data: this.overviewData.one,
                           color: COLOR_4,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .TWO_STARS,
+                          name: getLabel("TWO_STARS"),
                           data: this.overviewData.two,
                           color: COLOR_5,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .THREE_STARS,
+                          name: getLabel("THREE_STARS"),
                           data: this.overviewData.three,
                           color: COLOR_3,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .FOUR_STARS,
+                          name: getLabel("FOUR_STARS"),
                           data: this.overviewData.four,
                           color: COLOR_1,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .FIVE_STARS,
+                          name: getLabel("FIVE_STARS"),
                           data: this.overviewData.five,
                           color: COLOR_2,
                         },
                       ]
                     : [
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ZERO_STARS,
+                          name: getLabel("ZERO_STARS"),
                           data: this.overviewData.zero,
                           color: COLOR_5,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .ONE_STARS,
+                          name: getLabel("ONE_STARS"),
                           data: this.overviewData.one,
                           color: COLOR_3,
                         },
                         {
-                          name: translatedMessage[safeType.toUpperCase()]
-                            .TWO_STARS,
+                          name: getLabel("TWO_STARS"),
                           data: this.overviewData.two,
                           color: COLOR_2,
                         },
@@ -317,26 +355,183 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
               chart: {
                 ...ApexChartDefault,
                 type: "bar",
-                height: 350,
-              },
-              plotOptions: ApexBarDefault,
-              dataLabels: ApexDataLabelDefault,
-              stroke: { show: true, width: 2, colors: ["transparent"] },
-              xaxis: { categories: this.overviewData.duration },
-              yaxis: { title: { text: "" } },
-              fill: { opacity: 1 },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return "" + val + "";
+                height: 380,
+                foreColor: "#64748b",
+                background: "transparent",
+                toolbar: {
+                  show: false,
+                },
+                sparkline: {
+                  enabled: false,
+                },
+                animations: {
+                  enabled: true,
+                  speed: 800,
+                  animateGradually: {
+                    enabled: true,
+                    delay: 150,
                   },
+                },
+                fontFamily: "Cairo, Inter, sans-serif",
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  columnWidth: "55%",
+                  distributed: false,
+                  barHeight: "70%",
+                  borderRadius: 4,
+                  dataLabels: {
+                    position: "top",
+                  },
+                },
+              },
+              colors: [COLOR_1, COLOR_4, COLOR_3, COLOR_2, COLOR_5],
+              dataLabels: {
+                enabled: true,
+                formatter: function (val: number) {
+                  return val > 0 ? val.toString() : "";
+                },
+                textAnchor: "middle",
+                offsetY: -8,
+                style: {
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  colors: ["#fff"],
+                },
+                dropShadow: {
+                  enabled: false,
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+                lineCap: "round",
+                curve: "smooth",
+              },
+              grid: {
+                show: true,
+                borderColor: "#e2e8f0",
+                strokeDashArray: 4,
+                xaxis: {
+                  lines: {
+                    show: false,
+                  },
+                },
+                yaxis: {
+                  lines: {
+                    show: true,
+                  },
+                },
+                padding: {
+                  top: 0,
+                  right: 8,
+                  bottom: 0,
+                  left: 8,
+                },
+              },
+              xaxis: {
+                categories: this.overviewData.duration,
+                axisBorder: {
+                  show: true,
+                  color: "#e2e8f0",
+                  offsetX: 0,
+                  offsetY: 0,
+                },
+                axisTicks: {
+                  show: false,
+                },
+                labels: {
+                  style: {
+                    colors: "#64748b",
+                    fontSize: "11px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                    fontWeight: 500,
+                  },
+                },
+              },
+              yaxis: {
+                title: {
+                  text: "",
+                  style: {
+                    color: "#64748b",
+                    fontSize: "12px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                    fontWeight: 500,
+                  },
+                },
+                labels: {
+                  style: {
+                    colors: "#64748b",
+                    fontSize: "11px",
+                    fontFamily: "Cairo, Inter, sans-serif",
+                  },
+                  formatter: function (val: number) {
+                    return Math.round(val).toString();
+                  },
+                },
+              },
+              fill: {
+                opacity: 0.95,
+                type: "solid",
+              },
+              tooltip: {
+                theme: "light",
+                shared: true,
+                intersect: false,
+                x: {
+                  show: true,
+                },
+                y: {
+                  formatter: function (val: number) {
+                    return val.toString();
+                  },
+                  title: {
+                    formatter: function () {
+                      return "";
+                    },
+                  },
+                },
+                marker: {
+                  show: true,
+                },
+              },
+              legend: {
+                show: true,
+                position: "top",
+                horizontalAlign: "center",
+                floating: false,
+                offsetY: 16,
+                fontSize: "12px",
+                fontWeight: 600,
+                fontFamily: "Cairo, Inter, sans-serif",
+                labels: {
+                  colors: "#64748b",
+                  useSeriesColors: false,
+                },
+                markers: {
+                  radius: 3,
+                  offsetX: 0,
+                  offsetY: 2,
+                },
+                itemMargin: {
+                  horizontal: 12,
+                  vertical: 8,
                 },
               },
             };
           });
 
         this.cdr.markForCheck();
-        this.cdr.detectChanges();
-      });
+      },
+      error: (err) => {
+        console.error("Error loading statistics:", err);
+        this.toastr.error(
+          this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR")
+        );
+        this.cdr.markForCheck();
+      },
+    });
   }
 }
