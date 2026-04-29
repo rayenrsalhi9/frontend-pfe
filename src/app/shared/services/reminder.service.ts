@@ -53,4 +53,10 @@ export class ReminderService {
     return this.httpClient.delete<Reminder>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
+
+  getCalendarEvents(month: number, year: number): Observable<any> {
+    const url = `reminder/calendar-events/${month}/${year}`;
+    return this.httpClient.get<any>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
 }

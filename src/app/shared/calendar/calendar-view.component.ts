@@ -64,6 +64,7 @@ export class CalendarViewComponent implements OnInit, OnChanges {
 
   @Output() dateSelected = new EventEmitter<Date>();
   @Output() eventClicked = new EventEmitter<CalendarEvent>();
+  @Output() monthChanged = new EventEmitter<void>();
 
   viewDate: Date = new Date();
   today: Date = new Date();
@@ -162,12 +163,14 @@ export class CalendarViewComponent implements OnInit, OnChanges {
     this.viewDate = subMonths(this.viewDate, 1);
     this.generateCalendar();
     this.updateMonthYear();
+    this.monthChanged.emit();
   }
 
   nextMonth(): void {
     this.viewDate = addMonths(this.viewDate, 1);
     this.generateCalendar();
     this.updateMonthYear();
+    this.monthChanged.emit();
   }
 
   goToToday(): void {

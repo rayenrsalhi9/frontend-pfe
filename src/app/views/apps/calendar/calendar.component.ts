@@ -43,6 +43,7 @@ interface CalendarAppEvent {
   };
   allDay?: boolean;
   cssClass?: string;
+  frequency?: string;
 }
 
 defineLocale("ar", arLocale);
@@ -269,26 +270,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getReminders() {
-    this.reminderService.getReminders(this.reminderResource).subscribe({
-      next: (data: HttpResponse<any>) => {
-        if (data && data.body) {
-          this.events = [];
-          data.body.forEach((el: any) => {
-            const startDate = this.parsePlainDateTime(el.startDate);
-            const endDate = el.endDate
-              ? this.parsePlainDateTime(el.endDate)
-              : null;
+    const month = this.viewDate.getMonth() + 1;
+    const year = this.viewDate.getFullYear();
 
+    this.reminderService.getCalendarEvents(month, year).subscribe({
+      next: (data: any) => {
+        if (data) {
+          this.events = [];
+          data.forEach((el: any) => {
             this.events = [
               ...this.events,
               {
                 id: el.id,
-                title: el.eventName,
+                title: el.title,
                 description: el.description,
-                start: startDate,
-                end: endDate || startDate,
+                start: this.parsePlainDateTime(el.start),
+                end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
                 allDay: false,
                 category: colors[el.category] || el.category || colors.normal,
+                frequency: el.frequency,
               },
             ];
           });
@@ -297,7 +297,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.error("Error fetching reminders:", err);
+        console.error("Error fetching calendar events:", err);
       },
     });
   }
@@ -801,5 +801,44 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   canCreateEvent(): boolean {
     return this.securityService.hasClaim("REMINDER_CREATE_REMINDER");
+  }
+
+  getFrequencyLabel(frequency?: string): string {
+    const labels: Record<string, string> = {
+      daily: "Daily",
+      weekly: "Weekly",
+      monthly: "Monthly",
+      quarterly: "Quarterly",
+      half_yearly: "Half-Yearly",
+      yearly: "Yearly",
+      once: "Once",
+    };
+    return labels[frequency || ""] || "";
+  }
+
+  getFrequencyIcon(frequency?: string): string {
+    const icons: Record<string, string> = {
+      daily: "feather icon-refresh-cw",
+      weekly: "feather icon-repeat",
+      monthly: "feather icon-calendar",
+      quarterly: "feather icon-grid",
+      half_yearly: "feather icon-layers",
+      yearly: "feather icon-award",
+      once: "feather icon-corner-up-right",
+    };
+    return icons[frequency || ""] || "";
+  }
+
+  getFrequencyBadgeClass(frequency?: string): string {
+    const classes: Record<string, string> = {
+      daily: "freq-badge-daily",
+      weekly: "freq-badge-weekly",
+      monthly: "freq-badge-monthly",
+      quarterly: "freq-badge-quarterly",
+      half_yearly: "freq-badge-half",
+      yearly: "freq-badge-yearly",
+      once: "freq-badge-once",
+    };
+    return classes[frequency || ""] || "";
   }
 }

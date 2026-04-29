@@ -8,6 +8,7 @@
           [locale]="locale"
           (dateSelected)="onDateSelected($event)"
           (eventClicked)="onEventClicked($event)"
+          (monthChanged)="getReminders()"
         >
         </app-calendar-view>
       </div>
@@ -31,16 +32,6 @@
             *ngFor="let event of selectedDayEvents"
             class="event-card"
             [class.is-confirming]="confirmingDeleteId === event.id"
-            role="button"
-            tabindex="0"
-            (click)="
-              confirmingDeleteId !== event.id &&
-                openEditEventModal(eventModal, event.id)
-            "
-            (keydown.enter)="$event.target === $event.currentTarget && confirmingDeleteId !== event.id &&
-                openEditEventModal(eventModal, event.id)
-            "
-            (keydown.space)="$event.target === $event.currentTarget && confirmingDeleteId !== event.id && openEditEventModal(eventModal, event.id); $event?.preventDefault()"
           >
             <span
               class="event-color"
@@ -50,7 +41,13 @@
             ></span>
             <div class="event-content">
               <div class="event-info">
-                <h6 class="event-title">{{ event.title }}</h6>
+                <div class="event-title-row">
+                  <h6 class="event-title">{{ event.title }}</h6>
+                  <span class="freq-badge" [class]="getFrequencyBadgeClass(event.frequency)">
+                    <i [class]="getFrequencyIcon(event.frequency)"></i>
+                    <span>{{ getFrequencyLabel(event.frequency) }}</span>
+                  </span>
+                </div>
                 <span class="event-time">
                   <i class="feather icon-clock"></i>
                   {{ event.start | date:"shortTime":"":locale }} -
@@ -68,10 +65,7 @@
                 [attr.aria-label]="
                   'CALENDAR.EDIT_EVENT' | translate: { title: event.title }
                 "
-                (click)="
-                  openEditEventModal(eventModal, event.id);
-                  $event.stopPropagation()
-                "
+                (click)="openEditEventModal(eventModal, event.id)"
               >
                 <i class="feather icon-edit-2"></i>
               </button>
@@ -81,7 +75,7 @@
                 [attr.aria-label]="
                   'CALENDAR.DELETE_EVENT' | translate: { title: event.title }
                 "
-                (click)="deleteEvent(event.id); $event.stopPropagation()"
+                (click)="deleteEvent(event.id)"
               >
                 <i class="feather icon-trash-2"></i>
               </button>
