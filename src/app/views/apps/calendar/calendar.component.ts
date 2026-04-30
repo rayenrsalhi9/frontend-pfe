@@ -314,6 +314,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  onMonthChanged(date: Date): void {
+    this.viewDate = date;
+    this.getReminders();
+  }
+
   onEventClicked(event: CalendarAppEvent): void {
     this.handleEvent("Clicked", event);
   }

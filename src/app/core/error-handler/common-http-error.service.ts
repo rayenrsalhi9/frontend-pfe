@@ -9,7 +9,7 @@ import {} from '../../../environments/environment';
 export class CommonHttpErrorService {
   constructor() {}
 
-  handleError(httpErrorResponse: HttpErrorResponse): Observable<CommonError> {
+  handleError(httpErrorResponse: HttpErrorResponse): Observable<never> {
     const errors = [];
     for (const [, value] of Object.entries(httpErrorResponse.error)) {
       errors.push(value);
@@ -22,6 +22,6 @@ export class CommonHttpErrorService {
       error: httpErrorResponse.error,
     };
     console.error(httpErrorResponse);
-    return throwError(customError);
+    return throwError(() => customError);
   }
 }
