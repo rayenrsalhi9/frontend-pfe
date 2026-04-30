@@ -14,8 +14,6 @@ export class Reminder {
   isEmailNotification: boolean;
   reminderUsers: ReminderUsers[];
   dailyReminders: DailyReminders[];
-  quarterlyReminders: QuarterlyReminders[];
-  halfYearlyReminders: HalfYearlyReminders[];
 }
 
 export class DailyReminders {
@@ -23,20 +21,4 @@ export class DailyReminders {
   reminderId: string;
   dayOfWeek: number;
   isActive: boolean;
-}
-
-export class QuarterlyReminders {
-  id?: string;
-  reminderId: string;
-  day: number;
-  month: number;
-  quarter: number;
-}
-
-export class HalfYearlyReminders {
-  id?: string;
-  reminderId: string;
-  day: number;
-  month: number;
-  quarter: number;
 }

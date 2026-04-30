@@ -11,7 +11,7 @@ export interface CalendarEvent {
   title: string;
   start: string;
   end?: string;
-  frequency?: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+  frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly';
   description?: string;
   category?: string;
   allDay?: boolean;
