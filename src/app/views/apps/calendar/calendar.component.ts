@@ -274,24 +274,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const year = this.viewDate.getFullYear();
 
     this.reminderService.getCalendarEvents(month, year).subscribe({
-      next: (data: any) => {
-        if (data) {
-          this.events = [];
-          data.forEach((el: any) => {
-            this.events = [
-              ...this.events,
-              {
-                id: el.id,
-                title: el.title,
-                description: el.description,
-                start: this.parsePlainDateTime(el.start),
-                end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
-                allDay: false,
-                category: colors[el.category] || el.category || colors.normal,
-                frequency: el.frequency,
-              },
-            ];
-          });
+      next: (response: any) => {
+        const data = response.body || response;
+        if (data && Array.isArray(data)) {
+          this.events = data.map((el: any) => ({
+            id: el.id,
+            title: el.title,
+            description: el.description,
+            start: this.parsePlainDateTime(el.start),
+            end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
+            allDay: false,
+            category: colors[el.category] || el.category || colors.normal,
+            frequency: el.frequency,
+          }));
           this.updateSelectedDayEvents();
           this.cdr.markForCheck();
         }
@@ -804,16 +799,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getFrequencyLabel(frequency?: string): string {
-    const labels: Record<string, string> = {
-      daily: "Daily",
-      weekly: "Weekly",
-      monthly: "Monthly",
-      quarterly: "Quarterly",
-      half_yearly: "Half-Yearly",
-      yearly: "Yearly",
-      once: "Once",
-    };
-    return labels[frequency || ""] || "";
+    if (!frequency) {
+      return "";
+    }
+    const found = this.frequencies.find((f) => f.id === frequency);
+    return found ? found.name : "";
   }
 
   getFrequencyIcon(frequency?: string): string {

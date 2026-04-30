@@ -43,7 +43,7 @@
               <div class="event-info">
                 <div class="event-title-row">
                   <h6 class="event-title">{{ event.title }}</h6>
-                  <span class="freq-badge" [class]="getFrequencyBadgeClass(event.frequency)">
+                  <span *ngIf="event.frequency && getFrequencyLabel(event.frequency)" class="freq-badge" [class]="getFrequencyBadgeClass(event.frequency)">
                     <i [class]="getFrequencyIcon(event.frequency)"></i>
                     <span>{{ getFrequencyLabel(event.frequency) }}</span>
                   </span>

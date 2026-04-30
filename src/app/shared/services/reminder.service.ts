@@ -7,6 +7,17 @@ import { CommonError } from '../enums/common-error';
 import { Reminder } from '../enums/reminder';
 import { ReminderResourceParameter } from '../enums/reminder-resource-parameter';
 
+export interface CalendarEvent {
+  id?: any;
+  title: string;
+  start: string;
+  end?: string;
+  frequency?: string;
+  description?: string;
+  category?: string;
+  allDay?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -54,9 +65,9 @@ export class ReminderService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getCalendarEvents(month: number, year: number): Observable<any> {
+  getCalendarEvents(month: number, year: number): Observable<HttpResponse<CalendarEvent[]> | CommonError> {
     const url = `reminder/calendar-events/${month}/${year}`;
-    return this.httpClient.get<any>(url)
+    return this.httpClient.get<CalendarEvent[]>(url, { observe: 'response' })
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 }

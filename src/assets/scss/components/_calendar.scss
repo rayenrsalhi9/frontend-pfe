@@ -98,7 +98,8 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
-  &:hover .event-actions {
+  &:hover .event-actions,
+  &:focus-within .event-actions {
     opacity: 1;
   }
 
