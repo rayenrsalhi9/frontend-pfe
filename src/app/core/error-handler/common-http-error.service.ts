@@ -9,10 +9,14 @@ import {} from '../../../environments/environment';
 export class CommonHttpErrorService {
   constructor() {}
 
-  handleError(httpErrorResponse: HttpErrorResponse): Observable<CommonError> {
+  handleError(httpErrorResponse: HttpErrorResponse): Observable<never> {
     const errors = [];
-    for (const [, value] of Object.entries(httpErrorResponse.error)) {
-      errors.push(value);
+    if (!httpErrorResponse?.error) {
+      errors.push(httpErrorResponse.message || httpErrorResponse.statusText || 'Unknown error');
+    } else {
+      for (const [, value] of Object.entries(httpErrorResponse.error)) {
+        errors.push(value);
+      }
     }
     const customError: CommonError = {
       statusText: httpErrorResponse.statusText,

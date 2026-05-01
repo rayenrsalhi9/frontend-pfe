@@ -69,8 +69,6 @@ export const calendar = {
       DAILY: "Quotidien",
       WEEKLY: "Hebdomadaire",
       MONTHLY: "Mensuel",
-      QUARTERLY: "Trimestriel",
-      HALF_YEARLY: "Semestriel",
       YEARLY: "Annuel",
     },
     WEEK_DAYS: {

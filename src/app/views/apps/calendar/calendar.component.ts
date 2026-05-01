@@ -43,6 +43,7 @@ interface CalendarAppEvent {
   };
   allDay?: boolean;
   cssClass?: string;
+  frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly';
 }
 
 defineLocale("ar", arLocale);
@@ -172,8 +173,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           { id: "daily", name: translations.DAILY },
           { id: "weekly", name: translations.WEEKLY },
           { id: "monthly", name: translations.MONTHLY },
-          { id: "quarterly", name: translations.QUARTERLY },
-          { id: "half_yearly", name: translations.HALF_YEARLY },
           { id: "yearly", name: translations.YEARLY },
         ];
       });
@@ -269,35 +268,29 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getReminders() {
-    this.reminderService.getReminders(this.reminderResource).subscribe({
-      next: (data: HttpResponse<any>) => {
-        if (data && data.body) {
-          this.events = [];
-          data.body.forEach((el: any) => {
-            const startDate = this.parsePlainDateTime(el.startDate);
-            const endDate = el.endDate
-              ? this.parsePlainDateTime(el.endDate)
-              : null;
+    const month = this.viewDate.getMonth() + 1;
+    const year = this.viewDate.getFullYear();
 
-            this.events = [
-              ...this.events,
-              {
-                id: el.id,
-                title: el.eventName,
-                description: el.description,
-                start: startDate,
-                end: endDate || startDate,
-                allDay: false,
-                category: colors[el.category] || el.category || colors.normal,
-              },
-            ];
-          });
+    this.reminderService.getCalendarEvents(month, year).subscribe({
+      next: (response: any) => {
+        const data = response.body || response;
+        if (data && Array.isArray(data)) {
+          this.events = data.map((el: any) => ({
+            id: el.id,
+            title: el.title,
+            description: el.description,
+            start: this.parsePlainDateTime(el.start),
+            end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
+            allDay: false,
+            category: colors[el.category] || el.category || colors.normal,
+            frequency: el.frequency,
+          }));
           this.updateSelectedDayEvents();
           this.cdr.markForCheck();
         }
       },
       error: (err) => {
-        console.error("Error fetching reminders:", err);
+        console.error("Error fetching calendar events:", err);
       },
     });
   }
@@ -317,6 +310,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.viewDate = date;
     this.updateSelectedDayEvents();
     this.cdr.markForCheck();
+  }
+
+  onMonthChanged(date: Date): void {
+    this.viewDate = date;
+    this.getReminders();
   }
 
   onEventClicked(event: CalendarAppEvent): void {
@@ -488,28 +486,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           : [],
       dayOfWeek: data.dayOfWeek,
       frequency: data.frequency,
-      halfYearlyReminders:
-        isRecurring && data.frequency === "half_yearly"
-          ? [
-              {
-                day: new Date(data.startDate).getDate(),
-                month: new Date(data.startDate).getMonth() + 1,
-                quarter: new Date(data.startDate).getMonth() < 6 ? 1 : 2,
-              },
-            ]
-          : [],
-      quarterlyReminders:
-        isRecurring && data.frequency === "quarterly"
-          ? [
-              {
-                day: new Date(data.startDate).getDate(),
-                month: new Date(data.startDate).getMonth() + 1,
-                quarter: Math.floor(
-                  (new Date(data.startDate).getMonth() + 3) / 3,
-                ),
-              },
-            ]
-          : [],
       isEmailNotification: data.isEmailNotification || false,
       isRepeated: isRecurring,
       category: data.category,
@@ -801,5 +777,35 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   canCreateEvent(): boolean {
     return this.securityService.hasClaim("REMINDER_CREATE_REMINDER");
+  }
+
+  getFrequencyLabel(frequency?: string): string {
+    if (!frequency) {
+      return "";
+    }
+    const found = this.frequencies.find((f) => f.id === frequency);
+    return found ? found.name : "";
+  }
+
+  getFrequencyIcon(frequency?: string): string {
+    const icons: Record<string, string> = {
+      daily: "feather icon-refresh-cw",
+      weekly: "feather icon-repeat",
+      monthly: "feather icon-calendar",
+      yearly: "feather icon-award",
+      once: "feather icon-corner-up-right",
+    };
+    return icons[frequency || ""] || "";
+  }
+
+  getFrequencyBadgeClass(frequency?: string): string {
+    const classes: Record<string, string> = {
+      daily: "freq-badge-daily",
+      weekly: "freq-badge-weekly",
+      monthly: "freq-badge-monthly",
+      yearly: "freq-badge-yearly",
+      once: "freq-badge-once",
+    };
+    return classes[frequency || ""] || "";
   }
 }
