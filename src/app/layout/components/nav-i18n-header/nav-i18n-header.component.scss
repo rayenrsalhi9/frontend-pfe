@@ -83,9 +83,9 @@
   }
 
   [dir="rtl"] & {
-    right: auto;
-    left: 0;
-    transform-origin: top left;
+    right: 0;
+    left: auto;
+    transform-origin: top right;
   }
 }
 
