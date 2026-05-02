@@ -12,7 +12,7 @@ import { takeUntil, first, map } from "rxjs/operators";
 @Component({
   selector: "app-blog-category",
   templateUrl: "./blog-category.component.html",
-  styleUrls: ["./blog-category.component.css"],
+  styleUrls: ["./blog-category.component.scss"],
 })
 export class BlogCategoryComponent implements OnInit, OnDestroy {
   rows: any[] = [];
@@ -51,7 +51,6 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
     );
   }
 
-
   manageCategory(data: any) {
     const initialState = {
       data: Object.assign({}, data),
@@ -85,9 +84,7 @@ export class BlogCategoryComponent implements OnInit, OnDestroy {
           },
         });
 
-        const onHidden$ = this.bsModalRef.onHidden.pipe(
-          map(() => false)
-        );
+        const onHidden$ = this.bsModalRef.onHidden.pipe(map(() => false));
 
         merge(this.bsModalRef.content.onClose, onHidden$)
           .pipe(first(), takeUntil(this.destroy$))

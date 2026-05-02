@@ -1,251 +1,200 @@
-<div class="bento-main-container" *hasClaim="'FORUM_VIEW_FORUMS'">
-  <!-- Header Section -->
-  <div class="header-section">
-    <div class="header-actions">
-      <div class="title-group">
-        <h1 class="page-title">{{ "FORUM.TITLE" | translate }}</h1>
-        <p class="page-description">{{ "FORUM.DESCRIPTION" | translate }}</p>
-      </div>
-      <button
-        *hasClaim="'FORUM_ADD_TOPIC'"
-        routerLink="/apps/forums/add"
-        class="btn-create"
+<div class="list-page-container" *hasClaim="'FORUM_VIEW_FORUMS'">
+  <header class="list-page-header">
+    <div class="list-header-left">
+      <h1 class="list-page-title">{{ "FORUM.TITLE" | translate }}</h1>
+      <p class="list-page-desc">{{ "FORUM.DESCRIPTION" | translate }}</p>
+    </div>
+    <button
+      *hasClaim="'FORUM_ADD_TOPIC'"
+      routerLink="/apps/forums/add"
+      class="list-btn-add"
+    >
+      <span>{{ "FORUM.BUTTONS.ADD" | translate }}</span>
+      <i class="feather icon-plus list-btn-add__icon"></i>
+    </button>
+  </header>
+
+  <div class="list-filters">
+    <div class="list-search-wrapper">
+      <i class="feather icon-search list-search-icon"></i>
+      <input
+        type="text"
+        class="list-search-input"
+        (input)="onNameChange($event)"
+        [placeholder]="'FORUM.TABLE.SEARCH_BY_NAME' | translate"
+      />
+    </div>
+    <div class="list-category-wrapper">
+      <ng-select
+        class="list-select"
+        [multiple]="false"
+        [placeholder]="'FORUM.TABLE.SEARCH_BY_CATEGORY' | translate"
+        (change)="onCategoryChange($event)"
       >
-        <i class="feather icon-plus"></i>
-        <span>{{ "FORUM.BUTTONS.ADD" | translate }}</span>
-      </button>
+        <ng-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </ng-option>
+      </ng-select>
+    </div>
+    <div class="list-date-wrapper">
+      <i class="feather icon-calendar list-date-icon"></i>
+      <input
+        type="text"
+        class="list-date-input"
+        bsDatepicker
+        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+        (bsValueChange)="onDateChange($event)"
+        [placeholder]="'FORUM.TABLE.SEARCH_BY_DATE' | translate"
+      />
     </div>
   </div>
 
-  <!-- Filters Section -->
-  <div class="filters-section bento-item">
-    <div class="filters-grid">
-      <div class="filter-col">
-        <div class="input-modern">
-          <i class="feather icon-search prefix-icon"></i>
-          <input
-            type="text"
-            class="form-control"
-            (input)="onNameChange($event)"
-            [placeholder]="'FORUM.TABLE.SEARCH_BY_NAME' | translate"
-          />
-        </div>
-      </div>
-
-      <div class="filter-col">
-        <ng-select
-          class="modern-select"
-          [multiple]="false"
-          [placeholder]="'FORUM.TABLE.SEARCH_BY_CATEGORY' | translate"
-          (change)="onCategoryChange($event)"
-        >
-          <ng-option *ngFor="let category of categories" [value]="category.id"
-            >{{ category.name }}
-          </ng-option>
-        </ng-select>
-      </div>
-
-      <div class="filter-col">
-        <div class="input-modern">
-          <i class="feather icon-calendar prefix-icon"></i>
-          <input
-            type="text"
-            class="form-control"
-            bsDatepicker
-            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
-            (bsValueChange)="onDateChange($event)"
-            [placeholder]="'FORUM.TABLE.SEARCH_BY_DATE' | translate"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Table Section -->
-  <div class="table-section bento-item">
-    <div class="modern-table-wrapper">
-      <ngx-datatable
-        class="bootstrap modern-table"
-        [messages]="{
-          emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
-          selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
-          totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
-        }"
-        [rows]="rows"
-        [columnMode]="ColumnMode.force"
-        [headerHeight]="60"
-        [footerHeight]="60"
-        rowHeight="auto"
-        [limit]="10"
-        [loadingIndicator]="isLoadingResults"
-        (activate)="onActivate($event)"
+  <div class="list-table-wrapper">
+    <ngx-datatable
+      class="list-table"
+      [messages]="{
+        emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
+        selectedMessage: 'TABLE_MESSAGE.SELECTED' | translate,
+        totalMessage: 'TABLE_MESSAGE.TOTAL' | translate
+      }"
+      [rows]="rows"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="55"
+      [footerHeight]="55"
+      rowHeight="auto"
+      [limit]="10"
+      [loadingIndicator]="isLoadingResults"
+      (activate)="onActivate($event)"
+    >
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.TOPIC' | translate"
+        prop="title"
+        [flexGrow]="2"
       >
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.TOPIC' | translate"
-          prop="title"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="topic-title">{{ value }}</span>
-          </ng-template>
-        </ngx-datatable-column>
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span class="list-cell-title">{{ value }}</span>
+        </ng-template>
+      </ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.CATEGORY' | translate"
-          prop="category"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="badge badge-soft-primary" *ngIf="value?.name">{{
-              value.name
-            }}</span>
-            <span class="text-muted" *ngIf="!value?.name">-</span>
-          </ng-template>
-        </ngx-datatable-column>
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.CATEGORY' | translate"
+        prop="category"
+        [width]="140"
+      >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span class="list-cell-badge list-cell-badge--blue" *ngIf="value?.name">{{ value.name }}</span>
+          <span class="list-cell-creator-empty" *ngIf="!value?.name">-</span>
+        </ng-template>
+      </ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.CREATOR' | translate"
-          prop="creator"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <div class="creator-info">
-              <div class="creator-avatar-mini">
-                {{
-                  (value?.firstName?.charAt(0) || "") +
-                    (value?.lastName?.charAt(0) || "")
-                }}
-              </div>
-              <span
-                >{{ value?.firstName || "" }} {{ value?.lastName || "" }}</span
-              >
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.CREATED' | translate"
-          prop="createdAt"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span class="text-muted">{{
-              value | utcToLocalTime: "shortDate"
-            }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.STATUS' | translate"
-          prop="closed"
-          [width]="100"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <span
-              [class]="
-                value ? 'badge badge-soft-danger' : 'badge badge-soft-success'
-              "
-            >
-              {{
-                (value ? "FORUM.STATUS.CLOSED" : "FORUM.STATUS.OPEN")
-                  | translate
-              }}
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.CREATOR' | translate"
+        prop="creator"
+        [width]="180"
+      >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="list-cell-creator-icon">
+            <span class="list-creator-icon-circle">
+              <i class="feather icon-user"></i>
             </span>
-          </ng-template>
-        </ngx-datatable-column>
+            <span class="list-cell-creator">
+              {{ value?.firstName || "" }} {{ value?.lastName || "" }}
+            </span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.REACTIONS' | translate"
-          prop="reactionsCount"
-          [width]="100"
-        >
-          <ng-template ngx-datatable-cell-template let-value="value">
-            <div class="stat-badge">
-              <i class="feather icon-heart text-danger"></i>
-              <span>{{ value ?? 0 }}</span>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.CREATED' | translate"
+        prop="createdAt"
+        [width]="120"
+      >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span class="list-cell-date">{{ value | utcToLocalTime: "shortDate" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'FORUM.TABLE.REPLIES' | translate"
-          prop="commentsCount"
-          [width]="100"
-        >
-          <ng-template
-            ngx-datatable-cell-template
-            let-row="row"
-            let-value="value"
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.STATUS' | translate"
+        prop="closed"
+        [width]="110"
+      >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span
+            class="list-cell-badge"
+            [ngClass]="value ? 'list-cell-badge--red' : 'list-cell-badge--green'"
           >
-            <button
-              type="button"
-              class="btn-stat-link"
-              (click)="openCommentsModal(row)"
-              [attr.aria-label]="'FORUM.TABLE.REPLIES' | translate"
-            >
-              <i class="feather icon-message-circle text-primary"></i>
-              <span>{{ value ?? 0 }}</span>
-            </button>
-          </ng-template>
-        </ngx-datatable-column>
+            {{ (value ? "FORUM.STATUS.CLOSED" : "FORUM.STATUS.OPEN") | translate }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
 
-        <ngx-datatable-column
-          *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
-          [name]="'FORUM.TABLE.ACTIONS' | translate"
-          [sortable]="false"
-          [width]="80"
-          cellClass="actions-cell"
-        >
-          <ng-template let-row="row" ngx-datatable-cell-template>
-            <div
-              class="btn-group"
-              dropdown
-              placement="bottom right"
-              [container]="'body'"
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.REACTIONS' | translate"
+        prop="reactionsCount"
+        [width]="110"
+      >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span class="list-cell-stat list-cell-stat--red">
+            <i class="feather icon-heart"></i>
+            <span>{{ value ?? 0 }}</span>
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'FORUM.TABLE.REPLIES' | translate"
+        prop="commentsCount"
+        [width]="100"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <button
+            type="button"
+            class="list-btn-action--comments"
+            (click)="openCommentsModal(row)"
+            [attr.aria-label]="'FORUM.TABLE.REPLIES' | translate"
+          >
+            <i class="feather icon-message-circle"></i>
+            <span>{{ value ?? 0 }}</span>
+          </button>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
+        [name]="'FORUM.TABLE.ACTIONS' | translate"
+        [sortable]="false"
+        [width]="160"
+        cellClass="list-actions-cell"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="list-actions">
+            <button
+              class="list-btn-action list-btn-action--comments"
+              (click)="openCommentsModal(row)"
+              [title]="'FORUM.BUTTONS.COMMENTS' | translate"
             >
-              <button
-                dropdownToggle
-                type="button"
-                class="btn-action-trigger"
-                [attr.aria-label]="'FORUM.TABLE.ACTIONS' | translate"
-              >
-                <i class="feather icon-more-vertical"></i>
-              </button>
-              <ul *dropdownMenu class="dropdown-menu-modern" role="menu">
-                <li role="menuitem">
-                  <button
-                    type="button"
-                    class="dropdown-item-modern"
-                    (click)="openCommentsModal(row)"
-                  >
-                    <i class="feather icon-message-square"></i>
-                    <span>{{ "FORUM.BUTTONS.COMMENTS" | translate }}</span>
-                  </button>
-                </li>
-                <li role="menuitem" *hasClaim="'FORUM_EDIT_TOPIC'">
-                  <a
-                    class="dropdown-item-modern"
-                    [routerLink]="'/apps/forums/edit/' + row.id"
-                  >
-                    <i class="feather icon-edit-2"></i>
-                    <span>{{ "FORUM.BUTTONS.EDIT" | translate }}</span>
-                  </a>
-                </li>
-                <li
-                  class="dropdown-divider-modern"
-                  *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
-                ></li>
-                <li role="menuitem" *hasClaim="'FORUM_DELETE_TOPIC'">
-                  <button
-                    type="button"
-                    class="dropdown-item-modern text-danger"
-                    (click)="deleteForum(row)"
-                  >
-                    <i class="feather icon-trash-2"></i>
-                    <span>{{ "FORUM.BUTTONS.DELETE" | translate }}</span>
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
+              <i class="feather icon-message-square"></i>
+            </button>
+            <a
+              *hasClaim="'FORUM_EDIT_TOPIC'"
+              class="list-btn-action list-btn-action--edit"
+              [routerLink]="'/apps/forums/edit/' + row.id"
+              [title]="'FORUM.BUTTONS.EDIT' | translate"
+            >
+              <i class="feather icon-edit-2"></i>
+            </a>
+            <button
+              *hasClaim="'FORUM_DELETE_TOPIC'"
+              class="list-btn-action list-btn-action--delete"
+              (click)="deleteForum(row)"
+              [title]="'FORUM.BUTTONS.DELETE' | translate"
+            >
+              <i class="feather icon-trash-2"></i>
+            </button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>

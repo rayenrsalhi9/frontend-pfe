@@ -16,7 +16,7 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 @Component({
   selector: "app-document-audits-trail",
   templateUrl: "./document-audits-trail.component.html",
-  styleUrls: ["./document-audits-trail.component.css"],
+  styleUrls: ["./document-audits-trail.component.scss"],
 })
 export class DocumentAuditsTrailComponent implements OnInit, OnDestroy {
   nameChange$ = new Subject<string>();

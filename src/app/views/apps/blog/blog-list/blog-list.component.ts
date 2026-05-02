@@ -22,7 +22,7 @@ import { BlogCategoryService } from "../blog-category/blog-category.service";
 @Component({
   selector: "app-blog-list",
   templateUrl: "./blog-list.component.html",
-  styleUrls: ["./blog-list.component.css"],
+  styleUrls: ["./blog-list.component.scss"],
 })
 export class BlogListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;

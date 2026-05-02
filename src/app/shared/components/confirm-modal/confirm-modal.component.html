@@ -1,20 +1,22 @@
-<div class="cm-modal-wrapper">
-  <div class="cm-modal-icon">
-    <div class="cm-icon-circle">
-      <i class="feather icon-alert-triangle" aria-hidden="true"></i>
-    </div>
+<div class="confirm-modal">
+  <div class="confirm-modal__icon">
+    <i class="feather icon-alert-triangle" aria-hidden="true"></i>
   </div>
-
-  <div class="cm-modal-content">
-    <h3 class="cm-modal-title">{{ title }}</h3>
-    <p class="cm-modal-message">{{ message }}</p>
-  </div>
-
-  <div class="cm-modal-footer">
-    <button type="button" class="cm-btn cm-btn-cancel" (click)="close()">
+  <h3 class="confirm-modal__title">{{ title }}</h3>
+  <p class="confirm-modal__message">{{ message }}</p>
+  <div class="confirm-modal__actions">
+    <button
+      type="button"
+      class="confirm-modal__btn confirm-modal__btn--cancel"
+      (click)="close()"
+    >
       {{ button.cancel }}
     </button>
-    <button type="button" class="cm-btn cm-btn-delete" (click)="confirm()">
+    <button
+      type="button"
+      class="confirm-modal__btn confirm-modal__btn--confirm"
+      (click)="confirm()"
+    >
       {{ button.confirm }}
     </button>
   </div>

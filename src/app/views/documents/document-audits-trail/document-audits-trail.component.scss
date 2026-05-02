@@ -1,3 +1,5 @@
+@import "../../../shared/styles/list-common";
+
 :host ::ng-deep .datatable-body-cell.overflow-visible {
   overflow: visible !important;
 }

@@ -12,7 +12,7 @@ import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 @Component({
   selector: "app-login-audit",
   templateUrl: "./login-audit.component.html",
-  styleUrls: ["./login-audit.component.css"],
+  styleUrls: ["./login-audit.component.scss"],
 })
 export class LoginAuditComponent implements OnInit {
   private destroy$ = new Subject<void>();

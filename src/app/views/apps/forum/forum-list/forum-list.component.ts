@@ -15,7 +15,7 @@ import { ForumCommentsModalComponent } from "./forum-comments-modal.component";
 @Component({
   selector: "app-forum-list",
   templateUrl: "./forum-list.component.html",
-  styleUrls: ["./forum-list.component.css"],
+  styleUrls: ["./forum-list.component.scss"],
 })
 export class ForumListComponent implements OnInit {
   showMobilePanel = false;

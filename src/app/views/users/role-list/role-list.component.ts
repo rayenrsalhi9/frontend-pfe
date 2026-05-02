@@ -12,7 +12,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-role-list",
   templateUrl: "./role-list.component.html",
-  styleUrls: ["./role-list.component.css"],
+  styleUrls: ["./role-list.component.scss"],
 })
 export class RoleListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;

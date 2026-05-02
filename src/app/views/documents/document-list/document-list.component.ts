@@ -31,7 +31,7 @@ import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.se
 @Component({
   selector: "app-document-list",
   templateUrl: "./document-list.component.html",
-  styleUrls: ["./document-list.component.css"],
+  styleUrls: ["./document-list.component.scss"],
 })
 export class DocumentListComponent implements OnInit, OnDestroy {
   documents: DocumentInfo[] = [];
