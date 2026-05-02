@@ -82,11 +82,6 @@
     transform: translateY(0) scale(1);
   }
 
-  [dir="rtl"] & {
-    right: 0;
-    left: auto;
-    transform-origin: top right;
-  }
 }
 
 .language-option {

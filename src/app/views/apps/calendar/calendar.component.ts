@@ -284,7 +284,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
             start: this.parsePlainDateTime(el.start),
             end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
             allDay: false,
-            category: colors[el.category as any] || el.category || colors.normal,
+            category: colors[el.category as any] || colors.normal,
             frequency: el.frequency,
           }));
           this.updateSelectedDayEvents();
