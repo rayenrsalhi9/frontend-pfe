@@ -1,12 +1,36 @@
 <div class="login-container">
   <div class="login-wrapper">
     <div class="login-card">
-      <div class="login-header">
-        <h1 class="login-title">{{'SIGN.IN.WELCOME_BACK' | translate}}</h1>
-        <p class="login-subtitle">{{'SIGN.IN.LOGIN_TO_ACCOUNT' | translate}}</p>
+      <div class="login-form-side">
+        <div class="login-header">
+          <a routerLink="/" class="login-logo-link">
+            <img
+              src="assets/images/logo/logo.png"
+              alt="DGI Logo"
+              class="login-logo"
+            />
+            <div class="ged-brand-text-group">
+              <span class="ged-brand-text-line orange">DIRECTION</span>
+              <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
+              <span class="ged-brand-text-line green">IMPÔTS</span>
+            </div>
+          </a>
+          <h1 class="login-title">{{ "SIGN.IN.WELCOME_BACK" | translate }}</h1>
+          <p class="login-subtitle">
+            {{ "SIGN.IN.LOGIN_TO_ACCOUNT" | translate }}
+          </p>
+        </div>
+
+        <login-form></login-form>
       </div>
-      
-      <login-form></login-form>
+
+      <div class="login-image-side">
+        <img
+          src="assets/images/auth/login-cover.png"
+          alt="Authentication Cover"
+          class="login-cover-img"
+        />
+      </div>
     </div>
   </div>
 </div>
