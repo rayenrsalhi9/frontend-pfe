@@ -1,8 +1,12 @@
 <div class="ged-side-nav-shell">
-  <a routerLink="/" class="ged-brand-card" aria-label="GED home">
+  <a routerLink="/" class="ged-brand-card" [attr.aria-label]="'NAV.GED_HOME' | translate">
     <div class="ged-brand-inner">
-      <i class="feather ged-brand-icon icon-file-text"></i>
-      <span class="ged-brand-text">GED</span>
+      <img src="assets/images/logo/logo.png" alt="DGI Logo" class="ged-brand-logo">
+      <div class="ged-brand-text-group">
+        <span class="ged-brand-text-line orange">DIRECTION</span>
+        <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
+        <span class="ged-brand-text-line green">IMPÔTS</span>
+      </div>
     </div>
   </a>
 

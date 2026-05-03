@@ -1,6 +1,6 @@
 export const nav = {
   NAV: {
-    GED_HOME: "GED Home",
+    GED_HOME: "DGI Home",
     TOGGLE_NAVIGATION: "Toggle Navigation",
     CLOSE_NAVIGATION: "Close Navigation",
 
