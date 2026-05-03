@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <div class="footer-membership">
+      <div class="footer-membership" *ngIf="(isAuthenticated$ | async) === false">
         <h4 class="nav-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</h4>
         <p class="membership-text">
           {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}
