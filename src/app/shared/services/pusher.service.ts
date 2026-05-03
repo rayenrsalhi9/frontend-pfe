@@ -37,6 +37,13 @@ export class PusherService {
     });
   }
 
+  rebuildPusher(): void {
+    if (this.pusher) {
+      this.pusher.disconnect();
+    }
+    this.initializePusher();
+  }
+
   getSocketId() {
     if (this.pusher) {
       return this.pusher.connection.socket_id;

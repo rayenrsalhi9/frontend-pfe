@@ -1,6 +1,6 @@
 export const table = {
   "TABLE_MESSAGE":{
-    "EMPTY":"Aucune donnée à afficher",
+    "EMPTY":"Aucun résultat trouvé",
     "EXTENSION":"Extension",
     "TOTAL":"Total",
     "SELECTED":"Sélectionné"

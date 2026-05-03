@@ -1,7 +1,7 @@
 <ng-container *ngIf="{ auth: isAuthenticated$ | async } as vm">
   <header class="welcome-header" [class.is-scrolled]="isScrolled">
     <div class="header-inner">
-      <a class="logo-link" routerLink="/" aria-label="DGI home">
+      <a class="logo-link" routerLink="/" [attr.aria-label]="'NAV.GED_HOME' | translate">
         <logo></logo>
         <div class="ged-brand-text-group">
           <span class="ged-brand-text-line orange">DIRECTION</span>
@@ -94,7 +94,7 @@
     [inert]="!isMenuOpen"
   >
     <div class="drawer-header">
-      <a class="logo-link" routerLink="/" (click)="toggleMenu()" aria-label="DGI home">
+      <a class="logo-link" routerLink="/" (click)="toggleMenu()" [attr.aria-label]="'NAV.GED_HOME' | translate">
         <logo></logo>
         <div class="ged-brand-text-group">
           <span class="ged-brand-text-line orange">DIRECTION</span>

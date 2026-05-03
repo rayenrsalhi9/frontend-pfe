@@ -48,8 +48,17 @@
     </div>
   </div>
 
-  <div class="list-table-wrapper">
+   <div class="list-table-wrapper">
+    <div *ngIf="loadError" class="list-empty">
+      <div class="list-empty-icon"><i class="feather icon-alert-circle"></i></div>
+      <div class="list-empty-text">{{ "BLOG.LIST.ERROR_LOADING" | translate }}</div>
+      <button class="list-btn-add" (click)="getBlogs()" style="margin-top:1rem;">
+        <i class="feather icon-refresh-cw list-btn-add__icon"></i>
+        {{ "BLOG.BUTTONS.RETRY" | translate }}
+      </button>
+    </div>
     <ngx-datatable
+      *ngIf="!loadError"
       class="list-table"
       [messages]="{
         emptyMessage: 'TABLE_MESSAGE.EMPTY' | translate,
@@ -168,6 +177,7 @@
               class="list-btn-action list-btn-action--view"
               [routerLink]="'/apps/blogs/view/' + row.id"
               [title]="'BLOG.BUTTONS.VIEW' | translate"
+              [attr.aria-label]="'BLOG.BUTTONS.VIEW' | translate"
             >
               <i class="feather icon-eye"></i>
             </a>
@@ -175,6 +185,7 @@
               class="list-btn-action list-btn-action--edit"
               [routerLink]="'/apps/blogs/edit/' + row.id"
               [title]="'BLOG.BUTTONS.EDIT' | translate"
+              [attr.aria-label]="'BLOG.BUTTONS.EDIT' | translate"
             >
               <i class="feather icon-edit-2"></i>
             </a>
@@ -182,6 +193,7 @@
               class="list-btn-action list-btn-action--comments"
               (click)="openCommentsModal(row)"
               [title]="'BLOG.BUTTONS.COMMENTS' | translate"
+              [attr.aria-label]="'BLOG.BUTTONS.COMMENTS' | translate"
             >
               <i class="feather icon-message-square"></i>
             </button>
@@ -189,6 +201,7 @@
               class="list-btn-action list-btn-action--delete"
               (click)="deleteBlog(row)"
               [title]="'BLOG.BUTTONS.DELETE' | translate"
+              [attr.aria-label]="'BLOG.BUTTONS.DELETE' | translate"
             >
               <i class="feather icon-trash-2"></i>
             </button>

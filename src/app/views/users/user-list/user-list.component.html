@@ -82,6 +82,7 @@
               class="list-btn-action list-btn-action--edit"
               (click)="editUser(row.id)"
               [title]="'USERS.LIST.BUTTONS.EDIT' | translate"
+              [attr.aria-label]="'USERS.LIST.BUTTONS.EDIT' | translate"
             >
               <i class="feather icon-edit-2"></i>
             </button>
@@ -90,6 +91,7 @@
               class="list-btn-action list-btn-action--view"
               (click)="resetPassword(row)"
               [title]="'USERS.LIST.BUTTONS.RESETPASSWORD' | translate"
+              [attr.aria-label]="'USERS.LIST.BUTTONS.RESETPASSWORD' | translate"
             >
               <i class="feather icon-lock"></i>
             </button>
@@ -98,6 +100,7 @@
               class="list-btn-action list-btn-action--delete"
               (click)="deleteUser(row)"
               [title]="'USERS.LIST.BUTTONS.DELETE' | translate"
+              [attr.aria-label]="'USERS.LIST.BUTTONS.DELETE' | translate"
             >
               <i class="feather icon-trash-2"></i>
             </button>

@@ -157,8 +157,8 @@
               <i class="feather icon-user"></i>
             </span>
             <div class="list-cell-title-stack">
-              <span class="list-cell-creator">{{ value.firstName }} {{ value.lastName }}</span>
-              <span class="list-cell-title-stack__sub" *ngIf="value?.userName">{{ value.userName }}</span>
+              <span class="list-cell-creator">{{ value.firstName || value.userName }} {{ value.lastName || '' }}</span>
+              <span class="list-cell-title-stack__sub" *ngIf="value?.userName && (value.firstName || value.lastName)">{{ value.userName }}</span>
             </div>
           </div>
           <ng-template #fallbackUser>

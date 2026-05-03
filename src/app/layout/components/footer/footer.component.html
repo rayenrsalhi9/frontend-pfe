@@ -2,7 +2,7 @@
   <div class="footer-main">
     <div class="footer-top">
       <div class="footer-brand">
-        <a routerLink="/" class="footer-logo" aria-label="DGI home">
+        <a routerLink="/" class="footer-logo" [attr.aria-label]="'NAV.GED_HOME' | translate">
           <logo></logo>
           <div class="ged-brand-text-group">
             <span class="ged-brand-text-line orange">DIRECTION</span>
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <div class="footer-membership" *ngIf="(isAuthenticated$ | async) === false">
+      <div class="footer-membership" *ngIf="(isAuthenticated$ | async) !== true">
         <h4 class="nav-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</h4>
         <p class="membership-text">
           {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}

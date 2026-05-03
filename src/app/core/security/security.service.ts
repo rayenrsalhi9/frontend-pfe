@@ -224,6 +224,7 @@ export class SecurityService {
       this.securityObject.authorisation.token,
     );
     this.securityObject$.next(this.securityObject);
+    this.pusherService.rebuildPusher();
   }
   logout(): void {
     // Capture user ID before mutating state

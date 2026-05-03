@@ -24,6 +24,7 @@
         class="list-search-input"
         (input)="onNameChange($event)"
         [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_NAME' | translate"
+        [attr.aria-label]="'ARTICLES.LIST.TABLES.SEARCH_BY_NAME' | translate"
       />
     </div>
     <div class="list-category-wrapper">
@@ -31,6 +32,7 @@
         class="list-select"
         [multiple]="false"
         [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate"
+        [attr.aria-label]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate"
         (change)="onCategoryChange($event)"
       >
         <ng-option *ngFor="let category of categories" [value]="category.id">
@@ -47,6 +49,7 @@
         [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
         (bsValueChange)="onDateChange($event)"
         [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_DATE' | translate"
+        [attr.aria-label]="'ARTICLES.LIST.TABLES.SEARCH_BY_DATE' | translate"
       />
     </div>
   </div>
@@ -181,7 +184,6 @@
       </ngx-datatable-column>
 
       <ngx-datatable-column
-        *hasClaim="['ARTICLE_EDIT_ARTICLE', 'ARTICLE_DELETE_ARTICLE']"
         [name]="'ARTICLES.LIST.TABLES.ACTIONS' | translate"
         [sortable]="false"
         [width]="160"
@@ -194,6 +196,7 @@
               class="list-btn-action list-btn-action--view"
               (click)="viewArticle(row)"
               [title]="'ARTICLES.LIST.BUTTONS.VIEW' | translate"
+              [attr.aria-label]="'ARTICLES.LIST.BUTTONS.VIEW' | translate"
             >
               <i class="feather icon-eye"></i>
             </button>
@@ -202,6 +205,7 @@
               class="list-btn-action list-btn-action--comments"
               (click)="openCommentsModal(row)"
               [title]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
+              [attr.aria-label]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
             >
               <i class="feather icon-message-square"></i>
             </button>
@@ -211,6 +215,7 @@
                 class="list-btn-action list-btn-action--edit"
                 [routerLink]="'/apps/articles/edit/' + row.id"
                 [title]="'ARTICLES.LIST.BUTTONS.EDIT' | translate"
+                [attr.aria-label]="'ARTICLES.LIST.BUTTONS.EDIT' | translate"
               >
                 <i class="feather icon-edit-2"></i>
               </button>
@@ -221,6 +226,7 @@
                 class="list-btn-action list-btn-action--delete"
                 (click)="deleteArticle(row)"
                 [title]="'ARTICLES.LIST.BUTTONS.DELETE' | translate"
+                [attr.aria-label]="'ARTICLES.LIST.BUTTONS.DELETE' | translate"
               >
                 <i class="feather icon-trash-2"></i>
               </button>

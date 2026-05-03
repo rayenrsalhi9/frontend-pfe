@@ -293,8 +293,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error("Error fetching calendar events:", err);
+        this.events = [];
+        this.selectedDayEvents = [];
+        this.isLoading = false;
         this.translate
-          .get("CALENDAR.TOAST.ERROR_LOADING")
+          .get("CALENDAR.TOAST.ERROR_LOAD_ING")
           .subscribe((translatedMessage: string) => {
             this.toastrService.error(translatedMessage);
           });
