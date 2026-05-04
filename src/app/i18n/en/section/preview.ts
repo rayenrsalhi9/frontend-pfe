@@ -131,5 +131,9 @@ export const preview = {
         CLOSED_NOTICE: "Comments are disabled for this article.",
       },
     },
+    LOGIN: {
+      LOGIN_TO_REACT: "Please log in to react to this post",
+      LOGIN_TO_COMMENT: "Please log in to comment on this post",
+    },
   },
 };

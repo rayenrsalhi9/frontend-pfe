@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subject, of } from "rxjs";
-import { takeUntil, switchMap, map, filter, take } from "rxjs/operators";
+import { Observable, Subject, of } from "rxjs";
+import { takeUntil, take, switchMap, map, filter } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
-import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -20,6 +19,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   forum: any = {};
   comment: any;
   user: any;
+  isAuthenticated$: Observable<boolean | null>;
   private destroy$ = new Subject<void>();
   private modalRef: BsModalRef | null = null;
 
@@ -38,6 +38,14 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth === undefined) return null;
+        if (auth === null) return false;
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
+    );
+
     this.activeRoute.paramMap
       .pipe(
         map((params) => params.get("id")),
@@ -105,8 +113,6 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
             console.log(error);
           },
         );
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 
@@ -128,8 +134,6 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
             console.log(error);
           },
         );
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 
@@ -161,8 +165,6 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
           }
         });
       }
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 

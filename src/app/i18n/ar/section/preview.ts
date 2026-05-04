@@ -98,36 +98,40 @@ export const preview = {
       },
     },
 
-    ARTICLE: {
-      LABEL: "مقالة",
-      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
-      TABLE: {
-        TOPIC: "المواضيع",
-        POSTS: "المقالات",
-        REPLIES: "التعليقات",
-        REACTIONS: "التفاعلات",
+      ARTICLE: {
+        LABEL: "مقالة",
+        STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
+        TABLE: {
+          TOPIC: "المواضيع",
+          POSTS: "المقالات",
+          REPLIES: "التعليقات",
+          REACTIONS: "التفاعلات",
+        },
+        REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
+        COMMENT: {
+          REPLIES: "التعليقات",
+          ADD_COMMENT: "أضف تعليقًا هنا...",
+          DELETE: "حذف التعليق",
+        },
+        LIST: {
+          TITLE: "أحدث المستجدات",
+          DESCRIPTION:
+            "استعرض مجموعتنا من المقالات والأخبار والتحديثات المؤسسية.",
+          VIEW_THREAD: "عرض المقالة",
+          READ_MORE: "قراءة المقالة كاملة",
+          NO_RESULTS: "لم يتم العثور على مقالات.",
+        },
+        PREVIEW: {
+          AUTHOR: "بقلم",
+          COMMENTS: "تعليقات الأعضاء",
+          ADD_COMMENT: "أضف تعليقًا",
+          NO_COMMENTS: "كن أول من يعلّق على هذه المقالة.",
+          CLOSED_NOTICE: "التعليقات مغلقة لهذه المقالة.",
+        },
       },
-      REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
-      COMMENT: {
-        REPLIES: "التعليقات",
-        ADD_COMMENT: "أضف تعليقًا هنا...",
-        DELETE: "حذف التعليق",
-      },
-      LIST: {
-        TITLE: "أحدث المستجدات",
-        DESCRIPTION:
-          "استعرض مجموعتنا من المقالات والأخبار والتحديثات المؤسسية.",
-        VIEW_THREAD: "عرض المقالة",
-        READ_MORE: "قراءة المقالة كاملة",
-        NO_RESULTS: "لم يتم العثور على مقالات.",
-      },
-      PREVIEW: {
-        AUTHOR: "بقلم",
-        COMMENTS: "تعليقات الأعضاء",
-        ADD_COMMENT: "أضف تعليقًا",
-        NO_COMMENTS: "كن أول من يعلّق على هذه المقالة.",
-        CLOSED_NOTICE: "التعليقات مغلقة لهذه المقالة.",
+      LOGIN: {
+        LOGIN_TO_REACT: "يرجى تسجيل الدخول للتفاعل مع هذه المنشور",
+        LOGIN_TO_COMMENT: "يرجى تسجيل الدخول لتعليق على هذه المنشور",
       },
     },
-  },
-};
+  };

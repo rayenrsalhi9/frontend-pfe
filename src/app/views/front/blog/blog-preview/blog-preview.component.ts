@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Subject } from "rxjs";
-import { takeUntil, switchMap, map, filter, take } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { takeUntil, take, switchMap, map, filter, catchError } from "rxjs/operators";
 import { SecurityService } from "@app/core/security/security.service";
-import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -20,6 +19,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   blog: any = {};
   comment: any;
   user: any;
+  isAuthenticated$: Observable<boolean | null>;
   private destroy$ = new Subject<void>();
   private modalRef: BsModalRef | null = null;
 
@@ -38,16 +38,27 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth === undefined) return null;
+        if (auth === null) return false;
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
+    );
+
     this.activeRoute.paramMap
       .pipe(
         takeUntil(this.destroy$),
         map((params) => params.get("id")),
         filter((id) => !!id),
-        switchMap((id) => this.blogService.getBlog(id)),
+        switchMap((id) =>
+          this.blogService.getBlog(id)),
       )
-      .subscribe((data: any) => {
-        this.blog = data;
-        this.cdr.markForCheck();
+      .subscribe({
+        next: (data: any) => {
+          this.blog = data;
+          this.cdr.markForCheck();
+        },
       });
 
     this.getUserInfo();
@@ -139,8 +150,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
           console.log(error);
         },
       );
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 
@@ -161,8 +170,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
             console.log(error);
           },
         );
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 
@@ -194,8 +201,6 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
           }
         });
       }
-    } else {
-      this.modalService.show(SusbcribeModalComponent);
     }
   }
 

@@ -102,36 +102,40 @@ export const preview = {
       },
     },
 
-    ARTICLE: {
-      LABEL: "Article",
-      STATUS: { OPEN: "Ouvert", CLOSED: "Fermé" },
-      TABLE: {
-        TOPIC: "Sujets",
-        POSTS: "Articles",
-        REPLIES: "Commentaires",
-        REACTIONS: "Réactions",
+      ARTICLE: {
+        LABEL: "Article",
+        STATUS: { OPEN: "Ouvert", CLOSED: "Fermé" },
+        TABLE: {
+          TOPIC: "Sujets",
+          POSTS: "Articles",
+          REPLIES: "Commentaires",
+          REACTIONS: "Réactions",
+        },
+        REACTIONS: { UP: "J'aime", DOWN: "Je n'aime pas", HEART: "J'adore" },
+        COMMENT: {
+          REPLIES: "Commentaires",
+          ADD_COMMENT: "Écrivez votre commentaire ici...",
+          DELETE: "Supprimer le commentaire",
+        },
+        LIST: {
+          TITLE: "Dernières Actualités",
+          DESCRIPTION:
+            "Explorez notre collection d'articles, de nouvelles et de mises à jour organisationnelles.",
+          VIEW_THREAD: "Voir l'article",
+          READ_MORE: "Lire l'article complet",
+          NO_RESULTS: "Aucun article trouvé.",
+        },
+        PREVIEW: {
+          AUTHOR: "Rédigé par",
+          COMMENTS: "Commentaires des membres",
+          ADD_COMMENT: "Ajouter un commentaire",
+          NO_COMMENTS: "Soyez le premier à commenter cet article.",
+          CLOSED_NOTICE: "Les commentaires sont fermés pour cet article.",
+        },
       },
-      REACTIONS: { UP: "J'aime", DOWN: "Je n'aime pas", HEART: "J'adore" },
-      COMMENT: {
-        REPLIES: "Commentaires",
-        ADD_COMMENT: "Écrivez votre commentaire ici...",
-        DELETE: "Supprimer le commentaire",
-      },
-      LIST: {
-        TITLE: "Dernières Actualités",
-        DESCRIPTION:
-          "Explorez notre collection d'articles, de nouvelles et de mises à jour organisationnelles.",
-        VIEW_THREAD: "Voir l'article",
-        READ_MORE: "Lire l'article complet",
-        NO_RESULTS: "Aucun article trouvé.",
-      },
-      PREVIEW: {
-        AUTHOR: "Rédigé par",
-        COMMENTS: "Commentaires des membres",
-        ADD_COMMENT: "Ajouter un commentaire",
-        NO_COMMENTS: "Soyez le premier à commenter cet article.",
-        CLOSED_NOTICE: "Les commentaires sont fermés pour cet article.",
+      LOGIN: {
+        LOGIN_TO_REACT: "Veuillez vous connecter pour réagir à cette publication",
+        LOGIN_TO_COMMENT: "Veuillez vous connecter pour commenter cette publication",
       },
     },
-  },
-};
+  };
