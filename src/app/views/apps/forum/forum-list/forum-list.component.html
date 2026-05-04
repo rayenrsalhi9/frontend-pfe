@@ -115,16 +115,19 @@
       </ngx-datatable-column>
 
       <ngx-datatable-column
-        [name]="'FORUM.TABLE.STATUS' | translate"
-        prop="closed"
+        [name]="'FORUM.TABLE.PRIVACY' | translate"
+        prop="privacy"
         [width]="110"
       >
         <ng-template ngx-datatable-cell-template let-value="value">
           <span
             class="list-cell-badge"
-            [ngClass]="value ? 'list-cell-badge--red' : 'list-cell-badge--green'"
+            [ngClass]="{
+              'list-cell-badge--green': value === 'public',
+              'list-cell-badge--yellow': value === 'private'
+            }"
           >
-            {{ (value ? "FORUM.STATUS.CLOSED" : "FORUM.STATUS.OPEN") | translate }}
+            {{ (value === "public" ? "FORUM.PRIVACY.PUBLIC" : "FORUM.PRIVACY.PRIVATE") | translate }}
           </span>
         </ng-template>
       </ngx-datatable-column>
@@ -147,16 +150,11 @@
         prop="commentsCount"
         [width]="100"
       >
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
-          <button
-            type="button"
-            class="list-btn-action--comments"
-            (click)="openCommentsModal(row)"
-            [attr.aria-label]="'FORUM.TABLE.REPLIES' | translate"
-          >
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span class="list-cell-stat list-cell-stat--blue">
             <i class="feather icon-message-circle"></i>
             <span>{{ value ?? 0 }}</span>
-          </button>
+          </span>
         </ng-template>
       </ngx-datatable-column>
 
@@ -169,13 +167,6 @@
       >
         <ng-template let-row="row" ngx-datatable-cell-template>
           <div class="list-actions">
-            <button
-              class="list-btn-action list-btn-action--comments"
-              (click)="openCommentsModal(row)"
-              [title]="'FORUM.BUTTONS.COMMENTS' | translate"
-            >
-              <i class="feather icon-message-square"></i>
-            </button>
             <a
               *hasClaim="'FORUM_EDIT_TOPIC'"
               class="list-btn-action list-btn-action--edit"

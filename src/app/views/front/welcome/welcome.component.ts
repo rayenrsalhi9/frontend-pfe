@@ -72,9 +72,10 @@ export class WelcomeComponent implements OnInit {
   }
 
   loadPublicArticles(): void {
-    this.userService.getArticles().subscribe(
+    this.articleService.allArticles({ limit: 5 }).subscribe(
       (data: any) => {
-        this.articles = data;
+        this.articles = (data || []).slice(0, 5);
+        this.cdr.markForCheck();
       },
       (error) => {
         this.errorMessage = this.translate.instant(
@@ -106,17 +107,26 @@ export class WelcomeComponent implements OnInit {
   }
 
   getLatestBlogs() {
-    this.blogService
-      .allBlogs({ pageSize: 5, orderBy: 'createdAt desc' })
-      .subscribe((data: any) => {
-        this.latestBlogs = data;
-        this.cdr.markForCheck();
-      });
+    this.blogService.allBlogs({ limit: 5 }).subscribe((data: any) => {
+      this.latestBlogs = (data || []).slice(0, 5);
+      this.cdr.markForCheck();
+    });
+  }
+
+  getLatestForums() {
+    this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
+      this.latestForums = ((data || []).slice(0, 5)).map((forum: any) =>
+        this.normalizeForum(forum),
+      );
+      this.cdr.markForCheck();
+    });
   }
 
   getLastForums() {
     this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = (data || []).map((forum: any) => this.normalizeForum(forum));
+      this.latestForums = (data || []).map((forum: any) =>
+        this.normalizeForum(forum),
+      );
       this.cdr.markForCheck();
     });
   }
@@ -132,7 +142,7 @@ export class WelcomeComponent implements OnInit {
       commentsCount?: number;
       comments_count?: number;
       comments?: any[];
-    }
+    },
   ) {
     const reactionsCount =
       forum?.reactionsCount ??
@@ -140,7 +150,9 @@ export class WelcomeComponent implements OnInit {
       (Array.isArray(forum?.reactions) ? forum.reactions.length : 0) +
         (Array.isArray(forum?.reactionsUp) ? forum.reactionsUp.length : 0) +
         (Array.isArray(forum?.reactionsDown) ? forum.reactionsDown.length : 0) +
-        (Array.isArray(forum?.reactionsHeart) ? forum.reactionsHeart.length : 0);
+        (Array.isArray(forum?.reactionsHeart)
+          ? forum.reactionsHeart.length
+          : 0);
 
     const commentsCount =
       forum?.commentsCount ??

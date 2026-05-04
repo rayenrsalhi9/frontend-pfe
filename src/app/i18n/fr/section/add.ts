@@ -294,6 +294,13 @@ export const add = {
         NO_RESULTS: "Aucun résultat trouvé",
         BASIC_INFO: "Informations de base",
         SETTINGS: "Paramètres",
+        USERS: "Utilisateurs autorisés",
+      },
+      PLACEHOLDERS: {
+        USERS: "Rechercher des utilisateurs…",
+      },
+      HINTS: {
+        USERS: "Laissez vide pour autoriser tous les membres invités à lire ceci.",
       },
       BUTTONS: {
         BROWSE: "Parcourir",
@@ -321,76 +328,42 @@ export const add = {
   },
 
   EDIT: {
+    SHARED: {
+      BUTTONS: {
+        SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Mis à jour avec succès",
+        ERROR: "Échec de la mise à jour",
+      },
+    },
     FORUM: {
       TITLE: "Modifier le sujet",
       DESCRIPTION: "Mettez à jour votre sujet et ses paramètres.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Sujet mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du sujet",
-      },
     },
     BLOG: {
-      TITLE: "Modifier l’article",
+      TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Blog mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du blog",
-      },
     },
     ARTICLE: {
-      TITLE: "Modifier l’article",
+      TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
-      BUTTONS: {
-        UPDATE: "Mettre à jour",
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Article mis à jour avec succès",
-        ERROR: "Échec de la mise à jour de l’article",
-      },
     },
 
     SURVEY: {
       TITLE: "Modifier le sondage",
       DESCRIPTION:
         "Mettez à jour vos paramètres de sondage et vos participants.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Sondage mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du sondage",
-      },
     },
 
     CATEGORY: {
       TITLE: "Modifier la catégorie",
       DESCRIPTION: "Mettez à jour le nom et la description de votre catégorie.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Catégorie mise à jour avec succès",
-        ERROR: "Échec de la mise à jour de la catégorie",
-      },
     },
 
     USER: {
       TITLE: "Modifier l'utilisateur",
       DESCRIPTION: "Mettez à jour les informations et les rôles de l'utilisateur.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Utilisateur mis à jour avec succès",
-        ERROR: "Échec de la mise à jour de l'utilisateur",
-      },
     },
   },
 };

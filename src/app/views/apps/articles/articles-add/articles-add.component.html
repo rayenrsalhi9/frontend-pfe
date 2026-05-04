@@ -278,7 +278,7 @@
           <!-- Allowed users (shown when private) -->
           <div class="field" *ngIf="articleForm.get('private')?.value">
             <label class="field-label" for="users">
-              {{ "ADD.ARTICLE.LABELS.USERS" | translate }}
+              {{ "ADD.SHARED.LABELS.USERS" | translate }}
               <span class="optional-mark">{{
                 "ADD.SHARED.LABELS.OPTIONAL" | translate
               }}</span>
@@ -287,14 +287,14 @@
               id="users"
               formControlName="users"
               [multiple]="true"
-              [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.USERS' | translate"
+              [placeholder]="'ADD.SHARED.PLACEHOLDERS.USERS' | translate"
             >
               <ng-option *ngFor="let user of users" [value]="user.id">
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
             </ng-select>
             <p class="field-hint">
-              {{ "ADD.ARTICLE.HINTS.USERS" | translate }}
+              {{ "ADD.SHARED.HINTS.USERS" | translate }}
             </p>
           </div>
         </div>
@@ -316,7 +316,7 @@
           >
             {{
               (isEdit
-                ? "EDIT.ARTICLE.BUTTONS.UPDATE"
+                ? "EDIT.SHARED.BUTTONS.SAVE"
                 : "ADD.ARTICLE.BUTTONS.SAVE"
               ) | translate
             }}

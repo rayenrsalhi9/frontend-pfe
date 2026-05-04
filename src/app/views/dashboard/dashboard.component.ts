@@ -226,7 +226,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getArticles() {
     this._subscriptions.add(
-      this.articleService.allArticles({ limit: 4 }).subscribe({
+      this.articleService.allArticlesForDashboard({ limit: 4 }).subscribe({
         next: (data: any) => {
           this.articles = data;
           this.newsLoaded = true;

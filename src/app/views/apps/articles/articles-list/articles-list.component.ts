@@ -63,7 +63,7 @@ export class ArticlesListComponent implements OnInit, OnDestroy {
         debounceTime(300),
         tap(() => this.cdr.detectChanges()),
         switchMap(() =>
-          this.articleService.allArticles(this.articleResource).pipe(
+          this.articleService.allArticlesForDashboard(this.articleResource).pipe(
             catchError((err) => {
               console.error(err);
               return of([]);

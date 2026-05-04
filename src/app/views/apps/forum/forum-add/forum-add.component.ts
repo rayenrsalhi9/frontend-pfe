@@ -14,6 +14,8 @@ import { ForumCategoryService } from "../forum-category/forum-category.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { SecurityService } from "@app/core/security/security.service";
+import { CommonService } from "@app/shared/services/common.service";
 
 @Component({
   selector: "app-forum-add",
@@ -23,7 +25,8 @@ import { TranslateService } from "@ngx-translate/core";
 export class ForumAddComponent implements OnInit, OnDestroy {
   forumForm: FormGroup;
   categories: any[] = [];
-  subCategories: any[] = [];
+  users: any[] = [];
+  currentUser: any;
   isLoading = false;
   isEdit = false;
   forumId: any;
@@ -40,10 +43,14 @@ export class ForumAddComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private sanitizer: DomSanitizer,
     private activeRoute: ActivatedRoute,
+    private securityService: SecurityService,
+    private commonService: CommonService,
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.securityService.getUserDetail()?.user;
     this.initializeForm();
+    this.setupPrivateFieldWatcher();
     this.loadCategories();
     this.checkEditMode();
   }
@@ -64,36 +71,50 @@ export class ForumAddComponent implements OnInit, OnDestroy {
         ],
       ],
       category: ["", [Validators.required]],
-      subCategory: [""],
       content: ["", [Validators.required, Validators.minLength(10)]],
       tags: [[]],
       private: [false],
+      users: [[]],
     });
 
-    // Subscribe to category changes to load subcategories
-    this.forumForm
-      .get("category")!
-      .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((categoryId) => {
-        this.onCategoryChange(categoryId);
+    // Removed category change listener for subcategories
+  }
+
+  private setupPrivateFieldWatcher(): void {
+    this.forumForm.get('private')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isPrivate: boolean) => {
+        const usersControl = this.forumForm.get('users');
+        if (isPrivate) {
+          const currentUsers = usersControl?.value || [];
+          const currentUserId = this.currentUser?.id;
+          // Only add if we have a valid user ID and it's not already in the list
+          if (currentUserId && !currentUsers.includes(currentUserId)) {
+            usersControl?.setValue([...currentUsers, currentUserId]);
+          }
+        } else {
+          usersControl?.setValue([]);
+        }
       });
   }
 
-  private onCategoryChange(categoryId: string): void {
-    // Reset subCategory when category changes
-    this.forumForm.get("subCategory")!.reset();
-
-    // Load subcategories for the selected category
-    if (categoryId) {
-      const selectedCategory = this.categories.find(
-        (cat) => cat.id === categoryId,
-      );
-      this.subCategories = selectedCategory?.subCategories || [];
-    } else {
-      this.subCategories = [];
-    }
-
-    this.cdr.markForCheck();
+  private loadUsers(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.commonService
+        .getUsers()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (data: any) => {
+            this.users = data;
+            this.cdr.markForCheck();
+            resolve();
+          },
+          error: (error) => {
+            console.error("Error loading users:", error);
+            reject(error);
+          },
+        });
+    });
   }
 
   private loadCategories(): void {
@@ -104,15 +125,7 @@ export class ForumAddComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           this.categories = data;
 
-          // Re-derive subcategories if a category is already selected
-          const currentCategoryId = this.forumForm.get("category")?.value;
-          if (currentCategoryId) {
-            const selectedCategory = this.categories.find(
-              (cat) => cat.id === currentCategoryId,
-            );
-            this.subCategories = selectedCategory?.subCategories || [];
-          }
-
+          // Removed subcategory derivation
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -189,7 +202,7 @@ export class ForumAddComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.isLoading = false;
           this.translate
-            .get("EDIT.FORUM.TOAST.SUCCESS")
+            .get("EDIT.SHARED.TOAST.SUCCESS")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.success(message);
@@ -200,7 +213,7 @@ export class ForumAddComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           console.error("Error updating forum:", error);
           this.translate
-            .get("EDIT.FORUM.TOAST.ERROR")
+            .get("EDIT.SHARED.TOAST.ERROR")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.error(message);
@@ -233,6 +246,18 @@ export class ForumAddComponent implements OnInit, OnDestroy {
         .filter((tag) => tag && tag.length > 0);
     }
 
+    // Process users - include current user if private
+    if (formValue.private) {
+      if (formValue.users && formValue.users.length > 0) {
+        formValue.users = [...formValue.users, this.currentUser?.id];
+      } else {
+        formValue.users = [this.currentUser?.id];
+      }
+    } else {
+      // Clear users if not private
+      formValue.users = [];
+    }
+
     return formValue;
   }
 
@@ -248,7 +273,15 @@ export class ForumAddComponent implements OnInit, OnDestroy {
         if (id) {
           this.isEdit = true;
           this.forumId = id;
-          this.loadForum(id);
+          // Load users first, then load the forum so users are available for pre-selection
+          this.loadUsers().then(() => {
+            this.loadForum(id);
+          }).catch(() => {
+            this.loadForum(id);
+          });
+        } else {
+          // Not in edit mode, just load users
+          this.loadUsers().catch(() => {});
         }
       });
   }
@@ -261,6 +294,19 @@ export class ForumAddComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           this.isLoading = false;
+
+          // Map allowedUsers to user IDs that exist in the users array
+          // Backend now returns allowedUsers with user relationship
+          const allowedUserIds = data.allowedUsers
+            ? data.allowedUsers
+                .map((u: any) => u.user?.id || u.user_id)
+                .filter((id: any) => id != null)
+            : [];
+          // Filter to only include IDs that exist in our users array
+          const validUserIds = allowedUserIds.filter((id: any) =>
+            id && this.users.some((u) => u.id === id),
+          );
+
           this.forumForm.patchValue({
             title: data.title,
             category: data.category.id,
@@ -268,14 +314,8 @@ export class ForumAddComponent implements OnInit, OnDestroy {
             closed: data.closed,
             tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
-            subCategory: data.subCategory?.id || data.subCategoryId || null,
+            users: validUserIds,
           });
-
-          // Load subcategories for the selected category
-          const selectedCategory = this.categories.find(
-            (cat) => cat.id === data.category.id,
-          );
-          this.subCategories = selectedCategory?.subCategories || [];
 
           this.cdr.markForCheck();
         },

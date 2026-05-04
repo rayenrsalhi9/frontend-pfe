@@ -1,4 +1,4 @@
-<div class="add-form-page" *ngIf="!isLoading">
+<div class="add-form-page">
   <div class="add-form-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -56,67 +56,44 @@
             </div>
           </div>
 
-          <!-- Category + Subcategory -->
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="category">
-                {{ "ADD.FORUM.LABELS.CATEGORY" | translate }}
-                <span class="required-mark">*</span>
-              </label>
-              <ng-select
-                formControlName="category"
-                [class.has-error]="isCategoryInvalid"
-                [placeholder]="
-                  'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
-                "
-                [searchable]="false"
-                [labelForId]="'category'"
+          <!-- Category -->
+          <div class="field">
+            <label class="field-label" for="category">
+              {{ "ADD.FORUM.LABELS.CATEGORY" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <ng-select
+              formControlName="category"
+              [class.has-error]="isCategoryInvalid"
+              [placeholder]="
+                'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
+              "
+              [searchable]="false"
+              [labelForId]="'category'"
+            >
+              <ng-option
+                *ngFor="let category of categories"
+                [value]="category.id"
               >
-                <ng-option
-                  *ngFor="let category of categories"
-                  [value]="category.id"
-                >
-                  {{ category.name }}
-                </ng-option>
-              </ng-select>
-              <div class="field-error" *ngIf="isCategoryInvalid">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                {{ categoryErrorMessage | translate }}
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="subCategory">
-                {{ "ADD.FORUM.LABELS.SUBCATEGORY" | translate }}
-                <span class="optional-mark">{{
-                  "ADD.SHARED.LABELS.OPTIONAL" | translate
-                }}</span>
-              </label>
-              <ng-select
-                formControlName="subCategory"
-                [placeholder]="
-                  'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
-                "
-                [searchable]="false"
-                [labelForId]="'subCategory'"
+                {{ category.name }}
+              </ng-option>
+            </ng-select>
+            <div class="field-error" *ngIf="isCategoryInvalid">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               >
-                <ng-option *ngFor="let sub of subCategories" [value]="sub.id">
-                  {{ sub.name }}
-                </ng-option>
-              </ng-select>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              {{ categoryErrorMessage | translate }}
             </div>
           </div>
         </div>
@@ -208,6 +185,29 @@
               </div>
             </div>
           </div>
+
+          <!-- Allowed users (shown when private) -->
+          <div class="field" *ngIf="forumForm.get('private')?.value">
+            <label class="field-label" for="users">
+              {{ "ADD.SHARED.LABELS.USERS" | translate }}
+              <span class="optional-mark">{{
+                "ADD.SHARED.LABELS.OPTIONAL" | translate
+              }}</span>
+            </label>
+            <ng-select
+              id="users"
+              formControlName="users"
+              [multiple]="true"
+              [placeholder]="'ADD.SHARED.PLACEHOLDERS.USERS' | translate"
+            >
+              <ng-option *ngFor="let user of users" [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </ng-option>
+            </ng-select>
+            <p class="field-hint">
+              {{ "ADD.SHARED.HINTS.USERS" | translate }}
+            </p>
+          </div>
         </div>
       </form>
 
@@ -224,9 +224,11 @@
             type="button"
             class="btn btn-primary"
             (click)="onSubmit()"
-            [disabled]="isLoading"
+            [disabled]="forumForm.invalid || isLoading"
           >
-            {{ (isEdit ? "EDIT.FORUM.BUTTONS.SAVE" : "ADD.FORUM.BUTTONS.SAVE") | translate }}
+            {{
+              (isEdit ? "EDIT.SHARED.BUTTONS.SAVE" : "ADD.FORUM.BUTTONS.SAVE") | translate
+            }}
           </button>
         </div>
       </div>

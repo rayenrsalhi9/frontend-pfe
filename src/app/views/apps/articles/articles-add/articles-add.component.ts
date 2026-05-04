@@ -156,9 +156,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          this.users = data.filter(
-            (user: any) => user.id !== this.currentUser.id,
-          );
+          this.users = data;
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -237,6 +235,8 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
         this.newPicture = result;
         this.picture = this.sanitizer.bypassSecurityTrustUrl(result);
         this.articleForm.patchValue({ picture: result });
+        this.articleForm.get("picture")?.markAsDirty();
+        this.articleForm.get("picture")?.updateValueAndValidity();
         this.cdr.detectChanges();
       }
     };
@@ -305,7 +305,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.isLoading = false;
           this.translate
-            .get("ADD.ARTICLE.TOAST.UPDATED_SUCCESSFULLY")
+            .get("EDIT.SHARED.TOAST.SUCCESS")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.success(message);
@@ -316,7 +316,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           console.error("Error updating article:", error);
           this.translate
-            .get("ADD.ARTICLE.TOAST.ERROR")
+            .get("EDIT.SHARED.TOAST.ERROR")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.error(message);

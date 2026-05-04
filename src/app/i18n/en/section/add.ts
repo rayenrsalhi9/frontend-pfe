@@ -287,6 +287,13 @@ export const add = {
         NO_RESULTS: "No results found",
         BASIC_INFO: "Basic information",
         SETTINGS: "Settings",
+        USERS: "Allowed users",
+      },
+      PLACEHOLDERS: {
+        USERS: "Search for users…",
+      },
+      HINTS: {
+        USERS: "Leave empty to allow all invited members to read this.",
       },
       BUTTONS: {
         BROWSE: "Browse",
@@ -314,75 +321,41 @@ export const add = {
   },
 
   EDIT: {
+    SHARED: {
+      BUTTONS: {
+        SAVE: "Update",
+      },
+      TOAST: {
+        SUCCESS: "Updated successfully",
+        ERROR: "Failed to update",
+      },
+    },
     FORUM: {
       TITLE: "Edit forum thread",
       DESCRIPTION: "Update your forum thread and settings.",
-      BUTTONS: {
-        SAVE: "Update thread",
-      },
-      TOAST: {
-        SUCCESS: "Thread updated successfully",
-        ERROR: "Failed to update thread",
-      },
     },
     BLOG: {
       TITLE: "Edit blog post",
       DESCRIPTION: "Update your blog post and settings.",
-      BUTTONS: {
-        SAVE: "Update post",
-      },
-      TOAST: {
-        SUCCESS: "Blog post updated successfully",
-        ERROR: "Failed to update blog post",
-      },
     },
     ARTICLE: {
       TITLE: "Edit article",
       DESCRIPTION: "Update your article and settings.",
-      BUTTONS: {
-        UPDATE: "Update article",
-        SAVE: "Update article",
-      },
-      TOAST: {
-        SUCCESS: "Article updated successfully",
-        ERROR: "Failed to update article",
-      },
     },
 
     SURVEY: {
       TITLE: "Edit survey",
       DESCRIPTION: "Update your survey settings and participants.",
-      BUTTONS: {
-        SAVE: "Update survey",
-      },
-      TOAST: {
-        SUCCESS: "Survey updated successfully",
-        ERROR: "Failed to update survey",
-      },
     },
 
     CATEGORY: {
       TITLE: "Edit category",
       DESCRIPTION: "Update your category name and description.",
-      BUTTONS: {
-        SAVE: "Update category",
-      },
-      TOAST: {
-        SUCCESS: "Category updated successfully",
-        ERROR: "Failed to update category",
-      },
     },
 
     USER: {
       TITLE: "Edit user",
       DESCRIPTION: "Update user information and roles.",
-      BUTTONS: {
-        SAVE: "Update user",
-      },
-      TOAST: {
-        SUCCESS: "User updated successfully",
-        ERROR: "Failed to update user",
-      },
     },
   },
 };

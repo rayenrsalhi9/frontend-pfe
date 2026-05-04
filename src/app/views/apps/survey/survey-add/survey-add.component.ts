@@ -211,7 +211,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
         next: (res) => {
           this.isLoading = false;
           const toastKey = this.isEdit
-            ? "EDIT.SURVEY.TOAST.SUCCESS"
+            ? "EDIT.SHARED.TOAST.SUCCESS"
             : "ADD.SURVEY.TOAST.SUCCESS";
           this.toastr.success(this.translate.instant(toastKey));
           this.router.navigate(["/apps/surveys"]);
@@ -219,7 +219,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.isLoading = false;
           const toastKey = this.isEdit
-            ? "EDIT.SURVEY.TOAST.ERROR"
+            ? "EDIT.SHARED.TOAST.ERROR"
             : "ADD.SURVEY.TOAST.ERROR";
           this.toastr.error(this.translate.instant(toastKey));
           console.error("Error saving survey:", err);

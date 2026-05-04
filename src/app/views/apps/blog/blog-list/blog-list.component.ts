@@ -61,7 +61,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         }),
         switchMap(() =>
-          this.blogsService.allBlogs(this.blogResource).pipe(
+          this.blogsService.allBlogsForDashboard(this.blogResource).pipe(
             catchError((err) => {
               this.loadError = true;
               this.isLoadingResults = false;

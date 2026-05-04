@@ -10,9 +10,8 @@ export const forum = {
       REACTIONS: "التفاعلات",
       ACTIVITY: "آخر نشاط",
       CREATED: "تاريخ الإنشاء",
-      CLOSED: "مغلق",
       CREATOR: "الكاتب",
-      STATUS: "الحالة",
+      PRIVACY: "الخصوصية",
       ACTIONS: "الإجراءات",
       SEARCH_BY_NAME: "ابحث عن موضوع...",
       SEARCH_BY_CATEGORY: "تصفية حسب التصنيف",
@@ -84,9 +83,9 @@ export const forum = {
       ADD_COMMENT: "أضف تعليقاً...",
     },
 
-    STATUS: {
-      OPEN: "مفتوح",
-      CLOSED: "مغلق",
+    PRIVACY: {
+      PUBLIC: "عام",
+      PRIVATE: "خاص",
     },
     MODAL: {
       TITLE: "تعليقات المناقشة",

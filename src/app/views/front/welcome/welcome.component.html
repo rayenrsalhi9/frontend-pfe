@@ -32,7 +32,7 @@
       <div class="card-body">
         <div *ngIf="latestBlogs?.length > 0; else noBlogs" class="items-list">
           <a
-            *ngFor="let blog of latestBlogs | slice: 0 : 3"
+            *ngFor="let blog of latestBlogs | slice: 0 : 5"
             class="item-entry"
             [routerLink]="['/blog', blog.id]"
           >
@@ -88,7 +88,7 @@
         <ng-template #articlesContent>
           <div *ngIf="articles?.length > 0; else noArticles" class="items-list">
           <a
-            *ngFor="let article of articles | slice: 0 : 3"
+             *ngFor="let article of articles | slice: 0 : 5"
             class="item-entry"
             [routerLink]="['/article', article.id]"
           >
@@ -216,7 +216,7 @@
       <div class="card-body">
         <div *ngIf="latestForums?.length > 0; else noForums" class="items-list">
           <a
-            *ngFor="let forum of latestForums | slice: 0 : 3"
+             *ngFor="let forum of latestForums | slice: 0 : 5"
             class="item-entry simple"
             [routerLink]="['/forum', forum.id]"
           >

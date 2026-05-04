@@ -50,7 +50,7 @@ export class ForumListComponent implements OnInit {
         debounceTime(300),
         tap(() => (this.isLoadingResults = true)),
         switchMap(() =>
-          this.forumService.allForums(this.forumResource).pipe(
+          this.forumService.allForumsForDashboard(this.forumResource).pipe(
             catchError((err) => {
               console.error(err);
               this.isLoadingResults = false;

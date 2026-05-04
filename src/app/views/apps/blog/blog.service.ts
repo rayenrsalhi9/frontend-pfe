@@ -19,6 +19,13 @@ export class BlogService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  allBlogsForDashboard(params = {}): Observable<any[] | CommonError> {
+    const url = `dashboard/blogs`;
+    return this.httpClient
+      .get<any[]>(url, { params: params })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   getBlog(id: any): Observable<any[] | CommonError> {
     const url = `blogs/get/${id}`;
     return this.httpClient

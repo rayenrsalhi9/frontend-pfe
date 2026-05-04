@@ -104,14 +104,14 @@ export class DocumentService {
   }
 
   getDocumentByExtension() {
-    const url = `documents/extension`;
+    const url = `dashboard/extension`;
     return this.httpClient
       .get<DocumentInfo[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   documentTransaction() {
-    const url = "documents/transactions";
+    const url = "dashboard/transactions";
     return this.httpClient
       .get<DocumentInfo[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));

@@ -20,6 +20,13 @@ export class ForumService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  allForumsForDashboard(params = {}): Observable<ForumThread[] | CommonError> {
+    const url = `dashboard/forums`;
+    return this.httpClient
+      .get<ForumThread[]>(url, { params: params })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   getForum(id: any): Observable<any[] | CommonError> {
     const url = `forums/get/${id}`;
     return this.httpClient
