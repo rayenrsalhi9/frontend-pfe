@@ -107,7 +107,7 @@ export class WelcomeComponent implements OnInit {
 
   getLatestBlogs() {
     this.blogService
-      .allBlogs({ banner: 0, limit: 5 })
+      .allBlogs({ pageSize: 5, orderBy: 'createdAt desc' })
       .subscribe((data: any) => {
         this.latestBlogs = data;
         this.cdr.markForCheck();

@@ -32,7 +32,9 @@
         class="list-select"
         [multiple]="false"
         [placeholder]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate"
-        [attr.aria-label]="'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate"
+        [attr.aria-label]="
+          'ARTICLES.LIST.TABLES.SEARCH_BY_CATEGORY' | translate
+        "
         (change)="onCategoryChange($event)"
       >
         <ng-option *ngFor="let category of categories" [value]="category.id">
@@ -120,31 +122,6 @@
               {{ value.firstName }} {{ value.lastName }}
             </span>
           </div>
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column
-        [name]="'ARTICLES.LIST.TABLES.REPLIES' | translate"
-        [width]="100"
-        prop="commentsCount"
-      >
-        <ng-template
-          ngx-datatable-cell-template
-          let-value="value"
-          let-row="row"
-        >
-          <button
-            *hasClaim="'ARTICLE_VIEW_COMMENTS'"
-            type="button"
-            class="list-btn-action--comments"
-            (click)="openCommentsModal(row)"
-            [attr.aria-label]="
-              ('ARTICLES.LIST.TABLES.REPLIES' | translate) + ': ' + (value || 0)
-            "
-          >
-            <i class="feather icon-message-circle"></i>
-            <span>{{ value || 0 }}</span>
-          </button>
         </ng-template>
       </ngx-datatable-column>
 
