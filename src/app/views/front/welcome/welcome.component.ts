@@ -6,7 +6,6 @@ import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/
 import { ArticleService } from "@app/shared/services/article.service";
 import { UserService } from "@app/shared/services/user.service";
 import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/articles-views.component";
-
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { SurveyService } from "@app/views/apps/survey/survey.service";
@@ -21,10 +20,10 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./welcome.component.css"],
 })
 export class WelcomeComponent implements OnInit {
-  latestBlogs = [];
-  latestForums = [];
+  latestBlogs: any[] = [];
+  latestForums: any[] = [];
   articles: any[] = [];
-  survey = null;
+  survey: any = null;
   errorMessage: string = "";
   bsModalRef: BsModalRef;
   selectedRating: number = 0;
@@ -71,6 +70,16 @@ export class WelcomeComponent implements OnInit {
     this.loadPublicArticles();
   }
 
+  /** First blog — shown as the large featured card */
+  get featuredBlog(): any | null {
+    return this.latestBlogs?.length > 0 ? this.latestBlogs[0] : null;
+  }
+
+  /** Remaining blogs — shown in the numbered list below the featured card */
+  get remainingBlogs(): any[] {
+    return this.latestBlogs?.length > 1 ? this.latestBlogs.slice(1) : [];
+  }
+
   loadPublicArticles(): void {
     this.articleService.allArticles({ limit: 5 }).subscribe(
       (data: any) => {
@@ -86,15 +95,12 @@ export class WelcomeComponent implements OnInit {
     );
   }
 
-  viewArticle(data: any) {
-    const initialState = {
-      data: Object.assign({}, data),
-    };
-    this.modalService.show(ArticlesViewsComponent, {
-      initialState: initialState,
-    });
+  viewArticle(data: any): void {
+    const initialState = { data: Object.assign({}, data) };
+    this.modalService.show(ArticlesViewsComponent, { initialState });
   }
-  getHost() {
+
+  getHost(): string {
     return environment.apiUrl;
   }
 
@@ -106,23 +112,23 @@ export class WelcomeComponent implements OnInit {
     return name || creator?.userName || "";
   }
 
-  getLatestBlogs() {
+  getLatestBlogs(): void {
     this.blogService.allBlogs({ limit: 5 }).subscribe((data: any) => {
       this.latestBlogs = (data || []).slice(0, 5);
       this.cdr.markForCheck();
     });
   }
 
-  getLatestForums() {
+  getLatestForums(): void {
     this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = ((data || []).slice(0, 5)).map((forum: any) =>
-        this.normalizeForum(forum),
-      );
+      this.latestForums = (data || [])
+        .slice(0, 5)
+        .map((forum: any) => this.normalizeForum(forum));
       this.cdr.markForCheck();
     });
   }
 
-  getLastForums() {
+  getLastForums(): void {
     this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
       this.latestForums = (data || []).map((forum: any) =>
         this.normalizeForum(forum),
@@ -159,14 +165,10 @@ export class WelcomeComponent implements OnInit {
       forum?.comments_count ??
       (Array.isArray(forum?.comments) ? forum.comments.length : 0);
 
-    return {
-      ...forum,
-      reactionsCount,
-      commentsCount,
-    };
+    return { ...forum, reactionsCount, commentsCount };
   }
 
-  getLatestSurvey() {
+  getLatestSurvey(): void {
     this.surveyService.getLatestSurvey().subscribe({
       next: (data: any) => {
         const isValidSurvey =
@@ -183,7 +185,7 @@ export class WelcomeComponent implements OnInit {
     });
   }
 
-  surveyAnswer(value: any) {
+  surveyAnswer(value: any): void {
     if (
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
@@ -194,11 +196,11 @@ export class WelcomeComponent implements OnInit {
           this.surveyService
             .responseSurvey(this.survey.id, { answer: value })
             .subscribe(
-              (data: any) => {
+              () => {
                 this.toastr.success(translatedMessage["SUCCESS"]);
                 this.getLatestSurvey();
               },
-              (error: any) => {
+              () => {
                 this.toastr.error(translatedMessage["ERROR"]);
               },
             );

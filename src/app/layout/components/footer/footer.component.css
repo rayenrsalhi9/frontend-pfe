@@ -5,12 +5,13 @@
 .app-footer {
   background: var(--text-primary);
   color: #fff;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .app-footer .footer-main {
-  max-width: 1400px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 4rem 2.5rem 3rem;
+  padding: 3rem 2.5rem 2rem;
 }
 
 .app-footer .footer-top {
@@ -21,8 +22,53 @@
 }
 
 .app-footer .footer-brand {
-  flex: 1 1 300px;
+  flex:1 1 300px;
   max-width: 450px;
+}
+
+.app-footer .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  text-decoration: none;
+  line-height: 1.1;
+  transition: opacity 0.2s ease;
+}
+
+.app-footer .footer-logo:hover {
+  opacity: 0.85;
+}
+
+.app-footer .footer-brand-desc {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.app-footer .footer-social {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.app-footer .social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.125rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.app-footer .social-link:hover {
+  background: #b45309;
+  color: #fff;
 }
 
 .app-footer .footer-logo {
@@ -80,10 +126,10 @@
 }
 
 .app-footer .nav-title {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.5);
   margin: 0 0 1.25rem;
 }
@@ -115,7 +161,7 @@
   left: 0;
   width: 0;
   height: 1.5px;
-  background: #2563eb;
+  background: #fcd34d;
   transition: width 0.2s ease;
 }
 
@@ -128,17 +174,77 @@
 }
 
 .app-footer .nav-link.active {
-  color: #fff;
+  color: #fcd34d;
   font-weight: 600;
 }
 
 .app-footer .nav-link.active::after {
   width: 1.5rem;
+  background: #fcd34d;
 }
 
 .app-footer .footer-membership {
-  flex: 1 1 300px;
+  flex:1 1 300px;
   max-width: 450px;
+}
+
+.app-footer .membership-text {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.app-footer .membership-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.app-footer .membership-form .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.app-footer .membership-form input.form-input {
+  flex:1;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.app-footer .membership-form input.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.app-footer .membership-form input.form-input:focus {
+  outline: none;
+  border-color: #fcd34d;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.15);
+}
+
+.app-footer .membership-form button.form-btn {
+  padding: 0.75rem 1.25rem;
+  background: #b45309;
+  color: #ffffff;
+  border: 1px solid #b45309;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.app-footer .membership-form button.form-btn:hover {
+  background: #92400e;
+  border-color: #92400e;
 }
 
 .app-footer .membership-text {
@@ -206,24 +312,10 @@
   background: rgba(0, 0, 0, 0.15);
 }
 
-.app-footer .footer-bottom-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1.25rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .app-footer .copyright {
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
-}
-
-.app-footer .footer-legal {
-  display: flex;
-  gap: 1.5rem;
 }
 
 .app-footer .legal-link {
@@ -242,12 +334,60 @@
   left: 0;
   width: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #fcd34d;
   transition: width 0.2s ease;
 }
 
 .app-footer .legal-link:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: #fcd34d;
+}
+
+.app-footer .legal-link:hover::after {
+  width: 100%;
+}
+
+.app-footer .footer-bottom-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 1.25rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-footer .copyright {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.app-footer .footer-legal {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.app-footer .legal-link {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  position: relative;
+  padding: 0.25rem 0;
+}
+
+.app-footer .legal-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #b45309;
+  transition: width 0.2s ease;
+}
+
+.app-footer .legal-link:hover {
+  color: #b45309;
 }
 
 .app-footer .legal-link:hover::after {
@@ -256,7 +396,7 @@
 
 @media (max-width: 1024px) {
   .app-footer .footer-main {
-    padding: 3.5rem 2rem 2.5rem;
+    padding: 2.5rem 1.5rem 2rem;
   }
 
   .app-footer .footer-top {
@@ -266,12 +406,12 @@
 
 @media (max-width: 768px) {
   .app-footer .footer-main {
-    padding: 3rem 1.25rem 2rem;
+    padding: 2rem 1.25rem 1.5rem;
   }
 
   .app-footer .footer-top {
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2rem;
   }
 
   .app-footer .footer-brand {

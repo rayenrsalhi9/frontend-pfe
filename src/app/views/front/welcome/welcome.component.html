@@ -1,253 +1,324 @@
-<ng-container *ngIf="{ auth: isAuthenticated$ | async, user: userName$ | async } as vm">
-<div class="welcome-page">
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">
-        {{ "WELCOME.HERO_TITLE" | translate }}
-        <span *ngIf="vm.user" class="user-greeting">{{ vm.user }}</span>
-      </h1>
-      <p class="hero-subtitle">{{ "WELCOME.HERO_SUBTITLE" | translate }}</p>
-      <div class="hero-actions" *ngIf="vm.auth === false">
-        <a routerLink="/login" class="btn-hero-primary">
+<ng-container
+  *ngIf="{ auth: isAuthenticated$ | async, user: userName$ | async } as vm"
+>
+  <div class="welcome-page">
+    <!-- Hero Strip -->
+    <section class="hero-strip">
+      <div class="hero-left">
+        <p class="hero-eyebrow">{{ "WELCOME.EYEBROW" | translate }}</p>
+        <h1 class="hero-title">
+          {{ "WELCOME.HERO_TITLE" | translate }}
+          <span *ngIf="vm.user" class="hero-name">{{ vm.user }}</span>
+        </h1>
+        <p class="hero-subtitle">{{ "WELCOME.HERO_SUBTITLE" | translate }}</p>
+        <a *ngIf="vm.auth === false" routerLink="/login" class="hero-cta">
           {{ "WELCOME.GET_STARTED" | translate }}
           <i class="feather icon-arrow-right"></i>
         </a>
       </div>
-    </div>
-  </section>
-
-  <section class="content-sections">
-    <!-- Blogs Section - Full height on left -->
-    <div class="content-card card-blogs">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="feather icon-book-open"></i>
-          {{ "WELCOME.LATEST_BLOGS" | translate }}
-        </h2>
-        <a routerLink="/blog" class="card-link" [attr.aria-label]="'WELCOME.SEE_ALL_BLOGS' | translate">
-          {{ "WELCOME.SEE_ALL" | translate }}
-          <i class="feather icon-arrow-right"></i>
-        </a>
+      <div class="hero-stats" *ngIf="vm.auth">
+        <div class="stat-badge">
+          <span class="stat-num">{{ latestBlogs?.length || 0 }}</span>
+          <span class="stat-lbl">{{ "WELCOME.STAT_BLOGS" | translate }}</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-num">{{ articles?.length || 0 }}</span>
+          <span class="stat-lbl">{{
+            "WELCOME.STAT_ARTICLES" | translate
+          }}</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-num">{{ latestForums?.length || 0 }}</span>
+          <span class="stat-lbl">{{ "WELCOME.STAT_FORUMS" | translate }}</span>
+        </div>
       </div>
-      <div class="card-body">
-        <div *ngIf="latestBlogs?.length > 0; else noBlogs" class="items-list">
-          <a
-            *ngFor="let blog of latestBlogs | slice: 0 : 5"
-            class="item-entry"
-            [routerLink]="['/blog', blog.id]"
-          >
-            <img
-              [src]="
-                blog?.picture
-                  ? hostBase + blog.picture
-                  : '/assets/images/others/bg-4.jpg'
-              "
-              class="item-thumb"
-              alt=""
-            />
-            <div class="item-content">
-              <h3 class="item-title">{{ blog?.title }}</h3>
-              <span class="item-meta">
-                <span *ngIf="blog?.category" class="meta-category">{{ blog?.category?.name }}</span>
-                <span *ngIf="blog?.category" class="meta-separator">·</span>
-                <i class="feather icon-calendar"></i>
-                <span>{{ blog?.createdAt | utcToLocalTime: "shortDate" }}</span>
-                <span class="meta-separator">·</span>
-                <i class="feather icon-user"></i>
-                <span>{{ displayName(blog?.creator) }}</span>
-              </span>
+    </section>
+
+    <!-- Blogs & Articles -->
+    <div class="section-label">
+      <span>{{ "WELCOME.SECTION_CONTENT" | translate }}</span>
+    </div>
+
+    <div class="mag-grid">
+      <!-- Left: Featured Blog + More Blogs -->
+      <div class="blogs-col">
+        <ng-container *ngIf="featuredBlog; else noFeatured">
+          <a class="featured-card" [routerLink]="['/blog', featuredBlog.id]">
+            <div class="feat-image">
+              <img
+                [src]="
+                  featuredBlog?.picture
+                    ? hostBase + featuredBlog.picture
+                    : '/assets/images/others/bg-4.jpg'
+                "
+                alt=""
+              />
+            </div>
+            <div class="feat-body">
+              <p class="feat-kicker">
+                {{ "WELCOME.FEATURED_BLOG" | translate }}
+              </p>
+              <h2 class="feat-title">{{ featuredBlog?.title }}</h2>
+              <div class="feat-meta">
+                <span *ngIf="featuredBlog?.category" class="cat-pill amber">{{
+                  featuredBlog?.category?.name
+                }}</span>
+                <span *ngIf="featuredBlog?.category" class="meta-dot"></span>
+                <span>{{
+                  featuredBlog?.createdAt | utcToLocalTime: "shortDate"
+                }}</span>
+                <span class="meta-dot"></span>
+                <span>{{ displayName(featuredBlog?.creator) }}</span>
+              </div>
             </div>
           </a>
-        </div>
-        <ng-template #noBlogs>
-          <div class="empty-state">
-            <i class="feather icon-book-open"></i>
-            <p>{{ "WELCOME.NO_BLOGS" | translate }}</p>
+        </ng-container>
+
+        <ng-template #noFeatured>
+          <div class="featured-card featured-empty">
+            <div class="empty-state">
+              <i class="feather icon-book-open"></i>
+              <p>{{ "WELCOME.NO_BLOGS" | translate }}</p>
+            </div>
           </div>
         </ng-template>
-      </div>
-    </div>
 
-    <!-- Articles Section - Top right -->
-    <div class="content-card card-articles">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="feather icon-file-text"></i>
-          {{ "WELCOME.LATEST_ARTICLES" | translate }}
-        </h2>
-        <a routerLink="/article" class="card-link" *ngIf="articles?.length > 0" [attr.aria-label]="'WELCOME.SEE_ALL_ARTICLES' | translate">
-          {{ "WELCOME.SEE_ALL" | translate }}
-          <i class="feather icon-arrow-right"></i>
-        </a>
+        <div class="more-blogs" *ngIf="remainingBlogs?.length > 0">
+          <div class="mini-header">
+            <span class="mini-label">{{
+              "WELCOME.MORE_BLOGS" | translate
+            }}</span>
+            <a routerLink="/blog" class="see-all-link">
+              {{ "WELCOME.SEE_ALL" | translate }}
+              <i class="feather icon-arrow-right"></i>
+            </a>
+          </div>
+          <div class="blog-list">
+            <a
+              *ngFor="let blog of remainingBlogs | slice: 0 : 4; let i = index"
+              class="blog-row"
+              [routerLink]="['/blog', blog.id]"
+            >
+              <span class="blog-index">{{
+                (i + 1).toString().padStart(2, "0")
+              }}</span>
+              <span class="blog-row-title">{{ blog?.title }}</span>
+              <span class="blog-row-date">{{
+                blog?.createdAt | utcToLocalTime: "shortDate"
+              }}</span>
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <div *ngIf="errorMessage; else articlesContent" class="empty-state" role="alert" aria-live="assertive">
+
+      <!-- Right: Articles -->
+      <div class="articles-col">
+        <div class="mini-header">
+          <span class="mini-label">{{
+            "WELCOME.LATEST_ARTICLES" | translate
+          }}</span>
+          <a
+            routerLink="/article"
+            class="see-all-link"
+            *ngIf="articles?.length > 0"
+          >
+            {{ "WELCOME.SEE_ALL" | translate }}
+            <i class="feather icon-arrow-right"></i>
+          </a>
+        </div>
+
+        <div
+          *ngIf="errorMessage; else articlesContent"
+          class="empty-state"
+          role="alert"
+          aria-live="assertive"
+        >
           <i class="feather icon-alert-circle"></i>
           <p>{{ errorMessage }}</p>
         </div>
+
         <ng-template #articlesContent>
-          <div *ngIf="articles?.length > 0; else noArticles" class="items-list">
-          <a
-             *ngFor="let article of articles | slice: 0 : 5"
-            class="item-entry"
-            [routerLink]="['/article', article.id]"
+          <div
+            *ngIf="articles?.length > 0; else noArticles"
+            class="articles-list"
           >
-            <img
-              [src]="
-                article?.picture
-                  ? hostBase + article.picture
-                  : article?.files?.length
-                    ? hostBase + article.files[0].path
-                    : '/assets/images/others/bg-4.jpg'
-              "
-              class="item-thumb"
-              alt=""
-            />
-            <div class="item-content">
-              <h3 class="item-title">{{ article?.title }}</h3>
-              <span class="item-meta">
-                <span *ngIf="article?.category" class="meta-category">{{ article?.category?.name }}</span>
-                <span *ngIf="article?.category" class="meta-separator">·</span>
-                <i class="feather icon-calendar"></i>
-                <span>{{ article?.createdAt | utcToLocalTime: "shortDate" }}</span>
-                <span class="meta-separator">·</span>
-                <i class="feather icon-user"></i>
-                <span>{{ displayName(article?.creator) }}</span>
-              </span>
-            </div>
-          </a>
-        </div>
-        </ng-template>
-        <ng-template #noArticles>
-          <div class="empty-state">
-            <i class="feather icon-file-text"></i>
-            <p>{{ "WELCOME.NO_ARTICLES" | translate }}</p>
+            <a
+              *ngFor="let article of articles | slice: 0 : 5"
+              class="article-card"
+              [routerLink]="['/article', article.id]"
+            >
+              <div class="article-thumb">
+                <img
+                  [src]="
+                    article?.picture
+                      ? hostBase + article.picture
+                      : article?.files?.length
+                        ? hostBase + article.files[0].path
+                        : '/assets/images/others/bg-4.jpg'
+                  "
+                  alt=""
+                />
+              </div>
+              <div class="article-body">
+                <h3 class="article-title">{{ article?.title }}</h3>
+                <div class="article-meta">
+                  <span *ngIf="article?.category" class="cat-pill teal">{{
+                    article?.category?.name
+                  }}</span>
+                  <span *ngIf="article?.category" class="meta-dot"></span>
+                  <span>{{
+                    article?.createdAt | utcToLocalTime: "shortDate"
+                  }}</span>
+                  <span class="meta-dot"></span>
+                  <span>{{ displayName(article?.creator) }}</span>
+                </div>
+              </div>
+            </a>
           </div>
+          <ng-template #noArticles>
+            <div class="empty-state">
+              <i class="feather icon-file-text"></i>
+              <p>{{ "WELCOME.NO_ARTICLES" | translate }}</p>
+            </div>
+          </ng-template>
         </ng-template>
       </div>
     </div>
 
-    <!-- Survey Section - Top right corner -->
-    <div class="content-card card-survey">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="feather icon-bar-chart-2"></i>
-          {{ "WELCOME.SURVEY" | translate }}
-        </h2>
-      </div>
-      <div class="card-body survey-body">
-        <ng-container *ngIf="vm.auth !== null; else authLoading">
-          <ng-container *ngIf="vm.auth; else notLoggedIn">
-            <div *ngIf="survey; else noSurvey" class="survey-content">
-              <p class="survey-question">{{ survey?.title }}</p>
-              <div class="survey-actions">
-                <ng-container *ngIf="survey?.type === 'simple'">
-                  <button (click)="surveyAnswer(1)" class="btn-survey">
-                    {{ "BUTTONS.YES" | translate }}
-                  </button>
-                  <button (click)="surveyAnswer(0)" class="btn-survey">
-                    {{ "BUTTONS.NO" | translate }}
-                  </button>
-                </ng-container>
-                <ng-container *ngIf="survey?.type === 'rating'">
-                  <rating
-                    [max]="5"
-                    [(ngModel)]="selectedRating"
-                    (ngModelChange)="surveyAnswer($event)"
-                  ></rating>
-                </ng-container>
-                <ng-container *ngIf="survey?.type === 'satisfaction'">
-                  <button
-                    (click)="surveyAnswer(0)"
-                    class="btn-survey satisfied"
-                  >
-                    {{ "BUTTONS.SATISFIED" | translate }}
-                  </button>
-                  <button
-                    (click)="surveyAnswer(1)"
-                    class="btn-survey neutral"
-                  >
-                    {{ "BUTTONS.NEUTRAL" | translate }}
-                  </button>
-                  <button
-                    (click)="surveyAnswer(2)"
-                    class="btn-survey unsatisfied"
-                  >
-                    {{ "BUTTONS.NOT_SATISFIED" | translate }}
-                  </button>
-                </ng-container>
+    <!-- Community Section -->
+    <div class="section-label">
+      <span>{{ "WELCOME.COMMUNITY" | translate }}</span>
+    </div>
+
+    <div class="community-grid">
+      <!-- Forum -->
+      <div class="community-card">
+        <div class="card-head">
+          <h2 class="card-head-title">
+            <i class="feather icon-message-circle"></i>
+            {{ "WELCOME.LATEST_FORUMS" | translate }}
+          </h2>
+          <a
+            routerLink="/forum"
+            class="see-all-link"
+            [attr.aria-label]="'WELCOME.SEE_ALL_FORUMS' | translate"
+          >
+            {{ "WELCOME.SEE_ALL" | translate }}
+            <i class="feather icon-arrow-right"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <div
+            *ngIf="latestForums?.length > 0; else noForums"
+            class="forum-list"
+          >
+            <a
+              *ngFor="let forum of latestForums | slice: 0 : 5"
+              class="forum-row"
+              [routerLink]="['/forum', forum.id]"
+            >
+              <div class="forum-row-title">{{ forum?.title }}</div>
+              <div class="forum-row-meta">
+                <span *ngIf="forum?.category" class="cat-pill purple">{{
+                  forum?.category?.name
+                }}</span>
+                <span *ngIf="forum?.category" class="meta-dot"></span>
+                <i class="feather icon-message-circle"></i>
+                <span>{{ forum?.commentsCount || 0 }}</span>
+                <span class="meta-dot"></span>
+                <i class="feather icon-heart"></i>
+                <span>{{ forum?.reactionsCount || 0 }}</span>
+                <span class="meta-dot"></span>
+                <span>{{
+                  forum?.createdAt | utcToLocalTime: "shortDate"
+                }}</span>
               </div>
+            </a>
+          </div>
+          <ng-template #noForums>
+            <div class="empty-state">
+              <i class="feather icon-message-circle"></i>
+              <p>{{ "WELCOME.NO_FORUMS" | translate }}</p>
             </div>
-            <ng-template #noSurvey>
-              <div class="empty-state">
-                <i class="feather icon-bar-chart-2"></i>
-                <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Survey -->
+      <div class="community-card">
+        <div class="card-head">
+          <h2 class="card-head-title">
+            <i class="feather icon-bar-chart-2"></i>
+            {{ "WELCOME.SURVEY" | translate }}
+          </h2>
+        </div>
+        <div class="card-body survey-body">
+          <ng-container *ngIf="vm.auth !== null; else authLoading">
+            <ng-container *ngIf="vm.auth; else notLoggedIn">
+              <div *ngIf="survey; else noSurvey" class="survey-content">
+                <p class="survey-question">{{ survey?.title }}</p>
+                <div class="survey-actions">
+                  <ng-container *ngIf="survey?.type === 'simple'">
+                    <button (click)="surveyAnswer(1)" class="survey-btn yes">
+                      {{ "BUTTONS.YES" | translate }}
+                    </button>
+                    <button (click)="surveyAnswer(0)" class="survey-btn no">
+                      {{ "BUTTONS.NO" | translate }}
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="survey?.type === 'rating'">
+                    <rating
+                      [max]="5"
+                      [(ngModel)]="selectedRating"
+                      (ngModelChange)="surveyAnswer($event)"
+                    ></rating>
+                  </ng-container>
+                  <ng-container *ngIf="survey?.type === 'satisfaction'">
+                    <button
+                      (click)="surveyAnswer(0)"
+                      class="survey-btn satisfied"
+                    >
+                      {{ "BUTTONS.SATISFIED" | translate }}
+                    </button>
+                    <button
+                      (click)="surveyAnswer(1)"
+                      class="survey-btn neutral"
+                    >
+                      {{ "BUTTONS.NEUTRAL" | translate }}
+                    </button>
+                    <button
+                      (click)="surveyAnswer(2)"
+                      class="survey-btn unsatisfied"
+                    >
+                      {{ "BUTTONS.NOT_SATISFIED" | translate }}
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
+              <ng-template #noSurvey>
+                <div class="empty-state">
+                  <i class="feather icon-bar-chart-2"></i>
+                  <p>{{ "WELCOME.NO_SURVEY" | translate }}</p>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-template #notLoggedIn>
+              <div class="survey-login-prompt">
+                <i class="feather icon-log-in"></i>
+                <p>{{ "WELCOME.LOGIN_FOR_SURVEY" | translate }}</p>
+                <a routerLink="/login" class="survey-btn login">{{
+                  "BUTTONS.LOGIN" | translate
+                }}</a>
               </div>
             </ng-template>
           </ng-container>
-          <ng-template #notLoggedIn>
-            <div class="survey-login-prompt">
-              <i class="feather icon-log-in"></i>
-              <p>{{ "WELCOME.LOGIN_FOR_SURVEY" | translate }}</p>
-              <a routerLink="/login" class="btn-survey">{{ "BUTTONS.LOGIN" | translate }}</a>
+          <ng-template #authLoading>
+            <div class="loading-wrap">
+              <div class="loading-spinner"></div>
             </div>
           </ng-template>
-        </ng-container>
-        <ng-template #authLoading>
-          <div class="survey-loading">
-            <div class="loading-spinner"></div>
-          </div>
-        </ng-template>
-      </div>
-    </div>
-
-    <!-- Forum Section - Bottom right, spans 2 columns -->
-    <div class="content-card card-forum">
-      <div class="card-header">
-        <h2 class="card-title">
-          <i class="feather icon-message-circle"></i>
-          {{ "WELCOME.LATEST_FORUMS" | translate }}
-        </h2>
-        <a routerLink="/forum" class="card-link" [attr.aria-label]="'WELCOME.SEE_ALL_FORUMS' | translate">
-          {{ "WELCOME.SEE_ALL" | translate }}
-          <i class="feather icon-arrow-right"></i>
-        </a>
-      </div>
-      <div class="card-body">
-        <div *ngIf="latestForums?.length > 0; else noForums" class="items-list">
-          <a
-             *ngFor="let forum of latestForums | slice: 0 : 5"
-            class="item-entry simple"
-            [routerLink]="['/forum', forum.id]"
-          >
-            <div class="item-content">
-              <h3 class="item-title">{{ forum?.title }}</h3>
-              <span class="item-meta">
-                <span *ngIf="forum?.category" class="meta-category">{{ forum?.category?.name }}</span>
-                <span *ngIf="forum?.category" class="meta-separator">·</span>
-                <i class="feather icon-calendar"></i>
-                <span>{{ forum?.createdAt | utcToLocalTime: "shortDate" }}</span>
-                <span class="meta-separator">·</span>
-                <i class="feather icon-user"></i>
-                <span>{{ displayName(forum?.creator) }}</span>
-                <span class="meta-separator">·</span>
-                <i class="feather icon-message-circle"></i>
-                <span>{{ forum?.commentsCount || 0 }}</span>
-                <span class="meta-separator">·</span>
-                <i class="feather icon-heart"></i>
-                <span>{{ forum?.reactionsCount || 0 }}</span>
-              </span>
-            </div>
-          </a>
         </div>
-        <ng-template #noForums>
-          <div class="empty-state">
-            <i class="feather icon-message-circle"></i>
-            <p>{{ "WELCOME.NO_FORUMS" | translate }}</p>
-          </div>
-        </ng-template>
       </div>
     </div>
-  </section>
-</div>
+  </div>
 </ng-container>
