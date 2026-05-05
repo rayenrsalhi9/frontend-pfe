@@ -13,6 +13,7 @@ import { environment } from "src/environments/environment";
 export class PusherService {
   private pusher: Pusher;
   private channel: any;
+  private subscriptions: Map<string, { eventName: string; callback: (data: any) => void }> = new Map();
 
   constructor(
     private httpClient: HttpClient,
@@ -38,10 +39,17 @@ export class PusherService {
   }
 
   rebuildPusher(): void {
+    const savedSubscriptions = new Map(this.subscriptions);
     if (this.pusher) {
       this.pusher.disconnect();
     }
+    this.subscriptions.clear();
     this.initializePusher();
+    savedSubscriptions.forEach(({ eventName, callback }, channelName) => {
+      const channel = this.pusher.subscribe(channelName);
+      channel.bind(eventName, callback);
+      this.subscriptions.set(channelName, { eventName, callback });
+    });
   }
 
   getSocketId() {
@@ -77,13 +85,15 @@ export class PusherService {
     eventName: string,
     callback: (data: any) => void,
   ): void {
-    this.channel = this.pusher.subscribe(channelName);
-    this.channel.bind(eventName, callback);
+    const channel = this.pusher.subscribe(channelName);
+    channel.bind(eventName, callback);
+    this.subscriptions.set(channelName, { eventName, callback });
   }
 
   unsubscribeFromChannel(channelName: string): void {
     if (this.pusher) {
       this.pusher.unsubscribe(channelName);
     }
+    this.subscriptions.delete(channelName);
   }
 }

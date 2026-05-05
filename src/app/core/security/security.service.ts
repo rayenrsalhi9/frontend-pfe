@@ -223,8 +223,8 @@ export class SecurityService {
       "bearerToken",
       this.securityObject.authorisation.token,
     );
-    this.securityObject$.next(this.securityObject);
     this.pusherService.rebuildPusher();
+    this.securityObject$.next(this.securityObject);
   }
   logout(): void {
     // Capture user ID before mutating state

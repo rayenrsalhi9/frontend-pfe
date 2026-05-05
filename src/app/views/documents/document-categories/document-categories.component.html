@@ -4,7 +4,7 @@
       <h1 class="list-page-title">{{ "CATEGORY.LIST.TITLE" | translate }}</h1>
       <p class="list-page-desc">{{ "CATEGORY.LIST.DESCRIPTION" | translate }}</p>
     </div>
-    <button (click)="manageCategory(null)" class="list-btn-add">
+    <button (click)="manageCategory(null)" class="list-btn-add" *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'">
       <span>{{ "CATEGORY.LIST.BUTTONS.ADD" | translate }}</span>
       <i class="feather icon-plus list-btn-add__icon"></i>
     </button>
@@ -24,10 +24,6 @@
       [footerHeight]="55"
       rowHeight="auto"
       [limit]="10"
-      [selected]="selected"
-      [selectionType]="SelectionType.checkbox"
-      (activate)="onActivate($event)"
-      (select)="onSelect($event)"
     >
       <ngx-datatable-column
         [name]="'CATEGORY.LIST.TABLE.NAME' | translate"
@@ -71,6 +67,7 @@
               (click)="manageCategory(row)"
               [title]="'CATEGORY.LIST.BUTTONS.EDIT' | translate"
               [attr.aria-label]="'CATEGORY.LIST.BUTTONS.EDIT' | translate"
+              *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'"
             >
               <i class="feather icon-edit-2"></i>
             </button>
@@ -79,6 +76,7 @@
               (click)="deleteCategory(row.id)"
               [title]="'CATEGORY.LIST.BUTTONS.DELETE' | translate"
               [attr.aria-label]="'CATEGORY.LIST.BUTTONS.DELETE' | translate"
+              *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'"
             >
               <i class="feather icon-trash-2"></i>
             </button>

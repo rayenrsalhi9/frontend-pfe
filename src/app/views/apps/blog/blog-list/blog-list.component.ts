@@ -95,6 +95,10 @@ export class BlogListComponent implements OnInit, OnDestroy {
     this.searchSubject.next();
   }
 
+  getBlogs() {
+    this.getAllBlogs();
+  }
+
   getBlogsCategories() {
     this.blogCategoryService
       .allCategories()

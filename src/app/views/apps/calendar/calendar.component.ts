@@ -297,7 +297,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         this.selectedDayEvents = [];
         this.isLoading = false;
         this.translate
-          .get("CALENDAR.TOAST.ERROR_LOAD_ING")
+          .get("CALENDAR.TOAST.ERROR_LOADING")
           .subscribe((translatedMessage: string) => {
             this.toastrService.error(translatedMessage);
           });

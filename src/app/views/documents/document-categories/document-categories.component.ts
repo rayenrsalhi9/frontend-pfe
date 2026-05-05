@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CategoryService } from '@app/shared/services/category.service';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DocumentCategoryAddComponent } from '../document-category-add/document-category-add.component';
 import { ToastrService } from 'ngx-toastr';
 import { Category } from '@app/shared/enums/category';
 import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { TranslateService } from '@ngx-translate/core'; 
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-document-categories',
   templateUrl: './document-categories.component.html',
@@ -17,10 +17,8 @@ export class DocumentCategoriesComponent implements OnInit {
   showMobilePanel = false
 
   rows: any[] = [];
-  selected = [];
 
   ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   bsModalRef: BsModalRef;
 
@@ -109,26 +107,6 @@ export class DocumentCategoriesComponent implements OnInit {
     for (let i = 0, len = cells.length; i < len; i++) {
       cells[i].setAttribute('style', 'overflow: visible !important');
     }
-  }
-
-  onSelect({ selected }) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
-
-  onActivate(event) {
-  }
-
-  add() {
-    this.selected.push(this.rows[1], this.rows[3]);
-  }
-
-  update() {
-    this.selected = [this.rows[1], this.rows[3]];
-  }
-
-  remove() {
-    this.selected = [];
   }
 
 }
