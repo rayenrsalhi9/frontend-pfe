@@ -9,16 +9,16 @@
 
 <ng-template #vertical>
   <div class="header-nav-left">
-    <div class="header-nav-item">
-      <button
-        type="button"
-        class="sidenav-toggle-btn"
-        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
-        (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
-      >
-        <i class="feather nav-icon icon-menu"></i>
-      </button>
-    </div>
+    <button
+      type="button"
+      class="ged-nav-button header-nav-toggle"
+      [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
+      (click)="isMobile ? toggleMobileNav() : toggleNavCollapse()"
+    >
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-menu" aria-hidden="true"></i>
+      </span>
+    </button>
   </div>
   <div class="header-nav-right">
     <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>
@@ -28,16 +28,17 @@
 <ng-template #horizontal>
   <div class="header-nav-left">
     <logo *ngIf="!isMobile" [white]="logoColor !== 'dark'"></logo>
-    <div class="header-nav-item" *ngIf="isMobile">
-      <button
-        type="button"
-        class="sidenav-toggle-btn"
-        [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
-        (click)="toggleMobileNav()"
-      >
-        <i class="feather nav-icon icon-menu"></i>
-      </button>
-    </div>
+    <button
+      *ngIf="isMobile"
+      type="button"
+      class="ged-nav-button header-nav-toggle"
+      [attr.aria-label]="'NAV.TOGGLE_NAVIGATION' | translate"
+      (click)="toggleMobileNav()"
+    >
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-menu" aria-hidden="true"></i>
+      </span>
+    </button>
   </div>
   <div class="header-nav-right">
     <ng-container *ngTemplateOutlet="headerNavRight"></ng-container>

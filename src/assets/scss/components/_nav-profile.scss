@@ -1,23 +1,30 @@
+// ─── Warm accent palette (mirrors side-nav component) ────────────────────────
+$warm-amber: #b45309;
+$warm-amber-light: #fef3c7;
+$warm-amber-mid: #fcd34d;
+$warm-amber-bg: #fffbeb;
+
 .nav-profile {
   .toggle-wrapper {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     padding: 0.35rem 0.75rem 0.35rem 0.35rem;
-    background: #f8f9fa;
-    border: none;
+    background: $warm-amber-bg;
+    border: 1px solid transparent;
     color: var(--text-primary);
     cursor: pointer;
     font-weight: 500;
     transition:
-      background 0.15s,
-      border-color 0.15s;
+      background 0.15s ease,
+      border-color 0.15s ease;
 
     .user-name {
-      font-size: $font-size-body-lg - 0.15rem;
+      font-size: 0.875rem;
       letter-spacing: -0.01em;
       margin: 0 0.25rem;
+      font-weight: 500;
     }
 
     [dir="rtl"] & {
@@ -35,20 +42,22 @@
 
     &:hover,
     &:focus-visible {
-      background: var(--primary-glow);
+      background: $warm-amber-light;
+      border-color: $warm-amber-mid;
     }
 
     .icon-chevron-down {
       font-size: 1rem;
       color: var(--text-secondary);
+      transition: color 0.15s ease;
     }
   }
 
   .dropdown-menu {
     min-width: 240px;
     padding: 0.5rem;
-    border-radius: var(--radius-lg);
-    border: 0.5px solid var(--border-color);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
     overflow: hidden;
 
@@ -61,8 +70,8 @@
   .nav-profile-header {
     padding: 1rem 0.75rem;
     margin-bottom: 0.5rem;
-    border-bottom: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 10px;
 
     .profile-name {
       font-size: 0.85rem;
@@ -84,7 +93,7 @@
 
   .dropdown-item {
     padding: 0.6rem 0.75rem;
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     margin: 0.15rem 0;
     display: flex;
     align-items: center;
@@ -93,22 +102,22 @@
     font-size: 0.85rem;
     font-weight: 500;
     transition:
-      background 0.15s,
-      color 0.15s;
+      background 0.15s ease,
+      color 0.15s ease;
 
     &:hover {
-      background: var(--primary-glow);
-      color: var(--primary);
+      background: $warm-amber-bg;
+      color: $warm-amber;
 
       i {
-        color: var(--primary);
+        color: $warm-amber;
       }
     }
 
     i {
       font-size: 1rem;
       color: var(--text-secondary);
-      transition: color 0.15s;
+      transition: color 0.15s ease;
     }
 
     &.cursor-pointer:hover {

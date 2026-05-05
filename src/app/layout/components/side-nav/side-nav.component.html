@@ -1,7 +1,15 @@
 <div class="ged-side-nav-shell">
-  <a routerLink="/" class="ged-brand-card" [attr.aria-label]="'NAV.GED_HOME' | translate">
+  <a
+    routerLink="/"
+    class="ged-brand-card"
+    [attr.aria-label]="'NAV.GED_HOME' | translate"
+  >
     <div class="ged-brand-inner">
-      <img src="assets/images/logo/logo.png" alt="DGI Logo" class="ged-brand-logo">
+      <img
+        src="assets/images/logo/logo.png"
+        alt="DGI Logo"
+        class="ged-brand-logo"
+      />
       <div class="ged-brand-text-group">
         <span class="ged-brand-text-line orange">DIRECTION</span>
         <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
@@ -15,7 +23,11 @@
   </div>
 
   <button type="button" class="ged-logout-btn" (click)="logout()">
-    <i class="feather ged-logout-icon icon-log-out" aria-hidden="true"></i>
-    <span class="ged-logout-label">{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
+    <span class="ged-logout-icon-shell">
+      <i class="feather icon-log-out" aria-hidden="true"></i>
+    </span>
+    <span class="ged-logout-label">{{
+      "DROPDOWN_PROFILE.LOGOUT" | translate
+    }}</span>
   </button>
 </div>

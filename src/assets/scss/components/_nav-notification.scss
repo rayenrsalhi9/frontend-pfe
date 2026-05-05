@@ -1,3 +1,9 @@
+// ─── Warm accent palette (mirrors side-nav component) ────────────────────────
+$warm-amber: #b45309;
+$warm-amber-light: #fef3c7;
+$warm-amber-mid: #fcd34d;
+$warm-amber-bg: #fffbeb;
+
 .nav-notification {
   background: transparent !important;
   padding: 0 !important;
@@ -6,26 +12,28 @@
   justify-content: center;
 
   .notification-trigger {
-    width: 38px;
-    height: 38px;
-    background: var(--card-bg);
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 0 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: #f8f9fa;
     cursor: pointer;
     transition:
-      background 0.15s,
-      border-color 0.15s;
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
     position: relative;
 
     &:hover {
-      background: var(--primary-glow);
-      border-color: var(--primary);
+      background: $warm-amber-bg;
+      border-color: $warm-amber-mid;
 
       i {
-        color: var(--primary);
+        color: $warm-amber;
       }
     }
 
@@ -36,10 +44,18 @@
       justify-content: center;
     }
 
-    i {
-      font-size: $font-size-body-lg + 0.125rem;
-      color: var(--text-secondary);
-      transition: color 0.15s;
+    .ged-nav-icon-shell {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      min-width: 1.25rem;
+
+      i {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        transition: color 0.15s ease;
+      }
     }
 
     .notification-badge {
@@ -55,8 +71,8 @@
   }
 
   .dropdown-menu {
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     box-shadow: var(--shadow-md);
     background: var(--card-bg);
     margin-bottom: 0.75rem;
@@ -93,7 +109,7 @@
     justify-content: space-between;
     padding: 1rem 1.25rem;
     background: var(--card-bg);
-    border-bottom: 0.5px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 
     .nav-notification-title {
       font-weight: 600;
@@ -104,21 +120,22 @@
     }
 
     .nav-notification-mark-read {
-      color: var(--primary);
+      color: $warm-amber;
       font-weight: 500;
       text-decoration: none;
       font-size: 0.85rem;
       padding: 0.35rem 0.75rem;
-      background: var(--primary-glow);
-      border-radius: var(--radius-sm);
+      background: $warm-amber-bg;
+      border-radius: 10px;
       border: none;
+      cursor: pointer;
       transition:
         background 0.15s,
         color 0.15s;
 
       &:hover {
-        background: var(--primary);
-        color: var(--card-bg);
+        background: $warm-amber-light;
+        color: $warm-amber;
       }
     }
   }
@@ -138,7 +155,7 @@
     .nav-notification-item {
       display: flex;
       padding: 1.25rem;
-      border-bottom: 0.5px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
       transition: background-color 0.2s ease;
       cursor: pointer;
       position: relative;
@@ -148,11 +165,11 @@
       }
 
       &:hover {
-        background-color: var(--bg-app);
+        background-color: $warm-amber-bg;
       }
 
       &.is-unread {
-        background-color: rgba(var(--bs-primary-rgb), 0.04);
+        background-color: rgba($warm-amber, 0.04);
 
         &::before {
           content: "";
@@ -161,11 +178,11 @@
           inset-block-start: 0;
           inset-block-end: 0;
           width: 3px;
-          background: var(--primary);
+          background: $warm-amber;
         }
 
         &:hover {
-          background-color: rgba(var(--bs-primary-rgb), 0.08);
+          background-color: rgba($warm-amber, 0.08);
         }
       }
 
@@ -198,8 +215,8 @@
         letter-spacing: 0.02em;
 
         &.reminder {
-          background: rgba(var(--bs-primary-rgb), 0.1);
-          color: var(--primary);
+          background: rgba($warm-amber, 0.1);
+          color: $warm-amber;
         }
 
         &.message {
@@ -251,7 +268,7 @@
           display: block;
 
           &:hover {
-            color: var(--primary);
+            color: $warm-amber;
           }
 
           .user-name {
@@ -273,10 +290,10 @@
             line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            background: var(--bg-app);
+            background: $warm-amber-bg;
             padding: 0.5rem 0.75rem;
-            border-radius: var(--radius-sm);
-            border: 0.5px solid var(--border-color);
+            border-radius: 10px;
+            border: 1px solid $warm-amber-mid;
           }
         }
       }

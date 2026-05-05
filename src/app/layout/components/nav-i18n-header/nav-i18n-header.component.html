@@ -1,15 +1,17 @@
 <div class="language-selector-header" (keydown)="onKeyDown($event)">
   <button
     type="button"
-    class="language-trigger"
+    class="ged-nav-button language-trigger"
     (click)="toggleMenu()"
     [attr.aria-expanded]="isMenuOpen"
     aria-haspopup="listbox"
     aria-controls="language-menu-header"
   >
-    <i class="feather icon-globe"></i>
-    <span class="lang-code">{{currentLang?.split("_")[0] || currentLang}}</span>
-    <i class="feather icon-chevron-down chevron"></i>
+    <span class="ged-nav-icon-shell">
+      <i class="feather icon-globe" aria-hidden="true"></i>
+    </span>
+      <span class="ged-nav-label">{{ getLanguageDisplay() }}</span>
+    <i class="feather icon-chevron-down ged-nav-chevron"></i>
   </button>
 
   <div
@@ -23,7 +25,7 @@
       #optionBtn
       *ngFor="let language of languageList; let i = index"
       type="button"
-      class="language-option"
+      class="ged-nav-button language-option"
       [class.active]="currentLang === language.key"
       [class.focused]="focusedIndex === i"
       (click)="setLanguage(language.key)"
@@ -31,7 +33,7 @@
       [attr.aria-selected]="currentLang === language.key"
       [tabindex]="isMenuOpen ? (focusedIndex === i ? 0 : -1) : -1"
     >
-      <span class="option-name">
+      <span class="ged-nav-label">
         {{ "LANG." + language.key.split("_")[0].toUpperCase() | translate }}
       </span>
       <i *ngIf="currentLang === language.key" class="feather icon-check check-icon"></i>

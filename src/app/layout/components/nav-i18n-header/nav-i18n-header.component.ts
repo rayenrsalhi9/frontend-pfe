@@ -28,7 +28,7 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   @Select((state: { app: AppConfig }) => state.app) app$: Observable<AppConfig>;
-  
+
   private destroy$ = new Subject<void>();
 
   currentLang: string = "";
@@ -67,10 +67,18 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
   }
 
   getLanguageList() {
-    this.languageList = Object.entries(supportedLanguages).map(([key, lang]) => ({
-      key,
-      lang,
-    }));
+    this.languageList = Object.entries(supportedLanguages).map(
+      ([key, lang]) => ({
+        key,
+        lang,
+      }),
+    );
+  }
+
+  getLanguageDisplay(): string {
+    if (!this.currentLang) return "";
+    const lang = this.currentLang.split("_")[0];
+    return lang;
   }
 
   toggleMenu() {
@@ -146,7 +154,8 @@ export class NavI18NHeaderComponent implements OnInit, OnDestroy {
       case "Tab":
         this.isMenuOpen = false;
         if (event.key === "Escape") {
-          const btn = this.elementRef.nativeElement.querySelector(".language-trigger");
+          const btn =
+            this.elementRef.nativeElement.querySelector(".language-trigger");
           if (btn) btn.focus();
           event.preventDefault();
         }

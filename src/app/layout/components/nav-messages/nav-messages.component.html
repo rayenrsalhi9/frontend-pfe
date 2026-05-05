@@ -11,7 +11,9 @@
     (click)="navMessages.toggle($event)"
   >
     <div class="icon-badge-container">
-      <i class="feather icon-message-square"></i>
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-message-square" aria-hidden="true"></i>
+      </span>
       <div *ngIf="hasUnreadConversations" class="notification-badge"></div>
     </div>
   </button>

@@ -11,7 +11,9 @@
     (click)="navNotification.toggle($event)"
   >
     <div class="icon-badge-container">
-      <i class="feather icon-bell"></i>
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-bell" aria-hidden="true"></i>
+      </span>
       <div *ngIf="newNotificationCount > 0" class="notification-badge"></div>
     </div>
   </button>
