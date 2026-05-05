@@ -60,9 +60,10 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
   downloadLabel = "Downloads";
   tooltipText = "Documents";
 
+  // Warm palette: amber for uploads, teal for downloads
   private colors = {
-    primary: "#2563eb",
-    secondary: "#10b981",
+    primary: "#b45309", // amber  — matches dashboard accent
+    secondary: "#0f6e56", // teal
   };
 
   constructor(
@@ -71,6 +72,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     private rtlService: RtlService,
   ) {
     this.initChartOptions();
+
     this.rtlService
       .getIsRtl$()
       .pipe(takeUntil(this.destroy$))
@@ -92,7 +94,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     this.translateLabels();
   }
 
-  private translateLabels() {
+  private translateLabels(): void {
     this.translate
       .stream(["DASHBOARD.UPLOAD", "DASHBOARD.DOWNLOAD", "DASHBOARD.DOCUMENTS"])
       .pipe(takeUntil(this.destroy$))
@@ -104,7 +106,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private updateSeriesLabels() {
+  private updateSeriesLabels(): void {
     if (this.overviewChartOptions?.series) {
       this.overviewChartOptions.series = [
         { name: this.uploadLabel, data: this.data?.income || [] },
@@ -113,7 +115,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private initChartOptions() {
+  private initChartOptions(): void {
     this.overviewChartOptions = {
       series: [
         { name: this.uploadLabel, data: [] },
@@ -121,11 +123,16 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
       ],
       chart: {
         type: "area",
-        height: 280,
+        height: 300,
         fontFamily: "Cairo, Inter, sans-serif",
         toolbar: { show: false },
         zoom: { enabled: false },
         sparkline: { enabled: false },
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 500,
+        },
       },
       colors: [this.colors.primary, this.colors.secondary],
       dataLabels: { enabled: false },
@@ -137,8 +144,8 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         type: "gradient",
         gradient: {
           shadeIntensity: 1,
-          opacityFrom: 0.4,
-          opacityTo: 0.05,
+          opacityFrom: 0.35,
+          opacityTo: 0.03,
           stops: [0, 90, 100],
         },
       },
@@ -147,21 +154,30 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         axisBorder: { show: false },
         axisTicks: { show: false },
         labels: {
-          style: { colors: "#64748b", fontSize: "11px" },
+          style: {
+            colors: "#92400e",
+            fontSize: "11px",
+            fontFamily: "Cairo, Inter, sans-serif",
+          },
         },
       },
       yaxis: {
         opposite: this.rtlService.isRtl,
         labels: {
-          style: { colors: "#64748b", fontSize: "11px" },
+          style: {
+            colors: "#92400e",
+            fontSize: "11px",
+            fontFamily: "Cairo, Inter, sans-serif",
+          },
           formatter: (val: number) => Math.round(val).toString(),
         },
       },
       grid: {
-        borderColor: "#e2e8f0",
+        borderColor: "#fde68a", // amber-tinted gridlines
         strokeDashArray: 4,
         xaxis: { lines: { show: false } },
         yaxis: { lines: { show: true } },
+        padding: { top: 0, right: 8, bottom: 0, left: 8 },
       },
       legend: {
         show: true,
@@ -176,13 +192,10 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
           offsetX: -2,
           offsetY: 1,
         },
-        itemMargin: {
-          horizontal: 12,
-          vertical: 4,
-        },
+        itemMargin: { horizontal: 12, vertical: 4 },
         fontSize: "12px",
         labels: {
-          colors: ["#64748b", "#64748b"],
+          colors: ["#92400e", "#085041"],
           useSeriesColors: false,
         },
       },
@@ -197,13 +210,13 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes["data"] && this.data) {
       this.updateChartData();
     }
   }
 
-  private updateChartData() {
+  private updateChartData(): void {
     if (!this.overviewChartOptions) return;
 
     this.overviewChartOptions = {

@@ -1,55 +1,39 @@
-<div class="ds-container">
-  <ng-container *ngIf="extensions.length > 0; else noData">
-    <!-- Stacked Rainbow Bar -->
-    <div class="stacked-bar-wrap">
-      <div class="stacked-bar">
-        <div
-          *ngFor="let item of extensions"
-          class="stacked-segment"
-          [style.width.%]="item.percentage"
-          [style.background]="item.color"
-          [title]="item.extension + ' · ' + item.percentage + '%'"
-        ></div>
-      </div>
-    </div>
+<div class="dev-stat">
+  <!-- Total pill -->
+  <div class="dev-stat-summary" *ngIf="total > 0">
+    <span class="dev-stat-total-label">{{
+      "DASHBOARD.DEVICES_TOTAL" | translate
+    }}</span>
+    <span class="dev-stat-total-val">{{ total }}</span>
+  </div>
 
-    <!-- ApexCharts bar -->
-    <div class="chart-wrap">
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [plotOptions]="chartOptions.plotOptions"
-        [dataLabels]="chartOptions.dataLabels"
-        [colors]="chartOptions.colors"
-        [grid]="chartOptions.grid"
-        [tooltip]="chartOptions.tooltip"
-      ></apx-chart>
-    </div>
-
-    <!-- Legend + total -->
-    <div class="ds-footer">
-      <div class="legend-grid">
-        <div class="legend-item" *ngFor="let item of extensions">
-          <span class="legend-dot" [style.background]="item.color"></span>
-          <span class="legend-name">{{ item.extension }}</span>
-          <span class="legend-pct" [style.color]="item.color"
-            >{{ item.percentage }}%</span
-          >
+  <!-- Format rows -->
+  <div class="dev-stat-list" *ngIf="items?.length > 0; else emptyFormats">
+    <div
+      class="dev-stat-row"
+      *ngFor="let item of items"
+      [style.--item-color]="item.color"
+    >
+      <div class="dev-stat-row-header">
+        <div class="dev-stat-ext-badge">
+          <i class="feather icon-file"></i>
+          <span>{{ item.extension | uppercase }}</span>
+        </div>
+        <div class="dev-stat-row-right">
+          <span class="dev-stat-count">{{ item.count }}</span>
+          <span class="dev-stat-pct">{{ item.percentage }}%</span>
         </div>
       </div>
-      <div class="total-pill">
-        <span class="total-num">{{ totalCount | number }}</span>
-        <span class="total-lbl">{{ translations.documents }}</span>
+      <div class="dev-stat-bar-track">
+        <div class="dev-stat-bar-fill" [style.width.%]="item.percentage"></div>
       </div>
     </div>
-  </ng-container>
+  </div>
 
-  <ng-template #noData>
-    <div class="ds-empty">
+  <ng-template #emptyFormats>
+    <div class="dev-stat-empty">
       <i class="feather icon-database"></i>
-      <p>{{ translations.noData }}</p>
+      <p>{{ "DASHBOARD.NO_DEVICES" | translate }}</p>
     </div>
   </ng-template>
 </div>
