@@ -87,13 +87,13 @@
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: var(--primary);
+  background: #b45309;
   border-radius: 1px;
   transition: width 0.2s ease;
 }
 
 .nav-item:hover {
-  color: var(--text-primary);
+  color: #b45309;
   background: transparent;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .nav-item.active {
-  color: var(--primary);
+  color: #b45309;
   font-weight: 600;
 }
 
@@ -132,9 +132,9 @@
 }
 
 .btn-ghost:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: #eff6ff;
+  border-color: #b45309;
+  color: #b45309;
+  background: #fffbeb;
 }
 
 .btn-ghost i {
@@ -162,7 +162,7 @@
 }
 
 .mobile-menu-btn:hover {
-  background: #f9fafb;
+  background: #fffbeb;
 }
 
 .hamburger {
@@ -301,16 +301,16 @@
 }
 
 .drawer-item:hover {
-  background: #f9fafb;
+  background: #fffbeb;
 }
 
 .drawer-item:hover i {
-  color: var(--text-primary);
+  color: #b45309;
 }
 
 .drawer-item.active {
-  color: var(--primary);
-  background: #eff6ff;
+  color: #b45309;
+  background: #fffbeb;
   font-weight: 600;
 }
 
@@ -320,7 +320,7 @@
 }
 
 .drawer-item.active i {
-  color: var(--primary);
+  color: #b45309;
 }
 
 .drawer-footer {

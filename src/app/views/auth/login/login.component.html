@@ -1,36 +1,32 @@
-<div class="login-container">
-  <div class="login-wrapper">
-    <div class="login-card">
-      <div class="login-form-side">
-        <div class="login-header">
-          <a routerLink="/" class="login-logo-link">
-            <img
-              src="assets/images/logo/logo.png"
-              alt="DGI Logo"
-              class="login-logo"
-            />
-            <div class="ged-brand-text-group">
-              <span class="ged-brand-text-line orange">DIRECTION</span>
-              <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
-              <span class="ged-brand-text-line green">IMPÔTS</span>
-            </div>
-          </a>
-          <h1 class="login-title">{{ "SIGN.IN.WELCOME_BACK" | translate }}</h1>
-          <p class="login-subtitle">
-            {{ "SIGN.IN.LOGIN_TO_ACCOUNT" | translate }}
-          </p>
-        </div>
-
-        <login-form></login-form>
+<div class="login-page">
+  <div class="login-card">
+    <!-- Left: Form Side -->
+    <div class="form-side">
+      <div class="form-header">
+        <a routerLink="/" class="brand-link">
+          <logo></logo>
+          <div class="ged-brand-text-group">
+            <span class="ged-brand-text-line orange">DIRECTION</span>
+            <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
+            <span class="ged-brand-text-line green">IMPÔTS</span>
+          </div>
+        </a>
+        <h1 class="welcome-title">{{ "SIGN.IN.WELCOME_BACK" | translate }}</h1>
+        <p class="welcome-subtitle">
+          {{ "SIGN.IN.LOGIN_TO_ACCOUNT" | translate }}
+        </p>
       </div>
 
-      <div class="login-image-side">
-        <img
-          src="assets/images/auth/login-cover.png"
-          [attr.alt]="'SIGN.IN.LOGIN_COVER_ALT' | translate"
-          class="login-cover-img"
-        />
-      </div>
+      <login-form></login-form>
+    </div>
+
+    <!-- Right: Image Side -->
+    <div class="image-side">
+      <img
+        src="assets/images/auth/login-cover.png"
+        [attr.alt]="'SIGN.IN.LOGIN_COVER_ALT' | translate"
+        class="cover-img"
+      />
     </div>
   </div>
 </div>
