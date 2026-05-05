@@ -2,11 +2,17 @@
   <header class="welcome-header" [class.is-scrolled]="isScrolled">
     <div class="header-inner">
       <a class="logo-link" routerLink="/" [attr.aria-label]="'NAV.GED_HOME' | translate">
-        <logo></logo>
-        <div class="ged-brand-text-group">
-          <span class="ged-brand-text-line orange">DIRECTION</span>
-          <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
-          <span class="ged-brand-text-line green">IMPÔTS</span>
+        <div class="ged-brand-inner">
+          <img
+            src="assets/images/logo/logo.png"
+            alt="DGI Logo"
+            class="ged-brand-logo"
+          />
+          <div class="ged-brand-text-group">
+            <span class="ged-brand-text-line orange">DIRECTION</span>
+            <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
+            <span class="ged-brand-text-line green">IMPÔTS</span>
+          </div>
         </div>
       </a>
 
@@ -95,11 +101,17 @@
   >
     <div class="drawer-header">
       <a class="logo-link" routerLink="/" (click)="toggleMenu()" [attr.aria-label]="'NAV.GED_HOME' | translate">
-        <logo></logo>
-        <div class="ged-brand-text-group">
-          <span class="ged-brand-text-line orange">DIRECTION</span>
-          <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
-          <span class="ged-brand-text-line green">IMPÔTS</span>
+        <div class="ged-brand-inner">
+          <img
+            src="assets/images/logo/logo.png"
+            alt="DGI Logo"
+            class="ged-brand-logo"
+          />
+          <div class="ged-brand-text-group">
+            <span class="ged-brand-text-line orange">DIRECTION</span>
+            <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
+            <span class="ged-brand-text-line green">IMPÔTS</span>
+          </div>
         </div>
       </a>
       <button

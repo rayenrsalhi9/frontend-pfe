@@ -26,15 +26,6 @@
   max-width: 450px;
 }
 
-.app-footer .footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 1.25rem;
-  text-decoration: none;
-  line-height: 1.1;
-  transition: opacity 0.2s ease;
-}
 
 .app-footer .footer-logo:hover {
   opacity: 0.85;
@@ -72,12 +63,9 @@
 }
 
 .app-footer .footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
+  display: block;
   margin-bottom: 1.25rem;
   text-decoration: none;
-  line-height: 1.1;
   transition: opacity 0.2s ease;
 }
 
