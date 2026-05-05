@@ -148,10 +148,19 @@
       <ngx-datatable-column
         [name]="'FORUM.TABLE.REPLIES' | translate"
         prop="commentsCount"
-        [width]="100"
+        [width]="120"
       >
-        <ng-template ngx-datatable-cell-template let-value="value">
-          <span class="list-cell-stat list-cell-stat--blue">
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <span
+            class="list-cell-stat list-cell-stat--blue"
+            (click)="openCommentsModal(row)"
+            [title]="'FORUM.MODAL.TITLE' | translate"
+            [attr.aria-label]="'FORUM.MODAL.TITLE' | translate"
+            role="button"
+            tabindex="0"
+            (keydown.enter)="openCommentsModal(row)"
+            (keydown.space)="openCommentsModal(row)"
+          >
             <i class="feather icon-message-circle"></i>
             <span>{{ value ?? 0 }}</span>
           </span>
@@ -167,19 +176,29 @@
       >
         <ng-template let-row="row" ngx-datatable-cell-template>
           <div class="list-actions">
-            <a
+            <button
+              class="list-btn-action list-btn-action--view"
+              (click)="openCommentsModal(row)"
+              [title]="'FORUM.MODAL.TITLE' | translate"
+              [attr.aria-label]="'FORUM.MODAL.TITLE' | translate"
+            >
+              <i class="feather icon-eye"></i>
+            </button>
+            <a>
               *hasClaim="'FORUM_EDIT_TOPIC'"
               class="list-btn-action list-btn-action--edit"
               [routerLink]="'/apps/forums/edit/' + row.id"
               [title]="'FORUM.BUTTONS.EDIT' | translate"
+              [attr.aria-label]="'FORUM.BUTTONS.EDIT' | translate"
             >
               <i class="feather icon-edit-2"></i>
             </a>
-            <button
+            <button>
               *hasClaim="'FORUM_DELETE_TOPIC'"
               class="list-btn-action list-btn-action--delete"
               (click)="deleteForum(row)"
               [title]="'FORUM.BUTTONS.DELETE' | translate"
+              [attr.aria-label]="'FORUM.BUTTONS.DELETE' | translate"
             >
               <i class="feather icon-trash-2"></i>
             </button>

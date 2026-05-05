@@ -20,7 +20,7 @@ import { SecurityService } from "@app/core/security/security.service";
 @Component({
   selector: "app-survey-list",
   templateUrl: "./survey-list.component.html",
-  styleUrls: ["./survey-list.component.css"],
+  styleUrls: ["./survey-list.component.scss"],
 })
 export class SurveyListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;

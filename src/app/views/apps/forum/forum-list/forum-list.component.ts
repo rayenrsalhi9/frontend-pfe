@@ -116,7 +116,7 @@ export class ForumListComponent implements OnInit {
     if (!row?.id) return;
 
     this.bsModalRef = this.modalService.show(ForumCommentsModalComponent, {
-      class: "modal-lg modal-dialog-centered",
+      class: "modal-md modal-dialog-centered",
       initialState: {
         forumId: row.id,
         forumTitle: row.title,
