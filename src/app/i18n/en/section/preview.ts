@@ -6,7 +6,34 @@ export const preview = {
       COMMENTS: "Comments",
       SHARE: "Share",
       COPY_LINK: "Copy link",
+      AUTHOR: "Author",
     },
+    COMMON: {
+      REACTIONS_TITLE: "Reactions",
+      COMMENTS_TITLE: "Comments",
+      ADD_COMMENT: "Add Comment",
+      WRITE_COMMENT: "Write your comment here...",
+      NO_COMMENTS: "No comments yet, be the first to join the conversation!",
+      DELETE_COMMENT: "Delete comment",
+      DELETE_CONFIRM_TITLE: "Delete Comment",
+      DELETE_CONFIRM_MESSAGE:
+        "Are you sure you want to delete this comment? This action cannot be undone.",
+      DELETE_SUCCESS: "Comment deleted successfully",
+      DELETE_ERROR: "Failed to delete comment",
+      CANCEL: "Cancel",
+      CONFIRM: "Confirm",
+      CONTENT_HEADING: "Content",
+      STATUS: { OPEN: "Open", CLOSED: "Closed" },
+      LOGIN_TO_REACT: "Please log in to react",
+      LOGIN_TO_COMMENT: "Please log in to comment",
+    },
+
+    TYPES: {
+      BLOG: "Blog",
+      FORUM: "Forum",
+      ARTICLE: "Article",
+    },
+
     ACTIONS: {
       MORE: "More options",
     },
@@ -21,7 +48,7 @@ export const preview = {
         REPLIES: "Replies",
         REACTIONS: "Reactions",
       },
-      REACTIONS: { UP: "Upvote", DOWN: "Downvote", HEART: "Like" },
+      REACTIONS: { UP: "Upvote", DOWN: "Downvote", HEART: "Like", TITLE: "Reactions" },
       COMMENT: {
         REPLIES: "Replies",
         ADD_COMMENT: "Write your reply here...",
@@ -48,6 +75,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Topic started by",
+        CONTENT: "Forum Topic",
         COMMENTS: "Discussion Thread",
         ADD_COMMENT: "Add Reply",
         NO_COMMENTS: "No replies yet, be the first to join the discussion!",
@@ -66,7 +94,7 @@ export const preview = {
         REPLIES: "Replies",
         REACTIONS: "Reactions",
       },
-      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love" },
+      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love", TITLE: "Reactions" },
       COMMENT: {
         REPLIES: "Comments",
         ADD_COMMENT: "Write your reply here...",
@@ -93,6 +121,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Written by",
+        CONTENT: "Blog Post",
         COMMENTS: "Community Responses",
         ADD_COMMENT: "Leave a Response",
         NO_COMMENTS: "No responses yet, be the first to leave one!",
@@ -109,7 +138,7 @@ export const preview = {
         REPLIES: "Comments",
         REACTIONS: "Reactions",
       },
-      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love" },
+      REACTIONS: { UP: "Like", DOWN: "Dislike", HEART: "Love", TITLE: "Reactions" },
       COMMENT: {
         REPLIES: "Comments",
         ADD_COMMENT: "Write your comment here...",
@@ -125,15 +154,16 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Written by",
+        CONTENT: "Article",
         COMMENTS: "Member Comments",
         ADD_COMMENT: "Add Comment",
         NO_COMMENTS: "Be the first to comment on this article.",
         CLOSED_NOTICE: "Comments are disabled for this article.",
       },
     },
-    LOGIN: {
-      LOGIN_TO_REACT: "Please log in to react to this post",
-      LOGIN_TO_COMMENT: "Please log in to comment on this post",
+
+    NAV: {
+      CONNEXION: "Login",
     },
   },
 };

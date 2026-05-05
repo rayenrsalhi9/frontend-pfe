@@ -6,7 +6,34 @@ export const preview = {
       COMMENTS: "التعليقات",
       SHARE: "مشاركة",
       COPY_LINK: "نسخ الرابط",
+      AUTHOR: "الناشر",
     },
+    COMMON: {
+      REACTIONS_TITLE: "التفاعلات",
+      COMMENTS_TITLE: "التعليقات",
+      ADD_COMMENT: "أضف تعليقًا",
+      WRITE_COMMENT: "اكتب تعليقك هنا...",
+      NO_COMMENTS: "لا توجد تعليقات بعد، كن أول من ينضم إلى النقاش!",
+      DELETE_COMMENT: "حذف التعليق",
+      DELETE_CONFIRM_TITLE: "حذف التعليق",
+      DELETE_CONFIRM_MESSAGE:
+        "هل أنت متأكد من حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.",
+      DELETE_SUCCESS: "تم حذف التعليق بنجاح",
+      DELETE_ERROR: "فشل في حذف التعليق",
+      CANCEL: "إلغاء",
+      CONFIRM: "تأكيد",
+      CONTENT_HEADING: "المحتوى",
+      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
+      LOGIN_TO_REACT: "يرجى تسجيل الدخول للتفاعل",
+      LOGIN_TO_COMMENT: "يرجى تسجيل الدخول للتعليق",
+    },
+
+    TYPES: {
+      BLOG: "المدونة",
+      FORUM: "المنتدى",
+      ARTICLE: "مقالة",
+    },
+
     ACTIONS: {
       MORE: "المزيد من الخيارات",
     },
@@ -21,7 +48,12 @@ export const preview = {
         REPLIES: "الردود",
         REACTIONS: "التفاعلات",
       },
-      REACTIONS: { UP: "تصويت إيجابي", DOWN: "تصويت سلبي", HEART: "إعجاب" },
+      REACTIONS: {
+        UP: "تصويت إيجابي",
+        DOWN: "تصويت سلبي",
+        HEART: "إعجاب",
+        TITLE: "التفاعلات",
+      },
       COMMENT: {
         REPLIES: "الردود",
         ADD_COMMENT: "اكتب ردك هنا...",
@@ -47,6 +79,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "بدأ الموضوع بواسطة",
+        CONTENT: "موضوع المنتدى",
         COMMENTS: "خيط النقاش",
         ADD_COMMENT: "إضافة رد",
         NO_COMMENTS: "لا توجد ردود بعد، كن أول من ينضم إلى النقاش!",
@@ -64,7 +97,12 @@ export const preview = {
         REPLIES: "الردود",
         REACTIONS: "التفاعلات",
       },
-      REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
+      REACTIONS: {
+        UP: "إعجاب",
+        DOWN: "عدم إعجاب",
+        HEART: "أحببته",
+        TITLE: "التفاعلات",
+      },
       COMMENT: {
         REPLIES: "التعليقات",
         ADD_COMMENT: "اكتب تعليقك هنا...",
@@ -91,6 +129,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "بقلم",
+        CONTENT: "منشور المدونة",
         COMMENTS: "ردود المجتمع",
         ADD_COMMENT: "اترك ردًا",
         NO_COMMENTS: "لا توجد ردود بعد، كن أول من يترك ردًا!",
@@ -98,40 +137,47 @@ export const preview = {
       },
     },
 
-      ARTICLE: {
-        LABEL: "مقالة",
-        STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
-        TABLE: {
-          TOPIC: "المواضيع",
-          POSTS: "المقالات",
-          REPLIES: "التعليقات",
-          REACTIONS: "التفاعلات",
-        },
-        REACTIONS: { UP: "إعجاب", DOWN: "عدم إعجاب", HEART: "أحببته" },
-        COMMENT: {
-          REPLIES: "التعليقات",
-          ADD_COMMENT: "أضف تعليقًا هنا...",
-          DELETE: "حذف التعليق",
-        },
-        LIST: {
-          TITLE: "أحدث المستجدات",
-          DESCRIPTION:
-            "استعرض مجموعتنا من المقالات والأخبار والتحديثات المؤسسية.",
-          VIEW_THREAD: "عرض المقالة",
-          READ_MORE: "قراءة المقالة كاملة",
-          NO_RESULTS: "لم يتم العثور على مقالات.",
-        },
-        PREVIEW: {
-          AUTHOR: "بقلم",
-          COMMENTS: "تعليقات الأعضاء",
-          ADD_COMMENT: "أضف تعليقًا",
-          NO_COMMENTS: "كن أول من يعلّق على هذه المقالة.",
-          CLOSED_NOTICE: "التعليقات مغلقة لهذه المقالة.",
-        },
+    ARTICLE: {
+      LABEL: "مقالة",
+      STATUS: { OPEN: "مفتوح", CLOSED: "مغلق" },
+      TABLE: {
+        TOPIC: "المواضيع",
+        POSTS: "المقالات",
+        REPLIES: "التعليقات",
+        REACTIONS: "التفاعلات",
       },
-      LOGIN: {
-        LOGIN_TO_REACT: "يرجى تسجيل الدخول للتفاعل مع هذه المنشور",
-        LOGIN_TO_COMMENT: "يرجى تسجيل الدخول لتعليق على هذه المنشور",
+      REACTIONS: {
+        UP: "إعجاب",
+        DOWN: "عدم إعجاب",
+        HEART: "أحببته",
+        TITLE: "التفاعلات",
+      },
+      COMMENT: {
+        REPLIES: "التعليقات",
+        ADD_COMMENT: "أضف تعليقًا هنا...",
+        DELETE: "حذف التعليق",
+      },
+      LIST: {
+        TITLE: "أحدث المستجدات",
+        DESCRIPTION:
+          "استعرض مجموعتنا من المقالات والأخبار والتحديثات المؤسسية.",
+        VIEW_THREAD: "عرض المقالة",
+        READ_MORE: "قراءة المقالة كاملة",
+        NO_RESULTS: "لم يتم العثور على مقالات.",
+      },
+      PREVIEW: {
+        AUTHOR: "بقلم",
+        CONTENT: "مقالة",
+        COMMENTS: "تعليقات الأعضاء",
+        ADD_COMMENT: "أضف تعليقًا",
+        NO_COMMENTS: "كن أول من يعلّق على هذه المقالة.",
+        CLOSED_NOTICE: "التعليقات مغلقة لهذه المقالة.",
       },
     },
-  };
+
+
+    NAV: {
+      CONNEXION: "تسجيل الدخول",
+    },
+  },
+};

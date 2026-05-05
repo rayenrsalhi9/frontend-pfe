@@ -143,11 +143,11 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
       this.securityService.isUserAuthenticate()
     ) {
       const initialState = {
-        title: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.TITLE"),
-        message: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.MESSAGE"),
+        title: this.translate.instant("PREVIEW.COMMON.DELETE_CONFIRM_TITLE"),
+        message: this.translate.instant("PREVIEW.COMMON.DELETE_CONFIRM_MESSAGE"),
         button: {
-          cancel: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.CANCEL"),
-          confirm: this.translate.instant("PREVIEW.FORUM.COMMENT.DELETE_CONFIRM.CONFIRM"),
+          cancel: this.translate.instant("PREVIEW.COMMON.CANCEL"),
+          confirm: this.translate.instant("PREVIEW.COMMON.CONFIRM"),
         },
       };
 
@@ -175,13 +175,13 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
           this.forum.comments = this.forum.comments.filter((c: any) => c.id !== id);
           this.cdr.markForCheck();
           this.toastr.success(
-            this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.SUCCESS"),
+            this.translate.instant("PREVIEW.COMMON.DELETE_SUCCESS"),
           );
         } else {
           this.toastr.error(
             response?.message ||
               response?.friendlyMessage ||
-              this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
+              this.translate.instant("PREVIEW.COMMON.DELETE_ERROR"),
           );
         }
       },
@@ -190,7 +190,7 @@ export class ForumPreviewComponent implements OnInit, OnDestroy {
           err?.error?.message ||
             err?.friendlyMessage ||
             err?.messages?.[0] ||
-            this.translate.instant("PREVIEW.FORUM.DELETE_TOAST.ERROR"),
+            this.translate.instant("PREVIEW.COMMON.DELETE_ERROR"),
         );
       },
     });

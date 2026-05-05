@@ -179,11 +179,11 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
       this.securityService.isUserAuthenticate()
     ) {
       const initialState = {
-        title: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.TITLE"),
-        message: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.MESSAGE"),
+        title: this.translate.instant("PREVIEW.COMMON.DELETE_CONFIRM_TITLE"),
+        message: this.translate.instant("PREVIEW.COMMON.DELETE_CONFIRM_MESSAGE"),
         button: {
-          cancel: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.CANCEL"),
-          confirm: this.translate.instant("PREVIEW.BLOG.COMMENT.DELETE_CONFIRM.CONFIRM"),
+          cancel: this.translate.instant("PREVIEW.COMMON.CANCEL"),
+          confirm: this.translate.instant("PREVIEW.COMMON.CONFIRM"),
         },
       };
 
@@ -211,13 +211,13 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
           this.blog.comments = this.blog.comments.filter((c: any) => c.id !== id);
           this.cdr.markForCheck();
           this.toastr.success(
-            this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.SUCCESS"),
+            this.translate.instant("PREVIEW.COMMON.DELETE_SUCCESS"),
           );
         } else {
           this.toastr.error(
             response?.message ||
               response?.friendlyMessage ||
-              this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
+              this.translate.instant("PREVIEW.COMMON.DELETE_ERROR"),
           );
         }
       },
@@ -226,7 +226,7 @@ export class BlogPreviewComponent implements OnInit, OnDestroy {
           err?.error?.message ||
             err?.friendlyMessage ||
             err?.messages?.[0] ||
-            this.translate.instant("PREVIEW.BLOG.DELETE_TOAST.ERROR"),
+            this.translate.instant("PREVIEW.COMMON.DELETE_ERROR"),
         );
       },
     });
