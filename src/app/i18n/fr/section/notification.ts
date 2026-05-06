@@ -10,7 +10,8 @@ export const notification = {
         "CHAT": "message",
         "EMPTY": "Aucune notification",
         "SEPARATOR": "::",
-        "FROM_USER": "de"
+        "FROM_USER": "de",
+        "MESSAGE_FROM_USER": "Message de {{name}}"
       },
       "BUTTONS": {
         "READ": "Marquer tout comme lu"

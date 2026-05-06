@@ -10,7 +10,8 @@ export const notification = {
         "CHAT": "مراسلة",
         "EMPTY": "لا توجد إشعارات",
         "SEPARATOR": "::",
-        "FROM_USER": "من"
+        "FROM_USER": "من",
+        "MESSAGE_FROM_USER": "رسالة من {{name}}"
       },
       "BUTTONS": {
         "READ": "وضع علامة على الكل كمقروء"

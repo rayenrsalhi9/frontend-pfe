@@ -69,8 +69,16 @@ export class DeviceStatisticComponent implements OnChanges {
       const count = d.count ?? d.documentCount ?? 0;
       const pct = this.total > 0 ? Math.round((count / this.total) * 100) : 0;
 
+      let extension = d.extension ?? d.ext ?? "—";
+      if (
+        extension.toUpperCase() ===
+        "APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.WORDPROCESSINGML.DOCUMENT"
+      ) {
+        extension = "APPLICATION/DOCX";
+      }
+
       return {
-        extension: d.extension ?? d.ext ?? "—",
+        extension: extension,
         count,
         percentage: pct,
         color: this.palette[idx % this.palette.length],

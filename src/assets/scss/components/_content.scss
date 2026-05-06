@@ -7,6 +7,7 @@
 
   .content {
     width: 100%;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -58,14 +59,26 @@
     }
 
     .content-min-height {
-      min-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
-      height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      min-height: calc(
+        100vh - #{$header-nav-height} - #{$header-navbar-height} -
+          #{$footer-height}
+      );
+      height: calc(
+        100vh - #{$header-nav-height} - #{$header-navbar-height} -
+          #{$footer-height}
+      );
       overflow: hidden;
     }
 
     .content-max-height {
-      max-height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
-      height: calc(100vh - #{$header-nav-height} - #{$header-navbar-height} - #{$footer-height});
+      max-height: calc(
+        100vh - #{$header-nav-height} - #{$header-navbar-height} -
+          #{$footer-height}
+      );
+      height: calc(
+        100vh - #{$header-nav-height} - #{$header-navbar-height} -
+          #{$footer-height}
+      );
       overflow: hidden;
     }
   }

@@ -10,7 +10,8 @@ export const notification = {
         "CHAT": "chat",
         "EMPTY": "No notifications",
         "SEPARATOR": "::",
-        "FROM_USER": "from"
+        "FROM_USER": "from",
+        "MESSAGE_FROM_USER": "Message from {{name}}"
       },
       "BUTTONS":{
         "READ":"Mark All as Read",

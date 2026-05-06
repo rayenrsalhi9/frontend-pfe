@@ -1,19 +1,19 @@
-<div class="modal-form-body">
+<div class="ac-modal-body">
   <!-- Modal Header -->
-  <div class="modal-form-header">
-    <h2 class="modal-form-title">
+  <div class="ac-modal-header">
+    <h2 class="ac-modal-title">
       {{ 'CHAT.LABELS.CREATE_GROUP_CONVERSATION' | translate }}
     </h2>
-    <p class="modal-form-sub">
+    <p class="ac-modal-sub">
       {{ 'CHAT.MODAL.CREATE_GROUP.DESCRIPTION' | translate }}
     </p>
   </div>
 
   <!-- Form -->
-  <div class="form-body">
+  <div class="ac-form-body">
     <!-- Group Name -->
-    <div class="field">
-      <label class="field-label" for="groupName">
+    <div class="ac-field">
+      <label class="ac-field-label" for="groupName">
         {{ 'CHAT.LABELS.TITLE' | translate }}
         <span class="required-mark">*</span>
       </label>
@@ -21,16 +21,16 @@
         type="text"
         id="groupName"
         [(ngModel)]="groupName"
-        class="field-input"
+        class="ac-field-input"
         [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
       />
     </div>
 
     <!-- Users Selection -->
-    <div class="field">
+    <div class="ac-field">
       <div class="users-header">
         <div class="header-top">
-          <label class="field-label">
+          <label class="ac-field-label">
             {{ 'CHAT.LABELS.SELECT_MEMBERS' | translate }}
             <span class="selected-count" *ngIf="selectedCount > 0">
               ({{ selectedCount }})
@@ -52,7 +52,7 @@
         <i class="feather icon-search search-icon"></i>
         <input
           type="text"
-          class="field-input search-input"
+          class="ac-field-input search-input"
           [(ngModel)]="searchTerm"
           (input)="filterUsers()"
           [placeholder]="'CHAT.LABELS.SEARCH' | translate"
@@ -90,7 +90,7 @@
     </div>
 
     <!-- Footer Actions -->
-    <div class="modal-form-footer">
+    <div class="ac-modal-footer">
       <button type="button" class="btn btn-ghost" (click)="cancel()">
         {{ 'CHAT.BUTTONS.CANCEL' | translate }}
       </button>
