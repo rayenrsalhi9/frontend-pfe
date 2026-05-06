@@ -7,11 +7,11 @@ import { Reminder } from '../enums/reminder';
 import { ReminderResourceParameter } from '../enums/reminder-resource-parameter';
 
 export interface CalendarEvent {
-  id?: any;
+  id?: string | number;
   title: string;
   start: string;
   end?: string;
-  frequency?: string;
+  frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly';
   description?: string;
   category?: string;
   allDay?: boolean;

@@ -43,26 +43,6 @@ export class DashboardsService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getQuarterlyReminders(
-    month: number,
-    year: number,
-  ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/quarterly-reminder/${month}/${year}`;
-    return this.httpClient
-      .get<CalenderReminderDto[]>(url)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
-  }
-
-  getHalfYearlyReminders(
-    month: number,
-    year: number,
-  ): Observable<CalenderReminderDto[] | CommonError> {
-    const url = `dashboard/half-yearly-reminder/${month}/${year}`;
-    return this.httpClient
-      .get<CalenderReminderDto[]>(url)
-      .pipe(catchError(this.commonHttpErrorService.handleError));
-  }
-
   getYearlyReminders(
     month: number,
     year: number,
