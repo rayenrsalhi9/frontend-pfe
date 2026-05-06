@@ -1,6 +1,13 @@
 export const calendar = {
   CALENDAR: {
+    EYEBROW: "التقويم",
     TITLE: "التقويم",
+    DESCRIPTION: "إدارة الأحداث والجدول الزمني الخاص بك",
+    SECTION_LABEL: "نظرة عامة على التقويم",
+    PANEL: {
+      CALENDAR: "التقويم",
+      EVENTS: "الأحداث",
+    },
     BUTTONS: {
       ADD: "إضافة حدث جديد",
     },
@@ -48,6 +55,8 @@ export const calendar = {
       PREVIOUS_MONTH: "الشهر السابق",
       NEXT_MONTH: "الشهر التالي",
       GRID_LABEL: "أيام التقويم",
+      EDIT_EVENT: "تعديل {{title}}",
+      DELETE_EVENT: "حذف {{title}}",
     },
     TOAST: {
       EVENT_CREATED: "تم إنشاء الحدث",

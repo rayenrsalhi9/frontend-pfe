@@ -1,6 +1,13 @@
 export const calendar = {
   CALENDAR: {
+    EYEBROW: "Calendar",
     TITLE: "Calendar",
+    DESCRIPTION: "Manage your events and schedule",
+    SECTION_LABEL: "Calendar Overview",
+    PANEL: {
+      CALENDAR: "Calendar",
+      EVENTS: "Events",
+    },
     BUTTONS: {
       ADD: "Add new event",
     },
@@ -48,6 +55,8 @@ export const calendar = {
       PREVIOUS_MONTH: "Previous month",
       NEXT_MONTH: "Next month",
       GRID_LABEL: "Calendar days",
+      EDIT_EVENT: "Edit {{title}}",
+      DELETE_EVENT: "Delete {{title}}",
     },
     TOAST: {
       EVENT_CREATED: "Event created",
