@@ -16,7 +16,7 @@ import { AppConfiguration } from "@app/configs/app.config";
 @Injectable()
 export class AppConfigState {
   @Selector()
-  static getUsers(state: AppConfig) {
+  static getLayoutType(state: AppConfig) {
     return state.layoutType;
   }
 

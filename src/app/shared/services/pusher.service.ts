@@ -13,7 +13,10 @@ import { environment } from "src/environments/environment";
 export class PusherService {
   private pusher: Pusher;
   private channel: any;
-  private subscriptions: Map<string, { eventName: string; callback: (data: any) => void }> = new Map();
+  private subscriptions: Map<
+    string,
+    { eventName: string; callback: (data: any) => void }
+  > = new Map();
 
   constructor(
     private httpClient: HttpClient,
@@ -73,11 +76,15 @@ export class PusherService {
   }
 
   sendEvent(channelName: string, eventName: string, data: any) {
-    this.pusher.send_event(eventName, data, channelName);
+    if (this.pusher) {
+      this.pusher.send_event(eventName, data, channelName);
+    }
   }
 
   emitEvent(channelName: string, eventName: string, data: any) {
-    this.pusher.subscribe(channelName).trigger(eventName, data);
+    if (this.pusher) {
+      this.pusher.subscribe(channelName).trigger(eventName, data);
+    }
   }
 
   subscribeToChannel(
@@ -85,9 +92,11 @@ export class PusherService {
     eventName: string,
     callback: (data: any) => void,
   ): void {
-    const channel = this.pusher.subscribe(channelName);
-    channel.bind(eventName, callback);
-    this.subscriptions.set(channelName, { eventName, callback });
+    if (this.pusher) {
+      const channel = this.pusher.subscribe(channelName);
+      channel.bind(eventName, callback);
+      this.subscriptions.set(channelName, { eventName, callback });
+    }
   }
 
   unsubscribeFromChannel(channelName: string): void {

@@ -1,20 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CategoryService } from '@app/shared/services/category.service';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { DocumentCategoryAddComponent } from '../document-category-add/document-category-add.component';
-import { ToastrService } from 'ngx-toastr';
-import { Category } from '@app/shared/enums/category';
-import { ConfirmModalComponent } from '@app/shared/components/confirm-modal/confirm-modal.component';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { CategoryService } from "@app/shared/services/category.service";
+import { ColumnMode } from "@swimlane/ngx-datatable";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { DocumentCategoryAddComponent } from "../document-category-add/document-category-add.component";
+import { ToastrService } from "ngx-toastr";
+import { Category } from "@app/shared/enums/category";
+import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { TranslateService } from "@ngx-translate/core";
 @Component({
-  selector: 'app-document-categories',
-  templateUrl: './document-categories.component.html',
-  styleUrls: ['./document-categories.component.scss']
+  selector: "app-document-categories",
+  templateUrl: "./document-categories.component.html",
+  styleUrls: ["./document-categories.component.scss"],
 })
 export class DocumentCategoriesComponent implements OnInit {
-
-  showMobilePanel = false
+  showMobilePanel = false;
 
   rows: any[] = [];
 
@@ -23,39 +22,29 @@ export class DocumentCategoriesComponent implements OnInit {
   bsModalRef: BsModalRef;
 
   constructor(
-    private categoryService:CategoryService,
+    private categoryService: CategoryService,
     private cdr: ChangeDetectorRef,
     private modalService: BsModalService,
-    private toastrService:ToastrService,
-    private translate: TranslateService
-  ) { }
+    private toastrService: ToastrService,
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit() {
-    this.getCategories()
-  }
-
-  addCategory(){
-    this.modalService.show(DocumentCategoryAddComponent,{})
-  }
-
-  ngAfterViewInit() {
-    this.cellOverflowVisible();
+    this.getCategories();
   }
 
   getCategories(): void {
     this.categoryService.getAllCategories().subscribe(
-      (response:any)=>{
-        this.rows = response
-        this.cdr.detectChanges()
+      (response: any) => {
+        this.rows = response;
+        this.cdr.detectChanges();
       },
-      (error:any)=>{
-
-      }
+      (error: any) => {},
     );
   }
 
   deleteCategory(id: string): void {
-    this.translate.get('CATEGORY.DELETE.LABEL').subscribe((translations) => {
+    this.translate.get("CATEGORY.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
         class: "modal-confirm-custom",
         initialState: {
@@ -63,25 +52,29 @@ export class DocumentCategoriesComponent implements OnInit {
           message: translations.MESSAGE,
           button: {
             cancel: translations.BUTTON.CANCEL,
-            confirm: translations.BUTTON.CONFIRM
-          }
-        }
+            confirm: translations.BUTTON.CONFIRM,
+          },
+        },
       });
 
-      this.bsModalRef.content.onClose.subscribe(result => {
+      this.bsModalRef.content.onClose.subscribe((result) => {
         if (result) {
           this.categoryService.delete(id).subscribe(
             (d) => {
-              this.translate.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY').subscribe((translatedMessage: string) => {
-                this.toastrService.success(translatedMessage);
-              });
+              this.translate
+                .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETED_SUCCESSFULLY")
+                .subscribe((translatedMessage: string) => {
+                  this.toastrService.success(translatedMessage);
+                });
               this.getCategories();
             },
             (error) => {
-              this.translate.get('CATEGORY.DELETE.TOAST.CATEGORY_DELETE_FAILED').subscribe((translatedMessage: string) => {
-                this.toastrService.error(translatedMessage);
-              });
-            }
+              this.translate
+                .get("CATEGORY.DELETE.TOAST.CATEGORY_DELETE_FAILED")
+                .subscribe((translatedMessage: string) => {
+                  this.toastrService.error(translatedMessage);
+                });
+            },
           );
         }
       });
@@ -90,23 +83,15 @@ export class DocumentCategoriesComponent implements OnInit {
 
   manageCategory(category: Category): void {
     const initialState = {
-      width: '350px',
+      width: "350px",
       data: Object.assign({}, category),
-    }
+    };
     const dialogRef = this.modalService.show(DocumentCategoryAddComponent, {
-      initialState
+      initialState,
     });
 
-    dialogRef.onHide.subscribe(()=>{
-      this.getCategories()
-    })
+    dialogRef.onHide.subscribe(() => {
+      this.getCategories();
+    });
   }
-
-  private cellOverflowVisible() {
-    const cells = document.getElementsByClassName('datatable-body-cell overflow-visible');
-    for (let i = 0, len = cells.length; i < len; i++) {
-      cells[i].setAttribute('style', 'overflow: visible !important');
-    }
-  }
-
 }

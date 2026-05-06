@@ -148,7 +148,6 @@ export const add = {
       TOAST: {
         SUCCESS: "تم نشر المقال بنجاح",
         ERROR: "فشل نشر المقال",
-        UPDATED_SUCCESSFULLY: "تم تحديث المقال بنجاح",
       },
       VALIDATION: {
         TITLE_MIN_LENGTH: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",

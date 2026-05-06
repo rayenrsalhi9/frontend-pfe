@@ -244,11 +244,11 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
 
     // Process users - include current user if private
     if (formValue.private) {
-      if (formValue.users && formValue.users.length > 0) {
-        formValue.users = [...formValue.users, this.currentUser?.id];
-      } else {
-        formValue.users = [this.currentUser?.id];
+      let userIds = formValue.users || [];
+      if (this.currentUser?.id && !userIds.includes(this.currentUser.id)) {
+        userIds = [...userIds, this.currentUser.id];
       }
+      formValue.users = userIds;
     } else {
       // Clear users if not private
       formValue.users = [];
