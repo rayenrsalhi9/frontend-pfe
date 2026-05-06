@@ -86,6 +86,11 @@ $warm-amber-bg: #fffbeb;
     @include screen-mobile {
       min-width: 90vw;
       right: -0.5rem;
+
+      [dir="rtl"] & {
+        right: auto;
+        left: -0.5rem;
+      }
     }
 
     [dir="rtl"] & {

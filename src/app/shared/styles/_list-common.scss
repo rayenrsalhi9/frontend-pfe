@@ -164,61 +164,7 @@ $amber-dark: #92400e;
 }
 
 /* ── ng-select (requires ::ng-deep for child component) ── */
-/* stylelint-disable selector-pseudo-element-no-unknown */
-::ng-deep .list-select .ng-select-container {
-  height: 46px !important;
-  border-radius: 10px !important;
-  border: 1px solid var(--border-color, #e5e7eb) !important;
-  background-color: #ffffff !important;
-  box-shadow: none !important;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
 
-::ng-deep
-  .list-select
-  .ng-select-container
-  .ng-value-container
-  .ng-input
-  > input {
-  font-size: 0.875rem;
-  color: var(--text-primary, #111827);
-  padding-left: 0.25rem;
-  padding-inline-start: 0.25rem;
-}
-
-::ng-deep
-  .list-select
-  .ng-select-container
-  .ng-value-container
-  .ng-placeholder {
-  font-size: 0.875rem;
-  color: var(--text-secondary, #9ca3af);
-  padding-left: 2.875rem;
-  padding-inline-start: 2.875rem;
-}
-
-::ng-deep .list-select.ng-select-opened .ng-select-container {
-  border-color: var(--primary, #2563eb) !important;
-  background-color: #ffffff !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-}
-
-::ng-deep
-  .list-select.ng-select-opened
-  .ng-select-container
-  .ng-value-container
-  .ng-placeholder {
-  color: var(--primary, #2563eb);
-}
-
-::ng-deep .list-select .ng-dropdown-panel {
-  border-radius: 10px !important;
-  border: 1px solid var(--border-color, #e5e7eb) !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
-}
-/* stylelint-enable selector-pseudo-element-no-unknown */
 
 /* ── Table Wrapper ── */
 .list-table-wrapper {
@@ -730,7 +676,7 @@ $amber-dark: #92400e;
   color: var(--text-primary, #111827);
   font-size: 0.8125rem;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   transition: color 0.15s ease;
 }
 
