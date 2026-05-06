@@ -78,8 +78,6 @@ export const calendar = {
       DAILY: "يومي",
       WEEKLY: "أسبوعي",
       MONTHLY: "شهري",
-      QUARTERLY: "ربع سنوي",
-      HALF_YEARLY: "نصف سنوي",
       YEARLY: "سنوي",
     },
     WEEK_DAYS: {

@@ -43,7 +43,7 @@ interface CalendarAppEvent {
   };
   allDay?: boolean;
   cssClass?: string;
-  frequency?: string;
+  frequency?: 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly';
 }
 
 defineLocale("ar", arLocale);
@@ -173,8 +173,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           { id: "daily", name: translations.DAILY },
           { id: "weekly", name: translations.WEEKLY },
           { id: "monthly", name: translations.MONTHLY },
-          { id: "quarterly", name: translations.QUARTERLY },
-          { id: "half_yearly", name: translations.HALF_YEARLY },
           { id: "yearly", name: translations.YEARLY },
         ];
       });
@@ -496,28 +494,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           : [],
       dayOfWeek: data.dayOfWeek,
       frequency: data.frequency,
-      halfYearlyReminders:
-        isRecurring && data.frequency === "half_yearly"
-          ? [
-              {
-                day: new Date(data.startDate).getDate(),
-                month: new Date(data.startDate).getMonth() + 1,
-                quarter: new Date(data.startDate).getMonth() < 6 ? 1 : 2,
-              },
-            ]
-          : [],
-      quarterlyReminders:
-        isRecurring && data.frequency === "quarterly"
-          ? [
-              {
-                day: new Date(data.startDate).getDate(),
-                month: new Date(data.startDate).getMonth() + 1,
-                quarter: Math.floor(
-                  (new Date(data.startDate).getMonth() + 3) / 3,
-                ),
-              },
-            ]
-          : [],
       isEmailNotification: data.isEmailNotification || false,
       isRepeated: isRecurring,
       category: data.category,
@@ -824,8 +800,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       daily: "feather icon-refresh-cw",
       weekly: "feather icon-repeat",
       monthly: "feather icon-calendar",
-      quarterly: "feather icon-grid",
-      half_yearly: "feather icon-layers",
       yearly: "feather icon-award",
       once: "feather icon-corner-up-right",
     };
@@ -837,8 +811,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       daily: "freq-badge-daily",
       weekly: "freq-badge-weekly",
       monthly: "freq-badge-monthly",
-      quarterly: "freq-badge-quarterly",
-      half_yearly: "freq-badge-half",
       yearly: "freq-badge-yearly",
       once: "freq-badge-once",
     };
