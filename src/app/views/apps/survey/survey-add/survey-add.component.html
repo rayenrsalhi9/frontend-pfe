@@ -34,10 +34,12 @@
               id="title"
               formControlName="title"
               class="field-input"
-              [class.has-error]="isTitleInvalid"
+              [class.has-error]="isSurveyFieldInvalid('title')"
+
               [placeholder]="'ADD.SURVEY.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isTitleInvalid">
+            <div class="field-error" *ngIf="isSurveyFieldInvalid('title')">
+
               <svg
                 width="12"
                 height="12"
@@ -64,7 +66,8 @@
             </label>
             <ng-select
               formControlName="type"
-              [class.has-error]="isTypeInvalid"
+              [class.has-error]="isSurveyFieldInvalid('type')"
+
               [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
               [searchable]="false"
               [labelForId]="'type'"
@@ -73,7 +76,8 @@
                 {{ "SURVEY.OPTION." + type.toUpperCase() | translate }}
               </ng-option>
             </ng-select>
-            <div class="field-error" *ngIf="isTypeInvalid">
+            <div class="field-error" *ngIf="isSurveyFieldInvalid('type')">
+
               <svg
                 width="12"
                 height="12"
@@ -137,7 +141,6 @@
               }}</span>
             </label>
             <ng-select
-              id="users"
               formControlName="users"
               [multiple]="true"
               [placeholder]="'ADD.SHARED.PLACEHOLDERS.USERS' | translate"

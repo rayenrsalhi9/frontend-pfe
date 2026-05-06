@@ -24,6 +24,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 import { CommonService } from "src/app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
+import { AppFormBase } from "../../shared/app-form-base";
+
 
 // Custom date range validator
 export const dateRangeValidator: ValidatorFn = (
@@ -49,19 +51,14 @@ export const dateRangeValidator: ValidatorFn = (
   templateUrl: "./blog-add.component.html",
   styleUrls: ["./blog-add.component.scss"],
 })
-export class BlogAddComponent implements OnInit, OnDestroy {
+export class BlogAddComponent extends AppFormBase implements OnInit {
+
   blogForm: FormGroup;
   picture: SafeUrl;
   newPicture: SafeUrl;
   minDate = new Date();
-  categories: any[] = [];
-  users: any[] = [];
-  currentUser: any;
-  isLoading = false;
-  isEdit = false;
   blogId: any;
 
-  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -75,7 +72,9 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private sanitizer: DomSanitizer,
     private activeRoute: ActivatedRoute,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
@@ -86,10 +85,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     this.checkEditMode();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   private initializeForm(): void {
     this.blogForm = this.fb.group(
@@ -448,31 +444,10 @@ export class BlogAddComponent implements OnInit, OnDestroy {
 
   // Getters removed
 
-  // Validation getters
-  get isTitleInvalid(): boolean {
-    const control = this.titleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
+  isBlogFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.blogForm, fieldName);
   }
 
-  get isSubtitleInvalid(): boolean {
-    const control = this.subtitleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isBodyInvalid(): boolean {
-    const control = this.bodyControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isCategoryInvalid(): boolean {
-    const control = this.categoryControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isPictureInvalid(): boolean {
-    const control = this.pictureControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
 
   // Validation getters removed
 

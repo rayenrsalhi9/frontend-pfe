@@ -16,22 +16,19 @@ import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { SecurityService } from "@app/core/security/security.service";
 import { CommonService } from "@app/shared/services/common.service";
+import { AppFormBase } from "../../shared/app-form-base";
+
 
 @Component({
   selector: "app-forum-add",
   templateUrl: "./forum-add.component.html",
   styleUrls: ["./forum-add.component.scss"],
 })
-export class ForumAddComponent implements OnInit, OnDestroy {
+export class ForumAddComponent extends AppFormBase implements OnInit {
+
   forumForm: FormGroup;
-  categories: any[] = [];
-  users: any[] = [];
-  currentUser: any;
-  isLoading = false;
-  isEdit = false;
   forumId: any;
 
-  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -45,7 +42,9 @@ export class ForumAddComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     private securityService: SecurityService,
     private commonService: CommonService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail()?.user;
@@ -55,10 +54,7 @@ export class ForumAddComponent implements OnInit, OnDestroy {
     this.checkEditMode();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   private initializeForm(): void {
     this.forumForm = this.fb.group({
@@ -344,20 +340,10 @@ export class ForumAddComponent implements OnInit, OnDestroy {
     return this.forumForm.get("content");
   }
 
-  get isTitleInvalid(): boolean {
-    const control = this.titleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
+  isForumFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.forumForm, fieldName);
   }
 
-  get isCategoryInvalid(): boolean {
-    const control = this.categoryControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isContentInvalid(): boolean {
-    const control = this.contentControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
 
   get titleErrorMessage(): string {
     const control = this.titleControl;

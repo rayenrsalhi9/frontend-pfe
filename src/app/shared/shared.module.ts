@@ -17,6 +17,8 @@ import { OverlayModule } from "@angular/cdk/overlay";
 import { ConfirmModalComponent } from "./components/confirm-modal/confirm-modal.component";
 import { NgxEmojiPickerModule } from "ngx-emoji-picker";
 import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-modal.component";
+import { GedBrandComponent } from "./components/brand/brand.component";
+
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     VideoPreviewComponent,
     ConfirmModalComponent,
     SusbcribeModalComponent,
+    GedBrandComponent,
+
   ],
   exports: [
     CommonModule,
@@ -48,6 +52,8 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     AudioPreviewComponent,
     VideoPreviewComponent,
     ConfirmModalComponent,
+    GedBrandComponent,
+
     OverlayModule,
     NgxEmojiPickerModule,
   ],

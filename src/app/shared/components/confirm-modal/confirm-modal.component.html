@@ -1,9 +1,9 @@
-<div class="confirm-modal">
+<div class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-message">
   <div class="confirm-modal__icon">
     <i class="feather icon-alert-triangle" aria-hidden="true"></i>
   </div>
-  <h3 class="confirm-modal__title">{{ title }}</h3>
-  <p class="confirm-modal__message">{{ message }}</p>
+  <h3 class="confirm-modal__title" id="confirm-modal-title">{{ title }}</h3>
+  <p class="confirm-modal__message" id="confirm-modal-message">{{ message }}</p>
   <div class="confirm-modal__actions">
     <button
       type="button"

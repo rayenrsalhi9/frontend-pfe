@@ -1,4 +1,4 @@
-<div class="add-form-page">
+<div class="add-form-page" *ngIf="!isLoading">
   <div class="add-form-container">
     <!-- Page Header -->
     <div class="page-header">
@@ -34,10 +34,12 @@
               id="title"
               formControlName="title"
               class="field-input"
-              [class.has-error]="isTitleInvalid"
+              [class.has-error]="isForumFieldInvalid('title')"
+
               [placeholder]="'ADD.FORUM.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isTitleInvalid">
+            <div class="field-error" *ngIf="isForumFieldInvalid('title')">
+
               <svg
                 width="12"
                 height="12"
@@ -64,7 +66,8 @@
             </label>
             <ng-select
               formControlName="category"
-              [class.has-error]="isCategoryInvalid"
+              [class.has-error]="isForumFieldInvalid('category')"
+
               [placeholder]="
                 'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
               "
@@ -78,7 +81,8 @@
                 {{ category.name }}
               </ng-option>
             </ng-select>
-            <div class="field-error" *ngIf="isCategoryInvalid">
+            <div class="field-error" *ngIf="isForumFieldInvalid('category')">
+
               <svg
                 width="12"
                 height="12"
@@ -128,14 +132,16 @@
           </div>
 
           <div class="field">
-            <div class="quill-wrap" [class.has-error]="isContentInvalid">
+            <div class="quill-wrap" [class.has-error]="isForumFieldInvalid('content')">
+
               <quill-editor
                 formControlName="content"
                 [placeholder]="'ADD.FORUM.PLACEHOLDERS.CONTENT' | translate"
                 [styles]="{ minHeight: '200px' }"
               ></quill-editor>
             </div>
-            <div class="field-error" *ngIf="isContentInvalid">
+            <div class="field-error" *ngIf="isForumFieldInvalid('content')">
+
               <svg
                 width="12"
                 height="12"

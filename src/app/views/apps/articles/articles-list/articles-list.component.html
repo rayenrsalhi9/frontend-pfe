@@ -146,14 +146,14 @@
           <span
             class="list-cell-badge"
             [ngClass]="{
-              'list-cell-badge--green': value === 'public',
+              'list-cell-badge--green': value !== 'private',
               'list-cell-badge--yellow': value === 'private'
             }"
           >
             {{
-              (value === "public"
-                ? "ARTICLES.LIST.PRIVACY.PUBLIC"
-                : "ARTICLES.LIST.PRIVACY.PRIVATE"
+              (value === "private"
+                ? "ARTICLES.LIST.PRIVACY.PRIVATE"
+                : "ARTICLES.LIST.PRIVACY.PUBLIC"
               ) | translate
             }}
           </span>
@@ -171,7 +171,7 @@
             <button
               *hasClaim="'ARTICLE_VIEW_ARTICLES'"
               class="list-btn-action list-btn-action--view"
-              (click)="viewArticle(row)"
+              (click)="row && viewArticle(row)"
               [title]="'ARTICLES.LIST.BUTTONS.VIEW' | translate"
               [attr.aria-label]="'ARTICLES.LIST.BUTTONS.VIEW' | translate"
             >
@@ -180,13 +180,13 @@
             <button
               *hasClaim="'ARTICLE_VIEW_COMMENTS'"
               class="list-btn-action list-btn-action--comments"
-              (click)="openCommentsModal(row)"
+              (click)="row && openCommentsModal(row)"
               [title]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
               [attr.aria-label]="'ARTICLES.LIST.BUTTONS.COMMENTS' | translate"
             >
               <i class="feather icon-message-square"></i>
             </button>
-            <ng-container *ngIf="row.createdBy === currentUser.id">
+            <ng-container *ngIf="currentUser && row.createdBy === currentUser.id">
               <button
                 *hasClaim="'ARTICLE_EDIT_ARTICLE'"
                 class="list-btn-action list-btn-action--edit"
@@ -197,11 +197,11 @@
                 <i class="feather icon-edit-2"></i>
               </button>
             </ng-container>
-            <ng-container *ngIf="row.createdBy === currentUser.id">
+            <ng-container *ngIf="currentUser && row.createdBy === currentUser.id">
               <button
                 *hasClaim="'ARTICLE_DELETE_ARTICLE'"
                 class="list-btn-action list-btn-action--delete"
-                (click)="deleteArticle(row)"
+                (click)="row && deleteArticle(row)"
                 [title]="'ARTICLES.LIST.BUTTONS.DELETE' | translate"
                 [attr.aria-label]="'ARTICLES.LIST.BUTTONS.DELETE' | translate"
               >

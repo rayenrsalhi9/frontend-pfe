@@ -80,7 +80,7 @@
             <button
               *hasClaim="'USER_EDIT_USER'"
               class="list-btn-action list-btn-action--edit"
-              (click)="editUser(row.id)"
+              (click)="editUser(row.id); $event.stopPropagation()"
               [title]="'USERS.LIST.BUTTONS.EDIT' | translate"
               [attr.aria-label]="'USERS.LIST.BUTTONS.EDIT' | translate"
             >
@@ -89,7 +89,7 @@
             <button
               *hasClaim="'USER_RESET_PASSWORD'"
               class="list-btn-action list-btn-action--view"
-              (click)="resetPassword(row)"
+              (click)="resetPassword(row); $event.stopPropagation()"
               [title]="'USERS.LIST.BUTTONS.RESETPASSWORD' | translate"
               [attr.aria-label]="'USERS.LIST.BUTTONS.RESETPASSWORD' | translate"
             >
@@ -98,7 +98,7 @@
             <button
               *hasClaim="'USER_DELETE_USER'"
               class="list-btn-action list-btn-action--delete"
-              (click)="deleteUser(row)"
+              (click)="deleteUser(row); $event.stopPropagation()"
               [title]="'USERS.LIST.BUTTONS.DELETE' | translate"
               [attr.aria-label]="'USERS.LIST.BUTTONS.DELETE' | translate"
             >

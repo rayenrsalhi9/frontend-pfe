@@ -111,8 +111,8 @@
         [width]="180"
       >
         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-          <div class="list-cell-title-stack">
-            <span class="list-cell-creator" *ngIf="value">{{ value }}</span>
+          <div class="list-cell-title-stack" *ngIf="value">
+            <span class="list-cell-creator">{{ value }}</span>
             <span class="list-cell-title-stack__sub">{{ row.createdByEmail }}</span>
           </div>
           <span class="list-cell-creator-empty" *ngIf="!value">-</span>
@@ -125,8 +125,8 @@
         [width]="180"
       >
         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-          <div class="list-cell-title-stack">
-            <span class="list-cell-creator" *ngIf="value">{{ value }}</span>
+          <div class="list-cell-title-stack" *ngIf="value">
+            <span class="list-cell-creator">{{ value }}</span>
             <span class="list-cell-title-stack__sub">{{ row.permissionUserEmail || row.recipientEmail }}</span>
           </div>
           <span class="list-cell-creator-empty" *ngIf="!value">-</span>

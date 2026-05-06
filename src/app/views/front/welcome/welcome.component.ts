@@ -31,6 +31,7 @@ export class WelcomeComponent implements OnInit {
   userName$: Observable<string | null>;
   hostBase: string;
 
+
   constructor(
     private blogService: BlogService,
     private userService: UserService,
@@ -81,19 +82,15 @@ export class WelcomeComponent implements OnInit {
   }
 
   loadPublicArticles(): void {
-    this.articleService.allArticles({ limit: 5 }).subscribe(
-      (data: any) => {
+    this.articleService.allArticles({ limit: 5 }).subscribe({
+      next: (data: any) => {
         this.articles = (data || []).slice(0, 5);
         this.cdr.markForCheck();
       },
-      (error) => {
-        this.errorMessage = this.translate.instant(
-          "WELCOME.ARTICLE_LOAD_ERROR",
-        );
-        console.error(error);
-      },
-    );
+      error: (error) => this.handleLoadError(error, "WELCOME.ARTICLE_LOAD_ERROR")
+    });
   }
+
 
   viewArticle(data: any): void {
     const initialState = { data: Object.assign({}, data) };
@@ -113,29 +110,32 @@ export class WelcomeComponent implements OnInit {
   }
 
   getLatestBlogs(): void {
-    this.blogService.allBlogs({ limit: 5 }).subscribe((data: any) => {
-      this.latestBlogs = (data || []).slice(0, 5);
-      this.cdr.markForCheck();
+    this.blogService.allBlogs({ limit: 5 }).subscribe({
+      next: (data: any) => {
+        this.latestBlogs = (data || []).slice(0, 5);
+        this.cdr.markForCheck();
+      },
+      error: (error) => this.handleLoadError(error, "WELCOME.BLOG_LOAD_ERROR")
     });
   }
 
+
   getLatestForums(): void {
-    this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = (data || [])
-        .slice(0, 5)
-        .map((forum: any) => this.normalizeForum(forum));
-      this.cdr.markForCheck();
+    this.forumService.allForums({ limit: 5 }).subscribe({
+      next: (data: any) => {
+        this.latestForums = (data || []).map((forum: any) =>
+          this.normalizeForum(forum),
+        );
+        this.cdr.markForCheck();
+      },
+      error: (error) => this.handleLoadError(error, "WELCOME.FORUM_LOAD_ERROR")
     });
   }
 
   getLastForums(): void {
-    this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = (data || []).map((forum: any) =>
-        this.normalizeForum(forum),
-      );
-      this.cdr.markForCheck();
-    });
+    this.getLatestForums();
   }
+
 
   normalizeForum(
     forum: Partial<Record<string, any>> & {
@@ -209,4 +209,11 @@ export class WelcomeComponent implements OnInit {
       this.modalService.show(SusbcribeModalComponent);
     }
   }
+
+  private handleLoadError(error: any, translationKey: string): void {
+    console.error(`Error loading data:`, error);
+    this.errorMessage = this.translate.instant(translationKey);
+    this.cdr.markForCheck();
+  }
 }
+

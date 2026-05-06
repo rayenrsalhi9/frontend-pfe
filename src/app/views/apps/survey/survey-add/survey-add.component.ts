@@ -9,6 +9,8 @@ import { SecurityService } from "@app/core/security/security.service";
 import { User } from "@app/shared/enums/user-auth";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { AppFormBase } from "../../shared/app-form-base";
+
 
 type SurveyType = "simple" | "rating" | "satisfaction";
 
@@ -17,15 +19,13 @@ type SurveyType = "simple" | "rating" | "satisfaction";
   templateUrl: "./survey-add.component.html",
   styleUrls: ["./survey-add.component.scss"],
 })
-export class SurveyAddComponent implements OnInit, OnDestroy {
+export class SurveyAddComponent extends AppFormBase implements OnInit {
   surveyForm: FormGroup;
-  users: User[] = [];
   allUsers: User[] = [];
-  isLoading = false;
-  isEdit = false;
+
   isSubmitted = false;
   surveyId: string | null = null;
-  private destroy$ = new Subject<void>();
+
 
   surveyType: readonly SurveyType[] = ["simple", "rating", "satisfaction"];
 
@@ -39,7 +39,9 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private toastr: ToastrService,
     private translate: TranslateService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.createSurveyForm();
@@ -50,10 +52,7 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     }).catch(() => {});
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   private checkEditMode(): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -165,23 +164,10 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  get titleControl() {
-    return this.surveyForm.get("title");
+  isSurveyFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.surveyForm, fieldName);
   }
 
-  get typeControl() {
-    return this.surveyForm.get("type");
-  }
-
-  get isTitleInvalid() {
-    const ctrl = this.titleControl;
-    return !!(ctrl && ctrl.invalid && (ctrl.dirty || this.isSubmitted));
-  }
-
-  get isTypeInvalid() {
-    const ctrl = this.typeControl;
-    return !!(ctrl && ctrl.invalid && (ctrl.dirty || this.isSubmitted));
-  }
 
   onSubmit() {
     this.isSubmitted = true;
@@ -237,5 +223,5 @@ export class SurveyAddComponent implements OnInit, OnDestroy {
     this.router.navigate(["/apps/surveys"]);
   }
 
-  compareUsersById = (a: User, b: User): boolean => a?.id === b?.id;
+
 }

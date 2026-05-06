@@ -89,6 +89,7 @@
               class="list-btn-action list-btn-action--edit"
               [routerLink]="'/user/role-edit/' + row.id"
               [title]="'ROLES.LIST.BUTTONS.EDIT' | translate"
+              [attr.aria-label]="'ROLES.LIST.BUTTONS.EDIT' | translate"
             >
               <i class="feather icon-edit-2"></i>
             </button>
@@ -97,6 +98,7 @@
               class="list-btn-action list-btn-action--delete"
               (click)="deleteRole(row)"
               [title]="'ROLES.LIST.BUTTONS.DELETE' | translate"
+              [attr.aria-label]="'ROLES.LIST.BUTTONS.DELETE' | translate"
             >
               <i class="feather icon-trash-2"></i>
             </button>

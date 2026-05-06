@@ -3,18 +3,7 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a routerLink="/" class="footer-logo" [attr.aria-label]="'NAV.GED_HOME' | translate">
-          <div class="ged-brand-inner">
-            <img
-              src="assets/images/logo/logo.png"
-              alt="DGI Logo"
-              class="ged-brand-logo"
-            />
-            <div class="ged-brand-text-group">
-              <span class="ged-brand-text-line orange">DIRECTION</span>
-              <span class="ged-brand-text-line orange">GÉNÉRALE DES</span>
-              <span class="ged-brand-text-line green">IMPÔTS</span>
-            </div>
-          </div>
+          <app-ged-brand logoType="img"></app-ged-brand>
         </a>
         <p class="footer-brand-desc">{{ "FOOTER.DESC" | translate }}</p>
         <div class="footer-social">

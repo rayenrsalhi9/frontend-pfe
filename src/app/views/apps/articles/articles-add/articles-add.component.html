@@ -24,7 +24,8 @@
           <div
             class="image-upload-zone"
             [class.has-image]="picture"
-            [class.has-error]="isPictureInvalid"
+            [class.has-error]="isArticleFieldInvalid('picture')"
+
           >
             <img
               *ngIf="picture"
@@ -79,7 +80,8 @@
               </button>
             </div>
           </div>
-          <div class="field-error" *ngIf="isPictureInvalid">
+          <div class="field-error" *ngIf="isArticleFieldInvalid('picture')">
+
             <svg
               width="12"
               height="12"
@@ -115,10 +117,12 @@
               id="title"
               formControlName="title"
               class="field-input"
-              [class.has-error]="isTitleInvalid"
+              [class.has-error]="isArticleFieldInvalid('title')"
+
               [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isTitleInvalid">
+            <div class="field-error" *ngIf="isArticleFieldInvalid('title')">
+
               <svg
                 width="12"
                 height="12"
@@ -145,7 +149,8 @@
             <ng-select
               id="category"
               formControlName="category"
-              [class.has-error]="isCategoryInvalid"
+              [class.has-error]="isArticleFieldInvalid('category')"
+
               [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
               [searchable]="false"
             >
@@ -156,7 +161,8 @@
                 {{ category.name }}
               </ng-option>
             </ng-select>
-            <div class="field-error" *ngIf="isCategoryInvalid">
+            <div class="field-error" *ngIf="isArticleFieldInvalid('category')">
+
               <svg
                 width="12"
                 height="12"
@@ -184,11 +190,13 @@
               id="description"
               formControlName="description"
               class="field-input"
-              [class.has-error]="isDescriptionInvalid"
+              [class.has-error]="isArticleFieldInvalid('description')"
+
               rows="3"
               [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.DESCRIPTION' | translate"
             ></textarea>
-            <div class="field-error" *ngIf="isDescriptionInvalid">
+            <div class="field-error" *ngIf="isArticleFieldInvalid('description')">
+
               <svg
                 width="12"
                 height="12"
@@ -216,14 +224,16 @@
           </div>
 
           <div class="field">
-            <div class="quill-wrap" [class.has-error]="isBodyInvalid">
+            <div class="quill-wrap" [class.has-error]="isArticleFieldInvalid('body')">
+
               <quill-editor
                 formControlName="body"
                 [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.BODY' | translate"
                 [styles]="{ minHeight: '280px' }"
               ></quill-editor>
             </div>
-            <div class="field-error" *ngIf="isBodyInvalid">
+            <div class="field-error" *ngIf="isArticleFieldInvalid('body')">
+
               <svg
                 width="12"
                 height="12"

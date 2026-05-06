@@ -18,28 +18,24 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
+import { AppFormBase } from "../../shared/app-form-base";
+
 @Component({
   selector: "app-articles-add",
   templateUrl: "./articles-add.component.html",
   styleUrls: ["./articles-add.component.scss"],
 })
-export class ArticlesAddComponent implements OnInit, OnDestroy {
+export class ArticlesAddComponent extends AppFormBase implements OnInit {
   articleForm: FormGroup;
-  users: any[] = [];
-  categories: any[] = [];
-  isEdit = false;
-  articleId: any;
-  isLoading = false;
-
-  currentUser: any;
   picture: SafeUrl;
   newPicture: string = null;
   fileList: any[] = [];
 
-  private destroy$ = new Subject<void>();
+  private fb: FormBuilder;
+
 
   constructor(
-    private fb: FormBuilder,
+    fb: FormBuilder,
     private commonService: CommonService,
     private articleService: ArticleService,
     private articleCategoryService: ArticleCategoryService,
@@ -50,7 +46,10 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private toastrService: ToastrService,
     private sanitizer: DomSanitizer,
-  ) {}
+  ) {
+    super();
+    this.fb = fb;
+  }
 
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
@@ -60,10 +59,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     this.checkEditMode();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   private initializeForm(): void {
     this.articleForm = this.fb.group({
@@ -372,85 +368,9 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     return this.articleForm.get("picture");
   }
 
-  // Validation getters
-  get isTitleInvalid(): boolean {
-    const control = this.titleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isCategoryInvalid(): boolean {
-    const control = this.categoryControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isDescriptionInvalid(): boolean {
-    const control = this.descriptionControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isBodyInvalid(): boolean {
-    const control = this.bodyControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isPictureInvalid(): boolean {
-    const control = this.pictureControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  // Error message getters
-  get titleErrorMessage(): string {
-    const control = this.titleControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.TITLE_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.TITLE_MIN_LENGTH";
-    }
-    if (control?.errors?.["maxlength"]) {
-      return "ADD.ARTICLE.VALIDATION.TITLE_MAX_LENGTH";
-    }
-    return "";
-  }
-
-  get categoryErrorMessage(): string {
-    const control = this.categoryControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.CATEGORY_REQUIRED";
-    }
-    return "";
-  }
-
-  get descriptionErrorMessage(): string {
-    const control = this.descriptionControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.DESCRIPTION_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.DESCRIPTION_MIN_LENGTH";
-    }
-    if (control?.errors?.["maxlength"]) {
-      return "ADD.ARTICLE.VALIDATION.DESCRIPTION_MAX_LENGTH";
-    }
-    return "";
-  }
-
-  get bodyErrorMessage(): string {
-    const control = this.bodyControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.BODY_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.BODY_MIN_LENGTH";
-    }
-    return "";
-  }
-
-  get pictureErrorMessage(): string {
-    const control = this.pictureControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.PICTURE_REQUIRED";
-    }
-    return "";
+  // Validation wrapper
+  isArticleFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.articleForm, fieldName);
   }
 }
+

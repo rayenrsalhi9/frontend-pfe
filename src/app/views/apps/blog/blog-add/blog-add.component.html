@@ -41,7 +41,8 @@
           <div
             class="image-upload-zone"
             [class.has-image]="newPicture"
-            [class.has-error]="isPictureInvalid"
+            [class.has-error]="isBlogFieldInvalid('picture')"
+
           >
             <img
               *ngIf="newPicture"
@@ -96,7 +97,8 @@
               </button>
             </div>
           </div>
-          <div class="field-error" *ngIf="isPictureInvalid">
+          <div class="field-error" *ngIf="isBlogFieldInvalid('picture')">
+
             <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
             {{ pictureErrorMessage | translate }}
           </div>
@@ -119,10 +121,12 @@
               id="title"
               formControlName="title"
               class="field-input"
-              [class.has-error]="isTitleInvalid"
+              [class.has-error]="isBlogFieldInvalid('title')"
+
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isTitleInvalid">
+            <div class="field-error" *ngIf="isBlogFieldInvalid('title')">
+
               <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ titleErrorMessage | translate }}
             </div>
@@ -137,11 +141,13 @@
               id="subtitle"
               formControlName="subtitle"
               class="field-input"
-              [class.has-error]="isSubtitleInvalid"
+              [class.has-error]="isBlogFieldInvalid('subtitle')"
+
               rows="2"
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.SUBTITLE' | translate"
             ></textarea>
-            <div class="field-error" *ngIf="isSubtitleInvalid">
+            <div class="field-error" *ngIf="isBlogFieldInvalid('subtitle')">
+
               <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ subtitleErrorMessage | translate }}
             </div>
@@ -156,7 +162,7 @@
               <ng-select
                 id="category"
                 formControlName="category"
-                [class.has-error]="isCategoryInvalid"
+                [class.has-error]="isBlogFieldInvalid('category')"
                 [placeholder]="
                   'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
                 "
@@ -169,7 +175,8 @@
                   {{ category.name }}
                 </ng-option>
               </ng-select>
-              <div class="field-error" *ngIf="isCategoryInvalid">
+              <div class="field-error" *ngIf="isBlogFieldInvalid('category')">
+
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ categoryErrorMessage | translate }}
               </div>
@@ -201,14 +208,16 @@
           </div>
 
           <div class="field">
-            <div class="quill-wrap" [class.has-error]="isBodyInvalid">
+            <div class="quill-wrap" [class.has-error]="isBlogFieldInvalid('body')">
+
               <quill-editor
                 formControlName="body"
                 [placeholder]="'ADD.BLOG.PLACEHOLDERS.BODY' | translate"
                 [styles]="{ minHeight: '280px' }"
               ></quill-editor>
             </div>
-            <div class="field-error" *ngIf="isBodyInvalid">
+            <div class="field-error" *ngIf="isBlogFieldInvalid('body')">
+
               <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
               {{ bodyErrorMessage | translate }}
             </div>
