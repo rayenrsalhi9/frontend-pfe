@@ -82,8 +82,7 @@
           <a
             *ngIf="row.forumId; else noForum"
             [routerLink]="['/forum', value]"
-            class="list-cell-title"
-            style="color: #2563eb;"
+            class="list-cell-title list-cell-title--link"
           >
             <i class="feather icon-external-link mr-1"></i>
             {{ "RESPONSES.TABLE.SEE_FORUM" | translate }}
@@ -103,7 +102,7 @@
         [flexGrow]="2"
       >
         <ng-template let-value="value" ngx-datatable-cell-template>
-          <span class="list-cell-title" [title]="value" style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          <span class="list-cell-title list-cell-title--truncate" [title]="value">
             {{ value }}
           </span>
         </ng-template>

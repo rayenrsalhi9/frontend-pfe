@@ -75,13 +75,16 @@ export class ForumListComponent implements OnInit, OnDestroy {
   }
 
   private normalizeForumRow(row: any) {
+    const reactionsSum =
+      (Array.isArray(row?.reactionsUp) ? row.reactionsUp.length : 0) +
+      (Array.isArray(row?.reactionsDown) ? row.reactionsDown.length : 0) +
+      (Array.isArray(row?.reactionsHeart) ? row.reactionsHeart.length : 0);
+
     const reactionsCount =
       row?.reactionsCount ??
       row?.reactions_count ??
       (Array.isArray(row?.reactions) ? row.reactions.length : null) ??
-      (Array.isArray(row?.reactionsUp) ? row.reactionsUp.length : 0) +
-        (Array.isArray(row?.reactionsDown) ? row.reactionsDown.length : 0) +
-        (Array.isArray(row?.reactionsHeart) ? row.reactionsHeart.length : 0);
+      reactionsSum;
 
     const commentsCount =
       row?.commentsCount ??

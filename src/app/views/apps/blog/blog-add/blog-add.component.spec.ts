@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { QuillModule } from 'ngx-quill';
-import { of, throwError } from 'rxjs';
+import { of, throwError, BehaviorSubject } from 'rxjs';
 import { BlogAddComponent } from './blog-add.component';
 import { BlogService } from '../blog.service';
 import { BlogCategoryService } from '../blog-category/blog-category.service';
@@ -24,6 +24,7 @@ describe('BlogAddComponent', () => {
   let mockCategoryService: any;
   let mockRouter: any;
   let mockActivatedRoute: any;
+  let paramMapSubject: BehaviorSubject<any>;
 
   const mockUsers = [
     { id: 1, firstName: 'John', lastName: 'Doe', userName: 'johnd' },
@@ -75,8 +76,9 @@ describe('BlogAddComponent', () => {
       url: '/blog-add'
     };
 
+    paramMapSubject = new BehaviorSubject({ get: () => null });
     mockActivatedRoute = {
-      paramMap: of({ get: () => null })
+      paramMap: paramMapSubject.asObservable()
     };
 
     await TestBed.configureTestingModule({
@@ -188,6 +190,28 @@ describe('BlogAddComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/apps/blogs']);
   }));
 
+  it('should handle addBlog error gracefully', fakeAsync(() => {
+    mockBlogService.addBlog.and.returnValue(throwError(() => new Error('Server error')));
+    const toastrSpy = spyOn(component['toastrService'], 'error');
+
+    component.blogForm.patchValue({
+      title: 'Test Blog',
+      subtitle: 'Subtitle that is long enough for validation tests',
+      body: 'Body content here that is definitely long enough for validation.',
+      category: '1',
+      private: false,
+      users: [],
+      picture: 'data:image/jpeg;base64,fake'
+    });
+
+    component.onSubmit();
+    tick();
+    flush();
+
+    expect(toastrSpy).toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  }));
+
   /* ===========================================
    * Use Case 2 - Create Private Blog
    * =========================================== */
@@ -237,9 +261,7 @@ describe('BlogAddComponent', () => {
    * =========================================== */
 
   it('should load blog data in edit mode', fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({ get: (param: string) => param === 'id' ? '123' : null });
-
-    component.ngOnInit();
+    paramMapSubject.next({ get: (param: string) => param === 'id' ? '123' : null });
     tick();
 
     expect(mockBlogService.getBlog).toHaveBeenCalledWith('123');
@@ -247,9 +269,7 @@ describe('BlogAddComponent', () => {
   }));
 
   it('should clear picture validator in edit mode', fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({ get: (param: string) => param === 'id' ? '123' : null });
-
-    component.ngOnInit();
+    paramMapSubject.next({ get: (param: string) => param === 'id' ? '123' : null });
     tick();
 
     const pictureControl = component.blogForm.get('picture');
@@ -257,9 +277,7 @@ describe('BlogAddComponent', () => {
   }));
 
   it('should populate form with existing blog data', fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({ get: (param: string) => param === 'id' ? '123' : null });
-
-    component.ngOnInit();
+    paramMapSubject.next({ get: (param: string) => param === 'id' ? '123' : null });
     tick();
 
     expect(component.blogForm.get('title')?.value).toBe('Existing Blog');
@@ -287,24 +305,44 @@ describe('BlogAddComponent', () => {
     expect(mockBlogService.updateBlog).toHaveBeenCalledWith('123', jasmine.any(Object));
   }));
 
+  it('should handle updateBlog error gracefully', fakeAsync(() => {
+    mockBlogService.updateBlog.and.returnValue(throwError(() => new Error('Server error')));
+    const toastrSpy = spyOn(component['toastrService'], 'error');
+
+    component.isEdit = true;
+    component.blogId = '123';
+    component.blogForm.patchValue({
+      title: 'Updated Blog',
+      subtitle: 'Updated subtitle that is long enough for validation tests',
+      body: 'Updated body content that is definitely long enough for validation.',
+      category: '1',
+      private: true,
+      users: [1, 2],
+      picture: 'data:image/jpeg;base64,fake'
+    });
+
+    component.onSubmit();
+    tick();
+    flush();
+
+    expect(toastrSpy).toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  }));
+
   /* ===========================================
    * Claims Testing
    * =========================================== */
 
-  it('should check BLOG_ADD_BLOG claim for create', fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({ get: () => null });
+  it('should check BLOG_ADD_BLOG claim for create', () => {
     mockSecurityService.hasClaim.and.returnValue(false);
-    component.ngOnInit();
-    tick();
     expect(component.blogForm).toBeTruthy();
     expect(component.isEdit).toBeFalsy();
-  }));
+  });
 
   it('should check BLOG_EDIT_BLOG claim for edit', fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({ get: (param: string) => param === 'id' ? '123' : null });
+    paramMapSubject.next({ get: (param: string) => param === 'id' ? '123' : null });
     mockSecurityService.hasClaim.and.returnValue(true);
 
-    component.ngOnInit();
     tick();
     expect(component.isEdit).toBeTrue();
     expect(component.blogId).toBe('123');
