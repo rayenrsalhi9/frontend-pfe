@@ -1,85 +1,60 @@
-<ng-template #errorIcon>
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <line x1="12" y1="8" x2="12" y2="12" />
-    <line x1="12" y1="16" x2="12.01" y2="16" />
-  </svg>
-</ng-template>
+<div class="af-page" *ngIf="!isLoading">
+  <div class="af-container">
+    <!-- ── Page header ──────────────────────────────────────── -->
+    <header class="af-header">
+      <div class="af-header-left">
+        <p class="af-eyebrow">
+          {{ (isEdit ? "EDIT.BLOG.EYEBROW" : "ADD.BLOG.EYEBROW") | translate }}
+        </p>
+        <h1 class="af-title">
+          {{ (isEdit ? "EDIT.BLOG.TITLE" : "ADD.BLOG.TITLE") | translate }}
+        </h1>
+        <p class="af-desc">
+          {{
+            (isEdit ? "EDIT.BLOG.DESCRIPTION" : "ADD.BLOG.DESCRIPTION")
+              | translate
+          }}
+        </p>
+      </div>
+    </header>
 
-<div class="add-form-page">
-  <div class="add-form-container">
-    <div class="page-header">
-      <h1 class="page-title">
-        {{ (isEdit ? "EDIT.BLOG.TITLE" : "ADD.BLOG.TITLE") | translate }}
-      </h1>
-      <p class="page-sub">
-        {{
-          (isEdit ? "EDIT.BLOG.DESCRIPTION" : "ADD.BLOG.DESCRIPTION")
-            | translate
-        }}
-      </p>
-    </div>
-
-    <div class="form-card">
-      <form [formGroup]="blogForm" class="form-body">
-        <!-- ── Cover image ─────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.BLOG.LABELS.PICTURE" | translate }}
+    <!-- ── Form card ────────────────────────────────────────── -->
+    <div class="af-card">
+      <form [formGroup]="blogForm" class="af-form">
+        <!-- ══ Cover image ════════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.BLOG.LABELS.PICTURE" | translate }}</span>
           </div>
 
           <div
-            class="image-upload-zone"
-            [class.has-image]="newPicture"
-            [class.has-error]="isBlogFieldInvalid('picture')"
-
+            class="af-upload-zone"
+            [class.af-upload-zone--has-image]="newPicture"
+            [class.af-upload-zone--error]="isBlogFieldInvalid('picture')"
           >
             <img
               *ngIf="newPicture"
               [src]="newPicture"
               [alt]="'ADD.BLOG.PLACEHOLDERS.PICTURE' | translate"
-              class="upload-preview-img"
+              class="af-upload-preview"
             />
-            <div class="upload-placeholder" *ngIf="!newPicture">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
+            <div class="af-upload-placeholder" *ngIf="!newPicture">
+              <i class="feather icon-image"></i>
               <span>{{ "ADD.BLOG.PLACEHOLDERS.PICTURE" | translate }}</span>
             </div>
-            <div class="upload-actions">
+            <div class="af-upload-actions">
               <input
                 type="file"
                 id="picture"
                 #fileInput
                 (change)="onFileSelect($event)"
                 accept="image/*"
-                class="upload-input"
+                class="af-upload-input"
                 tabindex="-1"
               />
               <button
                 type="button"
-                class="btn btn-ghost btn-sm"
+                class="af-btn af-btn--ghost af-btn--sm"
                 (click)="fileInput.click()"
                 [attr.aria-label]="
                   (newPicture
@@ -88,6 +63,10 @@
                   ) | translate
                 "
               >
+                <i
+                  class="feather"
+                  [ngClass]="newPicture ? 'icon-refresh-cw' : 'icon-upload'"
+                ></i>
                 {{
                   (newPicture
                     ? "ADD.BLOG.BUTTONS.CHANGE_IMAGE"
@@ -97,67 +76,64 @@
               </button>
             </div>
           </div>
-          <div class="field-error" *ngIf="isBlogFieldInvalid('picture')">
-
-            <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+          <div class="af-field-error" *ngIf="isBlogFieldInvalid('picture')">
+            <i class="feather icon-alert-circle"></i>
             {{ pictureErrorMessage | translate }}
           </div>
         </div>
 
-        <!-- ── Basic info ──────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
+        <!-- ══ Basic info ═════════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}</span>
           </div>
 
-          <div class="field">
-            <label class="field-label" for="title">
+          <!-- Title -->
+          <div class="af-field">
+            <label class="af-label" for="title">
               {{ "ADD.BLOG.LABELS.TITLE" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <input
               type="text"
               id="title"
               formControlName="title"
-              class="field-input"
-              [class.has-error]="isBlogFieldInvalid('title')"
-
+              class="af-input"
+              [class.af-input--error]="isBlogFieldInvalid('title')"
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isBlogFieldInvalid('title')">
-
-              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+            <div class="af-field-error" *ngIf="isBlogFieldInvalid('title')">
+              <i class="feather icon-alert-circle"></i>
               {{ titleErrorMessage | translate }}
             </div>
           </div>
 
-          <div class="field">
-            <label class="field-label" for="subtitle">
+          <!-- Subtitle -->
+          <div class="af-field">
+            <label class="af-label" for="subtitle">
               {{ "ADD.BLOG.LABELS.SUBTITLE" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <textarea
               id="subtitle"
               formControlName="subtitle"
-              class="field-input"
-              [class.has-error]="isBlogFieldInvalid('subtitle')"
-
+              class="af-input af-input--textarea"
+              [class.af-input--error]="isBlogFieldInvalid('subtitle')"
               rows="2"
               [placeholder]="'ADD.BLOG.PLACEHOLDERS.SUBTITLE' | translate"
             ></textarea>
-            <div class="field-error" *ngIf="isBlogFieldInvalid('subtitle')">
-
-              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+            <div class="af-field-error" *ngIf="isBlogFieldInvalid('subtitle')">
+              <i class="feather icon-alert-circle"></i>
               {{ subtitleErrorMessage | translate }}
             </div>
           </div>
 
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="category">
+          <!-- Category + Tags side by side -->
+          <div class="af-field-row">
+            <div class="af-field">
+              <label class="af-label" for="category">
                 {{ "ADD.BLOG.LABELS.CATEGORY" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
               <ng-select
                 id="category"
@@ -175,17 +151,19 @@
                   {{ category.name }}
                 </ng-option>
               </ng-select>
-              <div class="field-error" *ngIf="isBlogFieldInvalid('category')">
-
-                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+              <div
+                class="af-field-error"
+                *ngIf="isBlogFieldInvalid('category')"
+              >
+                <i class="feather icon-alert-circle"></i>
                 {{ categoryErrorMessage | translate }}
               </div>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="tags">
+            <div class="af-field">
+              <label class="af-label" for="tags">
                 {{ "ADD.BLOG.LABELS.TAGS" | translate }}
-                <span class="optional-mark">{{
+                <span class="af-optional">{{
                   "ADD.SHARED.LABELS.OPTIONAL" | translate
                 }}</span>
               </label>
@@ -200,57 +178,55 @@
           </div>
         </div>
 
-        <!-- ── Content ────────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.BLOG.LABELS.BODY" | translate }}
+        <!-- ══ Content / body ═════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.BLOG.LABELS.BODY" | translate }}</span>
           </div>
 
-          <div class="field">
-            <div class="quill-wrap" [class.has-error]="isBlogFieldInvalid('body')">
-
+          <div class="af-field">
+            <div
+              class="af-quill-wrap"
+              [class.af-quill-wrap--error]="isBlogFieldInvalid('body')"
+            >
               <quill-editor
                 formControlName="body"
                 [placeholder]="'ADD.BLOG.PLACEHOLDERS.BODY' | translate"
                 [styles]="{ minHeight: '280px' }"
               ></quill-editor>
             </div>
-            <div class="field-error" *ngIf="isBlogFieldInvalid('body')">
-
-              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+            <div class="af-field-error" *ngIf="isBlogFieldInvalid('body')">
+              <i class="feather icon-alert-circle"></i>
               {{ bodyErrorMessage | translate }}
             </div>
           </div>
         </div>
 
-        <!-- ── Settings ───────────────────────── -->
-        <div class="form-section last">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
+        <!-- ══ Settings ═══════════════════════════════════════ -->
+        <div class="af-section af-section--last">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.SETTINGS" | translate }}</span>
           </div>
 
-
           <!-- Private toggle -->
-          <div class="field">
-            <div class="toggle-row">
-              <label class="toggle-track" for="private">
+          <div class="af-field">
+            <div class="af-toggle-row">
+              <label class="af-toggle-track" for="private">
                 <input
                   type="checkbox"
                   id="private"
                   formControlName="private"
-                  class="toggle-input"
+                  class="af-toggle-input"
                   [attr.aria-labelledby]="'private-title'"
                   [attr.aria-describedby]="'private-desc'"
                 />
-                <span class="toggle-thumb"></span>
+                <span class="af-toggle-thumb"></span>
               </label>
-              <div class="toggle-info">
-                <div class="toggle-title" id="private-title">
+              <div class="af-toggle-info">
+                <div class="af-toggle-title" id="private-title">
                   {{ "ADD.BLOG.LABELS.PRIVATE" | translate }}
                 </div>
-                <div class="toggle-desc" id="private-desc">
+                <div class="af-toggle-desc" id="private-desc">
                   {{ "ADD.BLOG.HINTS.PRIVATE" | translate }}
                 </div>
               </div>
@@ -258,10 +234,10 @@
           </div>
 
           <!-- Allowed users (shown when private) -->
-          <div class="field" *ngIf="blogForm.get('private')?.value">
-            <label class="field-label" for="users">
+          <div class="af-field" *ngIf="blogForm.get('private')?.value">
+            <label class="af-label" for="users">
               {{ "ADD.SHARED.LABELS.USERS" | translate }}
-              <span class="optional-mark">{{
+              <span class="af-optional">{{
                 "ADD.SHARED.LABELS.OPTIONAL" | translate
               }}</span>
             </label>
@@ -275,27 +251,39 @@
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
             </ng-select>
-            <p class="field-hint">
-              {{ "ADD.SHARED.HINTS.USERS" | translate }}
-            </p>
+
           </div>
         </div>
       </form>
 
-      <div class="form-footer">
-        <span class="footer-note">{{
+      <!-- ── Footer ─────────────────────────────────────────── -->
+      <div class="af-footer">
+        <span class="af-footer-note">{{
           "ADD.BLOG.HINTS.REQUIRED_FIELDS" | translate
         }}</span>
-        <div class="footer-actions">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+        <div class="af-footer-actions">
+          <button
+            type="button"
+            class="af-btn af-btn--cancel"
+            (click)="onCancel()"
+          >
+            <i class="feather icon-x"></i>
             {{ "ADD.BLOG.BUTTONS.CANCEL" | translate }}
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="af-btn af-btn--submit"
             (click)="onSubmit()"
-            [disabled]="blogForm.invalid || isLoading"
+            [disabled]="
+              blogForm.invalid || isLoading || (isEdit && !blogForm.dirty)
+            "
           >
+            <i
+              class="feather"
+              [ngClass]="
+                isLoading ? 'icon-loader' : isEdit ? 'icon-check' : 'icon-send'
+              "
+            ></i>
             {{
               (isEdit ? "EDIT.SHARED.BUTTONS.SAVE" : "ADD.BLOG.BUTTONS.SAVE")
                 | translate
@@ -304,5 +292,15 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ── Loading skeleton ─────────────────────────────────────── -->
+<div class="af-skeleton" *ngIf="isLoading">
+  <div class="af-skeleton-header"></div>
+  <div class="af-skeleton-card">
+    <div class="af-skeleton-line af-skeleton-line--wide"></div>
+    <div class="af-skeleton-line af-skeleton-line--mid"></div>
+    <div class="af-skeleton-line af-skeleton-line--short"></div>
   </div>
 </div>

@@ -14,7 +14,6 @@ import { CommonService } from "@app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
-import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
@@ -32,7 +31,6 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
   fileList: any[] = [];
 
   private fb: FormBuilder;
-
 
   constructor(
     fb: FormBuilder,
@@ -54,12 +52,29 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
     this.initializeForm();
+    this.setupPrivateFieldWatcher();
     this.loadCategories();
     this.loadUsers();
     this.checkEditMode();
   }
 
-
+  private setupPrivateFieldWatcher(): void {
+    this.articleForm
+      .get("private")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((isPrivate: boolean) => {
+        const usersControl = this.articleForm.get("users");
+        if (isPrivate) {
+          const currentUsers = usersControl?.value || [];
+          const currentUserId = this.currentUser?.id;
+          if (currentUserId && !currentUsers.includes(currentUserId)) {
+            usersControl?.setValue([...currentUsers, currentUserId]);
+          }
+        } else {
+          usersControl?.setValue([]);
+        }
+      });
+  }
 
   private initializeForm(): void {
     this.articleForm = this.fb.group({
@@ -114,9 +129,11 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
             description: data.shortText,
             body: data.longText,
             private: data.privacy === "private",
-            users: data.users
-              .filter((usr: any) => usr.user.id !== this.currentUser.id)
-              .map((usr: any) => usr.user.id),
+            users: data.allowedUsers
+              ? data.allowedUsers.map((usr: any) => usr.user?.id || usr.user_id)
+              : data.users
+                ? data.users.map((usr: any) => usr.user?.id || usr.user_id)
+                : [],
           });
 
           this.picture = data.picture
@@ -373,4 +390,3 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
     return this.isFieldInvalid(this.articleForm, fieldName);
   }
 }
-

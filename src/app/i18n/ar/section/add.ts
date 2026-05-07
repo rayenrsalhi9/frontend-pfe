@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "منتدى المجتمع",
       TITLE: "موضوع جديد في المنتدى",
       DESCRIPTION: "ابدأ نقاشًا، اطرح سؤالًا، أو شارك شيئًا مع المجتمع.",
       LABELS: {
@@ -44,6 +45,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "قاعدة المعرفة",
       TITLE: "مقالة جديدة",
       DESCRIPTION: "اكتب وانشر مقالة لجمهورك.",
       LABELS: {
@@ -73,7 +75,6 @@ export const add = {
         BANNER: "عرض هذا المقال كبانر في الصفحة الرئيسية.",
         PRIVATE: "فقط أنت والأعضاء المدعوون يمكنهم رؤية هذا المقال.",
         REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
-        USERS: "اتركه فارغًا للسماح لجميع الأعضاء المدعوين بالقراءة.",
       },
       BUTTONS: {
         SAVE: "نشر المقال",
@@ -107,6 +108,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "الأخبار والتحديثات",
       TITLE: "مقال جديد",
       DESCRIPTION: "أنشئ خبرًا أو إعلانًا لمجتمعك.",
       LABELS: {
@@ -127,7 +129,6 @@ export const add = {
       },
       HINTS: {
         PRIVATE: "فقط أنت والمستخدمون الذين تختارهم يمكنهم رؤية هذا المقال.",
-        USERS: "اتركه فارغًا للسماح لجميع الأعضاء المدعوين بالقراءة.",
         REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
       },
       BUTTONS: {
@@ -288,9 +289,7 @@ export const add = {
       PLACEHOLDERS: {
         USERS: "ابحث عن مستخدمين…",
       },
-      HINTS: {
-        USERS: "اتركه فارغًا للسماح لجميع الأعضاء المدعوين بالقراءة.",
-      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "استعراض",
         UPLOAD: "رفع",
@@ -327,14 +326,17 @@ export const add = {
       },
     },
     FORUM: {
+      EYEBROW: "منتدى المجتمع",
       TITLE: "تعديل الموضوع",
       DESCRIPTION: "قم بتحديث الموضوع والإعدادات.",
     },
     BLOG: {
+      EYEBROW: "قاعدة المعرفة",
       TITLE: "تعديل المقال",
       DESCRIPTION: "قم بتحديث المقال والإعدادات.",
     },
     ARTICLE: {
+      EYEBROW: "الأخبار والتحديثات",
       TITLE: "تعديل المقال",
       DESCRIPTION: "قم بتحديث المقال والإعدادات.",
     },

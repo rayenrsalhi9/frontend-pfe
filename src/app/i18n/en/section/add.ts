@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "Community forum",
       TITLE: "New forum thread",
       DESCRIPTION:
         "Start a discussion, ask a question, or share something with the community.",
@@ -46,6 +47,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "Knowledge base",
       TITLE: "New blog post",
       DESCRIPTION: "Write and publish a post for your audience.",
       LABELS: {
@@ -75,7 +77,6 @@ export const add = {
         BANNER: "Display this post as a featured banner on the home page.",
         PRIVATE: "Only you and invited members will be able to see this post.",
         REQUIRED_FIELDS: "Fields marked * are required",
-        USERS: "Leave empty to allow all invited members to read this post.",
       },
       BUTTONS: {
         SAVE: "Publish post",
@@ -108,6 +109,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "News & updates",
       TITLE: "New article",
       DESCRIPTION: "Create a news post or announcement for your community.",
       LABELS: {
@@ -129,7 +131,6 @@ export const add = {
       HINTS: {
         PRIVATE:
           "Only you and the users you select will be able to see this article.",
-        USERS: "Leave empty to allow all invited members to read this article.",
         REQUIRED_FIELDS: "Fields marked * are required",
       },
       BUTTONS: {
@@ -292,9 +293,7 @@ export const add = {
       PLACEHOLDERS: {
         USERS: "Search for users…",
       },
-      HINTS: {
-        USERS: "Leave empty to allow all invited members to read this.",
-      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "Browse",
         UPLOAD: "Upload",
@@ -331,14 +330,17 @@ export const add = {
       },
     },
     FORUM: {
+      EYEBROW: "Community forum",
       TITLE: "Edit forum thread",
       DESCRIPTION: "Update your forum thread and settings.",
     },
     BLOG: {
+      EYEBROW: "Knowledge base",
       TITLE: "Edit blog post",
       DESCRIPTION: "Update your blog post and settings.",
     },
     ARTICLE: {
+      EYEBROW: "News & updates",
       TITLE: "Edit article",
       DESCRIPTION: "Update your article and settings.",
     },

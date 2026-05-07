@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "Forum communautaire",
       TITLE: "Nouveau sujet de forum",
       DESCRIPTION:
         "Démarrez une discussion, posez une question ou partagez quelque chose avec la communauté.",
@@ -46,6 +47,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "Base de connaissances",
       TITLE: "Nouvel article de blog",
       DESCRIPTION: "Rédigez et publiez un article pour votre audience.",
       LABELS: {
@@ -76,8 +78,6 @@ export const add = {
         BANNER: "Afficher cet article comme bannière sur la page d’accueil.",
         PRIVATE: "Seuls vous et les membres invités pourront voir cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
-        USERS:
-          "Laissez vide pour autoriser tous les membres invités à lire cet article.",
       },
       BUTTONS: {
         SAVE: "Publier l’article",
@@ -112,6 +112,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "Actualités & annonces",
       TITLE: "Nouvel article",
       DESCRIPTION: "Créez une actualité ou une annonce pour votre communauté.",
       LABELS: {
@@ -133,8 +134,6 @@ export const add = {
       HINTS: {
         PRIVATE:
           "Seuls vous et les utilisateurs sélectionnés pourront voir cet article.",
-        USERS:
-          "Laissez vide pour autoriser tous les membres invités à lire cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
       },
       BUTTONS: {
@@ -299,9 +298,7 @@ export const add = {
       PLACEHOLDERS: {
         USERS: "Rechercher des utilisateurs…",
       },
-      HINTS: {
-        USERS: "Laissez vide pour autoriser tous les membres invités à lire ceci.",
-      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "Parcourir",
         UPLOAD: "Téléverser",
@@ -338,14 +335,17 @@ export const add = {
       },
     },
     FORUM: {
+      EYEBROW: "Forum communautaire",
       TITLE: "Modifier le sujet",
       DESCRIPTION: "Mettez à jour votre sujet et ses paramètres.",
     },
     BLOG: {
+      EYEBROW: "Base de connaissances",
       TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
     },
     ARTICLE: {
+      EYEBROW: "Actualités & annonces",
       TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
     },

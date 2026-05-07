@@ -1,68 +1,65 @@
-<div class="add-form-page">
-  <div class="add-form-container">
-    <div class="page-header">
-      <h1 class="page-title">
-        {{ (isEdit ? "EDIT.ARTICLE.TITLE" : "ADD.ARTICLE.TITLE") | translate }}
-      </h1>
-      <p class="page-sub">
-        {{
-          (isEdit ? "EDIT.ARTICLE.DESCRIPTION" : "ADD.ARTICLE.DESCRIPTION")
-            | translate
-        }}
-      </p>
-    </div>
+<div class="af-page">
+  <div class="af-container">
+    <!-- ── Page header ──────────────────────────────────────── -->
+    <header class="af-header">
+      <div class="af-header-left">
+        <p class="af-eyebrow">
+          {{
+            (isEdit ? "EDIT.ARTICLE.EYEBROW" : "ADD.ARTICLE.EYEBROW")
+              | translate
+          }}
+        </p>
+        <h1 class="af-title">
+          {{
+            (isEdit ? "EDIT.ARTICLE.TITLE" : "ADD.ARTICLE.TITLE") | translate
+          }}
+        </h1>
+        <p class="af-desc">
+          {{
+            (isEdit ? "EDIT.ARTICLE.DESCRIPTION" : "ADD.ARTICLE.DESCRIPTION")
+              | translate
+          }}
+        </p>
+      </div>
+    </header>
 
-    <div class="form-card">
-      <form [formGroup]="articleForm" class="form-body">
-        <!-- ── Cover image ─────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.ARTICLE.LABELS.PICTURE" | translate }}
+    <!-- ── Form card ────────────────────────────────────────── -->
+    <div class="af-card">
+      <form [formGroup]="articleForm" class="af-form">
+        <!-- ══ Cover image ════════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.ARTICLE.LABELS.PICTURE" | translate }}</span>
           </div>
 
           <div
-            class="image-upload-zone"
-            [class.has-image]="picture"
-            [class.has-error]="isArticleFieldInvalid('picture')"
-
+            class="af-upload-zone"
+            [class.af-upload-zone--has-image]="picture"
+            [class.af-upload-zone--error]="isArticleFieldInvalid('picture')"
           >
             <img
               *ngIf="picture"
               [src]="picture"
               [alt]="'ADD.ARTICLE.PLACEHOLDERS.PICTURE' | translate"
-              class="upload-preview-img"
+              class="af-upload-preview"
             />
-            <div class="upload-placeholder" *ngIf="!picture">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
+            <div class="af-upload-placeholder" *ngIf="!picture">
+              <i class="feather icon-image"></i>
               <span>{{ "ADD.ARTICLE.PLACEHOLDERS.PICTURE" | translate }}</span>
             </div>
-            <div class="upload-actions">
+            <div class="af-upload-actions">
               <input
                 type="file"
                 id="picture"
                 #fileInput
                 (change)="onFileSelect($event)"
                 accept="image/*"
-                class="upload-input"
+                class="af-upload-input"
                 tabindex="-1"
               />
               <button
                 type="button"
-                class="btn btn-ghost btn-sm"
+                class="af-btn af-btn--ghost af-btn--sm"
                 (click)="fileInput.click()"
                 [attr.aria-label]="
                   (picture
@@ -71,6 +68,10 @@
                   ) | translate
                 "
               >
+                <i
+                  class="feather"
+                  [ngClass]="picture ? 'icon-refresh-cw' : 'icon-upload'"
+                ></i>
                 {{
                   (picture
                     ? "ADD.ARTICLE.BUTTONS.CHANGE_IMAGE"
@@ -80,77 +81,48 @@
               </button>
             </div>
           </div>
-          <div class="field-error" *ngIf="isArticleFieldInvalid('picture')">
-
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
+          <div class="af-field-error" *ngIf="isArticleFieldInvalid('picture')">
+            <i class="feather icon-alert-circle"></i>
             {{ pictureErrorMessage | translate }}
           </div>
         </div>
 
-        <!-- ── Basic info ──────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
+        <!-- ══ Basic info ═════════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}</span>
           </div>
 
-          <div class="field">
-            <label class="field-label" for="title">
+          <!-- Title -->
+          <div class="af-field">
+            <label class="af-label" for="title">
               {{ "ADD.ARTICLE.LABELS.TITLE" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <input
               type="text"
               id="title"
               formControlName="title"
-              class="field-input"
-              [class.has-error]="isArticleFieldInvalid('title')"
-
+              class="af-input"
+              [class.af-input--error]="isArticleFieldInvalid('title')"
               [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isArticleFieldInvalid('title')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+            <div class="af-field-error" *ngIf="isArticleFieldInvalid('title')">
+              <i class="feather icon-alert-circle"></i>
               {{ titleErrorMessage | translate }}
             </div>
           </div>
 
-          <div class="field">
-            <label class="field-label" for="category">
+          <!-- Category -->
+          <div class="af-field">
+            <label class="af-label" for="category">
               {{ "ADD.ARTICLE.LABELS.CATEGORY" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <ng-select
               id="category"
               formControlName="category"
               [class.has-error]="isArticleFieldInvalid('category')"
-
               [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
               [searchable]="false"
             >
@@ -161,124 +133,88 @@
                 {{ category.name }}
               </ng-option>
             </ng-select>
-            <div class="field-error" *ngIf="isArticleFieldInvalid('category')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+            <div
+              class="af-field-error"
+              *ngIf="isArticleFieldInvalid('category')"
+            >
+              <i class="feather icon-alert-circle"></i>
               {{ categoryErrorMessage | translate }}
             </div>
           </div>
 
-          <div class="field">
-            <label class="field-label" for="description">
+          <!-- Description -->
+          <div class="af-field">
+            <label class="af-label" for="description">
               {{ "ADD.ARTICLE.LABELS.DESCRIPTION" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <textarea
               id="description"
               formControlName="description"
-              class="field-input"
-              [class.has-error]="isArticleFieldInvalid('description')"
-
+              class="af-input af-input--textarea"
+              [class.af-input--error]="isArticleFieldInvalid('description')"
               rows="3"
               [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.DESCRIPTION' | translate"
             ></textarea>
-            <div class="field-error" *ngIf="isArticleFieldInvalid('description')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+            <div
+              class="af-field-error"
+              *ngIf="isArticleFieldInvalid('description')"
+            >
+              <i class="feather icon-alert-circle"></i>
               {{ descriptionErrorMessage | translate }}
             </div>
           </div>
         </div>
 
-        <!-- ── Content ────────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.ARTICLE.LABELS.BODY" | translate }}
+        <!-- ══ Content / body ═════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.ARTICLE.LABELS.BODY" | translate }}</span>
           </div>
 
-          <div class="field">
-            <div class="quill-wrap" [class.has-error]="isArticleFieldInvalid('body')">
-
+          <div class="af-field">
+            <div
+              class="af-quill-wrap"
+              [class.af-quill-wrap--error]="isArticleFieldInvalid('body')"
+            >
               <quill-editor
                 formControlName="body"
                 [placeholder]="'ADD.ARTICLE.PLACEHOLDERS.BODY' | translate"
                 [styles]="{ minHeight: '280px' }"
               ></quill-editor>
             </div>
-            <div class="field-error" *ngIf="isArticleFieldInvalid('body')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+            <div class="af-field-error" *ngIf="isArticleFieldInvalid('body')">
+              <i class="feather icon-alert-circle"></i>
               {{ bodyErrorMessage | translate }}
             </div>
           </div>
         </div>
 
-        <!-- ── Settings ───────────────────────── -->
-        <div class="form-section last">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
+        <!-- ══ Settings ═══════════════════════════════════════ -->
+        <div class="af-section af-section--last">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.SETTINGS" | translate }}</span>
           </div>
 
           <!-- Private toggle -->
-          <div class="field">
-            <div class="toggle-row">
-              <label class="toggle-track" for="private">
+          <div class="af-field">
+            <div class="af-toggle-row">
+              <label class="af-toggle-track" for="private">
                 <input
                   type="checkbox"
                   id="private"
                   formControlName="private"
-                  class="toggle-input"
+                  class="af-toggle-input"
                   [attr.aria-labelledby]="'private-title'"
                   [attr.aria-describedby]="'private-desc'"
                 />
-                <span class="toggle-thumb"></span>
+                <span class="af-toggle-thumb"></span>
               </label>
-              <div class="toggle-info">
-                <div class="toggle-title" id="private-title">
+              <div class="af-toggle-info">
+                <div class="af-toggle-title" id="private-title">
                   {{ "ADD.ARTICLE.LABELS.PRIVATE" | translate }}
                 </div>
-                <div class="toggle-desc" id="private-desc">
+                <div class="af-toggle-desc" id="private-desc">
                   {{ "ADD.ARTICLE.HINTS.PRIVATE" | translate }}
                 </div>
               </div>
@@ -286,10 +222,10 @@
           </div>
 
           <!-- Allowed users (shown when private) -->
-          <div class="field" *ngIf="articleForm.get('private')?.value">
-            <label class="field-label" for="users">
+          <div class="af-field" *ngIf="articleForm.get('private')?.value">
+            <label class="af-label" for="users">
               {{ "ADD.SHARED.LABELS.USERS" | translate }}
-              <span class="optional-mark">{{
+              <span class="af-optional">{{
                 "ADD.SHARED.LABELS.OPTIONAL" | translate
               }}</span>
             </label>
@@ -303,32 +239,42 @@
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
             </ng-select>
-            <p class="field-hint">
-              {{ "ADD.SHARED.HINTS.USERS" | translate }}
-            </p>
+
           </div>
         </div>
       </form>
 
-      <div class="form-footer">
-        <span class="footer-note">{{
-          "ADD.ARTICLE.HINTS.REQUIRED_FIELDS" | translate
-        }}</span>
-        <div class="footer-actions">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+      <!-- ── Footer ─────────────────────────────────────────── -->
+      <div class="af-footer">
+        <span class="af-footer-note">
+          {{ "ADD.ARTICLE.HINTS.REQUIRED_FIELDS" | translate }}
+        </span>
+        <div class="af-footer-actions">
+          <button
+            type="button"
+            class="af-btn af-btn--cancel"
+            (click)="onCancel()"
+          >
+            <i class="feather icon-x"></i>
             {{ "ADD.ARTICLE.BUTTONS.CANCEL" | translate }}
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="af-btn af-btn--submit"
             (click)="onSubmit()"
-            [disabled]="articleForm.invalid || isLoading"
+            [disabled]="
+              articleForm.invalid || isLoading || (isEdit && !articleForm.dirty)
+            "
           >
+            <i
+              class="feather"
+              [ngClass]="
+                isLoading ? 'icon-loader' : isEdit ? 'icon-check' : 'icon-send'
+              "
+            ></i>
             {{
-              (isEdit
-                ? "EDIT.SHARED.BUTTONS.SAVE"
-                : "ADD.ARTICLE.BUTTONS.SAVE"
-              ) | translate
+              (isEdit ? "EDIT.SHARED.BUTTONS.SAVE" : "ADD.ARTICLE.BUTTONS.SAVE")
+                | translate
             }}
           </button>
         </div>
