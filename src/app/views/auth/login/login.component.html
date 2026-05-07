@@ -1,26 +1,36 @@
-<div class="login-page">
-  <div class="login-card">
-    <!-- Left: Form Side -->
-    <div class="form-side">
-      <div class="form-header">
-        <a routerLink="/" class="brand-link">
+<div class="ln-page">
+  <div class="ln-card">
+    <!-- ── Form side ────────────────────────────────────────── -->
+    <div class="ln-form-side">
+      <div class="ln-form-header">
+        <!-- Brand -->
+        <a
+          routerLink="/"
+          class="ln-brand-link"
+          [attr.aria-label]="'SIGN.IN.HOME' | translate"
+        >
           <app-ged-brand logoType="dynamic"></app-ged-brand>
         </a>
-        <h1 class="welcome-title">{{ "SIGN.IN.WELCOME_BACK" | translate }}</h1>
-        <p class="welcome-subtitle">
+
+        <!-- Welcome text -->
+        <h1 class="ln-welcome-title">
+          {{ "SIGN.IN.WELCOME_BACK" | translate }}
+        </h1>
+        <p class="ln-welcome-subtitle">
           {{ "SIGN.IN.LOGIN_TO_ACCOUNT" | translate }}
         </p>
       </div>
 
+      <!-- Login form component -->
       <login-form></login-form>
     </div>
 
-    <!-- Right: Image Side -->
-    <div class="image-side">
+    <!-- ── Image side ───────────────────────────────────────── -->
+    <div class="ln-image-side" aria-hidden="true">
       <img
         src="assets/images/auth/login-cover.png"
         [attr.alt]="'SIGN.IN.LOGIN_COVER_ALT' | translate"
-        class="cover-img"
+        class="ln-cover-img"
       />
     </div>
   </div>

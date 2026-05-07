@@ -17,6 +17,7 @@ export class LoginFormComponent implements OnInit {
     showPassword = false
     submitted = false
     isLoading = false
+    errorMessage: string | null = null
 
     @Input() thirPartyLogin = false
 
@@ -40,6 +41,7 @@ export class LoginFormComponent implements OnInit {
 
     login() {
         this.submitted = true;
+        this.errorMessage = null;
         
         // Mark all fields as touched to trigger validation only on submit
         Object.keys(this.formGroup.controls).forEach(key => {
@@ -68,7 +70,8 @@ export class LoginFormComponent implements OnInit {
           },
           (err: CommonError) => {
             this.isLoading = false;
-            this.toastr.error(err.error['message']);
+            this.errorMessage = err.error?.['message'] || 'SIGN.IN.ERROR_GENERIC';
+            this.toastr.error(this.errorMessage);
           }
         );
     }
@@ -79,5 +82,6 @@ export class LoginFormComponent implements OnInit {
 
     onReset() {
         this.formGroup.reset();
+        this.errorMessage = null;
     }
 }

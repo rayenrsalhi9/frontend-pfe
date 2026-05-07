@@ -1,55 +1,57 @@
-<form
-  [formGroup]="formGroup"
-  (ngSubmit)="login()"
-  novalidate
-  class="login-form-modern"
->
-  <div class="form-group">
-    <label class="form-label" for="login-username">{{
-      "SIGN.IN.USERNAME" | translate
-    }}</label>
+<form [formGroup]="formGroup" (ngSubmit)="login()" novalidate class="lf-form">
+  <!-- ── Error alert ──────────────────────────────────────── -->
+  <div class="lf-alert" *ngIf="errorMessage" role="alert">
+    <i class="feather icon-alert-circle"></i>
+    <span>{{ errorMessage | translate }}</span>
+  </div>
+
+  <!-- ── Username ─────────────────────────────────────────── -->
+  <div class="lf-field">
+    <label class="lf-label" for="login-username">
+      {{ "SIGN.IN.USERNAME" | translate }}
+    </label>
     <input
       type="text"
-      class="form-input"
-      formControlName="username"
       id="login-username"
+      class="lf-input"
+      [class.lf-input--error]="submitted && formGroup.get('username')?.invalid"
+      formControlName="username"
       placeholder="m@example.com"
-      [ngClass]="{
-        'is-invalid': submitted && formGroup.get('username')?.invalid
-      }"
+      autocomplete="username"
     />
     <div
-      *ngIf="submitted && formGroup.get('username')?.invalid"
-      class="form-error"
+      class="lf-field-error"
+      *ngIf="submitted && formGroup.get('username')?.errors?.['required']"
     >
-      <div *ngIf="formGroup.get('username')?.errors?.['required']">
-        {{ "SIGN.IN.USERNAME_ERROR" | translate }}
-      </div>
+      <i class="feather icon-alert-circle"></i>
+      {{ "SIGN.IN.USERNAME_ERROR" | translate }}
     </div>
   </div>
 
-  <div class="form-group">
-    <div class="form-label-row">
-      <label class="form-label" for="login-password">{{
-        "SIGN.IN.PASSWORD" | translate
-      }}</label>
-      <a class="forgot-link" routerLink="/forgot">{{
-        "SIGN.IN.FORGET" | translate
-      }}</a>
+  <!-- ── Password ─────────────────────────────────────────── -->
+  <div class="lf-field">
+    <div class="lf-label-row">
+      <label class="lf-label" for="login-password">
+        {{ "SIGN.IN.PASSWORD" | translate }}
+      </label>
+      <a class="lf-forgot-link" routerLink="/forgot">
+        {{ "SIGN.IN.FORGET" | translate }}
+      </a>
     </div>
-    <div class="password-wrapper">
+    <div class="lf-password-wrap">
       <input
         [type]="showPassword ? 'text' : 'password'"
-        class="form-input"
-        formControlName="password"
         id="login-password"
-        [ngClass]="{
-          'is-invalid': submitted && formGroup.get('password')?.invalid
-        }"
+        class="lf-input"
+        [class.lf-input--error]="
+          submitted && formGroup.get('password')?.invalid
+        "
+        formControlName="password"
+        autocomplete="current-password"
       />
       <button
         type="button"
-        class="password-toggle"
+        class="lf-password-toggle"
         (click)="onShowPasswordClick()"
         [attr.aria-label]="
           (showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD')
@@ -63,27 +65,30 @@
       </button>
     </div>
     <div
-      *ngIf="submitted && formGroup.get('password')?.invalid"
-      class="form-error"
+      class="lf-field-error"
+      *ngIf="submitted && formGroup.get('password')?.errors?.['required']"
     >
-      <div *ngIf="formGroup.get('password')?.errors?.['required']">
-        {{ "SIGN.IN.PASSWORD_ERROR" | translate }}
-      </div>
+      <i class="feather icon-alert-circle"></i>
+      {{ "SIGN.IN.PASSWORD_ERROR" | translate }}
     </div>
   </div>
 
-  <button class="submit-btn" type="submit" [disabled]="isLoading">
-    <span *ngIf="!isLoading">{{ "SIGN.IN.BUTTON" | translate }}</span>
-    <span *ngIf="isLoading" class="loading-content">
-      <i class="feather icon-loader spin"></i>
+  <!-- ── Submit ───────────────────────────────────────────── -->
+  <button class="lf-submit-btn" type="submit" [disabled]="isLoading">
+    <ng-container *ngIf="!isLoading">
       {{ "SIGN.IN.BUTTON" | translate }}
-    </span>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      <i class="feather icon-loader lf-spin"></i>
+      {{ "SIGN.IN.BUTTON" | translate }}
+    </ng-container>
   </button>
 </form>
 
-<div class="signup-prompt">
+<!-- ── Sign-up prompt ───────────────────────────────────────── -->
+<div class="lf-signup-prompt">
   <span>{{ "SIGN.IN.NO_ACCOUNT" | translate }}</span>
-  <a routerLink="/register" class="signup-link">{{
-    "SIGN.IN.SIGN_UP" | translate
-  }}</a>
+  <a routerLink="/register" class="lf-signup-link">
+    {{ "SIGN.IN.SIGN_UP" | translate }}
+  </a>
 </div>

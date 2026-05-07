@@ -1,4 +1,5 @@
-.login-page {
+/* ─── Page shell ────────────────────────────────────────────── */
+.ln-page {
   min-height: 100vh;
   background: #ffffff;
   display: flex;
@@ -7,7 +8,8 @@
   padding: 2rem 1.5rem;
 }
 
-.login-card {
+/* ─── Card ──────────────────────────────────────────────────── */
+.ln-card {
   display: flex;
   width: 100%;
   max-width: 960px;
@@ -15,136 +17,118 @@
   border: 1px solid var(--border-color);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
-[dir="rtl"] .login-card {
+[dir="rtl"] .ln-card {
   flex-direction: row-reverse;
 }
 
-/* ─── Form Side ──────────────────────────────────── */
-.form-side {
+/* ─── Form side ─────────────────────────────────────────────── */
+.ln-form-side {
   flex: 1;
   padding: 3.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-width: 400px;
+  gap: 0;
 }
 
-.form-header {
-  margin-bottom: 1.75rem;
+/* ─── Form header ───────────────────────────────────────────── */
+.ln-form-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
-.brand-link {
-  display: flex;
+.ln-brand-link {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   text-decoration: none;
-  line-height: 1.1;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.18s ease;
 }
 
-.brand-link:hover {
+.ln-brand-link:hover {
   opacity: 0.85;
 }
 
-.brand-link .ged-brand-text-group {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.brand-link .ged-brand-text-line {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.brand-link .ged-brand-text-line.orange {
-  color: #ea580c;
-}
-
-.brand-link .ged-brand-text-line.green {
-  color: #16a34a;
-}
-
-.welcome-title {
+/* ─── Welcome text ──────────────────────────────────────────── */
+.ln-welcome-title {
   font-size: 1.875rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 0.5rem;
   letter-spacing: -0.025em;
   line-height: 1.2;
+  margin: 0 0 0.5rem;
 }
 
-.welcome-subtitle {
+.ln-welcome-subtitle {
   font-size: 0.9375rem;
   color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
 }
 
-/* ─── Image Side ─────────────────────────────────── */
-.image-side {
+/* ─── Image side ────────────────────────────────────────────── */
+.ln-image-side {
   flex: 1.1;
-  background: var(--card-bg);
-  display: block;
+  background: #fffbeb;
   position: relative;
   overflow: hidden;
+  border-left: 1px solid var(--border-color);
 }
 
-.cover-img {
+[dir="rtl"] .ln-image-side {
+  border-left: none;
+  border-right: 1px solid var(--border-color);
+}
+
+.ln-cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-/* ─── Responsive ───────────────────────────────── */
+/* ─── Responsive — Tablet ≤992px ───────────────────────────── */
 @media (max-width: 992px) {
-  .login-card {
+  .ln-card {
     max-width: 480px;
   }
-
-  .image-side {
+  .ln-image-side {
     display: none;
   }
-
-  .form-side {
+  .ln-form-side {
     min-width: 0;
     padding: 2.5rem;
   }
 }
 
+/* ─── Responsive — Mobile ≤768px ───────────────────────────── */
 @media (max-width: 768px) {
-  .login-page {
+  .ln-page {
     padding: 1.5rem 1rem;
   }
-
-  .form-side {
+  .ln-form-side {
     padding: 2rem 1.5rem;
   }
-
-  .welcome-title {
+  .ln-welcome-title {
     font-size: 1.5rem;
   }
 }
 
+/* ─── Responsive — Small mobile ≤480px ─────────────────────── */
 @media (max-width: 480px) {
-  .login-page {
+  .ln-page {
     padding: 1rem 0.5rem;
   }
-
-  .form-side {
+  .ln-form-side {
     padding: 1.5rem 1rem;
   }
-
-  .welcome-title {
+  .ln-welcome-title {
     font-size: 1.375rem;
   }
 }
