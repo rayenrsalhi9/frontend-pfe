@@ -267,13 +267,17 @@ export class CalendarComponent implements OnInit, OnDestroy {
     return isNaN(date.getTime()) ? new Date() : date;
   }
 
+  private requestId = 0;
+
   getReminders() {
     const month = this.viewDate.getMonth() + 1;
     const year = this.viewDate.getFullYear();
+    const reqId = ++this.requestId;
 
     this.isLoading = true;
     this.reminderService.getCalendarEvents(month, year).subscribe({
       next: (response: HttpResponse<CalendarEvent[]>) => {
+        if (reqId !== this.requestId) return;
         const data = response.body;
         if (data && Array.isArray(data)) {
           this.events = data.map((el: CalendarEvent) => ({
@@ -294,6 +298,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (err) => {
+        if (reqId !== this.requestId) return;
         console.error("Error fetching calendar events:", err);
         this.events = [];
         this.selectedDayEvents = [];

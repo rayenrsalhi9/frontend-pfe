@@ -160,7 +160,7 @@
             role="button"
             tabindex="0"
             (keydown.enter)="row && openCommentsModal(row)"
-            (keydown.space)="row && openCommentsModal(row)"
+            (keydown.space)="onSpacePress($event, row)"
           >
             <i class="feather icon-message-circle"></i>
             <span>{{ value ?? 0 }}</span>

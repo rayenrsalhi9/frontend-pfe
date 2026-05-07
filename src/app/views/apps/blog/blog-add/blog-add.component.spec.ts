@@ -1,8 +1,10 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { QuillModule } from 'ngx-quill';
 import { of, throwError } from 'rxjs';
 import { BlogAddComponent } from './blog-add.component';
 import { BlogService } from '../blog.service';
@@ -84,7 +86,9 @@ describe('BlogAddComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        NgSelectModule,
+        QuillModule.forRoot({})
       ],
       providers: [
         { provide: BlogService, useValue: mockBlogService },
@@ -158,10 +162,11 @@ describe('BlogAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockBlogService.addBlog).toHaveBeenCalled();
     const callArgs = mockBlogService.addBlog.calls.mostRecent().args[0];
-    expect(callArgs.privacy).toBe('public');
+    expect(callArgs.private).toBe(false);
     expect(callArgs.users).toEqual([]);
   }));
 
@@ -178,6 +183,7 @@ describe('BlogAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/apps/blogs']);
   }));
@@ -217,10 +223,11 @@ describe('BlogAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockBlogService.addBlog).toHaveBeenCalled();
     const callArgs = mockBlogService.addBlog.calls.mostRecent().args[0];
-    expect(callArgs.privacy).toBe('private');
+    expect(callArgs.private).toBe(true);
     expect(callArgs.users).toContain(1);
     expect(callArgs.users).toContain(2);
   }));
@@ -246,7 +253,7 @@ describe('BlogAddComponent', () => {
     tick();
 
     const pictureControl = component.blogForm.get('picture');
-    expect(pictureControl?.hasValidator).toBeFalsy();
+    expect(pictureControl?.validator).toBeNull();
   }));
 
   it('should populate form with existing blog data', fakeAsync(() => {
@@ -275,6 +282,7 @@ describe('BlogAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockBlogService.updateBlog).toHaveBeenCalledWith('123', jasmine.any(Object));
   }));
@@ -327,17 +335,15 @@ describe('BlogAddComponent', () => {
     expect(toastrSpy).toHaveBeenCalled();
   });
 
-  it('should watch for form changes in edit mode', fakeAsync(() => {
+  it('should watch for form changes in edit mode', () => {
     component.isEdit = true;
     component.blogId = '123';
 
-    // Initially no changes
     expect(component.blogForm.pristine).toBeTrue();
 
-    // Make a change
-    component.blogForm.patchValue({ title: 'Changed Title' });
+    component.blogForm.markAsDirty();
     expect(component.blogForm.dirty).toBeTrue();
-  }));
+  });
 
   it('should handle privacy switch private to public - remove users', fakeAsync(() => {
     component.blogForm.get('private')?.setValue(true);

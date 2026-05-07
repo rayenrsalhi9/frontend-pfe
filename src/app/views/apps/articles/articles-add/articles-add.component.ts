@@ -30,10 +30,8 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
   newPicture: string = null;
   fileList: any[] = [];
 
-  private fb: FormBuilder;
-
   constructor(
-    fb: FormBuilder,
+    private fb: FormBuilder,
     private commonService: CommonService,
     private articleService: ArticleService,
     private articleCategoryService: ArticleCategoryService,
@@ -46,7 +44,6 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
     private sanitizer: DomSanitizer,
   ) {
     super();
-    this.fb = fb;
   }
 
   ngOnInit(): void {
@@ -115,6 +112,13 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
       });
   }
 
+  private extractUserIds(rows: any[]): number[] {
+    if (!rows) return [];
+    return rows
+      .map((r: any) => r?.user?.id ?? r?.user_id ?? null)
+      .filter((id: any) => id != null);
+  }
+
   private loadArticle(id: string): void {
     this.isLoading = true;
     this.articleService
@@ -129,25 +133,8 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
             description: data.shortText,
             body: data.longText,
             private: data.privacy === "private",
-            users: data.allowedUsers
-              ? data.allowedUsers
-                  .map((usr: any) => {
-                    if (usr.user && usr.user.id != null) {
-                      return usr.user.id;
-                    }
-                    return usr.user_id || null;
-                  })
-                  .filter((id: any) => id != null)
-              : data.users
-                ? data.users
-                    .map((usr: any) => {
-                      if (usr.user && usr.user.id != null) {
-                        return usr.user.id;
-                      }
-                      return usr.user_id || null;
-                    })
-                    .filter((id: any) => id != null)
-                : [],
+            users: this.extractUserIds(data.allowedUsers) ??
+              this.extractUserIds(data.users) ?? [],
           });
 
           this.picture = data.picture
@@ -364,12 +351,16 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
       formValue.description = this.sanitizeContent(formValue.description);
     }
 
-    // Process users - include current user
-    let userIds = formValue.users || [];
-    if (this.currentUser?.id && !userIds.includes(this.currentUser.id)) {
-      userIds = [...userIds, this.currentUser.id];
+    // Process users - include current user only if private
+    if (formValue.private) {
+      let userIds = formValue.users || [];
+      if (this.currentUser?.id && !userIds.includes(this.currentUser.id)) {
+        userIds = [...userIds, this.currentUser.id];
+      }
+      formValue.users = userIds;
+    } else {
+      formValue.users = [];
     }
-    formValue.users = userIds;
 
     return formValue;
   }

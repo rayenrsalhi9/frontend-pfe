@@ -151,7 +151,6 @@ export const add = {
       TOAST: {
         SUCCESS: "Article published successfully",
         ERROR: "Failed to publish article",
-        UPDATED_SUCCESSFULLY: "Article updated successfully",
       },
       VALIDATION: {
         TITLE_MIN_LENGTH: "Title must be at least 5 characters",

@@ -64,11 +64,7 @@ export class PusherService {
   }
 
   connect() {
-    if (this.pusher) {
-      this.pusher.connect();
-    } else {
-      this.initializePusher();
-    }
+    this.initializePusher();
   }
 
   disconnect() {
@@ -105,13 +101,15 @@ export class PusherService {
 
   unsubscribeFromChannel(channelName: string, callback?: (data: any) => void): void {
     if (this.pusher) {
-      const channel = this.pusher.subscribe(channelName);
+      const channel = this.pusher.channel(channelName);
+      if (!channel) return;
       if (callback) {
         const handlers = this.subscriptions.get(channelName) || [];
-        const index = handlers.findIndex((h: any) => h.callback === callback);
-        if (index > -1) {
+        const handler = handlers.find((h: any) => h.eventName && h.callback === callback);
+        if (handler) {
+          const index = handlers.indexOf(handler);
           handlers.splice(index, 1);
-          channel.unbind(null, callback);
+          channel.unbind(handler.eventName, handler.callback);
           if (handlers.length === 0) {
             this.pusher.unsubscribe(channelName);
             this.subscriptions.delete(channelName);
@@ -130,6 +128,7 @@ export class PusherService {
     this.subscriptions.clear();
     if (this.pusher) {
       this.pusher.disconnect();
+      this.pusher = null;
     }
   }
 }

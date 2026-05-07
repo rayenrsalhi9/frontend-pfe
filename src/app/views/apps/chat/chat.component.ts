@@ -43,6 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private searchTerm$ = new Subject<string>();
   private currentSearchTerm: string = "";
   private pendingConversationId: number | string | null = null;
+  creatingUserId: number | string | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -290,6 +291,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   newConversation(data: any) {
+    if (this.creatingUserId === data.id) return;
+    this.creatingUserId = data.id;
     this.conversationService
       .createConversation({ users: [data.id, this.user.id] })
       .pipe(takeUntil(this.destroy$))
@@ -316,6 +319,9 @@ export class ChatComponent implements OnInit, OnDestroy {
               this.toastrService.error(msg);
             });
         },
+      })
+      .add(() => {
+        this.creatingUserId = null;
       });
   }
 

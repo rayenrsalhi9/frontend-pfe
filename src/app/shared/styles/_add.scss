@@ -332,8 +332,7 @@ $amber-dark: #92400e;
 
     // Error state
     &.has-error .ng-select-container {
-      border-color: #fca5a5 !important;
-      background: #fef2f2 !important;
+      @extend %error-state;
     }
 
     // Multi-select tags — amber pills

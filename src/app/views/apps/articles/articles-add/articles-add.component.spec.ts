@@ -1,8 +1,10 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { QuillModule } from 'ngx-quill';
 import { of, throwError } from 'rxjs';
 import { ArticlesAddComponent } from './articles-add.component';
 import { ArticleService } from '@app/shared/services/article.service';
@@ -84,7 +86,9 @@ describe('ArticlesAddComponent', () => {
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        NgSelectModule,
+        QuillModule.forRoot({})
       ],
       providers: [
         { provide: ArticleService, useValue: mockArticleService },
@@ -158,11 +162,12 @@ describe('ArticlesAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockArticleService.addArticle).toHaveBeenCalled();
     const callArgs = mockArticleService.addArticle.calls.mostRecent().args[0];
-    expect(callArgs.privacy).toBe('public');
-    expect(callArgs.users).toContain(1); // Creator should be included
+    expect(callArgs.private).toBe(false);
+    expect(callArgs.users).toEqual([]);
   }));
 
   it('should navigate to /apps/articles after successful creation', fakeAsync(() => {
@@ -178,6 +183,7 @@ describe('ArticlesAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/apps/articles']);
   }));
@@ -192,11 +198,14 @@ describe('ArticlesAddComponent', () => {
     expect(component.articleForm.get('private')?.value).toBeTrue();
   });
 
-  it('BUG: should have setupPrivateFieldWatcher for auto-adding user', () => {
-    // NOTE: ArticlesAddComponent is MISSING setupPrivateFieldWatcher() method
-    // This means when switching to private, current user won't be auto-added
-    // ForumAddComponent and BlogAddComponent have this method
-    expect((component as any).setupPrivateFieldWatcher).toBeUndefined();
+  it('should have setupPrivateFieldWatcher for auto-adding user', () => {
+    expect((component as any).setupPrivateFieldWatcher).toBeDefined();
+  });
+
+  it('should call setupPrivateFieldWatcher during ngOnInit', () => {
+    spyOn(component as any, 'setupPrivateFieldWatcher').and.callThrough();
+    component.ngOnInit();
+    expect((component as any).setupPrivateFieldWatcher).toHaveBeenCalled();
   });
 
   it('should submit with privacy=private and users', fakeAsync(() => {
@@ -212,10 +221,11 @@ describe('ArticlesAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockArticleService.addArticle).toHaveBeenCalled();
     const callArgs = mockArticleService.addArticle.calls.mostRecent().args[0];
-    expect(callArgs.privacy).toBe('private');
+    expect(callArgs.private).toBe(true);
     expect(callArgs.users).toContain(1); // Creator added by prepareFormData
     expect(callArgs.users).toContain(2); // Selected user
   }));
@@ -271,6 +281,7 @@ describe('ArticlesAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     expect(mockArticleService.updateArticle).toHaveBeenCalledWith('123', jasmine.any(Object));
   }));
@@ -308,9 +319,16 @@ describe('ArticlesAddComponent', () => {
   }));
 
   it('should handle image upload', () => {
+    spyOn(FileReader.prototype, 'readAsDataURL').and.callFake(function () {
+      const reader = this as any;
+      reader.onload({ target: { result: 'data:image/jpeg;base64,fake' } });
+    });
+
+    const blob = new Blob([''], { type: 'image/jpeg' });
+    const file = new File([blob], 'test.jpg', { type: 'image/jpeg' });
     const event = {
       target: {
-        files: [{ type: 'image/jpeg', name: 'test.jpg', size: 1024 * 1024 }]
+        files: [file]
       }
     };
 
@@ -345,6 +363,7 @@ describe('ArticlesAddComponent', () => {
 
     component.onSubmit();
     tick();
+    flush();
 
     const callArgs = mockArticleService.addArticle.calls.mostRecent().args[0];
     // prepareFormData should add creator to users
@@ -366,4 +385,35 @@ describe('ArticlesAddComponent', () => {
     expect((component as any).destroy$.next).toHaveBeenCalled();
     expect((component as any).destroy$.complete).toHaveBeenCalled();
   });
+
+  it('should clear users when toggling privacy to public', fakeAsync(() => {
+    component.currentUser = { id: 1, firstName: 'Test', lastName: 'User' };
+    component.articleForm.patchValue({ private: true, users: [1, 2] });
+    tick();
+
+    component.articleForm.patchValue({ private: false });
+    tick();
+
+    expect(component.articleForm.get('users')?.value).toEqual([]);
+  }));
+
+  it('should reset isLoading on addArticle failure', fakeAsync(() => {
+    mockArticleService.addArticle.and.returnValue(throwError(() => new Error('fail')));
+
+    component.articleForm.patchValue({
+      title: 'Test Failure',
+      category: '1',
+      description: 'Description that is long enough for validation.',
+      body: 'Body content that is definitely long enough for validation.',
+      private: false,
+      users: [],
+      picture: 'data:image/jpeg;base64,fake'
+    });
+
+    component.onSubmit();
+    tick();
+    flush();
+
+    expect(component.isLoading).toBeFalse();
+  }));
 });

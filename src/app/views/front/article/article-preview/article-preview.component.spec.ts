@@ -1,16 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { ToastrModule } from "ngx-toastr";
 
-import { ArticlePreviewComponent } from './article-preview.component';
+import { ArticlePreviewComponent } from "./article-preview.component";
 
-describe('ArticlePreviewComponent', () => {
+describe("ArticlePreviewComponent", () => {
   let component: ArticlePreviewComponent;
   let fixture: ComponentFixture<ArticlePreviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ArticlePreviewComponent ]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        ToastrModule.forRoot(),
+      ],
+      declarations: [ArticlePreviewComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +28,7 @@ describe('ArticlePreviewComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

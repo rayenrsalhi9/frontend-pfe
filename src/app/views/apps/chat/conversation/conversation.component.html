@@ -326,6 +326,7 @@
       type="text"
       class="conv-input"
       [placeholder]="'CHAT.LABELS.PLACEHOLDER' | translate"
+      [attr.aria-label]="'CHAT.LABELS.PLACEHOLDER' | translate"
       [(ngModel)]="message"
       [disabled]="composerDisabled"
       (focus)="onInputMessageFocus()"

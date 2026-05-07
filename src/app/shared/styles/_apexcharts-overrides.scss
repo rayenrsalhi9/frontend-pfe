@@ -10,7 +10,7 @@
   // ── Axis labels ──
   .apexcharts-xaxis-label tspan,
   .apexcharts-yaxis-label tspan {
-    fill: #92400e;
+    fill: var(--color-amber-dark, #92400e);
     font-family: Cairo, Inter, sans-serif;
     font-size: 11px;
   }
@@ -36,9 +36,9 @@
   }
 
   .apexcharts-tooltip-title {
-    background: #fffbeb;
+    background: var(--bg-amber-light, #fffbeb);
     border-bottom: 1px solid var(--border-color, #e2e8f0);
-    color: #92400e;
+    color: var(--color-amber-dark, #92400e);
     font-weight: 600;
     font-size: 12px;
   }

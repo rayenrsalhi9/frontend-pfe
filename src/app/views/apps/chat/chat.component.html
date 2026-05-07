@@ -17,6 +17,7 @@
               type="text"
               class="chat-search-input"
               [placeholder]="'CHAT.LABELS.SEARCH' | translate"
+              [attr.aria-label]="'CHAT.LABELS.SEARCH' | translate"
               (input)="onSearch($event)"
             />
           </div>
@@ -194,6 +195,7 @@
               <button
                 type="button"
                 class="chat-row"
+                [disabled]="creatingUserId === usr.id"
                 (click)="newConversation(usr)"
               >
                 <div class="chat-row-avatar">

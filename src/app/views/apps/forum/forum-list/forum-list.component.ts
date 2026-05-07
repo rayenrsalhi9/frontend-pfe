@@ -114,6 +114,11 @@ export class ForumListComponent implements OnInit, OnDestroy {
 
   onActivate(event) {}
 
+  onSpacePress(event: KeyboardEvent, row: any) {
+    event.preventDefault();
+    if (row) this.openCommentsModal(row);
+  }
+
   openCommentsModal(row: any) {
     if (!row?.id) return;
 

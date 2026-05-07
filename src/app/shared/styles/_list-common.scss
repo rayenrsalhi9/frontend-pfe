@@ -302,6 +302,11 @@ $amber-dark: #92400e;
   color: #4c1d95;
 }
 
+.list-cell-badge--unknown {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
 /* ── Cell: Image Thumbnail ── */
 .list-cell-thumb {
   width: 48px;
@@ -561,10 +566,6 @@ $amber-dark: #92400e;
 
 .list-doc-link:hover {
   color: $amber;
-}
-
-.list-doc-link:hover {
-  color: #2563eb;
 }
 
 /* ── Actions cell override for ngx-datatable ── */
