@@ -130,9 +130,23 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
             body: data.longText,
             private: data.privacy === "private",
             users: data.allowedUsers
-              ? data.allowedUsers.map((usr: any) => usr.user?.id || usr.user_id)
+              ? data.allowedUsers
+                  .map((usr: any) => {
+                    if (usr.user && usr.user.id != null) {
+                      return usr.user.id;
+                    }
+                    return usr.user_id || null;
+                  })
+                  .filter((id: any) => id != null)
               : data.users
-                ? data.users.map((usr: any) => usr.user?.id || usr.user_id)
+                ? data.users
+                    .map((usr: any) => {
+                      if (usr.user && usr.user.id != null) {
+                        return usr.user.id;
+                      }
+                      return usr.user_id || null;
+                    })
+                    .filter((id: any) => id != null)
                 : [],
           });
 

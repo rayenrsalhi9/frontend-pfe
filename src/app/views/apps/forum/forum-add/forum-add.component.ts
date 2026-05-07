@@ -28,6 +28,8 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
 
   forumForm: FormGroup;
   forumId: any;
+  isUsersLoaded = false;
+  validSelectedUserIds: any[] = [];
 
 
   constructor(
@@ -102,11 +104,13 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
         .subscribe({
           next: (data: any) => {
             this.users = data;
+            this.isUsersLoaded = true;
             this.cdr.markForCheck();
             resolve();
           },
           error: (error) => {
             console.error("Error loading users:", error);
+            this.isUsersLoaded = false;
             reject(error);
           },
         });
@@ -141,6 +145,16 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.isUsersLoaded) {
+      this.translate
+        .get("ADD.SHARED.ERRORS.USERS_NOT_LOADED")
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((message) => {
+          this.toastrService.warning(message);
+        });
+      return;
+    }
+
     if (this.forumForm.invalid) {
       this.forumForm.markAllAsTouched();
       this.translate
@@ -291,15 +305,14 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
         next: (data: any) => {
           this.isLoading = false;
 
-          // Map allowedUsers to user IDs that exist in the users array
-          // Backend now returns allowedUsers with user relationship
-          const allowedUserIds = data.allowedUsers
+          // Map allowedUsers to user IDs - keep raw backend IDs for form payload
+          const rawAllowedUserIds = data.allowedUsers
             ? data.allowedUsers
                 .map((u: any) => u.user?.id || u.user_id)
                 .filter((id: any) => id != null)
             : [];
-          // Filter to only include IDs that exist in our users array
-          const validUserIds = allowedUserIds.filter((id: any) =>
+          // Filter to only include IDs that exist in our users array for UI rendering
+          this.validSelectedUserIds = rawAllowedUserIds.filter((id: any) =>
             id && this.users.some((u) => u.id === id),
           );
 
@@ -310,7 +323,7 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
             closed: data.closed,
             tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
-            users: validUserIds,
+            users: rawAllowedUserIds,
           });
 
           this.cdr.markForCheck();

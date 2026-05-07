@@ -181,7 +181,7 @@ export const preview = {
 
 
     NAV: {
-      CONNEXION: "Connexion",
+      LOGIN: "Se connecter",
     },
   },
 };

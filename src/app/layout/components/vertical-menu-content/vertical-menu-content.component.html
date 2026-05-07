@@ -1,11 +1,11 @@
 <div class="ged-nav-tree">
   <ng-container *ngFor="let item of menu; trackBy: trackByKey">
     <ng-container *ngIf="isVisible(item)">
-      <!-- Section title grouping -->
-      <ng-container *ngIf="isSection(item); else renderItem">
-        <section class="ged-nav-section" *ngIf="hasChildren(item)">
+      <!-- Section with children -->
+      <ng-container *ngIf="isSection(item) && hasChildren(item)">
+        <section class="ged-nav-section" [attr.aria-labelledby]="'nav-label-' + item.key">
           <div class="ged-nav-section-title">
-            <span class="ged-nav-section-label">
+            <span class="ged-nav-section-label" [attr.id]="'nav-label-' + item.key">
               {{ (item.translateKey | translate) || item.title }}
             </span>
           </div>
@@ -27,11 +27,12 @@
         </section>
       </ng-container>
 
-      <ng-template #renderItem>
+      <!-- Section without children OR non-section items -->
+      <ng-container *ngIf="!isSection(item) || !hasChildren(item)">
         <ng-container
           *ngTemplateOutlet="renderNode; context: { $implicit: item, level: 0 }"
         ></ng-container>
-      </ng-template>
+      </ng-container>
     </ng-container>
   </ng-container>
 </div>
@@ -72,6 +73,7 @@
               'icon-chevron-right': !isExpanded(item) && !isRtl,
               'icon-chevron-down': isExpanded(item)
             }"
+            aria-hidden="true"
           ></i>
         </button>
 

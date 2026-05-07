@@ -41,7 +41,7 @@ export class DeviceStatisticComponent implements OnChanges {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["data"] && this.data) {
+    if (changes["data"]) {
       this.buildItems();
       this.cdr.markForCheck();
     }

@@ -278,6 +278,9 @@
   line-height: 1.6;
   color: #334155;
   padding-left: 0.25rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ── Inline Confirmation ── */

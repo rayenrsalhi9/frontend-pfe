@@ -6,7 +6,7 @@
       <h1 class="list-page-title">{{ "SURVEY.LIST.TITLE" | translate }}</h1>
       <p class="list-page-desc">{{ "SURVEY.LIST.DESCRIPTION" | translate }}</p>
     </div>
-    <button routerLink="/apps/surveys/add" class="list-btn-add">
+    <button *hasClaim="'SURVEY_ADD_SURVEY'" routerLink="/apps/surveys/add" class="list-btn-add">
       <span>{{ "SURVEY.BUTTONS.ADD" | translate }}</span>
       <i class="feather icon-plus list-btn-add__icon"></i>
     </button>
@@ -26,14 +26,15 @@
     </div>
     <div class="list-date-wrapper">
       <i class="feather icon-calendar list-date-icon"></i>
-      <input
-        type="text"
-        class="list-date-input"
-        bsDatepicker
-        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', adaptivePosition: true }"
-        (bsValueChange)="onDateChange($event)"
-        [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
-      />
+        <input
+          type="text"
+          class="list-date-input"
+          bsDatepicker
+          [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', adaptivePosition: true }"
+          (bsValueChange)="onDateChange($event)"
+          [placeholder]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
+          [attr.aria-label]="'SURVEY.TABLE.SEARCH_BY_DATE' | translate"
+        />
     </div>
   </div>
 

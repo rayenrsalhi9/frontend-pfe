@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { take, debounceTime, switchMap, catchError, tap } from "rxjs/operators";
+import { take, debounceTime, switchMap, catchError, tap, takeUntil } from "rxjs/operators";
 import { Subject, of } from "rxjs";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
@@ -17,12 +17,13 @@ import { ForumCommentsModalComponent } from "./forum-comments-modal.component";
   templateUrl: "./forum-list.component.html",
   styleUrls: ["./forum-list.component.scss"],
 })
-export class ForumListComponent implements OnInit {
+export class ForumListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
 
   rows: any[] = [];
   selected: any[] = [];
   categories: any[] = [];
+  private destroy$ = new Subject<void>();
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -62,6 +63,7 @@ export class ForumListComponent implements OnInit {
             }),
           ),
         ),
+        takeUntil(this.destroy$),
       )
       .subscribe((resp: any) => {
         const list = Array.isArray(resp) ? resp : (resp?.data ?? []);
@@ -99,7 +101,7 @@ export class ForumListComponent implements OnInit {
   }
 
   getForumsCategories() {
-    this.forumCategoryService.allCategories().subscribe((data: any) => {
+    this.forumCategoryService.allCategories().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
       this.categories = data;
       this.cdr.markForCheck();
     });
@@ -128,7 +130,7 @@ export class ForumListComponent implements OnInit {
   deleteForum(row: any) {
     this.translateService
       .get("FORUM.DELETE.LABEL")
-      .pipe(take(1))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
@@ -142,16 +144,16 @@ export class ForumListComponent implements OnInit {
           },
         });
 
-        this.bsModalRef.content.onClose.pipe(take(1)).subscribe((result) => {
+        this.bsModalRef.content.onClose.pipe(takeUntil(this.destroy$)).subscribe((result) => {
           if (result) {
             this.forumService
               .deleteForum(row.id)
-              .pipe(take(1))
+              .pipe(takeUntil(this.destroy$))
               .subscribe(
                 () => {
                   this.translateService
                     .get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY")
-                    .pipe(take(1))
+                    .pipe(takeUntil(this.destroy$))
                     .subscribe((translatedMessage: string) =>
                       this.toastr.success(translatedMessage),
                     );
@@ -160,7 +162,7 @@ export class ForumListComponent implements OnInit {
                 () => {
                   this.translateService
                     .get("FORUM.DELETE.TOAST.DELETED_ERROR")
-                    .pipe(take(1))
+                    .pipe(takeUntil(this.destroy$))
                     .subscribe((translatedMessage: string) =>
                       this.toastr.error(translatedMessage),
                     );
@@ -188,5 +190,10 @@ export class ForumListComponent implements OnInit {
     this.forumResource.createdAt = event ? new Date(event).toDateString() : "";
     this.forumResource.skip = 0;
     this.searchSubject.next();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

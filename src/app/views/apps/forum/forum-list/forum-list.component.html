@@ -123,11 +123,12 @@
           <span
             class="list-cell-badge"
             [ngClass]="{
-              'list-cell-badge--green': value !== 'private',
-              'list-cell-badge--yellow': value === 'private'
+              'list-cell-badge--green': value === 'public',
+              'list-cell-badge--yellow': value === 'private',
+              'list-cell-badge--unknown': value !== 'public' && value !== 'private'
             }"
           >
-            {{ (value === "private" ? "FORUM.PRIVACY.PRIVATE" : "FORUM.PRIVACY.PUBLIC") | translate }}
+            {{ (value === 'private' ? 'FORUM.PRIVACY.PRIVATE' : (value === 'public' ? 'FORUM.PRIVACY.PUBLIC' : 'FORUM.PRIVACY.UNKNOWN')) | translate }}
           </span>
         </ng-template>
       </ngx-datatable-column>

@@ -22,6 +22,7 @@ export const chat = {
       GROUP_NAME: "Group Name",
       SELECT_MEMBERS: "Select Members",
       USERS_LIST: "Users list",
+      SEARCH_CONVERSATIONS: "Search conversations",
       CONVERSATIONS: "Conversations",
       LATEST_CONVERSATIONS: "Latest conversations",
       GROUPS: "Groups",

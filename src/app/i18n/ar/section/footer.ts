@@ -27,5 +27,6 @@ export const footer = {
     BRAND_TITLE: "منصة GED",
     BRAND_DESCRIPTION:
       "حلك الموحد لإدارة المستندات الإلكترونية، والمنتديات التعاونية، والرؤى المهنية.",
+    LOGO_ALT: "شعار DGI",
   },
 };

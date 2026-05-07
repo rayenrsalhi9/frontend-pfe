@@ -50,8 +50,8 @@ export const sign = {
       LAST_NAME: "Last name",
       EMAIL: "Email",
       BTN_SUBSCRIBE: "Subscribe",
-      BTN_CANCEL: "Canncel",
-      ERROS: {
+      BTN_CANCEL: "Cancel",
+      ERRORS: {
         FIRST_NAME_REQUIRED: "First name is required",
         LAST_NAME_REQUIRED: "Last name is required",
         EMAIL_REQUIRED: "Email is required",

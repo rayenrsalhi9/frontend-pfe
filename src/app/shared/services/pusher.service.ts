@@ -15,7 +15,7 @@ export class PusherService {
   private channel: any;
   private subscriptions: Map<
     string,
-    { eventName: string; callback: (data: any) => void }
+    Array<{ eventName: string; callback: (data: any) => void }>
   > = new Map();
 
   constructor(
@@ -48,10 +48,12 @@ export class PusherService {
     }
     this.subscriptions.clear();
     this.initializePusher();
-    savedSubscriptions.forEach(({ eventName, callback }, channelName) => {
+    savedSubscriptions.forEach((handlers, channelName) => {
       const channel = this.pusher.subscribe(channelName);
-      channel.bind(eventName, callback);
-      this.subscriptions.set(channelName, { eventName, callback });
+      handlers.forEach(({ eventName, callback }) => {
+        channel.bind(eventName, callback);
+      });
+      this.subscriptions.set(channelName, handlers);
     });
   }
 
@@ -95,14 +97,39 @@ export class PusherService {
     if (this.pusher) {
       const channel = this.pusher.subscribe(channelName);
       channel.bind(eventName, callback);
-      this.subscriptions.set(channelName, { eventName, callback });
+      const existing = this.subscriptions.get(channelName) || [];
+      existing.push({ eventName, callback });
+      this.subscriptions.set(channelName, existing);
     }
   }
 
-  unsubscribeFromChannel(channelName: string): void {
+  unsubscribeFromChannel(channelName: string, callback?: (data: any) => void): void {
     if (this.pusher) {
-      this.pusher.unsubscribe(channelName);
+      const channel = this.pusher.subscribe(channelName);
+      if (callback) {
+        const handlers = this.subscriptions.get(channelName) || [];
+        const index = handlers.findIndex((h: any) => h.callback === callback);
+        if (index > -1) {
+          handlers.splice(index, 1);
+          channel.unbind(null, callback);
+          if (handlers.length === 0) {
+            this.pusher.unsubscribe(channelName);
+            this.subscriptions.delete(channelName);
+          } else {
+            this.subscriptions.set(channelName, handlers);
+          }
+        }
+      } else {
+        this.pusher.unsubscribe(channelName);
+        this.subscriptions.delete(channelName);
+      }
     }
-    this.subscriptions.delete(channelName);
+  }
+
+  resetPusherSession(): void {
+    this.subscriptions.clear();
+    if (this.pusher) {
+      this.pusher.disconnect();
+    }
   }
 }

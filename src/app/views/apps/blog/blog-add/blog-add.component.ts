@@ -9,9 +9,6 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ValidatorFn,
-  AbstractControl,
-  ValidationErrors,
 } from "@angular/forms";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subject } from "rxjs";
@@ -26,25 +23,6 @@ import { CommonService } from "src/app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { AppFormBase } from "../../shared/app-form-base";
 
-
-// Custom date range validator
-export const dateRangeValidator: ValidatorFn = (
-  control: AbstractControl,
-): ValidationErrors | null => {
-  const expiration = control.get("expiration")?.value;
-  if (!expiration) {
-    return null; // No validation needed if expiration is disabled
-  }
-
-  const startDate = control.get("startDate")?.value;
-  const endDate = control.get("endDate")?.value;
-
-  if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
-    return { dateInvalid: true };
-  }
-
-  return null;
-};
 
 @Component({
   selector: "app-blog-add",
@@ -372,26 +350,21 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.isLoading = false;
-          // Map allowedUsers to user IDs that exist in the users array
-          // Backend now returns allowedUsers with user relationship
+          // Map allowedUsers to user IDs - keep raw backend IDs for form payload
           const allowedUserIds = data.allowedUsers
             ? data.allowedUsers
                 .map((u: any) => u.user?.id || u.user_id)
                 .filter((id: any) => id != null)
             : [];
-          // Filter to only include IDs that exist in our users array
-          const validUserIds = allowedUserIds.filter((id: any) =>
-            id && this.users.some((u) => u.id === id),
-          );
 
           this.blogForm.patchValue({
             title: data.title,
             subtitle: data.subtitle,
             category: data.category?.id,
             body: data.body,
-            tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
+            tags: (data.tags || []).map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
-            users: validUserIds,
+            users: allowedUserIds,
             picture: null,
           });
 

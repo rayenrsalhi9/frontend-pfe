@@ -27,5 +27,6 @@ export const footer = {
     BRAND_TITLE: "Plateforme GED",
     BRAND_DESCRIPTION:
       "Votre solution unifiée pour la gestion électronique de documents, les forums collaboratifs et les actualités professionnelles.",
+    LOGO_ALT: "Logo DGI",
   },
 };

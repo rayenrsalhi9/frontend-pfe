@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SecurityService } from '@app/core/security/security.service';
 import { ConversationService } from '@app/shared/services/conversation.service';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Conversation } from '@app/shared/enums/conversation';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
@@ -52,11 +53,25 @@ export class AddConversationComponent implements OnInit, OnDestroy {
   }
 
   getUsers() {
+    this.isLoading = true;
     this.commonService
       .getUsersWithClaim('CHAT_VIEW_CHATS')
-      .subscribe((users: User[]) => {
-        this.users = users.filter(u => u.id !== this.currentUser?.id);
-        this.filteredUsers = this.users;
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (users: User[]) => {
+          this.users = users.filter(u => u.id !== this.currentUser?.id);
+          this.filteredUsers = this.users;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error loading users:', err);
+          this.users = [];
+          this.filteredUsers = [];
+          this.isLoading = false;
+          this.translate.get('CHAT.ERROR.LOAD_USERS_FAILED').pipe(takeUntil(this.destroy$)).subscribe((msg: string) => {
+            this.toastr.error(msg);
+          });
+        }
       });
   }
 

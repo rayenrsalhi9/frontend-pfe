@@ -157,8 +157,7 @@ $warm-amber-bg: #fffbeb;
     border-color: $warm-amber-mid;
   }
 
-  &.active,
-  &.focused {
+  &.active {
     background: $warm-amber-light;
     color: $warm-amber;
     border-color: $warm-amber-mid;
@@ -170,6 +169,9 @@ $warm-amber-bg: #fffbeb;
   }
 
   &.focused {
+    background: $warm-amber-light;
+    color: $warm-amber;
+    border-color: $warm-amber-mid;
     outline: none;
   }
 }

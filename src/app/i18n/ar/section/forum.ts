@@ -86,6 +86,7 @@ export const forum = {
     PRIVACY: {
       PUBLIC: "عام",
       PRIVATE: "خاص",
+      UNKNOWN: "غير معروف",
     },
     MODAL: {
       TITLE: "تعليقات المناقشة",

@@ -22,6 +22,7 @@ export const chat = {
       SELECT_MEMBERS: "اختر الأعضاء",
       USERS_LIST: "قائمة المستخدمين",
       CONVERSATIONS: "المحادثات",
+      SEARCH_CONVERSATIONS: "بحث في المحادثات",
       LATEST_CONVERSATIONS: "آخر المحادثات",
       GROUPS: "المجموعات",
       USERS: "المستخدمون",

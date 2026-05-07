@@ -17,4 +17,9 @@ export class GedBrandComponent {
    * Optional font size override for the brand text lines
    */
   @Input() fontSize?: string;
+
+  /**
+   * Fallback logo alt text (overridden by translation)
+   */
+  logoAlt = 'DGI Logo';
 }

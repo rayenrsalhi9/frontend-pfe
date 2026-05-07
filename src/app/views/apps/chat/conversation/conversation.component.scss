@@ -540,7 +540,7 @@ $amber-dark: #92400e;
   min-height: 60px;
   padding: 0 1.125rem;
   border-top: 1px solid var(--border-color);
-  background: #ffffff;
+  background: var(--bg-surface);
 }
 
 .conv-input {
@@ -566,7 +566,7 @@ $amber-dark: #92400e;
 
   &:focus {
     border-color: $amber-mid;
-    background: #ffffff;
+    background: var(--bg-app);
     box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1);
   }
 }

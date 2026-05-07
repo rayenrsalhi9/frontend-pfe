@@ -62,6 +62,7 @@ export const calendar = {
       EVENT_CREATED: "تم إنشاء الحدث",
       EVENT_UPDATED: "تم تحديث الحدث",
       EVENT_DELETED: "تم حذف الحدث",
+      ERROR_LOADING: "فشل في تحميل الأحداث",
       ERROR_CREATED: "فشل في إنشاء الحدث",
       ERROR_UPDATED: "فشل في تحديث الحدث",
       ERROR_DELETED: "فشل في حذف الحدث",

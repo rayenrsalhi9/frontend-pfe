@@ -33,7 +33,7 @@
         <!-- ── Scrollable list body ───────────────────────── -->
         <perfect-scrollbar
           class="chat-sidebar-body"
-          (psScrollYReachEnd)="loadMoreConversations()"
+          (psYReachEnd)="loadMoreConversations()"
         >
           <!-- Direct conversations -->
           <ng-container *ngIf="conversations.length > 0">
@@ -212,7 +212,7 @@
                       >{{ usr.firstName }} {{ usr.lastName }}</span
                     >
                   </div>
-                  <div class="chat-row-preview">{{ usr.email }}</div>
+                  <div class="chat-row-preview">{{ usr.displayName || usr.role }}</div>
                 </div>
               </button>
             </ng-container>

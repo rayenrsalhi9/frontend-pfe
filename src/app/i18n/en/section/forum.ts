@@ -86,6 +86,7 @@ export const forum = {
     PRIVACY: {
       PUBLIC: "Public",
       PRIVATE: "Private",
+      UNKNOWN: "Unknown",
     },
 
     MODAL: {

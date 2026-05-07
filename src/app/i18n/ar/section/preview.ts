@@ -177,7 +177,7 @@ export const preview = {
 
 
     NAV: {
-      CONNEXION: "تسجيل الدخول",
+      LOGIN: "تسجيل الدخول",
     },
   },
 };

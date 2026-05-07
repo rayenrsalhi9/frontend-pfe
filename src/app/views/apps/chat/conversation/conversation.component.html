@@ -103,36 +103,39 @@
         <i class="feather icon-settings"></i>
       </button>
       <ul *dropdownMenu class="conv-dropdown" role="menu">
-        <li role="menuitem" *ngIf="isGroupConversation">
+        <li *ngIf="isGroupConversation">
           <button
             type="button"
             class="conv-dropdown-item"
+            role="menuitem"
             (click)="handleShowUsers()"
           >
             <i class="feather icon-users"></i>
             {{ "CHAT.LABELS.MEMBERS_LIST" | translate }}
           </button>
         </li>
-        <li role="menuitem" *ngIf="isGroupConversation">
+        <li *ngIf="isGroupConversation">
           <button
             type="button"
             class="conv-dropdown-item"
+            role="menuitem"
             (click)="handleUpdateChat()"
           >
             <i class="feather icon-edit-2"></i>
             {{ "CHAT.LABELS.EDIT_CHAT" | translate }}
           </button>
         </li>
-        <li role="menuitem" *ngIf="isGroupConversation">
-          <button type="button" class="conv-dropdown-item" (click)="addUser()">
+        <li *ngIf="isGroupConversation">
+          <button type="button" class="conv-dropdown-item" role="menuitem" (click)="addUser()">
             <i class="feather icon-user-plus"></i>
             {{ "CHAT.LABELS.ADD_USER" | translate }}
           </button>
         </li>
-        <li role="menuitem">
+        <li>
           <button
             type="button"
             class="conv-dropdown-item conv-dropdown-item--danger"
+            role="menuitem"
             (click)="onDeleteConversation()"
           >
             <i class="feather icon-trash-2"></i>

@@ -62,6 +62,7 @@ export const calendar = {
       EVENT_CREATED: "Événement créé",
       EVENT_UPDATED: "Événement mis à jour",
       EVENT_DELETED: "Événement supprimé",
+      ERROR_LOADING: "Échec du chargement des événements",
       ERROR_CREATED: "Échec de la création de l'événement",
       ERROR_UPDATED: "Échec de la mise à jour de l'événement",
       ERROR_DELETED: "Échec de la suppression de l'événement",

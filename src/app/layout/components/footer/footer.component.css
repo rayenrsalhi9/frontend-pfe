@@ -80,30 +80,6 @@
   margin: 0 0 1.5rem;
 }
 
-.app-footer .footer-social {
-  display: flex;
-  gap: 0.625rem;
-}
-
-.app-footer .social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.125rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.app-footer .social-link:hover {
-  background: #b45309;
-  color: #fff;
-}
-
 .app-footer .footer-nav {
   flex: 0 1 auto;
   min-width: 180px;

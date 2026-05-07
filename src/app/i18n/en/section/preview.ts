@@ -163,7 +163,7 @@ export const preview = {
     },
 
     NAV: {
-      CONNEXION: "Login",
+      LOGIN: "Login",
     },
   },
 };

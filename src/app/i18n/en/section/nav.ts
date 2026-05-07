@@ -8,7 +8,7 @@ export const nav = {
     FORUM: "Forums",
     BLOG: "Blogs",
     ARTICLE: "Articles",
-    CONNEXION: "Sign In",
+    LOGIN: "Sign In",
     INSCRIPTION: "Sign Up",
 
     DASHBOARD: "Dashboard",

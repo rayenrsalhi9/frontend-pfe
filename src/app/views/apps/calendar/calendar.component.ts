@@ -271,6 +271,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const month = this.viewDate.getMonth() + 1;
     const year = this.viewDate.getFullYear();
 
+    this.isLoading = true;
     this.reminderService.getCalendarEvents(month, year).subscribe({
       next: (response: HttpResponse<CalendarEvent[]>) => {
         const data = response.body;
@@ -285,20 +286,23 @@ export class CalendarComponent implements OnInit, OnDestroy {
             category: colors[el.category as any] || colors.normal,
             frequency: el.frequency,
           }));
-          this.updateSelectedDayEvents();
-          this.cdr.markForCheck();
+        } else {
+          this.events = [];
         }
+        this.updateSelectedDayEvents();
+        this.cdr.markForCheck();
+        this.isLoading = false;
       },
       error: (err) => {
         console.error("Error fetching calendar events:", err);
         this.events = [];
         this.selectedDayEvents = [];
         this.isLoading = false;
-        this.translate
-          .get("CALENDAR.TOAST.ERROR_LOADING")
-          .subscribe((translatedMessage: string) => {
-            this.toastrService.error(translatedMessage);
-          });
+          this.translate
+            .get("CALENDAR.TOAST.ERROR_LOADING")
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.error(translatedMessage);
+            });
       },
     });
   }

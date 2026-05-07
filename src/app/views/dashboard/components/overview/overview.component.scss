@@ -5,6 +5,12 @@
 .overview-chart-container {
   width: 100%;
   overflow: hidden;
+}
+
+
+.overview-chart-container {
+  width: 100%;
+  overflow: hidden;
 
   ::ng-deep .apexcharts-canvas {
     overflow: visible;

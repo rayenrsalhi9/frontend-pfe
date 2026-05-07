@@ -194,8 +194,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
   }
 
+  hasMoreConversations(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
   loadMoreConversations() {
-    if (this.currentPage < this.totalPages && !this.isLoadingConversations) {
+    if (this.hasMoreConversations() && !this.isLoadingConversations) {
       this.initConversations(this.currentPage + 1);
     }
   }

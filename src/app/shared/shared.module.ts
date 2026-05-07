@@ -10,15 +10,13 @@ import { BasePreviewComponent } from "./preview/base-preview/base-preview.compon
 import { ImagePreviewComponent } from "./preview/image-preview/image-preview.component";
 import { OfficeViewerComponent } from "./preview/office-viewer/office-viewer.component";
 import { PdfViewerComponent } from "./preview/pdf-viewer/pdf-viewer.component";
-import { TextPreviewComponent } from "./preview/text-preview/text-preview.component";
-import { VideoPreviewComponent } from "./preview/video-preview/video-preview.component";
 import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { ConfirmModalComponent } from "./components/confirm-modal/confirm-modal.component";
 import { NgxEmojiPickerModule } from "ngx-emoji-picker";
-import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-modal.component";
 import { GedBrandComponent } from "./components/brand/brand.component";
-
+import { LogoModule } from "./components/logo/logo.module";
+import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-modal.component";
 
 @NgModule({
   declarations: [
@@ -26,14 +24,11 @@ import { GedBrandComponent } from "./components/brand/brand.component";
     ImagePreviewComponent,
     BasePreviewComponent,
     PdfViewerComponent,
-    TextPreviewComponent,
     OfficeViewerComponent,
     AudioPreviewComponent,
-    VideoPreviewComponent,
     ConfirmModalComponent,
-    SusbcribeModalComponent,
     GedBrandComponent,
-
+    SusbcribeModalComponent,
   ],
   exports: [
     CommonModule,
@@ -47,15 +42,15 @@ import { GedBrandComponent } from "./components/brand/brand.component";
     ImagePreviewComponent,
     BasePreviewComponent,
     PdfViewerComponent,
-    TextPreviewComponent,
     OfficeViewerComponent,
     AudioPreviewComponent,
-    VideoPreviewComponent,
     ConfirmModalComponent,
     GedBrandComponent,
+    SusbcribeModalComponent,
 
     OverlayModule,
     NgxEmojiPickerModule,
+    LogoModule,
   ],
   imports: [
     PipesModule,
@@ -66,6 +61,7 @@ import { GedBrandComponent } from "./components/brand/brand.component";
     NgxExtendedPdfViewerModule,
     TranslateModule.forChild(),
     NgxEmojiPickerModule,
+    LogoModule,
   ],
   providers: [],
 })
