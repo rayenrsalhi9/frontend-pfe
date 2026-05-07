@@ -189,7 +189,7 @@ describe("ForumAddComponent", () => {
     expect(callArgs.users).toEqual([]);
   }));
 
-  it("should NOT include users array when public", fakeAsync(() => {
+  it("should include empty users array when public", fakeAsync(() => {
     component.forumForm.patchValue({
       title: "Test Public Forum",
       category: "1",
@@ -351,11 +351,13 @@ describe("ForumAddComponent", () => {
    * Claims Testing
    * ============================================ */
 
-  it("should handle missing claim for create", () => {
+  it("should handle missing claim for create", fakeAsync(() => {
     mockSecurityService.hasClaim.and.returnValue(false);
-    // Component should handle this - form may not show
-    expect(mockSecurityService.hasClaim).toBeDefined();
-  });
+    component.ngOnInit();
+    tick();
+    fixture.detectChanges();
+    expect(component.forumForm).toBeTruthy();
+  }));
 
   /* ============================================
    * Additional Edge Cases

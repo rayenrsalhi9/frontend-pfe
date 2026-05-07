@@ -66,6 +66,16 @@
   color: #b45309;
 }
 
+.btn-close-ghost:focus-visible,
+.btn-delete-ghost:focus-visible,
+.btn-inline-cancel:focus-visible,
+.btn-inline-confirm:focus-visible,
+.btn-dismiss:focus-visible {
+  outline: 2px solid #b45309;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.2);
+}
+
 /* ── Modal Body ── */
 .modal-body-modern {
   padding: 1.5rem;
@@ -425,6 +435,33 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .modal-body-modern {
+    scroll-behavior: auto;
+  }
+
+  .loading-state .spinner-border {
+    animation: none;
+  }
+
+  .btn-close-ghost,
+  .btn-delete-ghost,
+  .btn-inline-cancel,
+  .btn-inline-confirm,
+  .btn-dismiss {
+    transition: none;
+  }
+
+  .comment-card-modern {
+    transition: none;
+  }
+
+  .inline-confirmation {
+    animation: none;
+  }
 }
 
 /* ── Responsive ── */

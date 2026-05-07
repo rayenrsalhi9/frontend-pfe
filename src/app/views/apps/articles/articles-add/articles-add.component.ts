@@ -133,8 +133,7 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
             description: data.shortText,
             body: data.longText,
             private: data.privacy === "private",
-            users: this.extractUserIds(data.allowedUsers) ??
-              this.extractUserIds(data.users) ?? [],
+            users: data.allowedUsers != null ? this.extractUserIds(data.allowedUsers) : (data.users != null ? this.extractUserIds(data.users) : []),
           });
 
           this.picture = data.picture

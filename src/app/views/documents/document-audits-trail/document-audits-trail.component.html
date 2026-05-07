@@ -115,7 +115,7 @@
             <span class="list-cell-creator">{{ value }}</span>
             <span class="list-cell-title-stack__sub">{{ row.createdByEmail }}</span>
           </div>
-          <span class="list-cell-creator-empty" *ngIf="!value">-</span>
+          <span class="list-cell-empty" *ngIf="!value">-</span>
         </ng-template>
       </ngx-datatable-column>
 
@@ -129,7 +129,7 @@
             <span class="list-cell-creator">{{ value }}</span>
             <span class="list-cell-title-stack__sub">{{ row.permissionUserEmail || row.recipientEmail }}</span>
           </div>
-          <span class="list-cell-creator-empty" *ngIf="!value">-</span>
+          <span class="list-cell-empty" *ngIf="!value">-</span>
         </ng-template>
       </ngx-datatable-column>
 

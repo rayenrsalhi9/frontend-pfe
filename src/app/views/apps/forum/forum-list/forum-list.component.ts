@@ -4,7 +4,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { take, debounceTime, switchMap, catchError, tap, takeUntil } from "rxjs/operators";
+import { take, debounceTime, switchMap, catchError, tap, takeUntil, filter } from "rxjs/operators";
 import { Subject, of } from "rxjs";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
@@ -112,7 +112,7 @@ export class ForumListComponent implements OnInit, OnDestroy {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {}
+
 
   onSpacePress(event: KeyboardEvent, row: any) {
     event.preventDefault();
@@ -135,7 +135,6 @@ export class ForumListComponent implements OnInit, OnDestroy {
   deleteForum(row: any) {
     this.translateService
       .get("FORUM.DELETE.LABEL")
-      .pipe(takeUntil(this.destroy$))
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
@@ -149,32 +148,23 @@ export class ForumListComponent implements OnInit, OnDestroy {
           },
         });
 
-        this.bsModalRef.content.onClose.pipe(takeUntil(this.destroy$)).subscribe((result) => {
-          if (result) {
-            this.forumService
-              .deleteForum(row.id)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe(
-                () => {
-                  this.translateService
-                    .get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY")
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe((translatedMessage: string) =>
-                      this.toastr.success(translatedMessage),
-                    );
-                  this.getAllForums(this.forumResource);
-                },
-                () => {
-                  this.translateService
-                    .get("FORUM.DELETE.TOAST.DELETED_ERROR")
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe((translatedMessage: string) =>
-                      this.toastr.error(translatedMessage),
-                    );
-                },
-              );
-          }
-        });
+        this.bsModalRef.content.onClose
+          .pipe(
+            takeUntil(this.destroy$),
+            filter((result: any) => result),
+            switchMap(() => this.forumService.deleteForum(row.id)),
+            tap(() => this.getAllForums(this.forumResource)),
+            switchMap(() =>
+              this.translateService.get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY"),
+            ),
+            tap((msg: string) => this.toastr.success(msg)),
+            catchError(() =>
+              this.translateService
+                .get("FORUM.DELETE.TOAST.DELETED_ERROR")
+                .pipe(tap((msg) => this.toastr.error(msg))),
+            ),
+          )
+          .subscribe();
       });
   }
 

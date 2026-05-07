@@ -35,13 +35,13 @@
 
     <!-- Users Selection -->
     <div class="ac-field">
-      <label class="ac-field-label">
+      <h3 class="ac-field-label">
         {{
           type === "group"
             ? ("CHAT.LABELS.SELECT_MEMBERS" | translate)
             : ("CHAT.LABELS.SELECT_USER" | translate)
         }}
-      </label>
+      </h3>
 
       <!-- Search -->
       <div class="search-wrap">
@@ -142,6 +142,7 @@
           isLoading ||
           (type === 'group' ? selectedUsers.length === 0 : !selectedUser)
         "
+        [attr.aria-busy]="isLoading"
       >
         <span *ngIf="!isLoading">{{
           type === "group"
@@ -149,6 +150,11 @@
             : ("CHAT.BUTTONS.ADD" | translate)
         }}</span>
         <span *ngIf="isLoading" class="spinner"></span>
+        <span class="sr-only" *ngIf="isLoading">{{
+          type === "group"
+            ? ("CHAT.BUTTONS.CREATING" | translate)
+            : ("CHAT.BUTTONS.ADDING" | translate)
+        }}</span>
       </button>
     </div>
   </div>

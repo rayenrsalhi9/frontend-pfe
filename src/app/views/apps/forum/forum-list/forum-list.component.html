@@ -64,7 +64,6 @@
       rowHeight="auto"
       [limit]="10"
       [loadingIndicator]="isLoadingResults"
-      (activate)="onActivate($event)"
     >
       <ngx-datatable-column
         [name]="'FORUM.TABLE.TOPIC' | translate"
@@ -83,7 +82,7 @@
       >
         <ng-template ngx-datatable-cell-template let-value="value">
           <span class="list-cell-badge list-cell-badge--blue" *ngIf="value?.name">{{ value.name }}</span>
-          <span class="list-cell-creator-empty" *ngIf="!value?.name">-</span>
+          <span class="list-cell-empty" *ngIf="!value?.name">-</span>
         </ng-template>
       </ngx-datatable-column>
 
@@ -177,14 +176,6 @@
       >
         <ng-template let-row="row" ngx-datatable-cell-template>
           <div class="list-actions">
-            <button
-              class="list-btn-action list-btn-action--view"
-              (click)="row && openCommentsModal(row)"
-              [title]="'FORUM.MODAL.TITLE' | translate"
-              [attr.aria-label]="'FORUM.MODAL.TITLE' | translate"
-            >
-              <i class="feather icon-eye"></i>
-            </button>
             <a
               *hasClaim="'FORUM_EDIT_TOPIC'"
               class="list-btn-action list-btn-action--edit"

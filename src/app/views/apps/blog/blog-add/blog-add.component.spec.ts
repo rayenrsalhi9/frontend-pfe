@@ -291,18 +291,24 @@ describe('BlogAddComponent', () => {
    * Claims Testing
    * =========================================== */
 
-  it('should check BLOG_ADD_BLOG claim for create', () => {
+  it('should check BLOG_ADD_BLOG claim for create', fakeAsync(() => {
+    mockActivatedRoute.paramMap = of({ get: () => null });
     mockSecurityService.hasClaim.and.returnValue(false);
-    expect(mockSecurityService.hasClaim).toBeDefined();
-  });
+    component.ngOnInit();
+    tick();
+    expect(component.blogForm).toBeTruthy();
+    expect(component.isEdit).toBeFalsy();
+  }));
 
-  it('should check BLOG_EDIT_BLOG claim for edit', () => {
+  it('should check BLOG_EDIT_BLOG claim for edit', fakeAsync(() => {
     mockActivatedRoute.paramMap = of({ get: (param: string) => param === 'id' ? '123' : null });
     mockSecurityService.hasClaim.and.returnValue(true);
 
     component.ngOnInit();
-    expect(mockSecurityService.hasClaim).toBeDefined();
-  });
+    tick();
+    expect(component.isEdit).toBeTrue();
+    expect(component.blogId).toBe('123');
+  }));
 
   /* ===========================================
    * Additional Edge Cases
