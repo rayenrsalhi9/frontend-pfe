@@ -10,7 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-articles-category-add",
   templateUrl: "./articles-category-add.component.html",
-  styleUrls: ["./articles-category-add.component.scss"],
+  styleUrls: [],
 })
 export class ArticlesCategoryAddComponent implements OnInit, OnDestroy {
   categoryManage: FormGroup;

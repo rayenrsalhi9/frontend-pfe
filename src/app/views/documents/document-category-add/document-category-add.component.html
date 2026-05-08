@@ -1,32 +1,85 @@
-<div class="card">
-  <div class="card-body">
-    <div>
-      <div class="row">
-        <div class="col-sm-12">
-          <label class="form-label" for="categoryName">{{'CATEGORY.ADD.NAME' | translate}}</label>
-          <input required [(ngModel)]="data.name" type="text" name="name" #name="ngModel" class="form-control"
-            id="categoryName">
-          <div *ngIf="name.invalid && (name.dirty || name.touched)">
-            <div class="text-danger" *ngIf="name?.hasError('required')">{{'CATEGORY.ADD.ERROR.CATEGORY_NAME_IS_REQUIRED' | translate}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <label class="form-label" for="description">{{'CATEGORY.ADD.DESCRIPTION' | translate}}</label>
-          <textarea [(ngModel)]="data.description" name="description" type="text" class="form-control">
-              </textarea>
-        </div>
-      </div>
-    </div>
-    <div class="mt-2">
-      <ng-container *ngIf="!isEdit">
-        <button (click)="saveCategory()" style="margin-right: 10px;" type="submit" *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'" class="btn btn-success btn-sm m-r-10"><i class="fas fa-save"></i> {{'CATEGORY.ADD.BUTTONS.CATEGORY_SAVE' | translate}}</button>
-      </ng-container>
-      <ng-container *ngIf="isEdit">
-        <button (click)="saveCategory()" style="margin-right: 10px;" type="submit" *hasClaim="'DOCUMENT_CATEGORY_MANAGE_DOCUMENT_CATEGORY'" class="btn btn-success btn-sm m-r-10" cdkFocusInitial><i class="far fa-save"></i> {{'CATEGORY.ADD.BUTTONS.CATEGORY_SAVE' | translate}}</button>
-      </ng-container>
-      <button type="button" class="btn btn-danger btn-sm" (click)="onCancel()"> <i class="fas fa-times-circle"></i>{{'CATEGORY.ADD.BUTTONS.CATEGORY_CANCEL' | translate}}</button>
-    </div>
+<div class="modal-form-body">
+  <!-- Modal Header -->
+  <div class="modal-form-header">
+    <h2 class="modal-form-title">
+      <i
+        class="feather"
+        [ngClass]="isEdit ? 'icon-edit-2' : 'icon-folder-plus'"
+      ></i>
+      {{ (isEdit ? "EDIT.CATEGORY.TITLE" : "ADD.CATEGORY.TITLE") | translate }}
+    </h2>
+    <p class="modal-form-sub">
+      {{
+        (isEdit ? "EDIT.CATEGORY.DESCRIPTION" : "ADD.CATEGORY.DESCRIPTION")
+          | translate
+      }}
+    </p>
   </div>
+
+  <form
+    [formGroup]="categoryManage"
+    (ngSubmit)="saveCategory()"
+    class="af-form"
+  >
+    <!-- Category Name -->
+    <div class="af-field">
+      <label class="af-label" for="categoryName">
+        {{ "ADD.CATEGORY.LABELS.NAME" | translate }}
+        <span class="af-required">*</span>
+      </label>
+      <input
+        type="text"
+        id="categoryName"
+        formControlName="name"
+        class="af-input"
+        [class.af-input--error]="isNameInvalid"
+        [placeholder]="'ADD.CATEGORY.PLACEHOLDERS.NAME' | translate"
+      />
+      <div class="af-field-error" *ngIf="isNameInvalid">
+        <i class="feather icon-alert-circle"></i>
+        {{ "ADD.CATEGORY.ERRORS.NAME_REQUIRED" | translate }}
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="af-field">
+      <label class="af-label" for="categoryDescription">
+        {{ "ADD.CATEGORY.LABELS.DESCRIPTION" | translate }}
+        <span class="af-optional">{{
+          "ADD.SHARED.LABELS.OPTIONAL" | translate
+        }}</span>
+      </label>
+      <textarea
+        id="categoryDescription"
+        formControlName="description"
+        class="af-input af-input--textarea"
+        rows="3"
+        [placeholder]="'ADD.CATEGORY.PLACEHOLDERS.DESCRIPTION' | translate"
+      ></textarea>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="modal-form-footer">
+      <button type="button" class="af-btn af-btn--cancel" (click)="onCancel()">
+        <i class="feather icon-x"></i>
+        {{ "ADD.CATEGORY.BUTTONS.CANCEL" | translate }}
+      </button>
+      <button
+        type="submit"
+        class="af-btn af-btn--submit"
+        [disabled]="isLoading || categoryManage.invalid"
+      >
+        <i
+          class="feather"
+          [ngClass]="
+            isLoading ? 'icon-loader' : isEdit ? 'icon-check' : 'icon-plus'
+          "
+        ></i>
+        {{
+          (isEdit ? "EDIT.CATEGORY.BUTTONS.SAVE" : "ADD.CATEGORY.BUTTONS.SAVE")
+            | translate
+        }}
+      </button>
+    </div>
+  </form>
 </div>

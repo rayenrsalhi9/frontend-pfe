@@ -97,7 +97,7 @@ export class ManageComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancel() {
+  onCancel() {
     this.bsModalRef.hide();
   }
 }

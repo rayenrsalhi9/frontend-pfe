@@ -83,10 +83,10 @@ export class DocumentCategoriesComponent implements OnInit {
 
   manageCategory(category: Category): void {
     const initialState = {
-      width: "350px",
       data: Object.assign({}, category),
     };
     const dialogRef = this.modalService.show(DocumentCategoryAddComponent, {
+      class: "modal-md modal-dialog-centered",
       initialState,
     });
 
