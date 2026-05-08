@@ -1,46 +1,74 @@
+// ─── Warm palette ─────────────────────────────────────────────────────────────
+$amber: #b45309;
+$amber-light: #fef3c7;
+$amber-mid: #fcd34d;
+$amber-bg: #fffbeb;
+$amber-dark: #92400e;
+
+// ============================================================================
+// HOST — fixed floating position
+// ============================================================================
+
 :host {
   display: block;
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 1050;
+
+  [dir="rtl"] & {
+    right: auto;
+    left: 24px;
+  }
 }
 
-.floating-i18n-widget {
+// ============================================================================
+// WIDGET WRAPPER
+// ============================================================================
+
+.i18n-widget {
   position: relative;
   cursor: pointer;
 }
 
-.language-trigger {
+// ============================================================================
+// TRIGGER BUTTON
+// ============================================================================
+
+.i18n-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 52px;
   height: 52px;
-  background: var(--card-bg, #fff);
-  border: 1px solid var(--border-color, #edf4f9);
-  border-radius: 16px;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1),
-    0 0 0 0 rgba(37, 99, 235, 0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
+  // Warm tint layer
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%);
+    background: $amber-bg;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
+    border-radius: inherit;
   }
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 
-      0 12px 24px -8px rgba(0, 0, 0, 0.15),
-      0 0 0 2px rgba(37, 99, 235, 0.2);
+    transform: translateY(-3px);
+    border-color: $amber-mid;
+    box-shadow:
+      0 8px 20px -6px rgba(180, 83, 9, 0.2),
+      0 0 0 3px rgba(180, 83, 9, 0.1);
 
     &::before {
       opacity: 1;
@@ -48,26 +76,35 @@
   }
 
   &:active {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
-  .globe-icon {
-    color: var(--primary, #2563eb);
-    font-size: 1.375rem;
-    position: relative;
-    z-index: 1;
+  &:focus-visible {
+    outline: 2px solid $amber;
+    outline-offset: 2px;
   }
 }
 
-.lang-badge {
+.i18n-globe {
+  color: $amber;
+  font-size: 1.375rem;
+  position: relative;
+  z-index: 1;
+}
+
+// ============================================================================
+// CURRENT-LANG BADGE
+// ============================================================================
+
+.i18n-badge {
   position: absolute;
   top: -4px;
   right: -4px;
   min-width: 20px;
   height: 20px;
   padding: 0 5px;
-  background: var(--primary, #2563eb);
-  color: white;
+  background: $amber;
+  color: #ffffff;
   font-size: 0.625rem;
   font-weight: 700;
   border-radius: 10px;
@@ -76,160 +113,234 @@
   justify-content: center;
   letter-spacing: 0.02em;
   z-index: 10;
-  transform: translate(25%, -25%);
   pointer-events: none;
+
+  [dir="rtl"] & {
+    right: auto;
+    left: -4px;
+  }
 }
 
-.language-menu {
+// ============================================================================
+// DROPDOWN MENU
+// ============================================================================
+
+.i18n-menu {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 10px);
   right: 0;
-  min-width: 180px;
-  background: var(--card-bg, #fff);
-  border: 1px solid var(--border-color, #edf4f9);
+  min-width: 176px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: 14px;
-  padding: 8px;
-  box-shadow: 
-    0 20px 40px -12px rgba(0, 0, 0, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 6px;
+  box-shadow:
+    0 16px 32px -8px rgba(0, 0, 0, 0.12),
+    0 4px 8px -4px rgba(0, 0, 0, 0.06);
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px) scale(0.96);
   transform-origin: bottom right;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    opacity 0.18s ease,
+    visibility 0.18s ease,
+    transform 0.18s ease;
 
-  &.is-open {
+  [dir="rtl"] & {
+    right: auto;
+    left: 0;
+    transform-origin: bottom left;
+  }
+
+  // Arrow caret pointing down toward the trigger
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    right: 18px;
+    width: 11px;
+    height: 11px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+
+    [dir="rtl"] & {
+      right: auto;
+      left: 18px;
+    }
+  }
+
+  &--open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
   }
-
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    right: 20px;
-    width: 12px;
-    height: 12px;
-    background: var(--card-bg, #fff);
-    border: 1px solid var(--border-color, #edf4f9);
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-  }
 }
 
-.menu-list {
+// ============================================================================
+// MENU LIST + ITEMS
+// ============================================================================
+
+.i18n-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   position: relative;
   z-index: 1;
 }
 
-.menu-item {
+.i18n-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--text-secondary, #486f88);
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.15s ease;
-  border: none;
-  background: transparent;
+  gap: 0.625rem;
   width: 100%;
-  text-align: left;
+  padding: 0.5625rem 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: start;
   cursor: pointer;
   position: relative;
+  transition:
+    background 0.13s ease,
+    color 0.13s ease,
+    padding-left 0.13s ease;
 
+  // Left accent bar
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
     width: 3px;
     height: 0;
-    background: var(--primary, #2563eb);
+    background: $amber;
     border-radius: 0 2px 2px 0;
     transition: height 0.15s ease;
+
+    [dir="rtl"] & {
+      left: auto;
+      right: 0;
+      border-radius: 2px 0 0 2px;
+    }
   }
 
   &:hover {
-    background: rgba(37, 99, 235, 0.08);
-    color: var(--primary, #2563eb);
-    padding-left: 14px;
+    background: $amber-bg;
+    color: $amber;
+    padding-left: 1rem;
+
+    [dir="rtl"] & {
+      padding-left: 0.75rem;
+      padding-right: 1rem;
+    }
   }
 
-  &.active {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.06) 100%);
-    color: var(--primary, #2563eb);
-    font-weight: 600;
+  &:focus-visible {
+    outline: 2px solid $amber;
+    outline-offset: 2px;
+    background: $amber-bg;
+    color: $amber;
+  }
+
+  // Active — currently selected language
+  &--active {
+    background: $amber-light;
+    color: $amber;
+    font-weight: 700;
 
     &::before {
-      height: 24px;
+      height: 22px;
     }
 
-    .active-check {
+    .i18n-check {
       opacity: 1;
       transform: scale(1);
+      color: $amber;
     }
   }
 
-  &.focused {
-    background: rgba(37, 99, 235, 0.08);
+  // Keyboard focused (arrow key navigation)
+  &--focused {
+    background: $amber-bg;
+    color: $amber;
     outline: none;
   }
-
-  .lang-name {
-    flex-grow: 1;
-    letter-spacing: 0.01em;
-  }
-
-  .active-check {
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.15s ease;
-    color: var(--primary, #2563eb);
-    font-size: 0.875rem;
-  }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -2px rgba(0, 0, 0, 0.1);
+.i18n-lang-name {
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.i18n-check {
+  font-size: 0.875rem;
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  color: $amber;
+  flex-shrink: 0;
+}
+
+// ============================================================================
+// PULSE ANIMATION — amber glow when idle
+// ============================================================================
+
+@keyframes i18n-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      0 0 0 0 rgba(180, 83, 9, 0);
   }
   50% {
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -2px rgba(0, 0, 0, 0.1),
-      0 0 0 4px rgba(37, 99, 235, 0.15);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      0 0 0 4px rgba(180, 83, 9, 0.12);
   }
 }
 
-.floating-i18n-widget:not(:hover) .language-trigger {
-  animation: pulse-glow 3s ease-in-out infinite;
+.i18n-widget:not(:hover) .i18n-trigger {
+  animation: i18n-pulse 3s ease-in-out infinite;
 }
+
+// ============================================================================
+// RESPONSIVE — Mobile ≤640px
+// ============================================================================
 
 @media (max-width: 640px) {
   :host {
     bottom: 16px;
     right: 16px;
+
+    [dir="rtl"] & {
+      right: auto;
+      left: 16px;
+    }
   }
 
-  .language-trigger {
+  .i18n-trigger {
     width: 46px;
     height: 46px;
+    border-radius: 12px;
   }
 
-  .language-menu {
-    min-width: 160px;
+  .i18n-menu {
+    min-width: 158px;
     right: -4px;
+
+    [dir="rtl"] & {
+      right: auto;
+      left: -4px;
+    }
   }
 }

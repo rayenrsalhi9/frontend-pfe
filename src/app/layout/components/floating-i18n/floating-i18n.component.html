@@ -1,41 +1,42 @@
-<div class="floating-i18n-widget" (keydown)="onKeyDown($event)">
+<div class="i18n-widget" (keydown)="onKeyDown($event)">
   <button
     type="button"
-    class="language-trigger"
+    class="i18n-trigger"
     (click)="toggleMenu()"
     [attr.aria-expanded]="isMenuOpen"
     aria-haspopup="listbox"
-    aria-controls="language-menu"
+    aria-controls="i18n-menu"
     [attr.aria-label]="'Language selector'"
   >
-    <i class="feather icon-globe globe-icon"></i>
+    <i class="feather icon-globe i18n-globe"></i>
   </button>
-  <span class="lang-badge">{{ getLanguageCode(currentLang || 'en') }}</span>
+
+  <span class="i18n-badge">{{ getLanguageCode(currentLang || "en") }}</span>
 
   <div
-    id="language-menu"
-    class="language-menu"
-    [ngClass]="{ 'is-open': isMenuOpen }"
+    id="i18n-menu"
+    class="i18n-menu"
+    [class.i18n-menu--open]="isMenuOpen"
     role="listbox"
     aria-label="Select language"
   >
-    <div class="menu-list">
+    <div class="i18n-list">
       <button
         #optionBtn
         *ngFor="let language of languageList; let i = index"
         type="button"
-        class="menu-item"
-        [class.active]="currentLang === language.key"
-        [class.focused]="focusedIndex === i"
+        class="i18n-item"
+        [class.i18n-item--active]="currentLang === language.key"
+        [class.i18n-item--focused]="focusedIndex === i"
         (click)="setLanguage(language.key)"
         role="option"
         [attr.aria-selected]="currentLang === language.key"
         [tabindex]="isMenuOpen ? (focusedIndex === i ? 0 : -1) : -1"
       >
-        <span class="lang-name">
+        <span class="i18n-lang-name">
           {{ "LANG." + getLanguageCode(language.key) | translate }}
         </span>
-        <i class="feather icon-check active-check"></i>
+        <i class="feather icon-check i18n-check"></i>
       </button>
     </div>
   </div>
