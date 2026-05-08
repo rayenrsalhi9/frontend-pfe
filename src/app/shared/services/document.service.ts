@@ -39,13 +39,13 @@ export class DocumentService {
     formData.append("uploadFile", document.fileData);
     formData.append("name", document.name);
     formData.append("categoryId", document.categoryId);
-    formData.append("categoryName", document.categoryName);
+    formData.append("categoryName", document.categoryName ?? "");
     formData.append("description", document.description);
-    formData.append("extension", document.fileData.type);
+    formData.append("extension", document.extension ?? document.fileData?.name?.split(".").pop() ?? "");
     // formData.append('isAllowDownload', document.isAllowDownload.toString());
     formData.append(
       "documentMetaDatas",
-      JSON.stringify(document.documentMetaDatas),
+      JSON.stringify(document.documentMetaDatas ?? []),
     );
     formData.append(
       "documentRolePermissions",

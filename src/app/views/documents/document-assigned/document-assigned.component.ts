@@ -1,39 +1,26 @@
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Subject } from "rxjs";
+import { Subject, of } from "rxjs";
 import {
   debounceTime,
   switchMap,
   catchError,
   tap,
-  takeUntil,
 } from "rxjs/operators";
-import { of } from "rxjs";
 import { Router } from "@angular/router";
 import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
 import { DocumentInfo } from "@app/shared/enums/document-info";
 import { DocumentOperation } from "@app/shared/enums/document-operation";
 import { DocumentResource } from "@app/shared/enums/document-resource";
 import { DocumentView } from "@app/shared/enums/document-view";
-import { DocumentVersion } from "@app/shared/enums/documentVersion";
 import { BasePreviewComponent } from "@app/shared/preview/base-preview/base-preview.component";
 import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.service";
 import { CategoryService } from "@app/shared/services/category.service";
-import { ClonerService } from "@app/shared/services/clone.service";
 import { CommonService } from "@app/shared/services/common.service";
 import { DocumentAssignedService } from "@app/shared/services/document-assigned.service";
-import { DocumentService } from "@app/shared/services/document.service";
-import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { ToastrService } from "ngx-toastr";
-import { DocumentCommentComponent } from "../document-comment/document-comment.component";
-import { DocumentEditComponent } from "../document-edit/document-edit.component";
-import { DocumentHistoryComponent } from "../document-history/document-history.component";
-import { DocumentSendEmailComponent } from "../document-send-email/document-send-email.component";
-import { DocumentShareComponent } from "../document-share/document-share.component";
-import { DocumentUploadNewVersionComponent } from "../document-upload-new-version/document-upload-new-version.component";
+import { ColumnMode } from "@swimlane/ngx-datatable";
 import { Category } from "@app/shared/enums/category";
-import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
+import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
@@ -42,31 +29,22 @@ import { TranslateService } from "@ngx-translate/core";
   styleUrls: ["./document-assigned.component.css"],
 })
 export class DocumentAssignedComponent implements OnInit, OnDestroy {
-  showMobilePanel = false;
-
-  rows: any[] = [];
-  selected = [];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
   isLoadingResults = true;
   documentResource: DocumentResource;
   categories: Category[] = [];
   allCategories: Category[] = [];
-  bsModalRef: BsModalRef;
+  ColumnMode = ColumnMode;
+
+  rows: any[] = [];
   searchSubject: Subject<void> = new Subject<void>();
-  private destroy$ = new Subject<void>();
 
   constructor(
     private documentAssignedService: DocumentAssignedService,
     private categoryService: CategoryService,
-    public clonerService: ClonerService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private overlay: OverlayPanel,
-    private documentService: DocumentService,
     private commonService: CommonService,
-    private modalService: BsModalService,
     private toastr: ToastrService,
     private translate: TranslateService,
   ) {
@@ -90,7 +68,6 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
             }),
           ),
         ),
-        takeUntil(this.destroy$),
       )
       .subscribe((res: HttpResponse<any>) => {
         if (res) {
@@ -103,13 +80,7 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.searchSubject.complete();
-  }
-
-  addDocument() {
-    this.router.navigate(["/document/add"]);
+    this.searchSubject.unsubscribe();
   }
 
   loadDocuments(data = this.documentResource) {
@@ -118,13 +89,9 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChange(event: any) {
-    if (event) {
-      this.documentResource.categoryId = event;
-    } else {
-      this.documentResource.categoryId = "";
-    }
+    this.documentResource.categoryId = event ? event : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onNameChange(event: any) {
@@ -135,24 +102,18 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
   }
 
   onTagChange(event: any) {
-    let val = event.target.value;
-    if (val) {
-      this.documentResource.metaTags = val;
-    } else {
-      this.documentResource.metaTags = "";
-    }
+    const val = event.target.value;
+    this.documentResource.metaTags = val ? val : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onDateChange(event: any) {
-    if (event) {
-      this.documentResource.createDate = new Date(event).toDateString();
-    } else {
-      this.documentResource.createDate = "";
-    }
+    this.documentResource.createDate = event
+      ? new Date(event).toDateString()
+      : "";
     this.documentResource.skip = 0;
-    this.loadDocuments(this.documentResource);
+    this.searchSubject.next();
   }
 
   onDocumentView(document: DocumentInfo) {
@@ -193,17 +154,6 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
       });
     }
     return parent;
-  }
-
-  editDocument(documentInfo: DocumentInfo) {
-    const initialState = {
-      document: documentInfo,
-      categories: this.categories,
-    };
-
-    this.bsModalRef = this.modalService.show(DocumentEditComponent, {
-      initialState,
-    });
   }
 
   private downloadFile(data: HttpResponse<Blob>, documentInfo: DocumentInfo) {
@@ -247,118 +197,6 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
     this.commonService.addDocumentAuditTrail(objDocumentAuditTrail).subscribe();
   }
 
-  onVersionHistoryClick(document: DocumentInfo): void {
-    const documentInfo = this.clonerService.deepClone<DocumentInfo>(document);
-
-    this.documentService
-      .getDocumentVersion(document.id)
-      .subscribe((documentVersions: DocumentVersion[]) => {
-        documentInfo.documentVersions = documentVersions;
-        const initialState = {
-          width: "800px",
-          maxHeight: "70vh",
-          panelClass: "full-width-dialog",
-          data: Object.assign({}, documentInfo),
-        };
-        const bsModalRef = this.modalService.show(DocumentHistoryComponent, {
-          initialState,
-        });
-      });
-  }
-
-  uploadNewVersion(document: Document) {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "full-width-dialog",
-      data: Object.assign({}, document),
-    };
-
-    const dialogRef = this.modalService.show(
-      DocumentUploadNewVersionComponent,
-      { initialState },
-    );
-
-    /* dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        this.dataSource.loadDocuments(this.documentResource);
-      }
-    }); */
-  }
-
-  sendEmail(documentInfo: DocumentInfo) {
-    const initialState = {
-      data: documentInfo,
-      width: "80vw",
-      height: "80vh",
-    };
-
-    this.modalService.show(DocumentSendEmailComponent, { initialState });
-  }
-
-  addComment(document: Document) {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "full-width-dialog",
-      data: Object.assign({}, document),
-    };
-
-    this.modalService.show(DocumentCommentComponent, { initialState });
-
-    /* dialogRef.afterClosed().subscribe((result: string) => {
-      if (result === 'loaded') {
-        this.dataSource.loadDocuments(this.documentResource);
-      }
-    }); */
-  }
-
-  onSharedSelectDocument() {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "full-width-dialog",
-      data: Object.assign({}, document),
-    };
-
-    const dialogRef = this.modalService.show(DocumentShareComponent, {
-      initialState,
-    });
-  }
-
-  deleteDocument(document: DocumentInfo) {
-    this.translate.get("DOCUMENTS.DELETE.LABEL").subscribe((translations) => {
-      this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-        class: "modal-confirm-custom",
-        initialState: {
-          title: translations.title,
-          message: translations.message,
-          button: {
-            cancel: translations.button.cancel,
-            confirm: translations.button.confirm,
-          },
-        },
-      });
-
-      this.bsModalRef.content.onClose.subscribe((result) => {
-        if (result) {
-          this.documentService.deleteDocument(document.id).subscribe(() => {
-            this.addDocumentTrail(
-              document.id,
-              DocumentOperation.Deleted.toString(),
-            );
-            this.translate
-              .get("DOCUMENTS.DELETE.TOAST.DOCUMENT_DELETED_SUCCESSFULLY")
-              .subscribe((translatedMessage: string) => {
-                this.toastr.success(translatedMessage); // Display translated message using Toastr
-              });
-            this.loadDocuments();
-          });
-        }
-      });
-    });
-  }
-
   getExpiryDate(
     maxRolePermissionEndDate: Date | any,
     maxUserPermissionEndDate: Date | any,
@@ -390,14 +228,5 @@ export class DocumentAssignedComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect({ selected }) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
-
   onActivate(event) {}
-
-  remove() {
-    this.selected = [];
-  }
 }

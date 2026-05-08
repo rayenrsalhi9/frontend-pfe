@@ -4,6 +4,7 @@ import { User } from './user';
 export enum NotificationType {
     Message = 'message',
     Reminder = 'reminder',
+    Document = 'document',
     Other = 'other'
 }
 
@@ -28,6 +29,9 @@ export class UserNotification {
     constructor(init?: Partial<UserNotification>) {
         if (init) {
             Object.assign(this, init);
+            if ((init as any).documents?.name) {
+                this.documentName = (init as any).documents.name;
+            }
             if (this.user?.id) {
                 this.userId = this.user.id;
             }

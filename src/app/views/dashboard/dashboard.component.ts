@@ -24,6 +24,7 @@ import { DocumentService } from "@app/shared/services/document.service";
 import { DocumentResource } from "@app/shared/enums/document-resource";
 import { CommonService } from "@app/shared/services/common.service";
 import { DashboardService } from "@app/shared/services/dashboard.service";
+import { CategoryService } from "@app/shared/services/category.service";
 import { environment } from "src/environments/environment";
 import { ArticleService } from "@app/shared/services/article.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -97,6 +98,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private documentService: DocumentService,
     private dashboardService: DashboardService,
+    private categoryService: CategoryService,
     private translate: TranslateService,
     private rtlService: RtlService,
   ) {
@@ -352,8 +354,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
               2,
               series.reduce((a: number, b: number) => a + b, 0),
             );
-            this.updateStatCard(3, data.length);
           }
+
+          this.categoryService.getAllCategoriesForDropDown().subscribe(
+            (categories) => this.updateStatCard(3, categories.length),
+          );
 
           this.categoriesLoaded = true;
           this.cdr.detectChanges();

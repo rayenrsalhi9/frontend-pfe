@@ -10,8 +10,7 @@ export const audit = {
         CATEGORY: "الفئة",
         OPERATION: "العملية",
         BY: "تم بواسطة",
-        TO: "تمت المشاركة مع",
-        ROLE: "الدور الممنوح",
+        SHARED_WITH: "تمت المشاركة مع",
       },
       OPERATION: {
         CREATE: "تم الإنشاء",
@@ -29,6 +28,12 @@ export const audit = {
         CATEGORY: "التصفية حسب الفئة",
         USER: "التصفية حسب المستخدم",
       },
+      SHARED_USERS_TITLE: "المستخدمون المشاركون",
+      SHARED_ROLES_TITLE: "الأدوار المشاركة",
+      USERS_COUNT: "مستخدمين",
+      ROLES_COUNT: "أدوار",
+      LOADING_ROLES: "جار تحميل تفاصيل الدور...",
+      CLOSE: "إغلاق",
       EMPTY_STATE: {
         TITLE: "لم يتم العثور على سجلات تدقيق",
         DESCRIPTION: "لا توجد أي سجلات تدقيق تطابق عوامل التصفية المحددة.",

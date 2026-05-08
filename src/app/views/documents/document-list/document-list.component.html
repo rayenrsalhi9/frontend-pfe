@@ -139,7 +139,7 @@
               <i class="feather icon-edit-2"></i>
             </button>
             <button
-              *hasClaim="'ALL_DOCUMENTS_DOWNLOAD_DOCUMENT'"
+              *ngIf="row.isAllowDownload"
               class="list-btn-action list-btn-action--download"
               (click)="downloadDocument(row)"
               [title]="'DOCUMENTS.LIST.BUTTONS.DOWNLOAD' | translate"
@@ -147,38 +147,7 @@
             >
               <i class="feather icon-download-cloud"></i>
             </button>
-            <button
-              class="list-btn-action list-btn-action--upload"
-              (click)="uploadNewVersion(row)"
-              [title]="'DOCUMENTS.LIST.BUTTONS.UPLOAD' | translate"
-              [attr.aria-label]="'DOCUMENTS.LIST.BUTTONS.UPLOAD' | translate"
-            >
-              <i class="feather icon-upload-cloud"></i>
-            </button>
-            <button
-              class="list-btn-action list-btn-action--history"
-              (click)="onVersionHistoryClick(row)"
-              [title]="'DOCUMENTS.LIST.BUTTONS.HISTORY' | translate"
-              [attr.aria-label]="'DOCUMENTS.LIST.BUTTONS.HISTORY' | translate"
-            >
-              <i class="feather icon-watch"></i>
-            </button>
-            <button
-              class="list-btn-action list-btn-action--reminder"
-              (click)="addComment(row)"
-              [title]="'DOCUMENTS.LIST.BUTTONS.COMMENT' | translate"
-              [attr.aria-label]="'DOCUMENTS.LIST.BUTTONS.COMMENT' | translate"
-            >
-              <i class="feather icon-message-square"></i>
-            </button>
-            <button
-              class="list-btn-action list-btn-action--email"
-              (click)="sendEmail(row)"
-              [title]="'DOCUMENTS.LIST.BUTTONS.EMAIL' | translate"
-              [attr.aria-label]="'DOCUMENTS.LIST.BUTTONS.EMAIL' | translate"
-            >
-              <i class="feather icon-mail"></i>
-            </button>
+
             <button
               *hasClaim="'ALL_DOCUMENTS_DELETE_DOCUMENT'"
               class="list-btn-action list-btn-action--delete"

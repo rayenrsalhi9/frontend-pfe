@@ -46,6 +46,9 @@
               <span *ngIf="notification.type === NotificationType.Reminder" class="notification-type-badge reminder">
                 {{ "NOTIFICATION.LABELS.REMINDER" | translate }}
               </span>
+              <span *ngIf="notification.type === NotificationType.Document" class="notification-type-badge document">
+                {{ "NOTIFICATION.LABELS.DOCUMENT" | translate }}
+              </span>
               <span *ngIf="isNewNotification(notification)" class="nav-notification-status-badge">
                 {{ "NOTIFICATION.LABELS.NEW" | translate }}
               </span>
@@ -61,8 +64,16 @@
           <!-- Bottom section: Message/Text -->
           <div class="nav-notification-text">
             <ng-container *ngIf="!notification.message">
-              <span class="document-name">{{ notification.documentName }}</span>:
-              <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}</span>
+              <a
+                *ngIf="notification.documentId"
+                [routerLink]="['/apps/documents']"
+                class="nav-notification-link"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="document-name">{{ notification.documentName }}</span>:
+                <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}</span>
+              </a>
+              <span *ngIf="!notification.documentId" class="document-name">{{ notification.documentName }}</span>
             </ng-container>
 
             <a

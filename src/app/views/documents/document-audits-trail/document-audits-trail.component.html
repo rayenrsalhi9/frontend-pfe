@@ -120,28 +120,125 @@
       </ngx-datatable-column>
 
       <ngx-datatable-column
-        [name]="'AUDIT.LIST.TABLE.TO' | translate"
-        prop="permissionUser"
-        [width]="180"
-      >
-        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-          <div class="list-cell-title-stack" *ngIf="value">
-            <span class="list-cell-creator">{{ value }}</span>
-            <span class="list-cell-title-stack__sub">{{ row.permissionUserEmail || row.recipientEmail }}</span>
-          </div>
-          <span class="list-cell-empty" *ngIf="!value">-</span>
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column
-        [name]="'AUDIT.LIST.TABLE.ROLE' | translate"
-        prop="permissionRole"
+        [name]="'AUDIT.LIST.TABLE.SHARED_WITH' | translate"
         [width]="140"
+        [sortable]="false"
       >
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          <span class="list-cell-date">{{ value || "-" }}</span>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="list-actions">
+            <button
+              *ngIf="hasSharedUsers(row)"
+              class="list-btn-action"
+              (click)="openSharedUsersModal(sharedUsersModal, row)"
+              title="View shared users"
+              attr.aria-label="View shared users"
+            >
+              <i class="feather icon-users"></i>
+            </button>
+            <button
+              *ngIf="hasSharedRoles(row)"
+              class="list-btn-action"
+              (click)="openSharedRolesModal(sharedRolesModal, row)"
+              title="View shared roles"
+              attr.aria-label="View shared roles"
+            >
+              <i class="feather icon-shield"></i>
+            </button>
+            <span *ngIf="!hasSharedUsers(row) && !hasSharedRoles(row)">-</span>
+          </div>
         </ng-template>
       </ngx-datatable-column>
     </ngx-datatable>
   </div>
 </div>
+
+<ng-template #sharedUsersModal>
+  <div class="elegant-modal" [style.--modal-accent-color]="'var(--primary)'">
+    <div class="modal-header-modern">
+      <div class="header-info">
+        <h5 class="modal-title-modern">{{ "AUDIT.LIST.SHARED_USERS_TITLE" | translate }}</h5>
+        <p class="modal-subtitle">{{ sharedUsersList.length }} {{ "AUDIT.LIST.USERS_COUNT" | translate }}</p>
+      </div>
+      <button type="button" class="btn-close-ghost" (click)="bsModalRef.hide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body-modern scroll-content">
+      <div *ngIf="sharedUsersList.length === 0" class="empty-state-modern">
+        <i class="feather icon-users"></i>
+        <p>{{ "TABLE_MESSAGE.EMPTY" | translate }}</p>
+      </div>
+      <div class="comments-list" *ngIf="sharedUsersList.length > 0">
+        <div *ngFor="let user of sharedUsersList" class="comment-card-modern">
+          <div class="comment-header">
+            <div class="user-meta">
+              <div class="user-avatar">
+                {{ user.name.charAt(0) }}
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="comment-date">{{ user.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer-modern">
+      <button type="button" class="btn-dismiss" (click)="bsModalRef.hide()">
+        {{ "AUDIT.LIST.CLOSE" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sharedRolesModal>
+  <div class="elegant-modal" [style.--modal-accent-color]="'var(--primary)'">
+    <div class="modal-header-modern">
+      <div class="header-info">
+        <h5 class="modal-title-modern">{{ "AUDIT.LIST.SHARED_ROLES_TITLE" | translate }}</h5>
+        <p class="modal-subtitle">{{ sharedRolesList.length }} {{ "AUDIT.LIST.ROLES_COUNT" | translate }}</p>
+      </div>
+      <button type="button" class="btn-close-ghost" (click)="bsModalRef.hide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body-modern scroll-content">
+      <div *ngIf="modalLoading" class="loading-state">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">{{ "loading" | translate }}</span>
+        </div>
+        <p>{{ "AUDIT.LIST.LOADING_ROLES" | translate }}</p>
+      </div>
+      <div *ngIf="!modalLoading && sharedRolesList.length === 0" class="empty-state-modern">
+        <i class="feather icon-shield"></i>
+        <p>{{ "TABLE_MESSAGE.EMPTY" | translate }}</p>
+      </div>
+      <div class="comments-list" *ngIf="!modalLoading && sharedRolesList.length > 0">
+        <div *ngFor="let role of sharedRolesList" class="comment-card-modern">
+          <div class="modal-stats-header" style="margin-bottom: 0.5rem; padding: 0.5rem 0;">
+            <div class="stat-group">
+              <i class="feather icon-shield" style="margin-right: 0.5rem;"></i>
+              <span class="stat-value" style="font-size: 0.95rem;">{{ role.roleName }}</span>
+            </div>
+            <span class="stat-label">{{ role.users.length }} {{ "AUDIT.LIST.USERS_COUNT" | translate }}</span>
+          </div>
+          <div *ngFor="let user of role.users" style="padding: 0.35rem 0 0.35rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="user-avatar" style="width: 28px; height: 28px; font-size: 0.65rem;">
+              {{ user.name.charAt(0) }}
+            </div>
+            <div class="user-details">
+              <span class="user-name" style="font-size: 0.85rem;">{{ user.name }}</span>
+              <span class="comment-date" style="font-size: 0.75rem;">{{ user.email }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer-modern">
+      <button type="button" class="btn-dismiss" (click)="bsModalRef.hide()">
+        {{ "AUDIT.LIST.CLOSE" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

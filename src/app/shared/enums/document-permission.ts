@@ -10,5 +10,6 @@ export class DocumentPermission {
     endDate: Date;
     user?: User;
     role?: Role;
-    type:string;
+    type: string;
+    isAllowDownload?: boolean;
 }

@@ -5,6 +5,7 @@ export const notification = {
         "NEW":"new",
         "DOC_PERMISSION_GARANTED":"Document permission granted to you",
         "REMINDER":"Reminder",
+        "DOCUMENT":"Document",
         "DOCUMENT_NAME":"Document Name",
         "SEND_MESSAGE": "send a message",
         "CHAT": "chat",

@@ -10,8 +10,7 @@ export const audit = {
         CATEGORY: "Catégorie",
         OPERATION: "Opération",
         BY: "Effectué par",
-        TO: "Partagé avec",
-        ROLE: "Rôle attribué",
+        SHARED_WITH: "Partagé avec",
       },
       OPERATION: {
         CREATE: "Créé",
@@ -29,6 +28,12 @@ export const audit = {
         CATEGORY: "Filtrer par catégorie",
         USER: "Filtrer par utilisateur",
       },
+      SHARED_USERS_TITLE: "Utilisateurs partagés",
+      SHARED_ROLES_TITLE: "Rôles partagés",
+      USERS_COUNT: "utilisateurs",
+      ROLES_COUNT: "rôles",
+      LOADING_ROLES: "Chargement des détails des rôles...",
+      CLOSE: "Fermer",
       EMPTY_STATE: {
         TITLE: "Aucun enregistrement d’audit trouvé",
         DESCRIPTION:

@@ -5,6 +5,7 @@ export const notification = {
         "NEW": "جديد",
         "DOC_PERMISSION_GARANTED": "تم منح إذن المستند لك",
         "REMINDER": "تذكير",
+        "DOCUMENT": "مستند",
         "DOCUMENT_NAME": "اسم المستند",
         "SEND_MESSAGE": "أرسل رسالة",
         "CHAT": "مراسلة",

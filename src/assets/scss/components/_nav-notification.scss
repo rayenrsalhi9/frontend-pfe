@@ -228,6 +228,11 @@ $warm-amber-bg: #fffbeb;
           background: rgba(var(--bs-info-rgb), 0.1);
           color: var(--bs-info);
         }
+
+        &.document {
+          background: rgba(var(--bs-primary-rgb), 0.1);
+          color: var(--bs-primary);
+        }
       }
 
       .nav-notification-status-badge {

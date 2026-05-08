@@ -10,8 +10,7 @@ export const audit = {
         CATEGORY: "Category",
         OPERATION: "Operation",
         BY: "Performed By",
-        TO: "Shared With",
-        ROLE: "Assigned Role",
+        SHARED_WITH: "Shared With",
       },
       OPERATION: {
         CREATE: "Created",
@@ -29,6 +28,12 @@ export const audit = {
         CATEGORY: "Filter by category",
         USER: "Filter by user",
       },
+      SHARED_USERS_TITLE: "Shared Users",
+      SHARED_ROLES_TITLE: "Shared Roles",
+      USERS_COUNT: "users",
+      ROLES_COUNT: "roles",
+      LOADING_ROLES: "Loading role details...",
+      CLOSE: "Close",
       EMPTY_STATE: {
         TITLE: "No audit records found",
         DESCRIPTION:

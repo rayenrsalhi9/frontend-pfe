@@ -6,7 +6,6 @@ export interface DocumentAuditTrail {
   createdByEmail?: string;
   createdDate?: Date;
   operationName: string;
-  permissionUser?: string;
-  permissionUserEmail?: string;
-  permissionRole?: string
+  assignToUserId?: string;
+  assignToRoleId?: string;
 }
