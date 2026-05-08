@@ -19,6 +19,13 @@ export class SurveyService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  allSurveysForDashboard(params={}): Observable<any[] | CommonError> {
+    const url = `dashboard/surveys`;
+    return this.httpClient
+      .get<any[]>(url,{params:params})
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   getSurvey(id:any): Observable<any | CommonError> {
     const url = `surveys/get/${id}`;
     return this.httpClient

@@ -47,6 +47,7 @@ describe("SurveyListComponent", () => {
   beforeEach(async () => {
     mockSurveyService = {
       allSurveys: jasmine.createSpy("allSurveys").and.returnValue(of(mockSurveys)),
+      allSurveysForDashboard: jasmine.createSpy("allSurveysForDashboard").and.returnValue(of(mockSurveys)),
       deleteSurvey: jasmine.createSpy("deleteSurvey").and.returnValue(of({})),
     };
 
@@ -106,7 +107,7 @@ describe("SurveyListComponent", () => {
     fixture.detectChanges();
     tick(350);
 
-    expect(mockSurveyService.allSurveys).toHaveBeenCalled();
+    expect(mockSurveyService.allSurveysForDashboard).toHaveBeenCalled();
     expect(component.rows.length).toBe(3);
   }));
 
@@ -150,38 +151,38 @@ describe("SurveyListComponent", () => {
   it("should search by title on onNameChange", fakeAsync(() => {
     fixture.detectChanges();
     tick(350);
-    mockSurveyService.allSurveys.calls.reset();
+    mockSurveyService.allSurveysForDashboard.calls.reset();
 
     const event = { target: { value: "test" } };
     component.onNameChange(event);
     tick(350);
 
-    expect(mockSurveyService.allSurveys).toHaveBeenCalled();
+    expect(mockSurveyService.allSurveysForDashboard).toHaveBeenCalled();
     expect(component.surveyResource.title).toBe("test");
   }));
 
   it("should filter by type on onCategoryChange", fakeAsync(() => {
     fixture.detectChanges();
     tick(350);
-    mockSurveyService.allSurveys.calls.reset();
+    mockSurveyService.allSurveysForDashboard.calls.reset();
 
     component.onCategoryChange("simple");
     tick(350);
 
-    expect(mockSurveyService.allSurveys).toHaveBeenCalled();
+    expect(mockSurveyService.allSurveysForDashboard).toHaveBeenCalled();
     expect(component.surveyResource.type).toBe("simple");
   }));
 
   it("should filter by date on onDateChange", fakeAsync(() => {
     fixture.detectChanges();
     tick(350);
-    mockSurveyService.allSurveys.calls.reset();
+    mockSurveyService.allSurveysForDashboard.calls.reset();
 
     const testDate = new Date("2026-05-15");
     component.onDateChange(testDate);
     tick(350);
 
-    expect(mockSurveyService.allSurveys).toHaveBeenCalled();
+    expect(mockSurveyService.allSurveysForDashboard).toHaveBeenCalled();
   }));
 
   /* ===========================================

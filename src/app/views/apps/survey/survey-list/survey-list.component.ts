@@ -75,7 +75,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
         debounceTime(300),
         tap(() => (this.isLoadingResults = true)),
         switchMap(() =>
-          this.surveyService.allSurveys(this.surveyResource).pipe(
+          this.surveyService.allSurveysForDashboard(this.surveyResource).pipe(
             catchError((err) => {
               console.error(err);
               this.isLoadingResults = false;
