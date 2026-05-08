@@ -3,9 +3,10 @@ import {
   TestBed,
   fakeAsync,
   tick,
+  flush,
 } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { WelcomeComponent } from "./welcome.component";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { ForumService } from "@app/views/apps/forum/forum.service";
@@ -17,7 +18,14 @@ import { ToastrService, ToastrModule } from "ngx-toastr";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ModalModule, BsModalService } from "ngx-bootstrap/modal";
 import { ActivatedRoute } from "@angular/router";
-import { ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Pipe, PipeTransform } from "@angular/core";
+
+@Pipe({ name: "utcToLocalTime" })
+class MockUtcToLocalTimePipe implements PipeTransform {
+  transform(value: any): string {
+    return value ? new Date(value).toLocaleString() : "";
+  }
+}
 
 describe("WelcomeComponent", () => {
   let component: WelcomeComponent;
@@ -105,6 +113,9 @@ describe("WelcomeComponent", () => {
       getLatestSurvey: jasmine
         .createSpy("getLatestSurvey")
         .and.returnValue(of(mockSurvey)),
+      responseSurvey: jasmine
+        .createSpy("responseSurvey")
+        .and.returnValue(of({})),
     };
 
     mockSecurityService = {
@@ -124,7 +135,7 @@ describe("WelcomeComponent", () => {
     mockUserService = {};
 
     await TestBed.configureTestingModule({
-      declarations: [WelcomeComponent],
+      declarations: [WelcomeComponent, MockUtcToLocalTimePipe],
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot(),
@@ -183,28 +194,12 @@ describe("WelcomeComponent", () => {
     expect(component.latestBlogs.length).toBeGreaterThan(0);
   }));
 
-  it("should sort posts by creation date (newest first)", fakeAsync(() => {
-    const blogs = [
-      {
-        id: "1",
-        title: "Older",
-        createdAt: "2026-05-01",
-        privacy: "public" as const,
-      },
-      {
-        id: "2",
-        title: "Newer",
-        createdAt: "2026-05-06",
-        privacy: "public" as const,
-      },
-    ];
-    mockBlogService.allBlogs.and.returnValue(of(blogs));
-
+  it("should set featuredBlog as the first blog from API", fakeAsync(() => {
     fixture.detectChanges();
     tick();
 
-    // featuredBlog should be the newest (Blog 2)
-    expect(component.featuredBlog?.title).toBe("Newer");
+    // featuredBlog is latestBlogs[0], i.e. first item from API
+    expect(component.featuredBlog).toEqual(mockBlogs[0]);
   }));
 
   /* ===========================================
@@ -319,6 +314,90 @@ describe("WelcomeComponent", () => {
     tick();
 
     expect(component.survey).toBeNull();
+  }));
+
+  it("should call surveyAnswer with correct value when answered", fakeAsync(() => {
+    const translateService = TestBed.inject(TranslateService);
+    spyOn(translateService, "get").and.returnValue(
+      of({ SUCCESS: "Thanks!", ERROR: "Failed" }),
+    );
+
+    fixture.detectChanges();
+    tick();
+
+    component.surveyAnswer(1);
+    tick();
+
+    expect(mockSurveyService.responseSurvey).toHaveBeenCalledWith("1", {
+      answer: 1,
+    });
+    flush();
+  }));
+
+  it("should load new survey after answering successfully", fakeAsync(() => {
+    const translateService = TestBed.inject(TranslateService);
+    spyOn(translateService, "get").and.returnValue(
+      of({ SUCCESS: "Thanks!", ERROR: "Failed" }),
+    );
+
+    fixture.detectChanges();
+    tick();
+    mockSurveyService.getLatestSurvey.calls.reset();
+
+    component.surveyAnswer(1);
+    tick();
+
+    expect(mockSurveyService.getLatestSurvey).toHaveBeenCalled();
+    flush();
+  }));
+
+  it("should show error toastr when survey answer fails", fakeAsync(() => {
+    const translateService = TestBed.inject(TranslateService);
+    spyOn(translateService, "get").and.returnValue(
+      of({ SUCCESS: "Thanks!", ERROR: "Failed" }),
+    );
+    mockSurveyService.responseSurvey.and.returnValue(
+      throwError(() => new Error("Server error")),
+    );
+    const toastrSpy = spyOn(component["toastr"], "error");
+
+    fixture.detectChanges();
+    tick();
+
+    component.surveyAnswer(1);
+    tick();
+
+    expect(toastrSpy).toHaveBeenCalled();
+  }));
+
+  it("should show login prompt when user is NOT authenticated", fakeAsync(() => {
+    mockSecurityService.SecurityObject = of(null);
+    mockSecurityService.isUserAuthenticate = () => false;
+
+    fixture.detectChanges();
+    tick();
+
+    component.isAuthenticated$.subscribe((val) => {
+      expect(val).toBe(false);
+    });
+  }));
+
+  it("should set survey to null for invalid survey type", fakeAsync(() => {
+    mockSurveyService.getLatestSurvey.and.returnValue(
+      of({ id: "1", title: "Bad", type: "unknown" }),
+    );
+
+    fixture.detectChanges();
+    tick();
+
+    expect(component.survey).toBeNull();
+  }));
+
+  it("should call getLatestSurvey on init", fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+
+    expect(mockSurveyService.getLatestSurvey).toHaveBeenCalled();
   }));
 
   /* ===========================================

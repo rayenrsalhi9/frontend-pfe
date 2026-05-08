@@ -1,73 +1,63 @@
-<div class="add-form-page" *ngIf="!isLoading">
-  <div class="add-form-container">
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">
-        {{ (isEdit ? "EDIT.SURVEY.TITLE" : "ADD.SURVEY.TITLE") | translate }}
-      </h1>
-      <p class="page-sub">
-        {{
-          (isEdit ? "EDIT.SURVEY.DESCRIPTION" : "ADD.SURVEY.DESCRIPTION")
-            | translate
-        }}
-      </p>
-    </div>
+<div class="af-page" *ngIf="!isLoading">
+  <div class="af-container">
+    <!-- ── Page header ──────────────────────────────────────── -->
+    <header class="af-header">
+      <div class="af-header-left">
+        <p class="af-eyebrow">
+          {{
+            (isEdit ? "EDIT.SURVEY.EYEBROW" : "ADD.SURVEY.EYEBROW") | translate
+          }}
+        </p>
+        <h1 class="af-title">
+          {{ (isEdit ? "EDIT.SURVEY.TITLE" : "ADD.SURVEY.TITLE") | translate }}
+        </h1>
+        <p class="af-desc">
+          {{
+            (isEdit ? "EDIT.SURVEY.DESCRIPTION" : "ADD.SURVEY.DESCRIPTION")
+              | translate
+          }}
+        </p>
+      </div>
+    </header>
 
-    <!-- Form Card -->
-    <div class="form-card">
-      <form [formGroup]="surveyForm" class="form-body">
-        <!-- ── Basic Info ─────────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
+    <!-- ── Form card ────────────────────────────────────────── -->
+    <div class="af-card">
+      <form [formGroup]="surveyForm" class="af-form">
+        <!-- ══ Basic info ═════════════════════════════════════ -->
+        <div class="af-section">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}</span>
           </div>
 
           <!-- Title -->
-          <div class="field">
-            <label class="field-label" for="title">
+          <div class="af-field">
+            <label class="af-label" for="title">
               {{ "ADD.SURVEY.LABELS.TITLE" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <input
               type="text"
               id="title"
               formControlName="title"
-              class="field-input"
-              [class.has-error]="isSurveyFieldInvalid('title')"
-
+              class="af-input"
+              [class.af-input--error]="isSurveyFieldInvalid('title')"
               [placeholder]="'ADD.SURVEY.PLACEHOLDERS.TITLE' | translate"
             />
-            <div class="field-error" *ngIf="isSurveyFieldInvalid('title')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {{ "ADD.SURVEY.ERRORS.TITLE_REQUIRED" | translate }}
+            <div class="af-field-error" *ngIf="isSurveyFieldInvalid('title')">
+              <i class="feather icon-alert-circle"></i>
+              {{ titleErrorMessage | translate }}
             </div>
           </div>
 
           <!-- Type -->
-          <div class="field">
-            <label class="field-label" for="type">
+          <div class="af-field">
+            <label class="af-label" for="type">
               {{ "ADD.SURVEY.LABELS.TYPE" | translate }}
-              <span class="required-mark">*</span>
+              <span class="af-required">*</span>
             </label>
             <ng-select
               formControlName="type"
               [class.has-error]="isSurveyFieldInvalid('type')"
-
               [placeholder]="'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate"
               [searchable]="false"
               [labelForId]="'type'"
@@ -76,105 +66,94 @@
                 {{ "SURVEY.OPTION." + type.toUpperCase() | translate }}
               </ng-option>
             </ng-select>
-            <div class="field-error" *ngIf="isSurveyFieldInvalid('type')">
-
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {{ "ADD.SURVEY.ERRORS.TYPE_REQUIRED" | translate }}
+            <div class="af-field-error" *ngIf="isSurveyFieldInvalid('type')">
+              <i class="feather icon-alert-circle"></i>
+              {{ typeErrorMessage | translate }}
             </div>
           </div>
         </div>
 
-        <!-- ── Settings ──────────────────────────── -->
-        <div class="form-section last">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "ADD.SHARED.LABELS.SETTINGS" | translate }}
+        <!-- ══ Settings ═══════════════════════════════════════ -->
+        <div class="af-section af-section--last">
+          <div class="af-section-label">
+            <span>{{ "ADD.SHARED.LABELS.SETTINGS" | translate }}</span>
           </div>
 
-          <!-- Private Toggle -->
-          <div class="field">
-            <div class="toggle-row">
-              <label class="toggle-track" for="private">
+          <!-- Private toggle -->
+          <div class="af-field">
+            <div class="af-toggle-row">
+              <label class="af-toggle-track" for="private">
                 <input
                   type="checkbox"
                   id="private"
                   formControlName="private"
-                  class="toggle-input"
+                  class="af-toggle-input"
                   [attr.aria-labelledby]="'private-title'"
                   [attr.aria-describedby]="'private-desc'"
                 />
-                <span class="toggle-thumb"></span>
+                <span class="af-toggle-thumb"></span>
               </label>
-              <div class="toggle-info">
-                <div class="toggle-title" id="private-title">
+              <div class="af-toggle-info">
+                <div class="af-toggle-title" id="private-title">
                   {{ "ADD.SURVEY.LABELS.PRIVATE" | translate }}
                 </div>
-                <div class="toggle-desc" id="private-desc">
+                <div class="af-toggle-desc" id="private-desc">
                   {{ "ADD.SURVEY.HINTS.PRIVATE" | translate }}
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Allowed Users (conditional) -->
-          <div
-            class="field animate-fade-in"
-            *ngIf="surveyForm.get('private')?.value"
-          >
-            <label class="field-label" for="users">
+          <!-- Allowed users (shown when private) -->
+          <div class="af-field" *ngIf="surveyForm.get('private')?.value">
+            <label class="af-label" for="users">
               {{ "ADD.SHARED.LABELS.USERS" | translate }}
-              <span class="optional-mark">{{
+              <span class="af-optional">{{
                 "ADD.SHARED.LABELS.OPTIONAL" | translate
               }}</span>
             </label>
             <ng-select
+              id="users"
               formControlName="users"
               [multiple]="true"
               [placeholder]="'ADD.SHARED.PLACEHOLDERS.USERS' | translate"
-              [labelForId]="'users'"
-              [compareWith]="compareUsersById"
             >
-              <ng-option *ngFor="let user of users" [value]="user">
+              <ng-option *ngFor="let user of users" [value]="user.id">
                 {{ user.firstName }} {{ user.lastName }}
               </ng-option>
-              <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <button type="button" class="ng-value-icon left" (click)="clear(item)" (keydown.enter)="clear(item); $event.preventDefault()" (keydown.space)="clear(item); $event.preventDefault()" [attr.aria-label]="'Remove ' + item.firstName + ' ' + item.lastName" style="margin-right: 5px;">&times;</button>
-                <span>{{ item.firstName }} {{ item.lastName }}</span>
-              </ng-template>
             </ng-select>
-
           </div>
         </div>
       </form>
 
-      <!-- Footer -->
-      <div class="form-footer">
-        <span class="footer-note">
-          {{ "ADD.SURVEY.HINTS.REQUIRED_FIELDS" | translate }}
-        </span>
-        <div class="footer-actions">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+      <!-- ── Footer ─────────────────────────────────────────── -->
+      <div class="af-footer">
+        <span class="af-footer-note">{{
+          "ADD.SURVEY.HINTS.REQUIRED_FIELDS" | translate
+        }}</span>
+        <div class="af-footer-actions">
+          <button
+            type="button"
+            class="af-btn af-btn--cancel"
+            (click)="onCancel()"
+          >
+            <i class="feather icon-x"></i>
             {{ "ADD.SURVEY.BUTTONS.CANCEL" | translate }}
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="af-btn af-btn--submit"
             (click)="onSubmit()"
-            [disabled]="isLoading"
+            [disabled]="
+              surveyForm.invalid || isLoading || (isEdit && !surveyForm.dirty)
+            "
           >
+            <i
+              class="feather"
+              [ngClass]="
+                isLoading ? 'icon-loader' : isEdit ? 'icon-check' : 'icon-send'
+              "
+            ></i>
             {{
               (isEdit ? "EDIT.SHARED.BUTTONS.SAVE" : "ADD.SURVEY.BUTTONS.SAVE")
                 | translate
@@ -186,12 +165,12 @@
   </div>
 </div>
 
-<!-- Loading skeleton -->
-<div class="add-form-skeleton" *ngIf="isLoading">
-  <div class="skeleton-title"></div>
-  <div class="skeleton-card">
-    <div class="skeleton-line wide"></div>
-    <div class="skeleton-line medium"></div>
-    <div class="skeleton-line short"></div>
+<!-- ── Loading skeleton ─────────────────────────────────────── -->
+<div class="af-skeleton" *ngIf="isLoading">
+  <div class="af-skeleton-header"></div>
+  <div class="af-skeleton-card">
+    <div class="af-skeleton-line af-skeleton-line--wide"></div>
+    <div class="af-skeleton-line af-skeleton-line--mid"></div>
+    <div class="af-skeleton-line af-skeleton-line--short"></div>
   </div>
 </div>
