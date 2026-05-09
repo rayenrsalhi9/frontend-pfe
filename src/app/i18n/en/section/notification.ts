@@ -3,7 +3,7 @@ export const notification = {
       "LABELS":{
         "TITLE":"Notifications",
         "NEW":"new",
-        "DOC_PERMISSION_GARANTED":"Document permission granted to you",
+        "DOC_PERMISSION_GRANTED":"Document permission granted to you",
         "REMINDER":"Reminder",
         "DOCUMENT":"Document",
         "DOCUMENT_NAME":"Document Name",

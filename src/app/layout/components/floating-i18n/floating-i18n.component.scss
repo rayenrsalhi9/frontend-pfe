@@ -313,6 +313,12 @@ $amber-dark: #92400e;
   animation: i18n-pulse 3s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .i18n-widget:not(:hover) .i18n-trigger {
+    animation: none;
+  }
+}
+
 // ============================================================================
 // RESPONSIVE — Mobile ≤640px
 // ============================================================================

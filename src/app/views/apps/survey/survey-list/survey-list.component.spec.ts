@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick, flush } from "@angular/core
 import { FormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { of, Subject } from "rxjs";
 import { SurveyListComponent } from "./survey-list.component";
@@ -77,6 +78,7 @@ describe("SurveyListComponent", () => {
       imports: [
         FormsModule,
         RouterTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
       ],

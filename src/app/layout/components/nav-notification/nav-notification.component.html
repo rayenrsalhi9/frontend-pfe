@@ -63,7 +63,7 @@
 
           <!-- Bottom section: Message/Text -->
           <div class="nav-notification-text">
-            <ng-container *ngIf="!notification.message">
+            <ng-container *ngIf="notification.message || notification.documentId">
               <a
                 *ngIf="notification.documentId"
                 [routerLink]="['/apps/documents']"
@@ -71,9 +71,9 @@
                 (click)="$event.stopPropagation()"
               >
                 <span class="document-name">{{ notification.documentName }}</span>:
-                <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}</span>
+                <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GRANTED" | translate }}</span>
               </a>
-              <span *ngIf="!notification.documentId" class="document-name">{{ notification.documentName }}</span>
+              <span *ngIf="!notification.documentId && !notification.message" class="document-name">{{ notification.documentName }}</span>
             </ng-container>
 
             <a

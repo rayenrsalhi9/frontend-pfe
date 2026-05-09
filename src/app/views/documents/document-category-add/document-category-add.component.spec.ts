@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { ReactiveFormsModule } from "@angular/forms";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 import { DocumentCategoryAddComponent } from "./document-category-add.component";
@@ -10,7 +11,7 @@ describe("DocumentCategoryAddComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, ReactiveFormsModule],
       declarations: [DocumentCategoryAddComponent],
       providers: [BsModalRef],
     }).compileComponents();

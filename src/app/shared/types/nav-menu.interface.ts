@@ -9,4 +9,5 @@ export interface NavMenu {
   submenu: NavMenu[];
   key: string;
   claims?: string[];
+  alwaysVisible?: boolean;
 }

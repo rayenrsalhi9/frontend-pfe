@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModalModule } from "ngx-bootstrap/modal";
+import { TranslateModule } from "@ngx-translate/core";
 
 import { ArticleComponent } from "./article.component";
 
@@ -15,6 +16,7 @@ describe("ArticleComponent", () => {
         HttpClientTestingModule,
         RouterTestingModule,
         ModalModule.forRoot(),
+        TranslateModule.forRoot(),
       ],
       declarations: [ArticleComponent],
     }).compileComponents();

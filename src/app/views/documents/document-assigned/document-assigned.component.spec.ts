@@ -3,6 +3,7 @@ import { ChangeDetectorRef, NO_ERRORS_SCHEMA, Pipe, PipeTransform } from "@angul
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { of } from "rxjs";
@@ -57,6 +58,7 @@ describe("DocumentAssignedComponent", () => {
         FormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
       ],

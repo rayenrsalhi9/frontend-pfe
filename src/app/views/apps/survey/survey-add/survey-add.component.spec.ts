@@ -8,6 +8,7 @@ import {
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { of, throwError } from "rxjs";
@@ -98,6 +99,7 @@ describe("SurveyAddComponent", () => {
         ReactiveFormsModule,
         FormsModule,
         RouterTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
         NgSelectModule,

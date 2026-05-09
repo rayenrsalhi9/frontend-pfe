@@ -7,6 +7,7 @@ import {
 } from "@angular/core/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -98,6 +99,7 @@ describe("ForumAddComponent", () => {
         ReactiveFormsModule,
         FormsModule,
         RouterTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
         NgSelectModule,

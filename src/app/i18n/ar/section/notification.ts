@@ -3,7 +3,7 @@ export const notification = {
       "LABELS": {
         "TITLE": "الإشعارات",
         "NEW": "جديد",
-        "DOC_PERMISSION_GARANTED": "تم منح إذن المستند لك",
+        "DOC_PERMISSION_GRANTED": "تم منح إذن المستند لك",
         "REMINDER": "تذكير",
         "DOCUMENT": "مستند",
         "DOCUMENT_NAME": "اسم المستند",

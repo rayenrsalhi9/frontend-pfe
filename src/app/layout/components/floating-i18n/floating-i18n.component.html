@@ -6,9 +6,9 @@
     [attr.aria-expanded]="isMenuOpen"
     aria-haspopup="listbox"
     aria-controls="i18n-menu"
-    [attr.aria-label]="'Language selector'"
+    [attr.aria-label]="ariaLabel"
   >
-    <i class="feather icon-globe i18n-globe"></i>
+    <i class="feather icon-globe i18n-globe" aria-hidden="true"></i>
   </button>
 
   <span class="i18n-badge">{{ getLanguageCode(currentLang || "en") }}</span>
@@ -36,7 +36,7 @@
         <span class="i18n-lang-name">
           {{ "LANG." + getLanguageCode(language.key) | translate }}
         </span>
-        <i class="feather icon-check i18n-check"></i>
+        <i class="feather icon-check i18n-check" aria-hidden="true"></i>
       </button>
     </div>
   </div>

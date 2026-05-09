@@ -17,6 +17,7 @@ import { NgxEmojiPickerModule } from "ngx-emoji-picker";
 import { GedBrandComponent } from "./components/brand/brand.component";
 import { LogoModule } from "./components/logo/logo.module";
 import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-modal.component";
+import { CategoryManageFormComponent } from "./components/category-manage-form/category-manage-form.component";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     ConfirmModalComponent,
     GedBrandComponent,
     SusbcribeModalComponent,
+    CategoryManageFormComponent,
   ],
   exports: [
     CommonModule,
@@ -47,6 +49,7 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     ConfirmModalComponent,
     GedBrandComponent,
     SusbcribeModalComponent,
+    CategoryManageFormComponent,
 
     OverlayModule,
     NgxEmojiPickerModule,

@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -61,6 +62,7 @@ describe("DocumentAddComponent", () => {
         NgSelectModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
       ],

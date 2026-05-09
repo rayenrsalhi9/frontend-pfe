@@ -41,7 +41,11 @@ export class DocumentService {
     formData.append("categoryId", document.categoryId);
     formData.append("categoryName", document.categoryName ?? "");
     formData.append("description", document.description);
-    formData.append("extension", document.extension ?? document.fileData?.name?.split(".").pop() ?? "");
+    const extension = document.extension ?? (() => {
+      const dotIndex = document.fileData?.name?.lastIndexOf('.') ?? -1;
+      return dotIndex > -1 ? document.fileData.name.substring(dotIndex + 1) : '';
+    })();
+    formData.append("extension", extension);
     // formData.append('isAllowDownload', document.isAllowDownload.toString());
     formData.append(
       "documentMetaDatas",

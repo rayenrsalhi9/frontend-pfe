@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, Input, NO_ERRORS_SCHEMA, Pipe, PipeTransf
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -67,6 +68,7 @@ describe("DocumentListComponent", () => {
         ReactiveFormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
       ],

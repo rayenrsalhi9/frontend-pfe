@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { of, throwError } from "rxjs";
 import { SurveyDetailComponent } from "./survey-detail.component";
@@ -64,6 +65,7 @@ describe("SurveyDetailComponent", () => {
       declarations: [SurveyDetailComponent, MockUtcToLocalTimePipe],
       imports: [
         RouterTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
       ],

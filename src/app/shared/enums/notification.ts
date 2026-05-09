@@ -8,14 +8,22 @@ export enum NotificationType {
     Other = 'other'
 }
 
+export interface UserNotificationInit {
+    id?: string;
+    userId?: string;
+    message: string;
+    createdDate: Date;
+    documentName?: string;
+    documentId?: string;
+    isRead: boolean;
+    document?: DocumentInfo;
+    type?: NotificationType;
+    user?: User;
+    documents?: { name?: string };
+}
+
 export class UserNotification {
     id?: string;
-    /**
-     * userId is the canonical identifier (source-of-truth).
-     * user is an optional denormalized object/cached payload.
-     * When user is provided, userId should match user.id.
-     * Use user?.firstName for templates, but rely on userId for identification.
-     */
     userId?: string;
     message: string;
     createdDate: Date;
@@ -26,11 +34,11 @@ export class UserNotification {
     type?: NotificationType;
     user?: User;
 
-    constructor(init?: Partial<UserNotification>) {
+    constructor(init?: UserNotificationInit) {
         if (init) {
             Object.assign(this, init);
-            if ((init as any).documents?.name) {
-                this.documentName = (init as any).documents.name;
+            if (init.documents?.name) {
+                this.documentName = init.documents.name;
             }
             if (this.user?.id) {
                 this.userId = this.user.id;

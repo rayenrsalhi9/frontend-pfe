@@ -83,6 +83,7 @@ describe("DocumentService", () => {
     it("should filter out empty metatags before sending", () => {
       const doc: DocumentInfo = {
         name: "New Doc", categoryId: "cat1", description: "Desc",
+        fileData: new File(["test"], "test.pdf"),
         documentMetaDatas: [{ metatag: "good" }, { metatag: "" }],
         documentRolePermissions: [],
         documentUserPermissions: [],
@@ -135,6 +136,32 @@ describe("DocumentService", () => {
       expect(req.request.params.get("skip")).toBe("0");
       expect(req.request.params.get("createDateString")).toBeTruthy();
       req.flush([]);
+    });
+  });
+
+  describe("getDocumentByExtension", () => {
+    it("should send GET request to dashboard/extension", () => {
+      const mockResponse = [{ name: "pdf" }, { name: "docx" }];
+      service.getDocumentByExtension().subscribe((res) => {
+        expect(res).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne("dashboard/extension");
+      expect(req.request.method).toBe("GET");
+      req.flush(mockResponse);
+    });
+  });
+
+  describe("documentTransaction", () => {
+    it("should send GET request to dashboard/transactions", () => {
+      const mockResponse = [{ id: "1", name: "Doc1" }];
+      service.documentTransaction().subscribe((res) => {
+        expect(res).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne("dashboard/transactions");
+      expect(req.request.method).toBe("GET");
+      req.flush(mockResponse);
     });
   });
 });

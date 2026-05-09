@@ -83,7 +83,7 @@ export class VerticalMenuContentComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    if (item.claims.includes("show")) {
+    if (item.alwaysVisible) {
       return true;
     }
 

@@ -161,11 +161,12 @@ export class ForumListComponent implements OnInit, OnDestroy {
               this.translateService.get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY"),
             ),
             tap((msg: string) => this.toastr.success(msg)),
-            catchError(() =>
-              this.translateService
+            catchError((err) => {
+              console.error('Forum delete failed:', err);
+              return this.translateService
                 .get("FORUM.DELETE.TOAST.DELETED_ERROR")
-                .pipe(tap((msg) => this.toastr.error(msg))),
-            ),
+                .pipe(tap((msg) => this.toastr.error(msg)));
+            }),
           )
           .subscribe();
       });

@@ -26,12 +26,18 @@ export const category = {
       BUTTONS: {
         CATEGORY_SAVE: "Save",
         CATEGORY_CANCEL: "Cancel",
+        SAVE: "Save",
       },
       ERROR: {
         CATEGORY_NAME_IS_REQUIRED: "Category name is required.",
       },
       TOAST: {
         CATEGORY_SAVED_SUCCESSFULLY: "Category saved successfully.",
+      },
+    },
+    EDIT: {
+      BUTTONS: {
+        SAVE: "Save",
       },
     },
     DELETE: {

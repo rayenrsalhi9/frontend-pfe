@@ -14,6 +14,7 @@ import { ArticleService } from "@app/shared/services/article.service";
 import { UserService } from "@app/shared/services/user.service";
 import { SurveyService } from "@app/views/apps/survey/survey.service";
 import { SecurityService } from "@app/core/security/security.service";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ModalModule, BsModalService } from "ngx-bootstrap/modal";
@@ -138,6 +139,7 @@ describe("WelcomeComponent", () => {
       declarations: [WelcomeComponent, MockUtcToLocalTimePipe],
       imports: [
         HttpClientTestingModule,
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         ToastrModule.forRoot(),
         ModalModule.forRoot(),

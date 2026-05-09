@@ -26,12 +26,18 @@ export const category = {
       BUTTONS: {
         CATEGORY_SAVE: "حفظ",
         CATEGORY_CANCEL: "إلغاء",
+        SAVE: "حفظ",
       },
       ERROR: {
         CATEGORY_NAME_IS_REQUIRED: "اسم الفئة مطلوب.",
       },
       TOAST: {
         CATEGORY_SAVED_SUCCESSFULLY: "تم حفظ الفئة بنجاح.",
+      },
+    },
+    EDIT: {
+      BUTTONS: {
+        SAVE: "حفظ",
       },
     },
     DELETE: {
