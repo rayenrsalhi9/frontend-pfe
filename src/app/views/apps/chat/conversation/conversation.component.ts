@@ -492,6 +492,11 @@ export class ConversationComponent
     return parts.join(" ");
   }
 
+  isSenderRemoved(senderId: string | number | undefined): boolean {
+    if (!senderId || !this.conversation?.users) return false;
+    return !this.conversation.users.some((u) => u.id === senderId);
+  }
+
   private playAudio(src: string) {
     try {
       const audio = new Audio(src);

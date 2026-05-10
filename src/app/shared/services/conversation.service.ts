@@ -49,9 +49,14 @@ export class ConversationService {
   }
 
   getConversations(page: number = 1, perPage: number = 20): Observable<any> {
-    const url = `conversations?page=${page}&per_page=${perPage}`;
+    const url = `conversations`;
     return this.httpClient
-      .get<any>(url)
+      .get<any>(url, {
+        params: {
+          page: page.toString(),
+          per_page: perPage.toString(),
+        },
+      })
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 

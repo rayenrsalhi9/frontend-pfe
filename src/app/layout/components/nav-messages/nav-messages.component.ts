@@ -63,9 +63,8 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           const allConversations = Array.isArray(data.data) ? data.data : [];
-          
           this.conversations = allConversations.filter(
-            (c: Conversation) => !!c.lastMessage && (!c.title && (!c.users || c.users.length <= 2))
+            (c: Conversation) => !!c.lastMessage
           );
           this.isLoading = false;
           this.cdr.markForCheck();
@@ -75,6 +74,36 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  isGroupConversation(conversation: Conversation): boolean {
+    return !!(conversation.title || (conversation.users && conversation.users.length > 2));
+  }
+
+  getConversationAvatars(conversation: Conversation): { url: string; tooltip: string }[] {
+    const users = conversation.users || [];
+    const result: { url: string; tooltip: string }[] = [];
+    const avatarUrl = environment.apiUrl;
+    const defaultAvatar = "/assets/images/avatars/thumb-16.jpg";
+
+    if (conversation.title || users.length > 2) {
+      for (let i = 0; i < Math.min(users.length, 4); i++) {
+        result.push({
+          url: users[i].avatar ? avatarUrl + users[i].avatar : defaultAvatar,
+          tooltip: `${users[i].firstName} ${users[i].lastName}`
+        });
+      }
+    } else if (users.length === 2) {
+      const otherUser = users.find(u => u.id !== this.currentUserId);
+      if (otherUser) {
+        result.push({
+          url: otherUser.avatar ? avatarUrl + otherUser.avatar : defaultAvatar,
+          tooltip: `${otherUser.firstName} ${otherUser.lastName}`
+        });
+      }
+    }
+
+    return result;
   }
 
   getAvatarUrl(user: User | undefined): string {
@@ -112,6 +141,9 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
 
   getLastMessageContent(conversation: Conversation): string {
     if (!conversation.lastMessage) return "";
+    if (conversation.lastMessage.type === "reaction") {
+      return conversation.lastMessage.content || "";
+    }
     if (conversation.lastMessage.type !== "msg") {
       return this.translateService.instant("MESSAGES.LABELS.FILE_SENT");
     }

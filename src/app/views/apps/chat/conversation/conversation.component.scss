@@ -310,6 +310,12 @@ $amber-dark: #92400e;
   &--sent {
     justify-content: flex-end;
   }
+  &--removed {
+    opacity: 0.55;
+    .conv-msg-avatar {
+      filter: grayscale(1);
+    }
+  }
 }
 
 // ─── Sender avatar ────────────────────────────────────────────────────────────

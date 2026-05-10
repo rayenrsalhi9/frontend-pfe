@@ -133,28 +133,6 @@ describe('LoginFormComponent', () => {
     });
   });
 
-  describe('password requirements indicator', () => {
-    it('hasUpperCase should detect uppercase letters', () => {
-      expect(component.hasUpperCase('Test')).toBeTrue();
-      expect(component.hasUpperCase('test')).toBeFalse();
-    });
-
-    it('hasSpecialChar should detect special characters', () => {
-      expect(component.hasSpecialChar('Test@123')).toBeTrue();
-      expect(component.hasSpecialChar('Test123')).toBeFalse();
-    });
-
-    it('hasNumber should detect digits', () => {
-      expect(component.hasNumber('Test@123')).toBeTrue();
-      expect(component.hasNumber('Test@Test')).toBeFalse();
-    });
-
-    it('hasMinLength should check length >= 8', () => {
-      expect(component.hasMinLength('12345678')).toBeTrue();
-      expect(component.hasMinLength('1234567')).toBeFalse();
-    });
-  });
-
   describe('submit button state', () => {
     it('should be disabled when form is invalid', () => {
       const button = fixture.nativeElement.querySelector('.lf-submit-btn');

@@ -164,18 +164,20 @@
   <!-- ══ MESSAGE BODY ════════════════════════════════════════ -->
   <perfect-scrollbar *ngIf="chatId" class="conv-body" #chatPS>
     <div class="conv-messages" *ngIf="conversation">
-      <div
-        class="conv-msg"
-        *ngFor="let msg of conversation.messages"
-        [class.conv-msg--recv]="msg.sender?.id !== user.id"
-        [class.conv-msg--sent]="msg.sender?.id === user.id"
-      >
+      <ng-container *ngFor="let msg of conversation.messages">
+        <div
+          class="conv-msg"
+          *ngIf="msg.type !== 'reaction'"
+          [class.conv-msg--recv]="msg.sender?.id !== user.id"
+          [class.conv-msg--sent]="msg.sender?.id === user.id"
+          [class.conv-msg--removed]="isSenderRemoved(msg.sender?.id)"
+        >
         <!-- Sender avatar (received only) -->
         <div class="conv-msg-avatar" *ngIf="msg.sender?.id !== user.id">
           <avatar
             [icon]="'feather icon-user'"
             [src]="
-              msg.sender?.avatar
+              !isSenderRemoved(msg.sender?.id) && msg.sender?.avatar
                 ? getHost() + msg.sender.avatar
                 : '/assets/images/avatars/thumb-16.jpg'
             "
@@ -185,7 +187,7 @@
 
         <!-- Bubble + seen container -->
         <div class="conv-bubble-wrap">
-          <div class="conv-react-wrap" dropdown [container]="'body'" [dropup]="true">
+          <div class="conv-react-wrap" dropdown [container]="'body'" [dropup]="true" *ngIf="msg.type !== 'reaction' && !isSenderRemoved(msg.sender?.id)">
             <button
               type="button"
               class="conv-react-btn"
@@ -307,6 +309,7 @@
           </div>
         </div>
       </div>
+    </ng-container>
     </div>
   </perfect-scrollbar>
 

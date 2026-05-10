@@ -100,9 +100,12 @@ export class ChatComponent implements OnInit, OnDestroy {
               });
             return;
           }
-          this.users = response;
-          this.usersTemp = response;
-          this.filteredUsers = response;
+          const sorted = (response as User[]).sort((a, b) =>
+            `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)
+          );
+          this.users = sorted;
+          this.usersTemp = sorted;
+          this.filteredUsers = sorted;
           this.cdr.markForCheck();
         },
         error: () => {
@@ -608,5 +611,16 @@ export class ChatComponent implements OnInit, OnDestroy {
       conversation.lastMessage.isRead == null &&
       conversation.lastMessage.sender?.id !== this.user.id
     );
+  }
+
+  getLastMessageContent(conversation: Conversation): string {
+    if (!conversation.lastMessage) return "";
+    if (conversation.lastMessage.type === "reaction") {
+      return conversation.lastMessage.content || "";
+    }
+    if (conversation.lastMessage.type !== "msg") {
+      return this.translateService.instant("CHAT.LABELS.FILE_SENT");
+    }
+    return conversation.lastMessage.content || "";
   }
 }

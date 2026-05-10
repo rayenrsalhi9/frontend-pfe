@@ -83,11 +83,7 @@
                     <ng-container
                       *ngIf="conversation.lastMessage; else noMsgTpl"
                     >
-                      {{
-                        conversation.lastMessage.type !== "msg"
-                          ? ("CHAT.LABELS.FILE_SENT" | translate)
-                          : conversation.lastMessage.content
-                      }}
+                      {{ getLastMessageContent(conversation) }}
                     </ng-container>
                     <ng-template #noMsgTpl>{{
                       "CHAT.LABELS.NO_MESSAGES_YET" | translate
@@ -167,11 +163,7 @@
                     <ng-container
                       *ngIf="conversation.lastMessage; else noGroupMsgTpl"
                     >
-                      {{
-                        conversation.lastMessage?.type !== "msg"
-                          ? ("CHAT.LABELS.FILE_SENT" | translate)
-                          : conversation.lastMessage?.content
-                      }}
+                      {{ getLastMessageContent(conversation) }}
                     </ng-container>
                     <ng-template #noGroupMsgTpl>{{
                       "CHAT.LABELS.NO_MESSAGES_YET" | translate
