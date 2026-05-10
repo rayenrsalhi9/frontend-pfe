@@ -12,7 +12,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ToastrService, ToastrModule } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { QuillModule } from "ngx-quill";
-import { of, throwError } from "rxjs";
+import { of, throwError, Subject } from "rxjs";
 import { ForumAddComponent } from "./forum-add.component";
 import { ForumService } from "../forum.service";
 import { ForumCategoryService } from "../forum-category/forum-category.service";
@@ -90,7 +90,7 @@ describe("ForumAddComponent", () => {
     };
 
     mockActivatedRoute = {
-      paramMap: of({ get: () => null }),
+      paramMap: new Subject<any>(),
     };
 
     await TestBed.configureTestingModule({
@@ -121,6 +121,7 @@ describe("ForumAddComponent", () => {
     fixture = TestBed.createComponent(ForumAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    (mockActivatedRoute.paramMap as Subject<any>).next({ get: () => null });
   });
 
   /* ============================================
@@ -145,9 +146,7 @@ describe("ForumAddComponent", () => {
    * Use Case 1 - Create Public Forum
    * ============================================ */
 
-  it("should show form when user has FORUM_ADD_TOPIC claim", () => {
-    mockSecurityService.hasClaim.and.returnValue(true);
-    component.ngOnInit();
+  it("should initialize form after creation", () => {
     expect(component.forumForm).toBeTruthy();
   });
 
@@ -301,11 +300,9 @@ describe("ForumAddComponent", () => {
    * ============================================ */
 
   it("should load forum data in edit mode", fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({
+    (mockActivatedRoute.paramMap as Subject<any>).next({
       get: (param: string) => (param === "id" ? "123" : null),
     });
-
-    component.ngOnInit();
     tick();
 
     expect(mockForumService.getForum).toHaveBeenCalledWith("123");
@@ -313,11 +310,9 @@ describe("ForumAddComponent", () => {
   }));
 
   it("should populate form with existing forum data", fakeAsync(() => {
-    mockActivatedRoute.paramMap = of({
+    (mockActivatedRoute.paramMap as Subject<any>).next({
       get: (param: string) => (param === "id" ? "123" : null),
     });
-
-    component.ngOnInit();
     tick();
 
     expect(component.forumForm.get("title")?.value).toBe("Existing Forum");
@@ -353,12 +348,13 @@ describe("ForumAddComponent", () => {
    * Claims Testing
    * ============================================ */
 
-  it("should handle missing claim for create", fakeAsync(() => {
+  it("should initialize form regardless of claims", fakeAsync(() => {
     mockSecurityService.hasClaim.and.returnValue(false);
-    component.ngOnInit();
     tick();
     fixture.detectChanges();
     expect(component.forumForm).toBeTruthy();
+    const submitBtn = fixture.nativeElement.querySelector('.af-btn--submit');
+    expect(submitBtn).toBeTruthy();
   }));
 
   /* ============================================

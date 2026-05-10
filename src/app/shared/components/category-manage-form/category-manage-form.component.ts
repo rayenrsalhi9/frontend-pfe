@@ -8,7 +8,7 @@ import { FormGroup } from "@angular/forms";
 export class CategoryManageFormComponent {
   @Input() isEdit = false;
   @Input() isLoading = false;
-  @Input() formGroup: FormGroup;
+  @Input() formGroup!: FormGroup;
   @Output() save = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 

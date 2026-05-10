@@ -18,7 +18,7 @@
     class="i18n-menu"
     [class.i18n-menu--open]="isMenuOpen"
     role="listbox"
-    aria-label="Select language"
+    [attr.aria-label]="ariaLabel"
   >
     <div class="i18n-list">
       <button

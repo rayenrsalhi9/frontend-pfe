@@ -35,6 +35,9 @@ export class UserNotification {
     user?: User;
 
     constructor(init?: UserNotificationInit) {
+        this.message = '';
+        this.createdDate = new Date();
+        this.isRead = false;
         if (init) {
             Object.assign(this, init);
             if (init.documents?.name) {
