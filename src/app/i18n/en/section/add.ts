@@ -221,6 +221,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "User management",
       TITLE: "New user",
       DESCRIPTION: "Create a new user account and assign roles.",
       LABELS: {
@@ -271,6 +272,7 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "Password must be at least 6 characters",
+        PASSWORD_PATTERN: "Must include uppercase, number, and special character",
       },
     },
 
@@ -357,6 +359,9 @@ export const add = {
     USER: {
       TITLE: "Edit user",
       DESCRIPTION: "Update user information and roles.",
+      BUTTONS: {
+        SAVE: "Update user",
+      },
     },
   },
 };

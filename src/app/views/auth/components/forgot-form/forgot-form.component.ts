@@ -3,18 +3,20 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonError } from '@app/core/error-handler/common-error';
 import { SecurityService } from '@app/core/security/security.service';
-import { UserAuth } from '@app/shared/enums/user-auth';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'forgot-form',
-  templateUrl: './forgot-form.component.html'
+  templateUrl: './forgot-form.component.html',
+  styleUrls: ['./forgot-form.component.css']
 })
 export class ForgotFormComponent implements OnInit {
 
   formGroup: FormGroup;
-  showResult = false
-  showPassword = false
+  submitted = false;
+  isLoading = false;
+  errorMessage: string | null = null;
 
   @Input() thirPartyLogin = false
 
@@ -23,39 +25,51 @@ export class ForgotFormComponent implements OnInit {
     private router: Router,
     private securityService: SecurityService,
     private toastr: ToastrService,
+    private translate: TranslateService,
   ) { }
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
-      email:['',[Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  login() {
+  onSubmit() {
+    this.submitted = true;
+    this.errorMessage = null;
+
+    Object.keys(this.formGroup.controls).forEach(key => {
+      this.formGroup.get(key)?.markAsTouched();
+    });
+
+    if (this.formGroup.invalid) {
+      return;
+    }
+
+    this.isLoading = true;
+
     const userObject = {
-      email: this.formGroup.value.email,
+      email: this.formGroup.value.email.trim().toLowerCase(),
     };
 
-    console.log(userObject);
-
-
     this.securityService.forgot(userObject).subscribe(
-      (c: UserAuth) => {
-        this.toastr.success('Email sent successfully.');
-        this.router.navigate(['/verify/'+this.formGroup.value.email])
+      (c: any) => {
+        this.isLoading = false;
+        this.toastr.success(this.translate.instant('SIGN.FORGOT.SUCCESS'));
+        this.router.navigate(['/verify/' + encodeURIComponent(this.formGroup.value.email)])
       },
       (err: CommonError) => {
-        this.toastr.error(err.error['message']);
+        this.isLoading = false;
+        this.errorMessage = err.error?.['message'] || this.translate.instant('SIGN.IN.ERROR_GENERIC');
+        this.toastr.error(this.errorMessage);
       }
     );
   }
 
-  onShowPasswordClick() {
-    this.showPassword = !this.showPassword
-  }
-
   onReset() {
     this.formGroup.reset();
+    this.submitted = false;
+    this.errorMessage = null;
   }
 
 }

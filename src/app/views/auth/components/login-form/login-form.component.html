@@ -1,35 +1,40 @@
 <form [formGroup]="formGroup" (ngSubmit)="login()" novalidate class="lf-form">
-  <!-- ── Error alert ──────────────────────────────────────── -->
   <div class="lf-alert" *ngIf="errorMessage" role="alert">
     <i class="feather icon-alert-circle"></i>
     <span>{{ errorMessage | translate }}</span>
   </div>
 
-  <!-- ── Username ─────────────────────────────────────────── -->
-  <div class="lf-field">
-    <label class="lf-label" for="login-username">
+  <div class="lf-field" [class.lf-field--has-error]="hasSubmissionError">
+    <label class="lf-label" for="login-email">
       {{ "SIGN.IN.USERNAME" | translate }}
     </label>
     <input
-      type="text"
-      id="login-username"
+      type="email"
+      id="login-email"
       class="lf-input"
-      [class.lf-input--error]="submitted && formGroup.get('username')?.invalid"
-      formControlName="username"
+      [class.lf-input--error]="(submitted && formGroup.get('email')?.invalid) || hasSubmissionError"
+      formControlName="email"
       placeholder="m@example.com"
-      autocomplete="username"
+      autocomplete="email"
+      (input)="onFieldChange()"
     />
     <div
       class="lf-field-error"
-      *ngIf="submitted && formGroup.get('username')?.errors?.['required']"
+      *ngIf="submitted && formGroup.get('email')?.errors?.['required']"
     >
       <i class="feather icon-alert-circle"></i>
       {{ "SIGN.IN.USERNAME_ERROR" | translate }}
     </div>
+    <div
+      class="lf-field-error"
+      *ngIf="submitted && formGroup.get('email')?.errors?.['email']"
+    >
+      <i class="feather icon-alert-circle"></i>
+      {{ "SIGN.FORGOT.EMAIL_INVALID" | translate }}
+    </div>
   </div>
 
-  <!-- ── Password ─────────────────────────────────────────── -->
-  <div class="lf-field">
+  <div class="lf-field" [class.lf-field--has-error]="hasSubmissionError">
     <div class="lf-label-row">
       <label class="lf-label" for="login-password">
         {{ "SIGN.IN.PASSWORD" | translate }}
@@ -44,10 +49,11 @@
         id="login-password"
         class="lf-input"
         [class.lf-input--error]="
-          submitted && formGroup.get('password')?.invalid
+          (submitted && formGroup.get('password')?.invalid) || hasSubmissionError
         "
         formControlName="password"
         autocomplete="current-password"
+        (input)="onFieldChange()"
       />
       <button
         type="button"
@@ -64,17 +70,9 @@
         ></i>
       </button>
     </div>
-    <div
-      class="lf-field-error"
-      *ngIf="submitted && formGroup.get('password')?.errors?.['required']"
-    >
-      <i class="feather icon-alert-circle"></i>
-      {{ "SIGN.IN.PASSWORD_ERROR" | translate }}
-    </div>
   </div>
 
-  <!-- ── Submit ───────────────────────────────────────────── -->
-  <button class="lf-submit-btn" type="submit" [disabled]="isLoading">
+  <button class="lf-submit-btn" type="submit" [disabled]="formGroup.invalid || isLoading || hasSubmissionError">
     <ng-container *ngIf="!isLoading">
       {{ "SIGN.IN.BUTTON" | translate }}
     </ng-container>
@@ -84,11 +82,3 @@
     </ng-container>
   </button>
 </form>
-
-<!-- ── Sign-up prompt ───────────────────────────────────────── -->
-<div class="lf-signup-prompt">
-  <span>{{ "SIGN.IN.NO_ACCOUNT" | translate }}</span>
-  <a routerLink="/register" class="lf-signup-link">
-    {{ "SIGN.IN.SIGN_UP" | translate }}
-  </a>
-</div>

@@ -7,7 +7,9 @@ import { SecurityService } from '../core/security/security.service';
 })
 export class HasClaimDirective {
   @Input() set hasClaim(claimType: any) {
-    if (claimType.includes('show')) {
+    if (!claimType) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+    } else if (claimType.includes('show')) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       if (this.securityService.hasClaim(claimType)) {

@@ -16,41 +16,43 @@
   </svg>
 </ng-template>
 
-<div class="add-form-page" *ngIf="!isLoading">
-  <div class="add-form-container">
+<div class="af-page" *ngIf="!isLoading">
+  <div class="af-container">
     <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">
-        {{ (isEdit ? "EDIT.USER.TITLE" : "ADD.USER.TITLE") | translate }}
-      </h1>
-      <p class="page-sub">
-        {{
-          (isEdit ? "EDIT.USER.DESCRIPTION" : "ADD.USER.DESCRIPTION")
-            | translate
-        }}
-      </p>
+    <div class="af-header">
+      <div class="af-header-left">
+        <p class="af-eyebrow">{{ "ADD.USER.EYEBROW" | translate }}</p>
+        <h1 class="af-title">
+          {{ (isEdit ? "EDIT.USER.TITLE" : "ADD.USER.TITLE") | translate }}
+        </h1>
+        <p class="af-desc">
+          {{
+            (isEdit ? "EDIT.USER.DESCRIPTION" : "ADD.USER.DESCRIPTION")
+              | translate
+          }}
+        </p>
+      </div>
     </div>
 
     <!-- Form Card -->
-    <div class="form-card">
+    <div class="af-card">
       <form
         id="userForm"
         [formGroup]="userForm"
         (ngSubmit)="onSubmit()"
-        class="form-body"
+        class="af-form"
       >
         <!-- ── Basic Info ─────────────────────────── -->
-        <div class="form-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
+        <div class="af-section">
+          <div class="af-section-label">
             {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
           </div>
 
           <!-- Direction -->
-          <div class="field">
-            <label class="field-label" for="direction">
+          <div class="af-field">
+            <label class="af-label" for="direction">
               {{ "ADD.USER.LABELS.DIRECTION" | translate }}
-              <span class="optional-mark">{{
+              <span class="af-optional">{{
                 "ADD.SHARED.LABELS.OPTIONAL" | translate
               }}</span>
             </label>
@@ -58,8 +60,8 @@
               type="text"
               id="direction"
               formControlName="direction"
-              class="field-input"
-              [class.has-error]="
+              class="af-input"
+              [class.af-input--error]="
                 directionControl?.invalid &&
                 (directionControl?.dirty || isSubmitted)
               "
@@ -68,44 +70,44 @@
           </div>
 
           <!-- First Name + Last Name -->
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="firstName">
+          <div class="af-field-row">
+            <div class="af-field">
+              <label class="af-label" for="firstName">
                 {{ "ADD.USER.LABELS.FIRSTNAME" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
               <input
                 type="text"
                 id="firstName"
                 formControlName="firstName"
-                class="field-input"
-                [class.has-error]="isFirstNameInvalid"
+                class="af-input"
+                [class.af-input--error]="isFirstNameInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.FIRSTNAME' | translate"
                 [attr.aria-invalid]="isFirstNameInvalid"
                 aria-describedby="firstName-error"
               />
-              <div class="field-error" id="firstName-error" *ngIf="isFirstNameInvalid">
+              <div class="af-field-error" id="firstName-error" *ngIf="isFirstNameInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ firstNameErrorMessage | translate }}
               </div>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="lastName">
+            <div class="af-field">
+              <label class="af-label" for="lastName">
                 {{ "ADD.USER.LABELS.LASTNAME" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
               <input
                 type="text"
                 id="lastName"
                 formControlName="lastName"
-                class="field-input"
-                [class.has-error]="isLastNameInvalid"
+                class="af-input"
+                [class.af-input--error]="isLastNameInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.LASTNAME' | translate"
                 [attr.aria-invalid]="isLastNameInvalid"
                 aria-describedby="lastName-error"
               />
-              <div class="field-error" id="lastName-error" *ngIf="isLastNameInvalid">
+              <div class="af-field-error" id="lastName-error" *ngIf="isLastNameInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ lastNameErrorMessage | translate }}
               </div>
@@ -113,44 +115,44 @@
           </div>
 
           <!-- Mobile + Email -->
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="phoneNumber">
+          <div class="af-field-row">
+            <div class="af-field">
+              <label class="af-label" for="phoneNumber">
                 {{ "ADD.USER.LABELS.MOBILE" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
               <input
                 type="text"
                 id="phoneNumber"
                 formControlName="phoneNumber"
-                class="field-input"
-                [class.has-error]="isPhoneNumberInvalid"
+                class="af-input"
+                [class.af-input--error]="isPhoneNumberInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.MOBILE' | translate"
                 [attr.aria-invalid]="isPhoneNumberInvalid"
                 aria-describedby="phoneNumber-error"
               />
-              <div class="field-error" id="phoneNumber-error" *ngIf="isPhoneNumberInvalid">
+              <div class="af-field-error" id="phoneNumber-error" *ngIf="isPhoneNumberInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ phoneNumberErrorMessage | translate }}
               </div>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="email">
+            <div class="af-field">
+              <label class="af-label" for="email">
                 {{ "ADD.USER.LABELS.EMAIL" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
               <input
                 type="email"
                 id="email"
                 formControlName="email"
-                class="field-input"
-                [class.has-error]="isEmailInvalid"
+                class="af-input"
+                [class.af-input--error]="isEmailInvalid"
                 [placeholder]="'ADD.USER.PLACEHOLDERS.EMAIL' | translate"
                 [attr.aria-invalid]="isEmailInvalid"
                 aria-describedby="email-error"
               />
-              <div class="field-error" id="email-error" *ngIf="isEmailInvalid">
+              <div class="af-field-error" id="email-error" *ngIf="isEmailInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ emailErrorMessage | translate }}
               </div>
@@ -159,57 +161,104 @@
         </div>
 
         <!-- ── Password (only in add mode) ────────── -->
-        <div class="form-section" *ngIf="!isEdit">
-          <div class="section-label">
-            <span class="section-dot"></span>
+        <div class="af-section" *ngIf="!isEdit">
+          <div class="af-section-label">
             {{ "ADD.USER.LABELS.PASSWORD" | translate }}
           </div>
 
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="password">
+          <div class="af-field-row">
+            <div class="af-field">
+              <label class="af-label" for="password">
                 {{ "ADD.USER.LABELS.PASSWORD" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
-              <input
-                type="password"
-                id="password"
-                formControlName="password"
-                class="field-input"
-                autocomplete="new-password"
-                [class.has-error]="isPasswordInvalid"
-                [placeholder]="'ADD.USER.PLACEHOLDERS.PASSWORD' | translate"
-                [attr.aria-invalid]="isPasswordInvalid"
-                aria-describedby="password-error"
-              />
-              <div class="field-error" id="password-error" *ngIf="isPasswordInvalid">
+              <div class="af-password-wrap">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  formControlName="password"
+                  class="af-input"
+                  autocomplete="new-password"
+                  [class.af-input--error]="isPasswordInvalid"
+                  [placeholder]="'ADD.USER.PLACEHOLDERS.PASSWORD' | translate"
+                  [attr.aria-invalid]="isPasswordInvalid"
+                  aria-describedby="password-error"
+                />
+                <button
+                  type="button"
+                  class="af-password-toggle"
+                  (click)="onShowPasswordClick()"
+                  [attr.aria-label]="
+                    (showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD')
+                      | translate
+                  "
+                >
+                  <i
+                    class="feather"
+                    [ngClass]="showPassword ? 'icon-eye-off' : 'icon-eye'"
+                  ></i>
+                </button>
+              </div>
+              <div class="af-field-error" id="password-error" *ngIf="isPasswordInvalid">
                 <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
                 {{ passwordErrorMessage | translate }}
               </div>
+              <ul class="af-password-reqs">
+                <li
+                  [class.af-req--met]="hasUpperCase(passwordControl?.value || '')"
+                  [class.af-req--unmet]="isSubmitted && passwordControl?.invalid && !hasUpperCase(passwordControl?.value || '')"
+                >
+                  <i class="feather" [ngClass]="hasUpperCase(passwordControl?.value || '') ? 'icon-check' : 'icon-circle'"></i>
+                  One uppercase letter
+                </li>
+                <li
+                  [class.af-req--met]="hasSpecialChar(passwordControl?.value || '')"
+                  [class.af-req--unmet]="isSubmitted && passwordControl?.invalid && !hasSpecialChar(passwordControl?.value || '')"
+                >
+                  <i class="feather" [ngClass]="hasSpecialChar(passwordControl?.value || '') ? 'icon-check' : 'icon-circle'"></i>
+                  One special character
+                </li>
+                <li
+                  [class.af-req--met]="hasNumber(passwordControl?.value || '')"
+                  [class.af-req--unmet]="isSubmitted && passwordControl?.invalid && !hasNumber(passwordControl?.value || '')"
+                >
+                  <i class="feather" [ngClass]="hasNumber(passwordControl?.value || '') ? 'icon-check' : 'icon-circle'"></i>
+                  One number
+                </li>
+                <li
+                  [class.af-req--met]="hasMinLength(passwordControl?.value || '')"
+                  [class.af-req--unmet]="isSubmitted && passwordControl?.invalid && !hasMinLength(passwordControl?.value || '')"
+                >
+                  <i class="feather" [ngClass]="hasMinLength(passwordControl?.value || '') ? 'icon-check' : 'icon-circle'"></i>
+                  At least 8 characters
+                </li>
+              </ul>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="confirmPassword">
+            <div class="af-field">
+              <label class="af-label" for="confirmPassword">
                 {{ "ADD.USER.LABELS.CONFIRM_PASSWORD" | translate }}
-                <span class="required-mark">*</span>
+                <span class="af-required">*</span>
               </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                formControlName="confirmPassword"
-                class="field-input"
-                autocomplete="new-password"
-                [class.has-error]="
-                  isConfirmPasswordInvalid || isPasswordsNotMatch
-                "
-                [placeholder]="
-                  'ADD.USER.PLACEHOLDERS.CONFIRM_PASSWORD' | translate
-                "
-                [attr.aria-invalid]="isConfirmPasswordInvalid || isPasswordsNotMatch"
-                aria-describedby="confirmPassword-error"
-              />
+              <div class="af-password-wrap">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  class="af-input"
+                  autocomplete="new-password"
+                  [class.af-input--error]="
+                    isConfirmPasswordInvalid || isPasswordsNotMatch
+                  "
+                  [placeholder]="
+                    'ADD.USER.PLACEHOLDERS.CONFIRM_PASSWORD' | translate
+                  "
+                  [attr.aria-invalid]="isConfirmPasswordInvalid || isPasswordsNotMatch"
+                  aria-describedby="confirmPassword-error"
+                />
+              </div>
               <div
-                class="field-error"
+                class="af-field-error"
                 id="confirmPassword-error"
                 *ngIf="isConfirmPasswordInvalid || isPasswordsNotMatch"
               >
@@ -221,13 +270,12 @@
         </div>
 
         <!-- ── Roles ──────────────────────────────── -->
-        <div class="form-section last">
-          <div class="section-label" id="rolesLabel">
-            <span class="section-dot"></span>
+        <div class="af-section af-section--last">
+          <div class="af-section-label" id="rolesLabel">
             {{ "ADD.USER.LABELS.ROLES" | translate }}
           </div>
 
-          <div class="field">
+          <div class="af-field">
             <ng-select
               formControlName="roles"
               [items]="roleList"
@@ -244,18 +292,18 @@
       </form>
 
       <!-- Footer -->
-      <div class="form-footer">
-        <span class="footer-note">
+      <div class="af-footer">
+        <span class="af-footer-note">
           {{ "ADD.USER.HINTS.REQUIRED_FIELDS" | translate }}
         </span>
-        <div class="footer-actions">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()">
+        <div class="af-footer-actions">
+          <button type="button" class="af-btn af-btn--cancel" (click)="onCancel()">
             {{ "ADD.USER.BUTTONS.CANCEL" | translate }}
           </button>
           <button
             form="userForm"
             type="submit"
-            class="btn btn-primary"
+            class="af-btn af-btn--submit"
             [disabled]="userForm.invalid || isLoading"
           >
             {{
@@ -270,26 +318,12 @@
 </div>
 
 <!-- Loading skeleton -->
-<div class="add-form-skeleton" *ngIf="isLoading" role="status" aria-live="polite">
+<div class="af-skeleton" *ngIf="isLoading" role="status" aria-live="polite">
   <span class="visually-hidden">Loading user form…</span>
-  <div class="skeleton-title" aria-hidden="true"></div>
-  <div class="skeleton-card" aria-hidden="true">
-    <div class="skeleton-line wide" aria-hidden="true"></div>
-    <div class="skeleton-line medium" aria-hidden="true"></div>
-    <div class="skeleton-line short" aria-hidden="true"></div>
+  <div class="af-skeleton-header" aria-hidden="true"></div>
+  <div class="af-skeleton-card" aria-hidden="true">
+    <div class="af-skeleton-line af-skeleton-line--wide" aria-hidden="true"></div>
+    <div class="af-skeleton-line af-skeleton-line--mid" aria-hidden="true"></div>
+    <div class="af-skeleton-line af-skeleton-line--short" aria-hidden="true"></div>
   </div>
 </div>
-
-<style>
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-</style>

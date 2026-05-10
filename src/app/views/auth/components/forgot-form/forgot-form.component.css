@@ -172,6 +172,30 @@
   text-decoration: underline;
 }
 
+/* ─── Password requirements list ────────────────────────────── */
+.lf-password-reqs {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+}
+
+.lf-password-reqs li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.lf-password-reqs li.lf-req--met {
+  color: #16a34a;
+}
+
+.lf-password-reqs li.lf-req--unmet {
+  color: #b91c1c;
+}
+
 /* ─── Submit button  (mirrors af-btn--submit / conv-send-btn) ─ */
 .lf-submit-btn {
   display: inline-flex;
@@ -236,16 +260,6 @@
   .lf-spin {
     animation: none;
   }
-}
-
-/* ─── Form-level error state ────────────────────────────────── */
-.lf-field--has-error .lf-input {
-  border-color: #fca5a5 !important;
-  background: #fef2f2 !important;
-}
-
-.lf-field--has-error .lf-input:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
 
 /* ─── Sign-up prompt ────────────────────────────────────────── */

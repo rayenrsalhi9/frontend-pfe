@@ -218,6 +218,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "إدارة المستخدمين",
       TITLE: "مستخدم جديد",
       DESCRIPTION: "أنشئ حساب مستخدم جديد وعيّن الأدوار.",
       LABELS: {
@@ -268,6 +269,7 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+        PASSWORD_PATTERN: "يجب أن تتضمن حرفًا كبيرًا ورقمًا ورمزًا خاصًا",
       },
     },
 
@@ -354,6 +356,9 @@ export const add = {
     USER: {
       TITLE: "تعديل المستخدم",
       DESCRIPTION: "قم بتحديث معلومات المستخدم والأدوار.",
+      BUTTONS: {
+        SAVE: "تحديث المستخدم",
+      },
     },
   },
 };

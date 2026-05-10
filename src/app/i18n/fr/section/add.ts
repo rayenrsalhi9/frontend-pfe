@@ -226,6 +226,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "Gestion des utilisateurs",
       TITLE: "Nouvel utilisateur",
       DESCRIPTION: "Créez un nouveau compte utilisateur et attribuez des rôles.",
       LABELS: {
@@ -276,11 +277,13 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+        PASSWORD_PATTERN: "Doit inclure une majuscule, un chiffre et un caractère spécial",
       },
     },
 
     SHARED: {
       LABELS: {
+        FORM: "Formulaire",
         LOADING: "Chargement…",
         REQUIRED: "Champ obligatoire",
         OPTIONAL: "Optionnel",
@@ -363,6 +366,9 @@ export const add = {
     USER: {
       TITLE: "Modifier l'utilisateur",
       DESCRIPTION: "Mettez à jour les informations et les rôles de l'utilisateur.",
+      BUTTONS: {
+        SAVE: "Mettre à jour l'utilisateur",
+      },
     },
   },
 };
