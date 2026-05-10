@@ -133,12 +133,12 @@ export class ConversationComponent
 
   handleUpdateChat() {
     const initialState = { conversation: Object.assign({}, this.conversation) };
-    this.modalService.show(UpdateConversationComponent, { initialState });
+    this.modalService.show(UpdateConversationComponent, { initialState, class: 'modal-dialog-centered' });
   }
 
   handleShowUsers() {
     const initialState = { conversation: Object.assign({}, this.conversation) };
-    this.modalService.show(UsersConversationComponent, { initialState });
+    this.modalService.show(UsersConversationComponent, { initialState, class: 'modal-dialog-centered modal-md' });
   }
 
   onDeleteConversation() {
@@ -300,7 +300,7 @@ export class ConversationComponent
   addUser() {
     this.modalService
       .show(AddUserComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
         initialState: {
           conversationId: this.conversation.id,
           currentMembers: this.conversation.users,
@@ -324,7 +324,7 @@ export class ConversationComponent
   createGroup() {
     this.modalService
       .show(CreateGroupComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
       })
       .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
@@ -335,7 +335,7 @@ export class ConversationComponent
   openNewConversation() {
     this.modalService
       .show(AddConversationComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
         initialState: {
           type: "user",
         },
@@ -458,7 +458,7 @@ export class ConversationComponent
 
   showLightbox(data: string) {
     const initialState = { data: data };
-    this.modalService.show(ImageModalComponent, { initialState });
+    this.modalService.show(ImageModalComponent, { initialState, class: 'modal-dialog-centered' });
   }
 
   closeEventHandler() {

@@ -37,6 +37,9 @@ export const chat = {
       REACT_HEART: "Réagir avec cœur",
       REACT_LIKE: "Réagir avec j'aime",
       REACT_DISLIKE: "Réagir avec je n'aime pas",
+      YOU: "Vous",
+      MEMBERS: "Membres",
+      BACK: "Retour",
     },
     MODAL: {
       ADD_USER: {

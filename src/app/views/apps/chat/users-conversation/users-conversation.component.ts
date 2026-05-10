@@ -34,7 +34,6 @@ export class UsersConversationComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserId = this.securityService.getUserDetail().user.id;
-    this.bsModalRef.setClass('modal-sm');
   }
 
   removeUser(member: any) {
@@ -42,7 +41,7 @@ export class UsersConversationComponent implements OnInit {
       this.translate.get('CHAT.DELETE.LABEL.BUTTON.CONFIRM').subscribe((confirmBtn: string) => {
         this.translate.get('CHAT.DELETE.LABEL.BUTTON.CANCEL').subscribe((cancelBtn: string) => {
           const bsModalRef = this.modalService.show(ConfirmModalComponent, {
-            class: 'modal-confirm-custom',
+            class: 'modal-dialog-centered modal-confirm-custom',
             initialState: {
               title: confirmMsg,
               message: confirmMsg,

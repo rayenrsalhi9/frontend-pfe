@@ -12,7 +12,7 @@ import { environment } from "src/environments/environment";
 @Component({
   selector: "app-create-group",
   templateUrl: "./create-group.component.html",
-  styleUrls: ["./create-group.component.scss"],
+  styleUrls: ["./create-group.component.css"],
 })
 export class CreateGroupComponent implements OnInit, OnDestroy {
   users: User[] = [];
@@ -22,6 +22,8 @@ export class CreateGroupComponent implements OnInit, OnDestroy {
   selectedUsers: Set<User> = new Set();
   searchTerm: string = "";
   isLoading: boolean = false;
+  isFocused: boolean = false;
+  isSearchFocused: boolean = false;
 
   private destroy$ = new Subject<void>();
 

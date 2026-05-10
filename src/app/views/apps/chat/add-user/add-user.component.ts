@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss']
+  styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit, OnDestroy {
   @Input() conversationId: number | string | null = null;
@@ -24,6 +24,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
   selectedUser: User | null = null;
   searchTerm: string = '';
   isLoading: boolean = false;
+  isSearchFocused: boolean = false;
 
   private destroy$ = new Subject<void>();
 

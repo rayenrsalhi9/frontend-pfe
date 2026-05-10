@@ -36,6 +36,9 @@ export const chat = {
       REACT_HEART: "تفاعل مع القلب",
       REACT_LIKE: "تفاعل مع الإعجاب",
       REACT_DISLIKE: "تفاعل مع عدم الإعجاب",
+      YOU: "أنت",
+      MEMBERS: "أعضاء",
+      BACK: "رجوع",
     },
     MODAL: {
       ADD_USER: {
