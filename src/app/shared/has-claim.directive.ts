@@ -7,17 +7,18 @@ import { SecurityService } from '../core/security/security.service';
 })
 export class HasClaimDirective {
   @Input() set hasClaim(claimType: any) {
-    if (!claimType) {
-      this.viewContainer.createEmbeddedView(this.templateRef);
-    } else if (claimType.includes('show')) {
-      this.viewContainer.createEmbeddedView(this.templateRef);
-    } else {
-      if (this.securityService.hasClaim(claimType)) {
-        // Add template to DOM
+    this.viewContainer.clear();
+
+    const isNonEmptyString = typeof claimType === 'string' && claimType.trim() !== '';
+    const isNonEmptyArray = Array.isArray(claimType) && claimType.length > 0;
+
+    if (!isNonEmptyString && !isNonEmptyArray) {
+      return;
+    }
+
+    if (this.securityService.hasClaim(claimType)) {
+      if (this.viewContainer.length === 0) {
         this.viewContainer.createEmbeddedView(this.templateRef);
-      } else {
-        // Remove template from DOM
-        this.viewContainer.clear();
       }
     }
   }

@@ -74,7 +74,7 @@ export const sign = {
         MIN_LENGTH: "Au moins 8 caractères",
       },
     },
-    REMEMBER: "Mot de passe oublié ?",
+    REMEMBER: "Vous vous souvenez de votre mot de passe ?",
     SUBSCRIBE: {
       TITLE: "S'abonner en tant qu'invité",
       FIRST_NAME: "Prénom",

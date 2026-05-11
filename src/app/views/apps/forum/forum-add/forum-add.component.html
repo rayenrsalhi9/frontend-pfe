@@ -181,7 +181,7 @@
       </form>
 
       <!-- ── Footer ─────────────────────────────────────────── -->
-      <div class="af-footer">
+      <div class="af-footer" *hasClaim="isEdit ? 'FORUM_EDIT_TOPIC' : 'FORUM_ADD_TOPIC'">
         <span class="af-footer-note">{{
           "ADD.FORUM.HINTS.REQUIRED_FIELDS" | translate
         }}</span>

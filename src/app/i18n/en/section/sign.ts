@@ -2,12 +2,12 @@ export const sign = {
   SIGN: {
     IN: {
       LABEL: "Sign In",
-      DESCRIPTION: "Sign in your account to continue",
+      DESCRIPTION: "Sign in to your account to continue",
       USERNAME: "Username",
       USERNAME_ERROR: "Username is required",
       PASSWORD: "Password",
       PASSWORD_ERROR: "Password is required",
-      FORGET: "Forget Password?",
+      FORGET: "Forgot your password?",
       BUTTON: "Log In",
       NO_ACCOUNT: "Don't have an account?",
       SIGN_UP: "Sign Up",

@@ -21,6 +21,7 @@ import { CommonService } from "@app/shared/services/common.service";
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { ChangeDetectorRef } from "@angular/core";
+import { HasClaimDirective } from "@app/shared/has-claim.directive";
 
 describe("ForumAddComponent", () => {
   let component: ForumAddComponent;
@@ -94,7 +95,7 @@ describe("ForumAddComponent", () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ForumAddComponent],
+      declarations: [ForumAddComponent, HasClaimDirective],
       imports: [
         ReactiveFormsModule,
         FormsModule,
@@ -348,13 +349,22 @@ describe("ForumAddComponent", () => {
    * Claims Testing
    * ============================================ */
 
-  it("should initialize form regardless of claims", fakeAsync(() => {
+  it("should handle missing claims by gating the form", fakeAsync(() => {
+    // 1. Configure spy to return false BEFORE component initialization
     mockSecurityService.hasClaim.and.returnValue(false);
+    
+    // 2. Re-initialize component to pick up the new spy value during ngOnInit
+    component.ngOnInit();
     tick();
     fixture.detectChanges();
+    
+    // 3. Assert the form is still created but might be hidden in template (checked via nativeElement)
     expect(component.forumForm).toBeTruthy();
+    
+    // In this app, if FORUM_ADD_TOPIC/FORUM_EDIT_TOPIC is missing, the template should hide the form/button
+    // We check for the submit button which is wrapped in a [hasClaim] block in the template
     const submitBtn = fixture.nativeElement.querySelector('.af-btn--submit');
-    expect(submitBtn).toBeTruthy();
+    expect(submitBtn).toBeFalsy();
   }));
 
   /* ============================================
