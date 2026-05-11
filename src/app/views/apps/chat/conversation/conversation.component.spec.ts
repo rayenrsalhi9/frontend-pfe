@@ -231,13 +231,18 @@ describe("ConversationComponent", () => {
     expect(component.isSenderRemoved("u2")).toBeFalse();
   });
 
-  it("isGroupConversation returns true for conversations with title", () => {
-    component.conversation = { title: "Group", users: [mockUser, { id: "u2" }, { id: "u3" }] } as any;
+  it("isGroupConversation returns true for type group", () => {
+    component.conversation = { type: "group", title: "Group", users: [mockUser, { id: "u2" }, { id: "u3" }] } as any;
     expect(component.isGroupConversation).toBeTrue();
   });
 
-  it("isGroupConversation returns true for conversations with >2 users", () => {
-    component.conversation = { title: null, users: [mockUser, { id: "u2" }, { id: "u3" }] } as any;
+  it("isGroupConversation returns true for type group without title", () => {
+    component.conversation = { type: "group", title: null, users: [mockUser, { id: "u2" }, { id: "u3" }] } as any;
     expect(component.isGroupConversation).toBeTrue();
+  });
+
+  it("isGroupConversation returns false for type private", () => {
+    component.conversation = { type: "private", title: null, users: [mockUser, { id: "u2" }] } as any;
+    expect(component.isGroupConversation).toBeFalse();
   });
 });

@@ -84,10 +84,7 @@ export class ConversationComponent
   }
 
   get isGroupConversation(): boolean {
-    return (
-      (this.conversation?.title != null && this.conversation?.title !== "") ||
-      this.conversation?.users?.length > 2
-    );
+    return this.conversation?.type === 'group';
   }
 
   @Output() updateChat = new EventEmitter<Message>();
@@ -314,6 +311,9 @@ export class ConversationComponent
           }
           if (data.conversation.users) {
             this.conversation.users = data.conversation.users;
+          }
+          if (data.conversation.type) {
+            this.conversation.type = data.conversation.type;
           }
           this.cdr.markForCheck();
         }

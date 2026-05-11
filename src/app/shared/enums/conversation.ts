@@ -18,6 +18,7 @@ export interface Message {
 export interface Conversation {
   id?: number | string
   title?:string
+  type?: 'private' | 'group'
   lastMessage?:Message
   messages?:Message[]
   users?:User[]

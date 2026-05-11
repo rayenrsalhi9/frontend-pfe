@@ -370,15 +370,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     const isGroup = this.isGroupConversation(mergedConversation);
 
     const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
-    const newConversation = {
-      ...source.find((c) => c.id === data.conversation.id),
-      id: mergedConversation.id,
-      createdAt: mergedConversation.createdAt,
-      updatedAt: mergedConversation.updatedAt,
-      title: mergedConversation.title,
-      users: mergedConversation.users ?? [],
-      lastMessage: data,
-    };
+      const newConversation = {
+        ...source.find((c) => c.id === data.conversation.id),
+        id: mergedConversation.id,
+        createdAt: mergedConversation.createdAt,
+        updatedAt: mergedConversation.updatedAt,
+        title: mergedConversation.title,
+        type: mergedConversation.type,
+        users: mergedConversation.users ?? [],
+        lastMessage: data,
+      };
 
     if (isGroup) {
       const groupUpdatedConversations = this.groupConversationsTemp.filter(
@@ -454,6 +455,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         return {
           ...conversation,
           title: data.title,
+          type: data.type,
           users: data.users,
           lastMessage: data.lastMessage,
         };
@@ -466,6 +468,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         return {
           ...conversation,
           title: data.title,
+          type: data.type,
           users: data.users,
           lastMessage: data.lastMessage,
         };
@@ -595,7 +598,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   isGroupConversation(conversation: Conversation): boolean {
-    return !!(conversation.title || (conversation.users && conversation.users.length > 2));
+    return conversation.type === 'group';
   }
 
   getOtherUser(conversation: Conversation): User | null {

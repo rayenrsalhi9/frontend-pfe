@@ -45,8 +45,8 @@ describe("ChatComponent", () => {
   ];
 
   const mockConversations = [
-    { id: "c1", title: null, users: [mockUser, { id: "u2", firstName: "Alice", lastName: "Smith", email: "alice@test.com" }], lastMessage: { id: "m1", content: "Hi", type: "msg", sender: { id: "u2" }, createdAt: "2026-01-01" } },
-    { id: "c2", title: "Dev Team", users: [mockUser, { id: "u2", firstName: "Alice", lastName: "Smith", email: "alice@test.com" }, { id: "u3", firstName: "Charlie", lastName: "Brown", email: "charlie@test.com" }], lastMessage: { id: "m2", content: "Hello", type: "msg", sender: { id: "u2" }, createdAt: "2026-01-02" } },
+    { id: "c1", title: null, type: "private", users: [mockUser, { id: "u2", firstName: "Alice", lastName: "Smith", email: "alice@test.com" }], lastMessage: { id: "m1", content: "Hi", type: "msg", sender: { id: "u2" }, createdAt: "2026-01-01" } },
+    { id: "c2", title: "Dev Team", type: "group", users: [mockUser, { id: "u2", firstName: "Alice", lastName: "Smith", email: "alice@test.com" }, { id: "u3", firstName: "Charlie", lastName: "Brown", email: "charlie@test.com" }], lastMessage: { id: "m2", content: "Hello", type: "msg", sender: { id: "u2" }, createdAt: "2026-01-02" } },
   ];
 
   const mockQueryParamsSubject = new Subject<any>();
@@ -253,16 +253,16 @@ describe("ChatComponent", () => {
 
   // ─── UTILITY METHODS ──────────────────────────────────────
 
-  it("isGroupConversation returns true for conversations with title", () => {
-    expect(component.isGroupConversation({ title: "Group", users: [mockUser, { id: "u2" }] } as any)).toBeTrue();
+  it("isGroupConversation returns true for type group", () => {
+    expect(component.isGroupConversation({ type: "group", title: "Group", users: [mockUser, { id: "u2" }] } as any)).toBeTrue();
   });
 
-  it("isGroupConversation returns true for conversations with >2 users", () => {
-    expect(component.isGroupConversation({ title: null, users: [mockUser, { id: "u2" }, { id: "u3" }, { id: "u4" }] } as any)).toBeTrue();
+  it("isGroupConversation returns true for type group without title", () => {
+    expect(component.isGroupConversation({ type: "group", title: null, users: [mockUser, { id: "u2" }, { id: "u3" }, { id: "u4" }] } as any)).toBeTrue();
   });
 
-  it("isGroupConversation returns false for 1-on-1 without title", () => {
-    expect(component.isGroupConversation({ title: null, users: [mockUser, { id: "u2" }] } as any)).toBeFalse();
+  it("isGroupConversation returns false for type private", () => {
+    expect(component.isGroupConversation({ type: "private", title: null, users: [mockUser, { id: "u2" }] } as any)).toBeFalse();
   });
 
   it("getParticipantNames formats names for 2 users excluding current", () => {
