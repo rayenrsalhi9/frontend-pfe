@@ -231,50 +231,6 @@
             {{ "DOCUMENTS.ADD.LABELS.PERMISSIONS" | translate }}
           </div>
 
-          <!-- Role Assignment -->
-          <div class="af-field">
-            <label class="af-label">{{
-              "DOCUMENTS.ADD.LABEL.DOCUMENT_ROLE_ASSIGN" | translate
-            }}</label>
-            <ng-select
-              [multiple]="true"
-              [(ngModel)]="selectedRoles"
-              [ngModelOptions]="{standalone: true}"
-              (change)="selectRole($event)"
-              [placeholder]="
-                'DOCUMENTS.ADD.PLACEHOLDERS.SELECT_ROLES' | translate
-              "
-            >
-              <ng-option *ngFor="let role of roles" [value]="role">{{
-                role.name
-              }}</ng-option>
-            </ng-select>
-          </div>
-
-          <ng-container
-            *ngIf="selectedRoles.length > 0"
-            formGroupName="rolePermissionForm"
-          >
-            <div class="af-toggle-row">
-              <label class="af-toggle-track">
-                <input
-                  type="checkbox"
-                  class="af-toggle-input"
-                  formControlName="isAllowDownload"
-                />
-                <span class="af-toggle-thumb"></span>
-              </label>
-              <div class="af-toggle-info">
-                <div class="af-toggle-title">
-                  {{ "DOCUMENTS.ADD.LABEL.DOCUMENT_DOWNLOAD" | translate }}
-                </div>
-                <div class="af-toggle-desc">
-                  {{ "DOCUMENTS.ADD.HINTS.ALLOW_DOWNLOAD" | translate }}
-                </div>
-              </div>
-            </div>
-          </ng-container>
-
           <!-- User Assignment -->
           <div class="af-field">
             <label class="af-label">{{

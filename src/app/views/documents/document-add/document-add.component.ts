@@ -14,7 +14,6 @@ import { DocumentOperation } from "@app/shared/enums/document-operation";
 import { DocumentMetaData } from "@app/shared/enums/documentMetaData";
 import { DocumentPermission } from "@app/shared/enums/document-permission";
 import { FileInfo } from "@app/shared/enums/file-info";
-import { Role } from "@app/shared/enums/role";
 import { User } from "@app/shared/enums/user-auth";
 import { CategoryService } from "@app/shared/services/category.service";
 import { CommonService } from "@app/shared/services/common.service";
@@ -43,8 +42,6 @@ export class DocumentAddComponent implements OnInit {
   isFileUpload = false;
   fileData: any;
   users: User[];
-  roles: Role[];
-  selectedRoles: Role[] = [];
   selectedUsers: User[] = [];
   isEditMode = false;
   editDocumentId: string;
@@ -71,7 +68,6 @@ export class DocumentAddComponent implements OnInit {
     this.getCategories();
     this.documentMetaTagsArray.push(this.buildDocumentMetaTag());
     this.getUsers();
-    this.getRoles();
 
     this.route.queryParams.subscribe((params) => {
       if (params["edit"]) {
@@ -115,19 +111,10 @@ export class DocumentAddComponent implements OnInit {
       .getDocumentPermission(id)
       .subscribe({
         next: (permissions: DocumentPermission[]) => {
-          const rolePerms = permissions.filter((p) => p.type === "Role");
           const userPerms = permissions.filter((p) => p.type === "User");
-          this.selectedRoles = rolePerms
-            .map((p) => this.roles?.find((r) => r.id === p.roleId))
-            .filter(Boolean);
           this.selectedUsers = userPerms
             .map((p) => this.users?.find((u) => u.id === p.userId))
             .filter(Boolean);
-          if (rolePerms.length > 0) {
-            this.rolePermissionFormGroup.patchValue({
-              isAllowDownload: rolePerms[0].isAllowDownload,
-            });
-          }
           if (userPerms.length > 0) {
             this.userPermissionFormGroup.patchValue({
               isAllowDownload: userPerms[0].isAllowDownload,
@@ -152,21 +139,6 @@ export class DocumentAddComponent implements OnInit {
           this.loadDocumentPermissions(this.editDocumentId);
         }
       });
-  }
-
-  getRoles() {
-    this.commonService
-      .getRolesForDropdown()
-      .subscribe((roles: Role[]) => {
-        this.roles = roles;
-        if (this.isEditMode && this.editDocumentId) {
-          this.loadDocumentPermissions(this.editDocumentId);
-        }
-      });
-  }
-
-  selectRole(event: any) {
-    this.selectedRoles = event;
   }
 
   selectUser(event: any) {
@@ -205,11 +177,7 @@ export class DocumentAddComponent implements OnInit {
       url: [""],
       extension: [""],
       documentMetaTags: this.fb.array([]),
-      selectedRoles: [],
       selectedUsers: [],
-      rolePermissionForm: this.fb.group({
-        isAllowDownload: new FormControl(false),
-      }),
       userPermissionForm: this.fb.group({
         isAllowDownload: new FormControl(false),
       }),
@@ -222,10 +190,6 @@ export class DocumentAddComponent implements OnInit {
       documentId: [""],
       metatag: [""],
     });
-  }
-
-  get rolePermissionFormGroup() {
-    return this.documentForm.get("rolePermissionForm") as FormGroup;
   }
 
   get userPermissionFormGroup() {
@@ -315,20 +279,6 @@ export class DocumentAddComponent implements OnInit {
       documentMetaDatas: [...documentMetaTags],
       fileData: this.fileData,
     };
-    if (this.selectedRoles.length > 0) {
-      document.documentRolePermissions = this.selectedRoles.map((role) => {
-        return Object.assign(
-          {},
-          {
-            id: "",
-            documentId: this.isEditMode ? this.editDocumentId : "",
-            roleId: role.id,
-          },
-          this.rolePermissionFormGroup.value,
-        );
-      });
-    }
-
     if (this.selectedUsers.length > 0) {
       document.documentUserPermissions = this.selectedUsers.map((user) => {
         return Object.assign(

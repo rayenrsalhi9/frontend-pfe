@@ -111,9 +111,8 @@ describe("DocumentAddComponent", () => {
     expect(catControl?.hasError("required")).toBeTrue();
   });
 
-  it("should initialize role and user permission form groups", () => {
+  it("should initialize user permission form group", () => {
     fixture.detectChanges();
-    expect(component.rolePermissionFormGroup.get("isAllowDownload")).toBeDefined();
     expect(component.userPermissionFormGroup.get("isAllowDownload")).toBeDefined();
   });
 
@@ -166,18 +165,12 @@ describe("DocumentAddComponent", () => {
       description: "Test Desc",
     });
 
-    component.selectedRoles = [{ id: "role1", name: "Admin" }];
-    component.rolePermissionFormGroup.patchValue({ isAllowDownload: true });
     component.selectedUsers = [{ id: "user1", firstName: "John", lastName: "Doe" }];
     component.userPermissionFormGroup.patchValue({ isAllowDownload: false });
 
     const doc = component.buildDocumentObject();
 
     expect(doc.name).toBe("Test Doc");
-    expect(doc.documentRolePermissions).toBeDefined();
-    expect(doc.documentRolePermissions?.length).toBe(1);
-    expect(doc.documentRolePermissions?.[0].roleId).toBe("role1");
-    expect((doc.documentRolePermissions?.[0] as any).isAllowDownload).toBeTrue();
     expect(doc.documentUserPermissions?.length).toBe(1);
     expect(doc.documentUserPermissions?.[0].userId).toBe("user1");
     expect((doc.documentUserPermissions?.[0] as any).isAllowDownload).toBeFalse();

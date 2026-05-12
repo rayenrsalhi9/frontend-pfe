@@ -225,7 +225,6 @@ const documents: NavMenu[] = [
         iconType: "feather",
         icon: "icon-file-text",
         key: "documents.assigned-documents",
-        claims: ["show"],
         submenu: [],
       },
       {

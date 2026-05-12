@@ -52,11 +52,6 @@ export class DocumentService {
       JSON.stringify(document.documentMetaDatas ?? []),
     );
     formData.append(
-      "documentRolePermissions",
-      JSON.stringify(document.documentRolePermissions ?? []),
-    );
-
-    formData.append(
       "documentUserPermissions",
       JSON.stringify(document.documentUserPermissions ?? []),
     );

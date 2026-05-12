@@ -65,7 +65,6 @@ describe("DocumentService", () => {
         fileData: new File(["test"], "test.pdf"),
         extension: "pdf",
         documentMetaDatas: [],
-        documentRolePermissions: [],
         documentUserPermissions: [],
       };
 
@@ -85,7 +84,6 @@ describe("DocumentService", () => {
         name: "New Doc", categoryId: "cat1", description: "Desc",
         fileData: new File(["test"], "test.pdf"),
         documentMetaDatas: [{ metatag: "good" }, { metatag: "" }],
-        documentRolePermissions: [],
         documentUserPermissions: [],
       };
 

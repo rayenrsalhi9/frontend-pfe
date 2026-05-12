@@ -2,9 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { DocumentInfo } from "@app/shared/enums/document-info";
 import { DocumentPermission } from "@app/shared/enums/document-permission";
-import { DocumentRolePermission } from "@app/shared/enums/document-role-permission";
 import { DocumentUserPermission } from "@app/shared/enums/document-user-permission";
-import { Role } from "@app/shared/enums/role";
 import { User } from "@app/shared/enums/user-auth";
 import { CommonService } from "@app/shared/services/common.service";
 import { DocumentPermissionService } from "@app/shared/services/document-permission.service";
@@ -28,7 +26,6 @@ export class DocumentShareComponent implements OnInit {
   documentPermissionsFiltered: DocumentPermission[] = [];
   document: DocumentInfo;
   users: User[] = [];
-  roles: Role[] = [];
 
   constructor(
     private documentPermissionService: DocumentPermissionService,
@@ -41,7 +38,6 @@ export class DocumentShareComponent implements OnInit {
   ngOnInit(): void {
     this.document = this.data;
     this.getUsers();
-    this.getRoles();
     this.loadDocumentPermissions();
   }
 
@@ -60,28 +56,9 @@ export class DocumentShareComponent implements OnInit {
       .subscribe((users: User[]) => (this.users = users));
   }
 
-  getRoles() {
-    this.commonService
-      .getRolesForDropdown()
-      .subscribe((roles: Role[]) => (this.roles = roles));
-  }
-
   deleteDocumentUserPermission(permission: DocumentUserPermission) {
     this.documentPermissionService
       .deleteDocumentUserPermission(permission.id)
-      .subscribe(() => {
-        this.translate
-          .get("DOCUMENTS.SHARE.TOAST.PERMISSION_DELETED_SUCCESSFULLY")
-          .subscribe((translatedMessage: string) => {
-            this.toastrService.success(translatedMessage);
-          });
-        this.loadDocumentPermissions();
-      });
-  }
-
-  deleteDocumentRolePermission(permission: DocumentRolePermission) {
-    this.documentPermissionService
-      .deleteDocumentRolePermission(permission.id)
       .subscribe(() => {
         this.translate
           .get("DOCUMENTS.SHARE.TOAST.PERMISSION_DELETED_SUCCESSFULLY")
@@ -99,9 +76,7 @@ export class DocumentShareComponent implements OnInit {
         (d.type == "User" &&
           (d.user.firstName.toLocaleLowerCase().includes(filterValue) ||
             d.user.lastName.toLocaleLowerCase().includes(filterValue) ||
-            d.user.email.toLocaleLowerCase().includes(filterValue))) ||
-        (d.type == "Role" &&
-          d.role.name.toLocaleLowerCase().includes(filterValue)),
+            d.user.email.toLocaleLowerCase().includes(filterValue))),
     );
   }
 
