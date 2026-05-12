@@ -4,6 +4,7 @@
 export const environment = {
   production: true,
   apiUrl: "YOUR_PRODUCTION_API_URL", // TODO: Configure this during deployment
+  wsKey: "YOUR_WEBSOCKET_KEY", // TODO: Configure this during deployment
   wsHost: "YOUR_WEBSOCKET_HOST", // TODO: Configure this during deployment
   wsPort: 6002,
   tokenExpiredTimeInMin: 50,
