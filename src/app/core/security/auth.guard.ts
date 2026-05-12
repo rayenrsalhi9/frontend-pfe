@@ -9,7 +9,6 @@ import {
   Route,
 } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { Observable } from "rxjs";
 import { SecurityService } from "./security.service";
 
 @Injectable({ providedIn: "root" })
@@ -20,13 +19,21 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     private toastr: ToastrService,
   ) {}
 
-  canActivate(
+  async canActivate(
     next: ActivatedRouteSnapshot,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     state: RouterStateSnapshot,
-  ): Observable<boolean> | Promise<boolean> | boolean {
+  ): Promise<boolean> {
     if (this.securityService.isGuestUser()) {
       this.router.navigate(["/"]);
+      return false;
+    }
+
+    const fresh = await this.securityService.ensureFreshToken();
+
+    if (!fresh) {
+      this.router.navigate(["/login"], {
+        queryParams: { returnUrl: state.url },
+      });
       return false;
     }
 
@@ -41,20 +48,28 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
       }
       return true;
     } else {
-      this.router.navigate(["/login"]);
+      this.router.navigate(["/login"], {
+        queryParams: { returnUrl: state.url },
+      });
       return false;
     }
   }
 
-  canActivateChild(
+  async canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    // Get property name on security object to check
-    // let claimType: string = next.data['claimType'];
-
+  ): Promise<boolean> {
     if (this.securityService.isGuestUser()) {
       this.router.navigate(["/"]);
+      return false;
+    }
+
+    const fresh = await this.securityService.ensureFreshToken();
+
+    if (!fresh) {
+      this.router.navigate(["login"], {
+        queryParams: { returnUrl: state.url },
+      });
       return false;
     }
 
@@ -74,9 +89,12 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
       return false;
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  canLoad(route: Route): boolean {
+
+  async canLoad(route: Route): Promise<boolean> {
+    const fresh = await this.securityService.ensureFreshToken();
+
     if (
+      fresh &&
       this.securityService.isUserAuthenticate() &&
       !this.securityService.isGuestUser()
     ) {

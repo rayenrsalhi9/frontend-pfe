@@ -167,6 +167,33 @@ export class SecurityService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  async ensureFreshToken(): Promise<boolean> {
+    if (!this.tokenTime) {
+      const parsed = this.parseSecurityObj();
+      if (!parsed) return false;
+    }
+
+    const now = new Date();
+    const elapsed = now.getTime() - new Date(this.tokenTime).getTime();
+    const refreshInterval = environment.tokenExpiredTimeInMin * 60 * 1000;
+
+    if (elapsed < refreshInterval) return true;
+
+    try {
+      const result = (await this.refresh().toPromise()) as any;
+      if (!result || !result.authorisation?.token) {
+        this.clearAuthData();
+        return false;
+      }
+      this.updateSecurityData(result as UserAuth);
+      this.refreshToken();
+      return true;
+    } catch {
+      this.clearAuthData();
+      return false;
+    }
+  }
+
   private parseSecurityObj(): boolean {
     const securityObjectString = localStorage.getItem("currentUser");
     if (!securityObjectString) {
