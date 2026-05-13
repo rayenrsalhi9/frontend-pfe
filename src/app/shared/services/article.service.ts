@@ -19,6 +19,13 @@ export class ArticleService {
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
+  allArticlesForDashboard(params = {}): Observable<any[] | CommonError> {
+    const url = `dashboard/articles`;
+    return this.httpClient
+      .get<any[]>(url, { params: params })
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
   getArticle(id: any): Observable<any | CommonError> {
     const url = `articles/get/${id}`;
     return this.httpClient

@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { map, takeUntil } from "rxjs/operators";
 import { CompanyProfileService } from "@app/shared/services/company-profile.service";
 import { CommonError } from "@app/core/error-handler/common-error";
 import { CompanyProfile } from "@app/shared/enums/company-profile";
+import { SecurityService } from "@app/core/security/security.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-footer",
@@ -17,12 +19,27 @@ export class FooterComponent implements OnInit, OnDestroy {
   currentYear: number = new Date().getFullYear();
   companyProfile: CompanyProfile | null = null;
   email: string = "";
+  isAuthenticated$: Observable<boolean | null>;
   private destroy$ = new Subject<void>();
 
-  constructor(private companyProfileService: CompanyProfileService) {}
+  constructor(
+    private companyProfileService: CompanyProfileService,
+    private securityService: SecurityService,
+  ) {}
 
   ngOnInit(): void {
     this.getCompanyProfile();
+    this.isAuthenticated$ = this.securityService.SecurityObject.pipe(
+      map((auth) => {
+        if (auth === undefined) {
+          return null;
+        }
+        if (auth === null) {
+          return false;
+        }
+        return !!auth?.user?.userName && !!auth?.authorisation?.token;
+      }),
+    );
   }
 
   private getCompanyProfile(): void {

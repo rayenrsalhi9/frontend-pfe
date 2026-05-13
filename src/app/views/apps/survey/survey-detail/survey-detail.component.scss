@@ -1,130 +1,442 @@
-.card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+// ─── Warm palette (mirrors dashboard + welcome + all redesigned components) ──
+$amber: #b45309;
+$amber-light: #fef3c7;
+$amber-mid: #fcd34d;
+$amber-bg: #fffbeb;
+$amber-dark: #92400e;
+
+// ============================================================================
+// PAGE WRAPPER  (mirrors af-page / cal-page / lp-container)
+// ============================================================================
+
+.sv-page {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 4rem;
 }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
+// ============================================================================
+// PAGE HEADER  (identical pattern to every other page header in the system)
+// ============================================================================
 
-  h4 {
-    margin: 0;
-    font-size: 1.25rem;
+.sv-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.sv-header-left {
+  flex: 1;
+  min-width: 200px;
+}
+
+.sv-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $amber-dark;
+  margin: 0 0 0.375rem;
+}
+
+.sv-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 0.375rem;
+}
+
+.sv-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+
+  strong {
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
   }
 }
 
-.badge-success {
-  background-color: #d1fae5;
-  color: #065f46;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
+// ─── Privacy badge ────────────────────────────────────────────────────────────
+
+.sv-privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+
+  i {
+    font-size: 0.8125rem;
+  }
+
+  &--public {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+
+  &--private {
+    background: $amber-light;
+    color: #78350f;
+    border: 1px solid $amber-mid;
+  }
 }
 
-.badge-primary {
-  background-color: #dbeafe;
-  color: #1e40af;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
+// ============================================================================
+// SECTION LABEL DIVIDER  (identical to db-section-label / cal-section-label)
+// ============================================================================
+
+.sv-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+  }
 }
 
-.card-body {
-  padding: 1.5rem;
-}
+// ============================================================================
+// STAT STRIP  (mirrors db-stat-strip / db-stat-card exactly)
+// ============================================================================
 
-.survey-stats-grid {
+.sv-stat-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 2rem;
-  padding: 1.25rem;
-  background: #f9fafb;
-  border-radius: 8px;
+}
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+.sv-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.18s ease;
+
+  // Left accent bar — per-card colour via CSS custom property
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--stat-color, #{$amber});
+    border-radius: 3px 0 0 3px;
   }
 
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
+  [dir="rtl"] & {
+    &::before {
+      left: auto;
+      right: 0;
+      border-radius: 0 3px 3px 0;
+    }
+  }
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   }
 }
 
-.stat-item {
+.sv-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--stat-color, #{$amber}) 12%, transparent);
+
+  i {
+    font-size: 1.125rem;
+    color: var(--stat-color, #{$amber});
+  }
+}
+
+.sv-stat-body {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
-  text-align: center;
+  gap: 0.2rem;
+  min-width: 0;
 }
 
-.stat-label {
-  font-size: 0.8125rem;
-  color: #6b7280;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.stat-value {
+.sv-stat-value {
   font-size: 1.125rem;
-  color: #111827;
   font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.chart-section {
-  margin-top: 1.5rem;
+.sv-stat-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
 
-  apx-chart {
-    display: block;
-    width: 100%;
+// ============================================================================
+// CHART CARD  (mirrors db-card / pv-card)
+// ============================================================================
+
+.sv-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.18s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   }
 }
 
-.section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.no-data {
-  text-align: center;
-  padding: 3rem;
-  color: #9ca3af;
-  font-size: 0.9375rem;
-}
-
-.loading-state {
+.sv-card-head {
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 200px;
+  padding: 0.875rem 1.375rem;
+  border-bottom: 1px solid var(--border-color);
+  background: $amber-bg;
 }
 
-.spinner-border {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 0.25rem solid #e5e7eb;
-  border-top-color: #2563eb;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.sv-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+
+  i {
+    font-size: 1rem;
+    color: $amber;
+  }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.sv-card-body {
+  padding: 1.5rem 1.75rem;
+
+  // ApexCharts style normalisation — matches db-chart-wrap
+  ::ng-deep .apexcharts-canvas {
+    overflow: visible;
+  }
+  ::ng-deep .apexcharts-gridline {
+    stroke: var(--border-color) !important;
+    stroke-dasharray: 4 !important;
+  }
+  ::ng-deep .apexcharts-tooltip {
+    background: var(--card-bg, #fff) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    font-family: Cairo, Inter, sans-serif !important;
+  }
+  ::ng-deep .apexcharts-tooltip-title {
+    background: $amber-bg !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: $amber-dark !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+  }
+  ::ng-deep .apexcharts-xaxis-label tspan,
+  ::ng-deep .apexcharts-yaxis-label tspan {
+    fill: $amber-dark !important;
+    font-family: Cairo, Inter, sans-serif !important;
+    font-size: 11px !important;
+  }
+  ::ng-deep .apexcharts-legend-text {
+    color: var(--text-secondary) !important;
+    font-family: Cairo, Inter, sans-serif !important;
+    font-size: 12px !important;
+  }
+  ::ng-deep .apexcharts-legend-marker {
+    border-radius: 3px !important;
+  }
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+.sv-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+
+  i {
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+  p {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+}
+
+// ============================================================================
+// LOADING SKELETON  (matches pv-skeleton / af-skeleton shimmer)
+// ============================================================================
+
+@keyframes sv-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+%sv-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--border-color, #e2e8f0) 25%,
+    $amber-bg 50%,
+    var(--border-color, #e2e8f0) 75%
+  );
+  background-size: 200% 100%;
+  animation: sv-shimmer 1.4s infinite;
+  border-radius: 14px;
+}
+
+.sv-skeleton {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sv-skeleton-header {
+  height: 110px;
+  @extend %sv-shimmer;
+}
+
+.sv-skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sv-skeleton-strip {
+  height: 88px;
+  @extend %sv-shimmer;
+}
+
+.sv-skeleton-chart {
+  height: 320px;
+  @extend %sv-shimmer;
+}
+
+// ============================================================================
+// RESPONSIVE — Tablet ≤1024px
+// ============================================================================
+
+@media (max-width: 1024px) {
+  .sv-page,
+  .sv-skeleton {
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .sv-stat-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ============================================================================
+// RESPONSIVE — Mobile ≤768px
+// ============================================================================
+
+@media (max-width: 768px) {
+  .sv-page,
+  .sv-skeleton {
+    padding: 1rem 1rem 2.5rem;
+  }
+
+  .sv-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.375rem;
+    border-radius: 12px;
+    gap: 0.875rem;
+  }
+
+  .sv-title {
+    font-size: 1.5rem;
+  }
+
+  .sv-privacy-badge {
+    align-self: flex-start;
+  }
+
+  .sv-card-body {
+    padding: 1.25rem;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE — Small mobile ≤480px
+// ============================================================================
+
+@media (max-width: 480px) {
+  .sv-page,
+  .sv-skeleton {
+    padding: 0.75rem 0.75rem 2rem;
+  }
+
+  .sv-title {
+    font-size: 1.25rem;
+  }
+
+  .sv-stat-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.625rem;
+  }
+
+  .sv-stat-value {
+    font-size: 1rem;
   }
 }

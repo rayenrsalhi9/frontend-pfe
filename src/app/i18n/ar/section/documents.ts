@@ -74,6 +74,9 @@ export const documents = {
     },
 
     ADD: {
+      EYEBROW: "المستندات",
+      TITLE: "إضافة مستند",
+      DESCRIPTION: "املأ التفاصيل لإضافة مستند جديد إلى النظام.",
       LABEL: {
         DOCUMENT_UPLOAD: "رفع مستند",
         DOCUMENT_NAME: "اسم المستند",
@@ -88,6 +91,29 @@ export const documents = {
         DOCUMENT_DOWNLOAD: "السماح بالتنزيل",
         DOCUMENT_SAVE: "حفظ",
         DOCUMENT_CANCEL: "إلغاء",
+      },
+      LABELS: {
+        DOCUMENT_INFO: "معلومات المستند",
+        DOCUMENT_TAGS: "علامات المستند",
+        PERMISSIONS: "الصلاحيات",
+      },
+      PLACEHOLDERS: {
+        DOCUMENT_NAME: "أدخل اسم المستند…",
+        TAG: "أضف وسمًا…",
+        SELECT_ROLES: "اختر الأدوار…",
+        SELECT_USERS: "ابحث عن مستخدمين…",
+      },
+      OPTIONS: {
+        ALL_USERS: "الجميع",
+      },
+      ACTIONS: {
+        ADD_TAG: "إضافة وسم",
+        REMOVE_TAG: "حذف الوسم",
+      },
+      HINTS: {
+        TIME_BOUND: "تقييد الوصول إلى فترة محددة",
+        ALLOW_DOWNLOAD: "السماح للمستخدمين بتنزيل هذا المستند",
+        REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
       },
       ERROR: {
         DOCUMENT_IS_REQUIRED: "المستند مطلوب.",

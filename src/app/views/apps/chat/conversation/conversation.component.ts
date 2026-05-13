@@ -84,10 +84,7 @@ export class ConversationComponent
   }
 
   get isGroupConversation(): boolean {
-    return (
-      (this.conversation?.title != null && this.conversation?.title !== "") ||
-      this.conversation?.users?.length > 2
-    );
+    return this.conversation?.type === 'group';
   }
 
   @Output() updateChat = new EventEmitter<Message>();
@@ -133,12 +130,12 @@ export class ConversationComponent
 
   handleUpdateChat() {
     const initialState = { conversation: Object.assign({}, this.conversation) };
-    this.modalService.show(UpdateConversationComponent, { initialState });
+    this.modalService.show(UpdateConversationComponent, { initialState, class: 'modal-dialog-centered' });
   }
 
   handleShowUsers() {
     const initialState = { conversation: Object.assign({}, this.conversation) };
-    this.modalService.show(UsersConversationComponent, { initialState });
+    this.modalService.show(UsersConversationComponent, { initialState, class: 'modal-dialog-centered modal-md' });
   }
 
   onDeleteConversation() {
@@ -249,7 +246,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();
@@ -269,7 +266,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();
@@ -289,7 +286,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();
@@ -300,7 +297,7 @@ export class ConversationComponent
   addUser() {
     this.modalService
       .show(AddUserComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
         initialState: {
           conversationId: this.conversation.id,
           currentMembers: this.conversation.users,
@@ -315,6 +312,9 @@ export class ConversationComponent
           if (data.conversation.users) {
             this.conversation.users = data.conversation.users;
           }
+          if (data.conversation.type) {
+            this.conversation.type = data.conversation.type;
+          }
           this.cdr.markForCheck();
         }
         this.updateConversation.emit(data.conversation);
@@ -324,7 +324,7 @@ export class ConversationComponent
   createGroup() {
     this.modalService
       .show(CreateGroupComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
       })
       .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
@@ -335,7 +335,7 @@ export class ConversationComponent
   openNewConversation() {
     this.modalService
       .show(AddConversationComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
         initialState: {
           type: "user",
         },
@@ -458,7 +458,7 @@ export class ConversationComponent
 
   showLightbox(data: string) {
     const initialState = { data: data };
-    this.modalService.show(ImageModalComponent, { initialState });
+    this.modalService.show(ImageModalComponent, { initialState, class: 'modal-dialog-centered' });
   }
 
   closeEventHandler() {
@@ -490,6 +490,11 @@ export class ConversationComponent
     }
 
     return parts.join(" ");
+  }
+
+  isSenderRemoved(senderId: string | number | undefined): boolean {
+    if (!senderId || !this.conversation?.users) return false;
+    return !this.conversation.users.some((u) => u.id === senderId);
   }
 
   private playAudio(src: string) {

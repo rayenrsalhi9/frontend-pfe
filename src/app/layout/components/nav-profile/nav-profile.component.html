@@ -11,7 +11,9 @@
       [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
     ></avatar>
     <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-    <i class="feather icon-chevron-down"></i>
+    <span class="ged-nav-icon-shell">
+      <i class="feather icon-chevron-down" aria-hidden="true"></i>
+    </span>
   </button>
   <dropdown-menu #navProfile alignment="right">
     <div class="nav-profile-header">
@@ -31,14 +33,16 @@
 
     <div class="dropdown-items-container">
       <ng-container *ngFor="let menuItem of profileMenuList">
-        <ng-container *hasClaim="menuItem.claims">
+        <ng-container *ngIf="!menuItem.claims || menuItem.claims.length === 0; else withClaims">
           <a
             *ngIf="menuItem.path"
             [routerLink]="menuItem.path"
             (click)="menuItem.click ? menuItem.click() : null"
             dropdownItem
           >
-            <i [ngClass]="menuItem.icon"></i>
+            <span class="ged-nav-icon-shell">
+              <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
+            </span>
             <span>{{ menuItem.item | translate }}</span>
           </a>
           <button
@@ -47,10 +51,38 @@
             (click)="menuItem.click()"
             dropdownItem
           >
-            <i [ngClass]="menuItem.icon"></i>
+            <span class="ged-nav-icon-shell">
+              <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
+            </span>
             <span>{{ menuItem.item | translate }}</span>
           </button>
         </ng-container>
+        <ng-template #withClaims>
+          <ng-container *hasClaim="menuItem.claims">
+            <a
+              *ngIf="menuItem.path"
+              [routerLink]="menuItem.path"
+              (click)="menuItem.click ? menuItem.click() : null"
+              dropdownItem
+            >
+              <span class="ged-nav-icon-shell">
+                <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
+              </span>
+              <span>{{ menuItem.item | translate }}</span>
+            </a>
+            <button
+              *ngIf="!menuItem.path && menuItem.click"
+              type="button"
+              (click)="menuItem.click()"
+              dropdownItem
+            >
+              <span class="ged-nav-icon-shell">
+                <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
+              </span>
+              <span>{{ menuItem.item | translate }}</span>
+            </button>
+          </ng-container>
+        </ng-template>
       </ng-container>
 
       <button
@@ -59,7 +91,9 @@
         (click)="logout()"
         dropdownItem
       >
-        <i class="feather icon-log-out"></i>
+        <span class="ged-nav-icon-shell">
+          <i class="feather icon-log-out" aria-hidden="true"></i>
+        </span>
         <span>{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
       </button>
     </div>

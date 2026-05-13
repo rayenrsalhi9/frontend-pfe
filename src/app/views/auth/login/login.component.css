@@ -1,57 +1,134 @@
-.login-container {
+/* ─── Page shell ────────────────────────────────────────────── */
+.ln-page {
   min-height: 100vh;
-  background: var(--bg-app);
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  overflow: visible;
+  padding: 2rem 1.5rem;
 }
 
-.login-wrapper {
+/* ─── Card ──────────────────────────────────────────────────── */
+.ln-card {
+  display: flex;
   width: 100%;
-  max-width: 420px;
+  max-width: 960px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
-.login-card {
-  background: var(--card-bg);
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  overflow: visible;
-  padding: 2.5rem;
+[dir="rtl"] .ln-card {
+  flex-direction: row-reverse;
 }
 
-.login-header {
-  margin-bottom: 2rem;
+/* ─── Form side ─────────────────────────────────────────────── */
+.ln-form-side {
+  flex: 1;
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 400px;
+  gap: 0;
+}
+
+/* ─── Form header ───────────────────────────────────────────── */
+.ln-form-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
-.login-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+.ln-brand-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  transition: opacity 0.18s ease;
+}
+
+.ln-brand-link:hover {
+  opacity: 0.85;
+}
+
+/* ─── Welcome text ──────────────────────────────────────────── */
+.ln-welcome-title {
+  font-size: 1.875rem;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
 }
 
-.login-subtitle {
-  font-size: 1rem;
+.ln-welcome-subtitle {
+  font-size: 0.9375rem;
   color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
 }
 
+/* ─── Image side ────────────────────────────────────────────── */
+.ln-image-side {
+  flex: 1.1;
+  background: #fffbeb;
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid var(--border-color);
+}
+
+[dir="rtl"] .ln-image-side {
+  border-left: none;
+  border-right: 1px solid var(--border-color);
+}
+
+.ln-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ─── Responsive — Tablet ≤992px ───────────────────────────── */
+@media (max-width: 992px) {
+  .ln-card {
+    max-width: 480px;
+  }
+  .ln-image-side {
+    display: none;
+  }
+  .ln-form-side {
+    min-width: 0;
+    padding: 2.5rem;
+  }
+}
+
+/* ─── Responsive — Mobile ≤768px ───────────────────────────── */
+@media (max-width: 768px) {
+  .ln-page {
+    padding: 1.5rem 1rem;
+  }
+  .ln-form-side {
+    padding: 2rem 1.5rem;
+  }
+  .ln-welcome-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ─── Responsive — Small mobile ≤480px ─────────────────────── */
 @media (max-width: 480px) {
-  .login-container {
-    padding: 1rem;
+  .ln-page {
+    padding: 1rem 0.5rem;
   }
-
-  .login-card {
-    padding: 2rem;
+  .ln-form-side {
+    padding: 1.5rem 1rem;
   }
-
-  .login-title {
+  .ln-welcome-title {
     font-size: 1.375rem;
   }
 }

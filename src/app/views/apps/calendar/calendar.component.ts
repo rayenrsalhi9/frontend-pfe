@@ -13,7 +13,7 @@ import { Subject, Subscription } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { combineLatest } from "rxjs";
 import { CommonService } from "@app/shared/services/common.service";
-import { ReminderService } from "@app/shared/services/reminder.service";
+import { ReminderService, CalendarEvent } from "@app/shared/services/reminder.service";
 import { ReminderResourceParameter } from "@app/shared/enums/reminder-resource-parameter";
 import { HttpResponse } from "@angular/common/http";
 import { User } from "@app/shared/enums/user";
@@ -267,30 +267,47 @@ export class CalendarComponent implements OnInit, OnDestroy {
     return isNaN(date.getTime()) ? new Date() : date;
   }
 
+  private requestId = 0;
+
   getReminders() {
     const month = this.viewDate.getMonth() + 1;
     const year = this.viewDate.getFullYear();
+    const reqId = ++this.requestId;
 
+    this.isLoading = true;
     this.reminderService.getCalendarEvents(month, year).subscribe({
-      next: (response: any) => {
-        const data = response.body || response;
+      next: (response: HttpResponse<CalendarEvent[]>) => {
+        if (reqId !== this.requestId) return;
+        const data = response.body;
         if (data && Array.isArray(data)) {
-          this.events = data.map((el: any) => ({
+          this.events = data.map((el: CalendarEvent) => ({
             id: el.id,
             title: el.title,
             description: el.description,
             start: this.parsePlainDateTime(el.start),
             end: el.end ? this.parsePlainDateTime(el.end) : this.parsePlainDateTime(el.start),
             allDay: false,
-            category: colors[el.category] || el.category || colors.normal,
+            category: colors[el.category as any] || colors.normal,
             frequency: el.frequency,
           }));
-          this.updateSelectedDayEvents();
-          this.cdr.markForCheck();
+        } else {
+          this.events = [];
         }
+        this.updateSelectedDayEvents();
+        this.cdr.markForCheck();
+        this.isLoading = false;
       },
       error: (err) => {
+        if (reqId !== this.requestId) return;
         console.error("Error fetching calendar events:", err);
+        this.events = [];
+        this.selectedDayEvents = [];
+        this.isLoading = false;
+          this.translate
+            .get("CALENDAR.TOAST.ERROR_LOADING")
+            .subscribe((translatedMessage: string) => {
+              this.toastrService.error(translatedMessage);
+            });
       },
     });
   }

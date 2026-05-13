@@ -44,6 +44,7 @@ export class FloatingI18nComponent implements OnInit, OnDestroy {
   languageList: LanguageItem[] = [];
   isMenuOpen = false;
   focusedIndex = -1;
+  ariaLabel = '';
 
   @ViewChildren("optionBtn") optionButtons: QueryList<ElementRef>;
 
@@ -64,6 +65,7 @@ export class FloatingI18nComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getLanguageList();
+    this.ariaLabel = this.translateService.instant('LANG.SELECTOR');
     this.appSubscription = this.app$.subscribe((app) => {
       this.currentLang = app.lang;
       this.cdr.markForCheck();

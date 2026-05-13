@@ -2,8 +2,8 @@
   <div class="footer-main">
     <div class="footer-top">
       <div class="footer-brand">
-        <a routerLink="/" class="footer-logo">
-          <logo></logo>
+        <a routerLink="/" class="footer-logo" [attr.aria-label]="'NAV.GED_HOME' | translate">
+          <app-ged-brand logoType="img"></app-ged-brand>
         </a>
         <p class="footer-brand-desc">{{ "FOOTER.DESC" | translate }}</p>
         <div class="footer-social">
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div class="footer-membership">
+      <div class="footer-membership" *ngIf="(isAuthenticated$ | async) === false">
         <h4 class="nav-title">{{ "FOOTER.BECOME_MEMBER" | translate }}</h4>
         <p class="membership-text">
           {{ "FOOTER.BECOME_MEMBER_DESCRIPTION" | translate }}

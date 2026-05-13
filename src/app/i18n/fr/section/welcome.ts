@@ -1,8 +1,19 @@
 export const welcome = {
   WELCOME: {
+    EYEBROW: "Bienvenue",
     HERO_TITLE: "Bienvenue sur notre plateforme",
     HERO_SUBTITLE: "Découvrez le dernier contenu, rejoignez les discussions et connectez-vous avec notre communauté.",
     GET_STARTED: "Commencer",
+
+    STAT_BLOGS: "Blogs",
+    STAT_ARTICLES: "Articles",
+    STAT_FORUMS: "Forums",
+
+    SECTION_CONTENT: "Contenu",
+    FEATURED_BLOG: "En vedette",
+    MORE_BLOGS: "Plus de blogs",
+
+    COMMUNITY: "Communauté",
 
     LATEST_BLOGS: "Derniers articles du blog",
     LATEST_BLOGS_DESC:

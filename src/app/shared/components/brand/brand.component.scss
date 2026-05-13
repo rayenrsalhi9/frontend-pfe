@@ -1,0 +1,41 @@
+.ged-brand-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  line-height: 1.1;
+}
+
+.ged-brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.ged-brand-text-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.ged-brand-text-line {
+  font-size: 0.75rem; // Increased from 0.65rem as per accessibility fix
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &.orange {
+    color: #ea580c;
+  }
+
+  &.green {
+    color: #16a34a;
+  }
+}
+
+:host-context(.sidebar-collapsed) {
+  .ged-brand-text-group {
+    display: none;
+  }
+}

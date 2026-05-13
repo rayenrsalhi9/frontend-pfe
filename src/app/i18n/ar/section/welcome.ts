@@ -1,8 +1,19 @@
 export const welcome = {
   WELCOME: {
+    EYEBROW: "مرحباً",
     HERO_TITLE: "مرحباً بك في منصتنا",
     HERO_SUBTITLE: "اكتشف أحدث المحتوى، انضم إلى النقاشات، وتواصل مع مجتمعنا.",
     GET_STARTED: "ابدأ الآن",
+
+    STAT_BLOGS: "المدونات",
+    STAT_ARTICLES: "المقالات",
+    STAT_FORUMS: "المنتديات",
+
+    SECTION_CONTENT: "المحتوى",
+    FEATURED_BLOG: "مميز",
+    MORE_BLOGS: "المزيد من المدونات",
+
+    COMMUNITY: "المجتمع",
 
     LATEST_BLOGS: "أحدث مقالات المدونة",
     LATEST_BLOGS_DESC:

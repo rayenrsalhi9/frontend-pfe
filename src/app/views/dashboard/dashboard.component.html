@@ -1,46 +1,51 @@
-<div class="dashboard-container">
-  <!-- Stats Cards Row -->
-  <div class="stats-row">
+<div class="db-page">
+  <!-- ── Stat strip ─────────────────────────────────────────── -->
+  <div class="db-stat-strip">
     <div
-      class="stat-card"
-      *ngFor="let stat of statCards; let i = index"
-      [style.--accent-color]="stat.color"
+      class="db-stat-card"
+      *ngFor="let stat of statCards"
+      [style.--stat-color]="stat.color"
     >
-      <div class="stat-icon">
+      <div class="db-stat-icon">
         <i class="feather" [ngClass]="stat.icon"></i>
       </div>
-      <div class="stat-content">
-        <span class="stat-value">{{ stat.value }}</span>
-        <span class="stat-label">{{ stat.title | translate }}</span>
+      <div class="db-stat-content">
+        <span class="db-stat-value">{{ stat.value }}</span>
+        <span class="db-stat-label">{{ stat.title | translate }}</span>
       </div>
     </div>
   </div>
 
-  <!-- Main Grid -->
-  <div class="dashboard-grid">
-    <!-- Overview Chart -->
-    <div class="dashboard-card card-overview">
-      <div class="card-header">
-        <div class="header-top">
-          <div class="card-title">
+  <!-- ── Section: Charts ────────────────────────────────────── -->
+  <div class="db-section-label">
+    <span>{{ "DASHBOARD.SECTION_CHARTS" | translate }}</span>
+  </div>
+
+  <div class="db-charts-grid">
+    <!-- Overview area chart — wide left -->
+    <div class="db-card db-card--overview">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
             <i class="feather icon-bar-chart-2"></i>
-            <h3>{{ "DASHBOARD.OVERVIEW" | translate }}</h3>
-          </div>
+            {{ "DASHBOARD.OVERVIEW" | translate }}
+          </h2>
+          <p class="db-card-subtitle">
+            {{ "DASHBOARD.OVERVIEW_DESC" | translate }}
+          </p>
         </div>
-        <span class="card-subtitle">{{
-          "DASHBOARD.OVERVIEW_DESC" | translate
-        }}</span>
       </div>
-      <div class="card-body">
-        <ng-container *ngIf="overviewLoaded">
-          <div *ngIf="overviewData?.duration?.length > 0; else noOverview">
-            <div class="overview-chart-container">
-              <overview [data]="overviewData"></overview>
-            </div>
+      <div class="db-card-body">
+        <ng-container *ngIf="overviewLoaded; else loadingTpl">
+          <div
+            *ngIf="overviewData?.duration?.length > 0; else emptyOverview"
+            class="db-chart-wrap"
+          >
+            <overview [data]="overviewData"></overview>
           </div>
-          <ng-template #noOverview>
-            <div class="empty-state">
-              <i class="feather icon-inbox"></i>
+          <ng-template #emptyOverview>
+            <div class="db-empty">
+              <i class="feather icon-bar-chart-2"></i>
               <p>{{ "DASHBOARD.NO_OVERVIEW" | translate }}</p>
             </div>
           </ng-template>
@@ -48,37 +53,38 @@
       </div>
     </div>
 
-    <!-- Categories Donut -->
-    <div class="dashboard-card card-categories">
-      <div class="card-header">
-        <div class="header-top">
-          <div class="card-title">
+    <!-- Categories donut — narrow right -->
+    <div class="db-card db-card--donut">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
             <i class="feather icon-pie-chart"></i>
-            <h3>{{ "DASHBOARD.CATEGORIES" | translate }}</h3>
-          </div>
+            {{ "DASHBOARD.CATEGORIES" | translate }}
+          </h2>
+          <p class="db-card-subtitle">
+            {{ "DASHBOARD.CATEGORIES_DESC" | translate }}
+          </p>
         </div>
-        <span class="card-subtitle">{{
-          "DASHBOARD.CATEGORIES_DESC" | translate
-        }}</span>
       </div>
-      <div class="card-body">
-        <ng-container *ngIf="categoriesLoaded">
-          <div *ngIf="chartOptions?.series?.length > 0; else noCategories">
-            <div class="donut-chart-wrapper">
-              <apx-chart
-                #donutChart
-                [series]="chartOptions.series"
-                [chart]="chartOptions.chart"
-                [labels]="chartOptions.labels"
-                [responsive]="chartOptions.responsive"
-                [plotOptions]="chartOptions.plotOptions"
-                [legend]="chartOptions.legend"
-                [colors]="chartOptions.colors"
-              ></apx-chart>
-            </div>
+      <div class="db-card-body db-card-body--centered">
+        <ng-container *ngIf="categoriesLoaded; else loadingTpl">
+          <div
+            *ngIf="chartOptions?.series?.length > 0; else emptyCategories"
+            class="db-donut-wrap"
+          >
+            <apx-chart
+              #donutChart
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [labels]="chartOptions.labels"
+              [responsive]="chartOptions.responsive"
+              [plotOptions]="chartOptions.plotOptions"
+              [legend]="chartOptions.legend"
+              [colors]="chartOptions.colors"
+            ></apx-chart>
           </div>
-          <ng-template #noCategories>
-            <div class="empty-state">
+          <ng-template #emptyCategories>
+            <div class="db-empty">
               <i class="feather icon-pie-chart"></i>
               <p>{{ "DASHBOARD.NO_CATEGORIES" | translate }}</p>
             </div>
@@ -86,68 +92,70 @@
         </ng-container>
       </div>
     </div>
+  </div>
 
-    <!-- Device Statistics -->
-    <div class="dashboard-card card-devices">
-      <div class="card-header">
-        <div class="header-top">
-          <div class="card-title">
+  <!-- ── Section: Data ──────────────────────────────────────── -->
+  <div class="db-section-label">
+    <span>{{ "DASHBOARD.SECTION_DATA" | translate }}</span>
+  </div>
+
+  <div class="db-data-grid">
+    <!-- Device / file formats — left -->
+    <div class="db-card db-card--devices">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
             <i class="feather icon-database"></i>
-            <h3>{{ "DASHBOARD.DEVICES" | translate }}</h3>
-          </div>
+            {{ "DASHBOARD.DEVICES" | translate }}
+          </h2>
+          <p class="db-card-subtitle">
+            {{ "DASHBOARD.DEVICES_DESC" | translate }}
+          </p>
         </div>
-        <span class="card-subtitle">{{
-          "DASHBOARD.DEVICES_DESC" | translate
-        }}</span>
       </div>
-      <div class="card-body">
-        <ng-container *ngIf="devicesLoaded">
-          <div *ngIf="deviceStatisticData; else noDevices">
-            <device-satistic [data]="deviceStatisticData"></device-satistic>
-          </div>
-          <ng-template #noDevices>
-            <div class="empty-state">
-              <i class="feather icon-database"></i>
-              <p>{{ "DASHBOARD.NO_DEVICES" | translate }}</p>
-            </div>
-          </ng-template>
+      <div class="db-card-body">
+        <ng-container *ngIf="devicesLoaded; else loadingTpl">
+          <device-statistic [data]="deviceStatisticData"></device-statistic>
         </ng-container>
       </div>
     </div>
 
-    <!-- Latest News -->
-    <div class="dashboard-card card-news">
-      <div class="card-header">
-        <div class="header-top">
-          <div class="card-title">
-            <i class="feather icon-bell"></i>
-            <h3>{{ "DASHBOARD.NEWS" | translate }}</h3>
-          </div>
-          <a
-            *ngIf="articles?.length > 0"
-            routerLink="/apps/articles"
-            class="see-all-link"
-          >
-            {{ "DASHBOARD.SEEALL" | translate }}
-            <i
-              class="feather"
-              [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
-            ></i>
-          </a>
+    <!-- Latest articles / news — right -->
+    <div class="db-card db-card--news">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
+            <i class="feather icon-file-text"></i>
+            {{ "DASHBOARD.NEWS" | translate }}
+          </h2>
+          <p class="db-card-subtitle">
+            {{ "DASHBOARD.NEWS_DESC" | translate }}
+          </p>
         </div>
-        <span class="card-subtitle">{{
-          "DASHBOARD.NEWS_DESC" | translate
-        }}</span>
+        <a
+          *ngIf="articles?.length > 0"
+          routerLink="/apps/articles"
+          class="db-see-all"
+        >
+          {{ "DASHBOARD.SEEALL" | translate }}
+          <i
+            class="feather"
+            [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
+          ></i>
+        </a>
       </div>
-      <div class="card-body">
-        <ng-container *ngIf="newsLoaded">
-          <div *ngIf="articles?.length > 0; else noNews" class="news-list">
+      <div class="db-card-body">
+        <ng-container *ngIf="newsLoaded; else loadingTpl">
+          <div
+            *ngIf="articles?.length > 0; else emptyNews"
+            class="db-news-list"
+          >
             <a
-              class="news-item"
+              class="db-news-item"
               *ngFor="let article of articles | slice: 0 : 3"
               [routerLink]="['/article', article.id]"
             >
-              <div class="news-thumb">
+              <div class="db-news-thumb">
                 <img
                   [src]="
                     article.picture
@@ -157,118 +165,123 @@
                   [alt]="article.title"
                 />
               </div>
-              <div class="news-info">
+              <div class="db-news-body">
                 <span
-                  class="news-category"
+                  class="db-news-cat"
                   *ngIf="article.category?.name as name"
                   >{{ name }}</span
                 >
-                <h4 class="news-title">{{ article.title }}</h4>
-                <p class="news-excerpt">{{ article.shortText }}</p>
-                <div class="news-meta">
-                  <span
-                    ><i class="feather icon-user"></i>
+                <h3 class="db-news-title">{{ article.title }}</h3>
+                <p class="db-news-excerpt">{{ article.shortText }}</p>
+                <div class="db-news-meta">
+                  <span>
+                    <i class="feather icon-user"></i>
                     {{ article.creator?.firstName }}
-                    {{ article.creator?.lastName }}</span
-                  >
-                  <span
-                    ><i class="feather icon-calendar"></i>
-                    {{ article.createdAt | utcToLocalTime: "shortDate" }}</span
-                  >
+                    {{ article.creator?.lastName }}
+                  </span>
+                  <span>
+                    <i class="feather icon-calendar"></i>
+                    {{ article.createdAt | utcToLocalTime: "shortDate" }}
+                  </span>
                 </div>
               </div>
             </a>
           </div>
-          <ng-template #noNews>
-            <div class="empty-state">
-              <i class="feather icon-bell"></i>
+          <ng-template #emptyNews>
+            <div class="db-empty">
+              <i class="feather icon-file-text"></i>
               <p>{{ "DASHBOARD.NO_NEWS" | translate }}</p>
             </div>
           </ng-template>
         </ng-container>
       </div>
     </div>
+  </div>
 
-    <!-- Latest Users -->
-    <div class="dashboard-card card-users">
-      <div class="card-header">
-        <div class="header-top">
-          <div class="card-title">
-            <i class="feather icon-users"></i>
-            <h3>{{ "DASHBOARD.USERS" | translate }}</h3>
-          </div>
-          <a
-            *ngIf="rows?.length > 0"
-            routerLink="/user/list"
-            class="see-all-link"
-          >
-            {{ "DASHBOARD.SEEALL" | translate }}
-            <i
-              class="feather"
-              [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
-            ></i>
-          </a>
-        </div>
-        <span class="card-subtitle">{{
-          "DASHBOARD.USERS_DESC" | translate
-        }}</span>
+  <!-- ── Section: Users ─────────────────────────────────────── -->
+  <div class="db-section-label">
+    <span>{{ "DASHBOARD.SECTION_USERS" | translate }}</span>
+  </div>
+
+  <div class="db-card db-card--users">
+    <div class="db-card-head">
+      <div class="db-card-head-left">
+        <h2 class="db-card-title">
+          <i class="feather icon-users"></i>
+          {{ "DASHBOARD.USERS" | translate }}
+        </h2>
+        <p class="db-card-subtitle">{{ "DASHBOARD.USERS_DESC" | translate }}</p>
       </div>
-      <div class="card-body">
-        <ng-container *ngIf="usersLoaded">
-          <div
-            *ngIf="rows?.length > 0; else noUsers"
-            class="users-list"
-            role="table"
-            aria-label="{{ 'DASHBOARD.USERS' | translate }}"
-          >
-            <div class="user-row header-row" role="row">
-              <span role="columnheader">{{
-                "USERS.LIST.TABLE.EMAIL" | translate
-              }}</span>
-              <span role="columnheader">{{
-                "USERS.LIST.TABLE.FIRSTNAME" | translate
-              }}</span>
-              <span role="columnheader">{{
-                "USERS.LIST.TABLE.LASTNAME" | translate
-              }}</span>
-              <span role="columnheader">{{
-                "USERS.LIST.TABLE.PHONE" | translate
-              }}</span>
-            </div>
-            <div role="rowgroup">
-              <div
-                class="user-row"
-                *ngFor="let user of rows | slice: 0 : 5"
-                role="row"
-              >
-                <div class="user-cell" role="cell">
-                  <avatar
-                    [size]="32"
-                    [src]="
-                      user.avatar
-                        ? getHost() + user.avatar
-                        : '/assets/images/avatars/thumb-16.jpg'
-                    "
-                    [ngClass]="isRtl ? 'ml-2' : 'mr-2'"
-                  ></avatar>
-                  <span class="user-email">{{ user.email }}</span>
-                </div>
-                <span role="cell">{{ user.firstName }}</span>
-                <span role="cell">{{ user.lastName }}</span>
-                <span class="user-phone" role="cell">{{
-                  user.phoneNumber || "—"
-                }}</span>
+      <a *ngIf="rows?.length > 0" routerLink="/user/list" class="db-see-all">
+        {{ "DASHBOARD.SEEALL" | translate }}
+        <i
+          class="feather"
+          [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
+        ></i>
+      </a>
+    </div>
+    <div class="db-card-body db-card-body--flush">
+      <ng-container *ngIf="usersLoaded; else loadingTpl">
+        <div
+          *ngIf="rows?.length > 0; else emptyUsers"
+          class="db-users-table"
+          role="table"
+          [attr.aria-label]="'DASHBOARD.USERS' | translate"
+        >
+          <div class="db-users-head" role="row">
+            <span role="columnheader">{{
+              "USERS.LIST.TABLE.EMAIL" | translate
+            }}</span>
+            <span role="columnheader">{{
+              "USERS.LIST.TABLE.FIRSTNAME" | translate
+            }}</span>
+            <span role="columnheader">{{
+              "USERS.LIST.TABLE.LASTNAME" | translate
+            }}</span>
+            <span role="columnheader">{{
+              "USERS.LIST.TABLE.PHONE" | translate
+            }}</span>
+          </div>
+          <div role="rowgroup">
+            <div
+              class="db-users-row"
+              *ngFor="let user of rows | slice: 0 : 5"
+              role="row"
+            >
+              <div class="db-users-cell" role="cell">
+                <avatar
+                  [size]="32"
+                  [src]="
+                    user.avatar
+                      ? getHost() + user.avatar
+                      : '/assets/images/avatars/thumb-16.jpg'
+                  "
+                  [ngClass]="isRtl ? 'ml-2' : 'mr-2'"
+                ></avatar>
+                <span class="db-user-email">{{ user.email }}</span>
               </div>
+              <span class="db-user-name" role="cell">{{ user.firstName }}</span>
+              <span class="db-user-name" role="cell">{{ user.lastName }}</span>
+              <span class="db-user-phone" role="cell">{{
+                user.phoneNumber || "—"
+              }}</span>
             </div>
           </div>
-          <ng-template #noUsers>
-            <div class="empty-state">
-              <i class="feather icon-users"></i>
-              <p>{{ "DASHBOARD.NO_USERS" | translate }}</p>
-            </div>
-          </ng-template>
-        </ng-container>
-      </div>
+        </div>
+        <ng-template #emptyUsers>
+          <div class="db-empty">
+            <i class="feather icon-users"></i>
+            <p>{{ "DASHBOARD.NO_USERS" | translate }}</p>
+          </div>
+        </ng-template>
+      </ng-container>
     </div>
   </div>
 </div>
+
+<!-- ── Shared loading template ────────────────────────────── -->
+<ng-template #loadingTpl>
+  <div class="db-loading">
+    <div class="db-spinner"></div>
+  </div>
+</ng-template>

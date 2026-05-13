@@ -1,78 +1,85 @@
-<!-- Role Add Component -->
-<div class="bento-main-container">
-  <!-- Loading State Fallback -->
-  <div class="bento-item loading-card" *ngIf="isLoading || (isEditMode && !role)">
-    <div class="loading-inner">
-      <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">{{ "ROLES.ADD.LOADING" | translate }}</span>
+<!-- Role Add/Edit Component -->
+<div class="role-page">
+  <!-- Loading State -->
+  <ng-container *ngIf="isLoading || (isEditMode && !role)">
+    <div class="db-card">
+      <div class="db-loading">
+        <div class="db-spinner"></div>
       </div>
-      <p class="loading-text">{{ "ROLES.ADD.LOADING" | translate }}</p>
     </div>
-  </div>
+  </ng-container>
 
   <ng-container *ngIf="role && !isLoading">
     <!-- Header Section -->
-    <div class="header-section">
-      <div class="header-actions">
-        <div class="header-content">
-          <h1 class="page-title">
-            {{
-              isEditMode
-                ? ("ROLES.ADD.TITLE_EDIT" | translate)
-                : ("ROLES.ADD.TITLE_ADD" | translate)
-            }}
-          </h1>
-          <p class="page-description">
-            {{ "ROLES.ADD.DESCRIPTION" | translate }}
-          </p>
-        </div>
-        <a routerLink="/user/role" class="back-link">
-          <i class="feather icon-arrow-left"></i>
-          {{ "ROLES.ADD.BUTTONS.BACK" | translate }}
-        </a>
+    <div class="hero-strip">
+      <div class="hero-left">
+        <p class="hero-eyebrow">
+          {{
+            isEditMode
+              ? ("ROLES.ADD.TITLE_EDIT" | translate)
+              : ("ROLES.ADD.TITLE_ADD" | translate)
+          }}
+        </p>
+        <h1 class="hero-title">
+          {{ "ROLES.ADD.DESCRIPTION" | translate }}
+        </h1>
       </div>
+      <a routerLink="/user/role" class="see-all-link">
+        <i class="feather icon-arrow-left"></i>
+        {{ "ROLES.ADD.BUTTONS.BACK" | translate }}
+      </a>
     </div>
 
-    <!-- Role Name Section -->
-    <div class="bento-item role-name-section">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">
+    <!-- Role Information Section -->
+    <div class="db-section-label">
+      <span>{{ "ROLES.ADD.LABELS.ROLE_INFO" | translate }}</span>
+    </div>
+
+    <div class="db-card role-name-section">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
             <i class="feather icon-tag"></i>
             {{ "ROLES.ADD.LABELS.ROLE_INFO" | translate }}
           </h2>
-          <p class="section-desc">
+          <p class="db-card-subtitle">
             {{ "ROLES.ADD.LABELS.ROLE_INFO_DESC" | translate }}
           </p>
         </div>
       </div>
-      <div class="role-name-field">
-        <label class="field-label" for="roleName">
-          {{ "ROLES.ADD.LABELS.NAME" | translate }}
-        </label>
-        <div class="input-modern">
-          <i class="prefix-icon feather icon-shield"></i>
-          <input
-            id="roleName"
-            [(ngModel)]="role.name"
-            type="text"
-            class="form-control"
-            [placeholder]="'ROLES.ADD.LABELS.NAME_PLACEHOLDER' | translate"
-            [attr.aria-label]="'ROLES.ADD.LABELS.NAME' | translate"
-          />
+      <div class="db-card-body">
+        <div class="role-name-field">
+          <label class="field-label" for="roleName">
+            {{ "ROLES.ADD.LABELS.NAME" | translate }}
+          </label>
+          <div class="input-modern">
+            <i class="prefix-icon feather icon-shield"></i>
+            <input
+              id="roleName"
+              [(ngModel)]="role.name"
+              type="text"
+              class="input-field"
+              [placeholder]="'ROLES.ADD.LABELS.NAME_PLACEHOLDER' | translate"
+              [attr.aria-label]="'ROLES.ADD.LABELS.NAME' | translate"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Permissions Section -->
-    <div class="bento-item permissions-section" *ngIf="pages">
-      <div class="permissions-header">
-        <div>
-          <h2 class="section-title">
+    <div class="db-section-label" *ngIf="pages">
+      <span>{{ "ROLES.ADD.LABELS.PERMISSIONS" | translate }}</span>
+    </div>
+
+    <div class="db-card permissions-section" *ngIf="pages">
+      <div class="db-card-head">
+        <div class="db-card-head-left">
+          <h2 class="db-card-title">
             <i class="feather icon-lock"></i>
             {{ "ROLES.ADD.LABELS.PERMISSIONS" | translate }}
           </h2>
-          <p class="section-desc">
+          <p class="db-card-subtitle">
             {{ "ROLES.ADD.LABELS.PERMISSIONS_DESC" | translate }}
           </p>
         </div>
@@ -80,7 +87,7 @@
           <label class="toggle-label" for="selectAll">
             {{ "ROLES.ADD.LABELS.SELECTALL" | translate }}
           </label>
-          <div class="modern-toggle">
+          <label class="modern-toggle" for="selectAll">
             <input
               id="selectAll"
               type="checkbox"
@@ -90,43 +97,44 @@
             <span class="toggle-track">
               <span class="toggle-thumb"></span>
             </span>
-          </div>
+          </label>
         </div>
       </div>
-
-      <div class="pages-grid">
-        <div *ngFor="let page of pages; let i = index" class="page-card">
-          <div class="page-card-header">
-            <label class="page-toggle" [for]="'page-' + i">
-              <input
-                [id]="'page-' + i"
-                class="page-checkbox"
-                type="checkbox"
-                [name]="page.name"
-                [checked]="isPageSelected(page)"
-                (change)="onPageSelect($event, page)"
-              />
-              <span class="page-check-indicator"></span>
-              <span class="page-name">{{ page.name }}</span>
-            </label>
-          </div>
-          <div class="page-actions-grid">
-            <label
-              *ngFor="let action of page.pageActions; let j = index"
-              class="action-item"
-              [for]="'action-' + i + '-' + j"
-            >
-              <input
-                [id]="'action-' + i + '-' + j"
-                class="action-checkbox"
-                type="checkbox"
-                [name]="action.name"
-                [checked]="checkPermission(action.id)"
-                (change)="onPermissionChange($event, page, action)"
-              />
-              <span class="action-check-indicator"></span>
-              <span class="action-name">{{ action.name }}</span>
-            </label>
+      <div class="db-card-body">
+        <div class="pages-grid">
+          <div *ngFor="let page of pages; let i = index" class="page-card">
+            <div class="page-card-header">
+              <label class="page-toggle" [for]="'page-' + i">
+                <input
+                  [id]="'page-' + i"
+                  class="page-checkbox"
+                  type="checkbox"
+                  [name]="page.name"
+                  [checked]="isPageSelected(page)"
+                  (change)="onPageSelect($event, page)"
+                />
+                <span class="page-check-indicator"></span>
+                <span class="page-name">{{ page.name }}</span>
+              </label>
+            </div>
+            <div class="page-actions-grid">
+              <label
+                *ngFor="let action of page.pageActions; let j = index"
+                class="action-item"
+                [for]="'action-' + i + '-' + j"
+              >
+                <input
+                  [id]="'action-' + i + '-' + j"
+                  class="action-checkbox"
+                  type="checkbox"
+                  [name]="action.name"
+                  [checked]="checkPermission(action.id)"
+                  (change)="onPermissionChange($event, page, action)"
+                />
+                <span class="action-check-indicator"></span>
+                <span class="action-name">{{ action.name }}</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>

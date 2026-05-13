@@ -23,9 +23,10 @@ export const footer = {
     EMAIL_PLACEHOLDER: "Enter your email",
     REQUEST_MEMBERSHIP: "Request membership",
     BECOME_MEMBER_DESCRIPTION:
-      "Join our GED team and get access to exclusive content and features.",
+      "Join our enterprise platform and get access to exclusive content and collaboration features.",
     BRAND_TITLE: "GED Platform",
     BRAND_DESCRIPTION:
       "Your unified solution for electronic document management, collaborative forums, and professional insights.",
+    LOGO_ALT: "DGI Logo",
   },
 };

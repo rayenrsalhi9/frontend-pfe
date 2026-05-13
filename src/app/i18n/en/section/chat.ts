@@ -22,6 +22,7 @@ export const chat = {
       GROUP_NAME: "Group Name",
       SELECT_MEMBERS: "Select Members",
       USERS_LIST: "Users list",
+      SEARCH_CONVERSATIONS: "Search conversations",
       CONVERSATIONS: "Conversations",
       LATEST_CONVERSATIONS: "Latest conversations",
       GROUPS: "Groups",
@@ -36,6 +37,9 @@ export const chat = {
       REACT_HEART: "React with heart",
       REACT_LIKE: "React with like",
       REACT_DISLIKE: "React with dislike",
+      YOU: "You",
+      MEMBERS: "Members",
+      BACK: "Back",
     },
     MODAL: {
       ADD_USER: {

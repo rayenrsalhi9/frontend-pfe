@@ -8,7 +8,7 @@ export const nav = {
     FORUM: "المنتديات",
     BLOG: "المدونة",
     ARTICLE: "المقالات",
-    CONNEXION: "تسجيل الدخول",
+    LOGIN: "تسجيل الدخول",
     INSCRIPTION: "إنشاء حساب",
 
     DASHBOARD: "لوحة التحكم",
@@ -45,5 +45,6 @@ export const nav = {
     USERS: "المستخدمون والأدوار",
     USERS_LIST: "قائمة المستخدمين",
     USERS_ROLES_LIST: "الأدوار",
+    USER_ROLES: "أدوار المستخدمين",
   },
 };

@@ -10,13 +10,14 @@ import { BasePreviewComponent } from "./preview/base-preview/base-preview.compon
 import { ImagePreviewComponent } from "./preview/image-preview/image-preview.component";
 import { OfficeViewerComponent } from "./preview/office-viewer/office-viewer.component";
 import { PdfViewerComponent } from "./preview/pdf-viewer/pdf-viewer.component";
-import { TextPreviewComponent } from "./preview/text-preview/text-preview.component";
-import { VideoPreviewComponent } from "./preview/video-preview/video-preview.component";
 import { NgxExtendedPdfViewerModule } from "ngx-extended-pdf-viewer";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { ConfirmModalComponent } from "./components/confirm-modal/confirm-modal.component";
 import { NgxEmojiPickerModule } from "ngx-emoji-picker";
+import { GedBrandComponent } from "./components/brand/brand.component";
+import { LogoModule } from "./components/logo/logo.module";
 import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-modal.component";
+import { CategoryManageFormComponent } from "./components/category-manage-form/category-manage-form.component";
 
 @NgModule({
   declarations: [
@@ -24,12 +25,12 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     ImagePreviewComponent,
     BasePreviewComponent,
     PdfViewerComponent,
-    TextPreviewComponent,
     OfficeViewerComponent,
     AudioPreviewComponent,
-    VideoPreviewComponent,
     ConfirmModalComponent,
+    GedBrandComponent,
     SusbcribeModalComponent,
+    CategoryManageFormComponent,
   ],
   exports: [
     CommonModule,
@@ -43,13 +44,16 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     ImagePreviewComponent,
     BasePreviewComponent,
     PdfViewerComponent,
-    TextPreviewComponent,
     OfficeViewerComponent,
     AudioPreviewComponent,
-    VideoPreviewComponent,
     ConfirmModalComponent,
+    GedBrandComponent,
+    SusbcribeModalComponent,
+    CategoryManageFormComponent,
+
     OverlayModule,
     NgxEmojiPickerModule,
+    LogoModule,
   ],
   imports: [
     PipesModule,
@@ -60,6 +64,7 @@ import { SusbcribeModalComponent } from "./components/susbcribe-modal/susbcribe-
     NgxExtendedPdfViewerModule,
     TranslateModule.forChild(),
     NgxEmojiPickerModule,
+    LogoModule,
   ],
   providers: [],
 })

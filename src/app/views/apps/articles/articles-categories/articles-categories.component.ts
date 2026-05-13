@@ -15,7 +15,7 @@ import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/conf
 @Component({
   selector: "app-articles-categories",
   templateUrl: "./articles-categories.component.html",
-  styleUrls: ["./articles-categories.component.css"],
+  styleUrls: ["./articles-categories.component.scss"],
 })
 export class ArticlesCategoriesComponent implements OnInit, OnDestroy {
   showMobilePanel = false;

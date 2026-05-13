@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { Router } from "@angular/router";
 import { Category } from "@app/shared/enums/category";
 import { DocumentInfo } from "@app/shared/enums/document-info";
 import { DocumentResource } from "@app/shared/enums/document-resource";
-import { ClonerService } from "@app/shared/services/clone.service";
 import { DocumentService } from "@app/shared/services/document.service";
 import { CategoryService } from "@app/shared/services/category.service";
 import { CommonService } from "@app/shared/services/common.service";
@@ -11,7 +11,6 @@ import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { DocumentView } from "@app/shared/enums/document-view";
 import { BasePreviewComponent } from "@app/shared/preview/base-preview/base-preview.component";
-import { DocumentEditComponent } from "../document-edit/document-edit.component";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject, of, Observable } from "rxjs";
@@ -19,19 +18,13 @@ import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 import { DocumentAuditTrail } from "@app/shared/enums/document-audit-trail";
 import { DocumentOperation } from "@app/shared/enums/document-operation";
 import { ToastrService } from "ngx-toastr";
-import { DocumentVersion } from "@app/shared/enums/documentVersion";
-import { DocumentUploadNewVersionComponent } from "../document-upload-new-version/document-upload-new-version.component";
-import { DocumentHistoryComponent } from "../document-history/document-history.component";
-import { DocumentSendEmailComponent } from "../document-send-email/document-send-email.component";
-import { DocumentCommentComponent } from "../document-comment/document-comment.component";
-import { DocumentShareComponent } from "../document-share/document-share.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { OverlayPanel } from "@app/shared/preview/overlay-panel/overlay-panel.service";
 
 @Component({
   selector: "app-document-list",
   templateUrl: "./document-list.component.html",
-  styleUrls: ["./document-list.component.css"],
+  styleUrls: ["./document-list.component.scss"],
 })
 export class DocumentListComponent implements OnInit, OnDestroy {
   documents: DocumentInfo[] = [];
@@ -64,9 +57,9 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     private documentService: DocumentService,
     private commonService: CommonService,
     private categoryService: CategoryService,
-    public clonerService: ClonerService,
     private cdr: ChangeDetectorRef,
     private overlay: OverlayPanel,
+    private router: Router,
     private modalService: BsModalService,
     private toastr: ToastrService,
     private translate: TranslateService,
@@ -210,13 +203,8 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   }
 
   editDocument(documentInfo: DocumentInfo) {
-    const initialState = {
-      document: documentInfo,
-      categories: this.categories,
-    };
-
-    this.bsModalRef = this.modalService.show(DocumentEditComponent, {
-      initialState,
+    this.router.navigate(["/document/add"], {
+      queryParams: { edit: documentInfo.id },
     });
   }
 
@@ -259,75 +247,6 @@ export class DocumentListComponent implements OnInit, OnDestroy {
       operationName: operation,
     };
     this.commonService.addDocumentAuditTrail(objDocumentAuditTrail).subscribe();
-  }
-
-  onVersionHistoryClick(document: DocumentInfo): void {
-    const documentInfo = this.clonerService.deepClone<DocumentInfo>(document);
-
-    this.documentService
-      .getDocumentVersion(document.id)
-      .subscribe((documentVersions: DocumentVersion[]) => {
-        documentInfo.documentVersions = documentVersions;
-
-        const initialState = {
-          width: "800px",
-          maxHeight: "70vh",
-          panelClass: "full-width-dialog",
-          data: Object.assign({}, documentInfo),
-        };
-
-        const dialogRef = this.modalService.show(DocumentHistoryComponent, {
-          initialState,
-        });
-      });
-  }
-
-  uploadNewVersion(document: Document) {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "full-width-dialog",
-      data: Object.assign({}, document),
-    };
-
-    const dialogRef = this.modalService.show(
-      DocumentUploadNewVersionComponent,
-      { initialState },
-    );
-  }
-
-  sendEmail(documentInfo: DocumentInfo) {
-    const initialState = {
-      data: documentInfo,
-      width: "80vw",
-      height: "80vh",
-    };
-
-    this.modalService.show(DocumentSendEmailComponent, { initialState });
-  }
-
-  addComment(document: Document) {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "full-width-dialog",
-      data: Object.assign({}, document),
-    };
-
-    this.modalService.show(DocumentCommentComponent, { initialState });
-  }
-
-  onSharedSelectDocument(document: Document) {
-    const initialState = {
-      width: "800px",
-      maxHeight: "70vh",
-      panelClass: "modal-lg",
-      data: Object.assign({}, document),
-    };
-
-    const dialogRef = this.modalService.show(DocumentShareComponent, {
-      initialState: initialState,
-    });
   }
 
   deleteDocument(document: DocumentInfo) {

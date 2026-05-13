@@ -13,7 +13,7 @@ import { takeUntil } from "rxjs/operators";
 @Component({
   selector: "app-forum-category",
   templateUrl: "./forum-category.component.html",
-  styleUrls: ["./forum-category.component.css"],
+  styleUrls: ["./forum-category.component.scss"],
 })
 export class ForumCategoryComponent implements OnInit, OnDestroy {
   rows: any[] = [];

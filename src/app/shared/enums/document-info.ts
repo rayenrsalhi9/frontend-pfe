@@ -1,4 +1,3 @@
-import { DocumentRolePermission } from "./document-role-permission";
 import { DocumentUserPermission } from "./document-user-permission";
 import { DocumentMetaData } from "./documentMetaData";
 import { DocumentVersion } from "./documentVersion";
@@ -21,7 +20,6 @@ export interface DocumentInfo {
   isAllowDownload?: boolean;
   documentVersions?: DocumentVersion[];
   documentMetaDatas?: DocumentMetaData[];
-  documentRolePermissions?: DocumentRolePermission[];
   documentUserPermissions?: DocumentUserPermission[];
   fileData?: any;
   isAssignUser?: any;

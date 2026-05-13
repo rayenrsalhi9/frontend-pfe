@@ -52,6 +52,9 @@
               "src/styles.scss",
               "node_modules/@ctrl/ngx-emoji-mart/picker.css"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            },
             "scripts": [
               "src/assets/js/prettify.min.js",
               "src/assets/js/pusher.min.js",
@@ -88,7 +91,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumError": "25kb"
                 }
               ]
             }
@@ -120,7 +123,10 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
+            "styles": ["src/styles.scss", "node_modules/@ctrl/ngx-emoji-mart/picker.css"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules"]
+            },
             "scripts": []
           }
         },

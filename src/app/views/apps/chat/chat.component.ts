@@ -43,6 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private searchTerm$ = new Subject<string>();
   private currentSearchTerm: string = "";
   private pendingConversationId: number | string | null = null;
+  creatingUserId: number | string | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -99,9 +100,12 @@ export class ChatComponent implements OnInit, OnDestroy {
               });
             return;
           }
-          this.users = response;
-          this.usersTemp = response;
-          this.filteredUsers = response;
+          const sorted = (response as User[]).sort((a, b) =>
+            `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)
+          );
+          this.users = sorted;
+          this.usersTemp = sorted;
+          this.filteredUsers = sorted;
           this.cdr.markForCheck();
         },
         error: () => {
@@ -194,8 +198,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
   }
 
+  hasMoreConversations(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
   loadMoreConversations() {
-    if (this.currentPage < this.totalPages && !this.isLoadingConversations) {
+    if (this.hasMoreConversations() && !this.isLoadingConversations) {
       this.initConversations(this.currentPage + 1);
     }
   }
@@ -286,6 +294,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   newConversation(data: any) {
+    if (this.creatingUserId === data.id) return;
+    this.creatingUserId = data.id;
     this.conversationService
       .createConversation({ users: [data.id, this.user.id] })
       .pipe(takeUntil(this.destroy$))
@@ -312,6 +322,9 @@ export class ChatComponent implements OnInit, OnDestroy {
               this.toastrService.error(msg);
             });
         },
+      })
+      .add(() => {
+        this.creatingUserId = null;
       });
   }
 
@@ -334,7 +347,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   createGroup() {
     this.modalService
       .show(CreateGroupComponent, {
-        class: "modal-form-container",
+        class: "modal-dialog-centered modal-form-container",
       })
       .content.onClose.pipe(takeUntil(this.destroy$))
       .subscribe((data: Conversation) => {
@@ -357,15 +370,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     const isGroup = this.isGroupConversation(mergedConversation);
 
     const source = isGroup ? this.groupConversationsTemp : this.conversationsTemp;
-    const newConversation = {
-      ...source.find((c) => c.id === data.conversation.id),
-      id: mergedConversation.id,
-      createdAt: mergedConversation.createdAt,
-      updatedAt: mergedConversation.updatedAt,
-      title: mergedConversation.title,
-      users: mergedConversation.users ?? [],
-      lastMessage: data,
-    };
+      const newConversation = {
+        ...source.find((c) => c.id === data.conversation.id),
+        id: mergedConversation.id,
+        createdAt: mergedConversation.createdAt,
+        updatedAt: mergedConversation.updatedAt,
+        title: mergedConversation.title,
+        type: mergedConversation.type,
+        users: mergedConversation.users ?? [],
+        lastMessage: data,
+      };
 
     if (isGroup) {
       const groupUpdatedConversations = this.groupConversationsTemp.filter(
@@ -441,6 +455,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         return {
           ...conversation,
           title: data.title,
+          type: data.type,
           users: data.users,
           lastMessage: data.lastMessage,
         };
@@ -453,6 +468,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         return {
           ...conversation,
           title: data.title,
+          type: data.type,
           users: data.users,
           lastMessage: data.lastMessage,
         };
@@ -496,7 +512,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   deleteConversation(conversation: Conversation) {
     this.translateService.get("CHAT.DELETE.LABEL").subscribe((translations) => {
       this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
-        class: "modal-confirm-custom",
+        class: "modal-dialog-centered modal-confirm-custom",
         initialState: {
           title: translations.TITLE,
           message: translations.MESSAGE,
@@ -582,7 +598,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   isGroupConversation(conversation: Conversation): boolean {
-    return !!(conversation.title || (conversation.users && conversation.users.length > 2));
+    return conversation.type === 'group';
   }
 
   getOtherUser(conversation: Conversation): User | null {
@@ -598,5 +614,36 @@ export class ChatComponent implements OnInit, OnDestroy {
       conversation.lastMessage.isRead == null &&
       conversation.lastMessage.sender?.id !== this.user.id
     );
+  }
+
+  trackByConversation(index: number, conversation: Conversation): any {
+    return conversation?.id ?? index;
+  }
+
+  trackByUser(index: number, user: User): any {
+    return user?.id ?? index;
+  }
+
+  getLastMessageContent(conversation: Conversation): string {
+    if (!conversation.lastMessage) return "";
+    if (conversation.lastMessage.type === "reaction") {
+      if (conversation.type === "group") {
+        const lastContent = (conversation as any).lastContentMessage;
+        if (lastContent?.content) return lastContent.content;
+        return "";
+      }
+      const text = (conversation.lastMessage.content || "").split('\n')[0];
+      if (conversation.lastMessage.sender?.id === this.user?.id) {
+        if (text.startsWith('Liked')) return 'You liked this message';
+        const match = text.match(/React with (.+)/);
+        if (match) return 'You reacted with ' + match[1];
+        return 'You reacted to a message';
+      }
+      return text;
+    }
+    if (conversation.lastMessage.type !== "msg") {
+      return this.translateService.instant("CHAT.LABELS.FILE_SENT");
+    }
+    return conversation.lastMessage.content || "";
   }
 }

@@ -1,183 +1,242 @@
-<div class="chat card mb-0">
-  <div class="d-flex content-min-height content-max-height chat-main">
-    <!-- ── Sidebar Panel ──────────────────────────────── -->
+<div class="chat-shell">
+  <div class="chat-inner">
+    <!-- ══ SIDEBAR PANEL ════════════════════════════════════ -->
     <column-panel
       borderRight="true"
-      [panelWidth]="350"
+      [panelWidth]="340"
       class="p-0"
       [isMobileActive]="mobilePanelOpen"
     >
-      <div class="chat-panel">
-        <!-- Search header -->
-        <div class="chat-panel-header">
-          <div class="search-input-wrap">
-            <i class="feather icon-search search-icon"></i>
+      <div class="chat-sidebar">
+        <!-- ── Search header ──────────────────────────────── -->
+        <div class="chat-sidebar-head">
+          <div class="chat-search-wrap">
+            <i class="feather icon-search chat-search-icon"></i>
             <input
               id="chat-search-input"
               type="text"
-              class="form-control"
+              class="chat-search-input"
               [placeholder]="'CHAT.LABELS.SEARCH' | translate"
+              [attr.aria-label]="'CHAT.LABELS.SEARCH' | translate"
               (input)="onSearch($event)"
             />
           </div>
         </div>
 
-        <!-- Add Group Button -->
-        <div *hasClaim="'CHAT_ADD_GROUP_CHAT'" class="chat-group-btn-wrap">
-          <button class="chat-action-btn" (click)="createGroup()">
-            <i class="feather icon-user-plus"></i>
+        <!-- ── New group button ───────────────────────────── -->
+        <div *hasClaim="'CHAT_ADD_GROUP_CHAT'" class="chat-group-wrap">
+          <button class="chat-group-btn" (click)="createGroup()" type="button">
+            <i class="feather icon-users"></i>
             <span>{{ "CHAT.BUTTONS.GROUP" | translate }}</span>
           </button>
         </div>
 
-        <!-- All Lists in scrollable area -->
-        <perfect-scrollbar class="chat-panel-body" (psScrollYReachEnd)="loadMoreConversations()">
-          <!-- Latest Conversations -->
+        <!-- ── Scrollable list body ───────────────────────── -->
+        <perfect-scrollbar
+          class="chat-sidebar-body"
+          (psYReachEnd)="loadMoreConversations()"
+        >
+          <!-- Direct conversations -->
           <ng-container *ngIf="conversations.length > 0">
-            <div class="chat-conversations-header">
+            <div class="chat-list-label">
               <span>{{ "CHAT.LABELS.LATEST_CONVERSATIONS" | translate }}</span>
             </div>
-            <ng-container *ngFor="let conversation of conversations">
+            <ng-container *ngFor="let conversation of conversations; trackBy: trackByConversation">
               <button
                 *ngIf="conversation"
                 type="button"
-                class="chat-list-row"
-                [class.active]="conversation.id === selectedId"
-                [class.unread]="isUnreadMessage(conversation)"
+                class="chat-row"
+                [class.chat-row--active]="conversation.id === selectedId"
+                [class.chat-row--unread]="isUnreadMessage(conversation)"
                 (click)="selectChat(conversation)"
               >
-                <div class="chat-list-row-avatar">
+                <div class="chat-row-avatar">
                   <ng-container *ngIf="getOtherUser(conversation) as otherUser">
                     <avatar
-                      class="avatar"
                       [size]="38"
                       [src]="getAvatarUrl(otherUser)"
                     ></avatar>
                   </ng-container>
                 </div>
-                <div class="chat-list-row-msg">
-                  <h6 class="chat-list-name mb-0">
-                    {{ getParticipantNames(conversation.users) }}
-                    <span *ngIf="conversation.lastMessage?.createdAt" class="chat-list-time-inline">
-                      ({{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }})
+                <div class="chat-row-info">
+                  <div class="chat-row-name">
+                    <span class="chat-row-name-text">{{
+                      getParticipantNames(conversation.users)
+                    }}</span>
+                    <span
+                      *ngIf="conversation.lastMessage?.createdAt"
+                      class="chat-row-time"
+                    >
+                      {{
+                        conversation.lastMessage.createdAt
+                          | amLocale: momentLang
+                          | amTimeAgo: true
+                      }}
                     </span>
-                  </h6>
-                  <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
-                    <ng-container *ngIf="conversation.lastMessage; else noMessagesTpl">
-                      {{ conversation.lastMessage.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage.content }}
+                  </div>
+                  <div
+                    class="chat-row-preview"
+                    [class.chat-row-preview--unread]="
+                      isUnreadMessage(conversation)
+                    "
+                  >
+                    <ng-container
+                      *ngIf="conversation.lastMessage; else noMsgTpl"
+                    >
+                      {{ getLastMessageContent(conversation) }}
                     </ng-container>
-                    <ng-template #noMessagesTpl>
-                      <span class="text-muted">{{ 'CHAT.LABELS.NO_MESSAGES_YET' | translate }}</span>
-                    </ng-template>
-                    <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
-                  </p>
+                    <ng-template #noMsgTpl>{{
+                      "CHAT.LABELS.NO_MESSAGES_YET" | translate
+                    }}</ng-template>
+                    <span
+                      *ngIf="isUnreadMessage(conversation)"
+                      class="chat-unread-dot"
+                    ></span>
+                  </div>
                 </div>
               </button>
             </ng-container>
           </ng-container>
 
-          <!-- Groups -->
+          <!-- Group conversations -->
           <ng-container *ngIf="groupConversations.length > 0">
-            <div class="chat-conversations-header">
+            <div class="chat-list-label">
               <span>{{ "CHAT.LABELS.GROUPS" | translate }}</span>
             </div>
-            <ng-container *ngFor="let conversation of groupConversations">
+            <ng-container *ngFor="let conversation of groupConversations; trackBy: trackByConversation">
               <button
                 *ngIf="conversation"
                 type="button"
-                class="chat-list-row"
-                [class.active]="conversation.id === selectedId"
-                [class.unread]="isUnreadMessage(conversation)"
+                class="chat-row"
+                [class.chat-row--active]="conversation.id === selectedId"
+                [class.chat-row--unread]="isUnreadMessage(conversation)"
                 (click)="selectChat(conversation)"
               >
-                <div class="chat-list-row-avatar">
-                  <div class="collage">
-                    <div class="avatar-collage">
-                      <ng-container *ngFor="let avatar of getConversationAvatars(conversation); let i = index">
+                <div class="chat-row-avatar">
+                  <div class="chat-collage">
+                    <div class="chat-collage-grid">
+                      <ng-container
+                        *ngFor="
+                          let avatar of getConversationAvatars(conversation).slice(0,4);
+                          let i = index
+                        "
+                      >
                         <avatar
-                          *ngIf="i < 4"
                           [tooltip]="avatar.tooltip"
-                          [ngClass]="'collage-img'"
-                          class="avatar"
+                          class="chat-collage-img"
                           [size]="38"
                           [src]="avatar.url"
                         ></avatar>
                       </ng-container>
                     </div>
-                    <div *ngIf="conversation.users.length > 4" class="collage-rest">
+                    <span
+                      *ngIf="conversation.users.length > 4"
+                      class="chat-collage-overflow"
+                    >
                       +{{ conversation.users.length - 4 }}
-                    </div>
+                    </span>
                   </div>
                 </div>
-                <div class="chat-list-row-msg">
-                  <h6 class="chat-list-name mb-0">
-                    {{ conversation.title }}
-                    <span *ngIf="conversation.lastMessage?.createdAt" class="chat-list-time-inline">
-                      ({{ conversation.lastMessage.createdAt | amLocale: momentLang | amTimeAgo: true }})
+                <div class="chat-row-info">
+                  <div class="chat-row-name">
+                    <span class="chat-row-name-text">{{
+                      conversation.title
+                    }}</span>
+                    <span
+                      *ngIf="conversation.lastMessage?.createdAt"
+                      class="chat-row-time"
+                    >
+                      {{
+                        conversation.lastMessage.createdAt
+                          | amLocale: momentLang
+                          | amTimeAgo: true
+                      }}
                     </span>
-                  </h6>
-                  <p class="chat-list-preview mb-0" [class.fw-semibold]="isUnreadMessage(conversation)" [class.text-muted]="!isUnreadMessage(conversation)">
-                    <ng-container *ngIf="conversation.lastMessage; else noGroupMessagesTpl">
-                      {{ conversation.lastMessage?.type !== 'msg' ? ('CHAT.LABELS.FILE_SENT' | translate) : conversation.lastMessage?.content }}
-                      <span *ngIf="isUnreadMessage(conversation)" class="chat-unread-dot"></span>
+                  </div>
+                  <div
+                    class="chat-row-preview"
+                    [class.chat-row-preview--unread]="
+                      isUnreadMessage(conversation)
+                    "
+                  >
+                    <ng-container
+                      *ngIf="conversation.lastMessage; else noGroupMsgTpl"
+                    >
+                      {{ getLastMessageContent(conversation) }}
                     </ng-container>
-                    <ng-template #noGroupMessagesTpl>
-                      <span class="text-muted">
-                        {{ 'CHAT.LABELS.NO_MESSAGES_YET' | translate }}
-                      </span>
-                    </ng-template>
-                  </p>
+                    <ng-template #noGroupMsgTpl>{{
+                      "CHAT.LABELS.NO_MESSAGES_YET" | translate
+                    }}</ng-template>
+                    <span
+                      *ngIf="isUnreadMessage(conversation)"
+                      class="chat-unread-dot"
+                    ></span>
+                  </div>
                 </div>
               </button>
             </ng-container>
           </ng-container>
 
-          <!-- Users -->
-          <div *ngIf="filteredUsers.length > 0" class="chat-users-list-header">
-            <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
-          </div>
-          <ng-container *ngFor="let usr of filteredUsers">
-            <button
-              type="button"
-              class="chat-list-row"
-              (click)="newConversation(usr)"
-            >
-              <div class="chat-list-row-avatar">
-                <div class="chat-avatar-wrap">
-                  <avatar
-                    [size]="38"
-                    [src]="getAvatarUrl(usr)"
-                  ></avatar>
-                  <span
-                    class="user-status-dot"
-                    [class.online]="usr.isConnected"
-                    [class.offline]="!usr.isConnected"
-                  ></span>
+          <!-- Users list -->
+          <ng-container *ngIf="filteredUsers.length > 0">
+            <div class="chat-list-label chat-list-label--divided">
+              <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
+            </div>
+            <ng-container *ngFor="let usr of filteredUsers; trackBy: trackByUser">
+              <button
+                type="button"
+                class="chat-row"
+                [disabled]="creatingUserId === usr.id"
+                (click)="newConversation(usr)"
+              >
+                <div class="chat-row-avatar">
+                  <div class="chat-status-wrap">
+                    <avatar [size]="38" [src]="getAvatarUrl(usr)"></avatar>
+                    <span
+                      class="chat-status-dot"
+                      [class.chat-status-dot--online]="usr.isConnected"
+                      [class.chat-status-dot--offline]="!usr.isConnected"
+                    ></span>
+                  </div>
                 </div>
-              </div>
-              <div class="chat-list-row-msg">
-                <h6 class="chat-list-name mb-0">
-                  {{ usr.firstName }} {{ usr.lastName }}
-                </h6>
-                <p class="chat-list-preview text-muted mb-0">
-                  {{ usr.email }}
-                </p>
-              </div>
-            </button>
+                <div class="chat-row-info">
+                  <div class="chat-row-name">
+                    <span class="chat-row-name-text"
+                      >{{ usr.firstName }} {{ usr.lastName }}</span
+                    >
+                  </div>
+                  <div class="chat-row-preview">{{ usr.displayName || usr.role }}</div>
+                </div>
+              </button>
+            </ng-container>
           </ng-container>
+
+          <!-- Empty state -->
+          <div
+            class="chat-empty"
+            *ngIf="
+              conversations.length === 0 &&
+              groupConversations.length === 0 &&
+              filteredUsers.length === 0
+            "
+          >
+            <i class="feather icon-message-circle"></i>
+            <p>{{ "CHAT.LABELS.NO_CONVERSATIONS" | translate }}</p>
+          </div>
         </perfect-scrollbar>
       </div>
     </column-panel>
 
-    <!-- ── Conversation Panel ─────────────────────────── -->
-    <conversation
-      class="chat-conversation-panel"
-      [chatId]="selectedId"
-      [user]="user"
-      (updateChat)="updateChat($event)"
-      (updateConversation)="updateConversation($event)"
-      (openMobilePanel)="onMobilePanelToggleOpen()"
-      (deleteConversation)="deleteConversation($event)"
-    ></conversation>
+    <!-- ══ CONVERSATION PANEL ════════════════════════════════ -->
+    <div class="chat-conversation-panel">
+      <conversation
+        [chatId]="selectedId"
+        [user]="user"
+        (updateChat)="updateChat($event)"
+        (updateConversation)="updateConversation($event)"
+        (openMobilePanel)="onMobilePanelToggleOpen()"
+        (deleteConversation)="deleteConversation($event)"
+      ></conversation>
+    </div>
   </div>
 </div>

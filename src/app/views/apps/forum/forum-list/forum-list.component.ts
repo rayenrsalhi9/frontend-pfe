@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastrService } from "ngx-toastr";
-import { take, debounceTime, switchMap, catchError, tap } from "rxjs/operators";
+import { take, debounceTime, switchMap, catchError, tap, takeUntil, filter } from "rxjs/operators";
 import { Subject, of } from "rxjs";
 
 import { ForumResource } from "@app/shared/enums/forum-resource";
@@ -15,14 +15,15 @@ import { ForumCommentsModalComponent } from "./forum-comments-modal.component";
 @Component({
   selector: "app-forum-list",
   templateUrl: "./forum-list.component.html",
-  styleUrls: ["./forum-list.component.css"],
+  styleUrls: ["./forum-list.component.scss"],
 })
-export class ForumListComponent implements OnInit {
+export class ForumListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
 
   rows: any[] = [];
   selected: any[] = [];
   categories: any[] = [];
+  private destroy$ = new Subject<void>();
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -50,7 +51,7 @@ export class ForumListComponent implements OnInit {
         debounceTime(300),
         tap(() => (this.isLoadingResults = true)),
         switchMap(() =>
-          this.forumService.allForums(this.forumResource).pipe(
+          this.forumService.allForumsForDashboard(this.forumResource).pipe(
             catchError((err) => {
               console.error(err);
               this.isLoadingResults = false;
@@ -62,6 +63,7 @@ export class ForumListComponent implements OnInit {
             }),
           ),
         ),
+        takeUntil(this.destroy$),
       )
       .subscribe((resp: any) => {
         const list = Array.isArray(resp) ? resp : (resp?.data ?? []);
@@ -73,13 +75,16 @@ export class ForumListComponent implements OnInit {
   }
 
   private normalizeForumRow(row: any) {
+    const reactionsSum =
+      (Array.isArray(row?.reactionsUp) ? row.reactionsUp.length : 0) +
+      (Array.isArray(row?.reactionsDown) ? row.reactionsDown.length : 0) +
+      (Array.isArray(row?.reactionsHeart) ? row.reactionsHeart.length : 0);
+
     const reactionsCount =
       row?.reactionsCount ??
       row?.reactions_count ??
       (Array.isArray(row?.reactions) ? row.reactions.length : null) ??
-      (Array.isArray(row?.reactionsUp) ? row.reactionsUp.length : 0) +
-        (Array.isArray(row?.reactionsDown) ? row.reactionsDown.length : 0) +
-        (Array.isArray(row?.reactionsHeart) ? row.reactionsHeart.length : 0);
+      reactionsSum;
 
     const commentsCount =
       row?.commentsCount ??
@@ -99,7 +104,7 @@ export class ForumListComponent implements OnInit {
   }
 
   getForumsCategories() {
-    this.forumCategoryService.allCategories().subscribe((data: any) => {
+    this.forumCategoryService.allCategories().pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
       this.categories = data;
       this.cdr.markForCheck();
     });
@@ -110,13 +115,18 @@ export class ForumListComponent implements OnInit {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {}
+
+
+  onSpacePress(event: KeyboardEvent, row: any) {
+    event.preventDefault();
+    if (row) this.openCommentsModal(row);
+  }
 
   openCommentsModal(row: any) {
     if (!row?.id) return;
 
     this.bsModalRef = this.modalService.show(ForumCommentsModalComponent, {
-      class: "modal-lg modal-dialog-centered",
+      class: "modal-md modal-dialog-centered",
       initialState: {
         forumId: row.id,
         forumTitle: row.title,
@@ -128,7 +138,6 @@ export class ForumListComponent implements OnInit {
   deleteForum(row: any) {
     this.translateService
       .get("FORUM.DELETE.LABEL")
-      .pipe(take(1))
       .subscribe((translations) => {
         this.bsModalRef = this.modalService.show(ConfirmModalComponent, {
           class: "modal-confirm-custom",
@@ -142,32 +151,24 @@ export class ForumListComponent implements OnInit {
           },
         });
 
-        this.bsModalRef.content.onClose.pipe(take(1)).subscribe((result) => {
-          if (result) {
-            this.forumService
-              .deleteForum(row.id)
-              .pipe(take(1))
-              .subscribe(
-                () => {
-                  this.translateService
-                    .get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY")
-                    .pipe(take(1))
-                    .subscribe((translatedMessage: string) =>
-                      this.toastr.success(translatedMessage),
-                    );
-                  this.getAllForums(this.forumResource);
-                },
-                () => {
-                  this.translateService
-                    .get("FORUM.DELETE.TOAST.DELETED_ERROR")
-                    .pipe(take(1))
-                    .subscribe((translatedMessage: string) =>
-                      this.toastr.error(translatedMessage),
-                    );
-                },
-              );
-          }
-        });
+        this.bsModalRef.content.onClose
+          .pipe(
+            takeUntil(this.destroy$),
+            filter((result: any) => result),
+            switchMap(() => this.forumService.deleteForum(row.id)),
+            tap(() => this.getAllForums(this.forumResource)),
+            switchMap(() =>
+              this.translateService.get("FORUM.DELETE.TOAST.DELETED_SUCCESSFULLY"),
+            ),
+            tap((msg: string) => this.toastr.success(msg)),
+            catchError((err) => {
+              console.error('Forum delete failed:', err);
+              return this.translateService
+                .get("FORUM.DELETE.TOAST.DELETED_ERROR")
+                .pipe(tap((msg) => this.toastr.error(msg)));
+            }),
+          )
+          .subscribe();
       });
   }
 
@@ -188,5 +189,10 @@ export class ForumListComponent implements OnInit {
     this.forumResource.createdAt = event ? new Date(event).toDateString() : "";
     this.forumResource.skip = 0;
     this.searchSubject.next();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -22,6 +22,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
   isEdit = false;
   userId: string | null = null;
   isSubmitted = false;
+  showPassword = false;
 
   private destroy$ = new Subject<void>();
 
@@ -97,9 +98,15 @@ export class UserAddComponent implements OnInit, OnDestroy {
   }
 
   private addPasswordValidators(): void {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>~\-_=+\[\];'\\\/])(?=.*[0-9]).{8,}$/;
     this.userForm
       .get("password")
-      ?.setValidators([Validators.required, Validators.minLength(6)]);
+      ?.setValidators([
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(passwordRegex),
+      ]);
     this.userForm.get("confirmPassword")?.setValidators([Validators.required]);
     this.userForm.get("password")?.updateValueAndValidity();
     this.userForm.get("confirmPassword")?.updateValueAndValidity();
@@ -133,7 +140,10 @@ export class UserAddComponent implements OnInit, OnDestroy {
             this.isEdit = false;
             this.userForm.disable();
             this.cdr.markForCheck();
-            this.toastrService.error(error.friendlyMessage || this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
+            this.toastrService.error(
+              error.friendlyMessage ||
+                this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+            );
           }
         },
         error: (error) => {
@@ -143,7 +153,9 @@ export class UserAddComponent implements OnInit, OnDestroy {
           this.userForm.disable();
           this.cdr.markForCheck();
           console.error("Error loading user:", error);
-          this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
+          this.toastrService.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
         },
       });
   }
@@ -160,7 +172,9 @@ export class UserAddComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error("Error loading roles:", error);
           this.roleList = [];
-          this.toastrService.error(this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"));
+          this.toastrService.error(
+            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
+          );
         },
       });
   }
@@ -170,7 +184,9 @@ export class UserAddComponent implements OnInit, OnDestroy {
 
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      this.toastrService.warning(this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"));
+      this.toastrService.warning(
+        this.translate.instant("ADD.SHARED.ERRORS.VALIDATION_ERROR"),
+      );
       return;
     }
 
@@ -192,17 +208,24 @@ export class UserAddComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.isLoading = false;
           if ("id" in data) {
-            this.toastrService.success(this.translate.instant("ADD.USER.TOAST.SUCCESS"));
+            this.toastrService.success(
+              this.translate.instant("ADD.USER.TOAST.SUCCESS"),
+            );
             this.router.navigate(["/user/list"]);
           } else {
             const error = data as any;
-            this.toastrService.error(error.friendlyMessage || this.translate.instant("ADD.USER.TOAST.ERROR"));
+            this.toastrService.error(
+              error.friendlyMessage ||
+                this.translate.instant("ADD.USER.TOAST.ERROR"),
+            );
           }
         },
         error: (error) => {
           this.isLoading = false;
           console.error("Error creating user:", error);
-          this.toastrService.error(this.translate.instant("ADD.USER.TOAST.ERROR"));
+          this.toastrService.error(
+            this.translate.instant("ADD.USER.TOAST.ERROR"),
+          );
         },
       });
   }
@@ -218,17 +241,24 @@ export class UserAddComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.isLoading = false;
           if ("id" in data) {
-            this.toastrService.success(this.translate.instant("EDIT.USER.TOAST.SUCCESS"));
+            this.toastrService.success(
+              this.translate.instant("EDIT.USER.TOAST.SUCCESS"),
+            );
             this.router.navigate(["/user/list"]);
           } else {
             const error = data as any;
-            this.toastrService.error(error.friendlyMessage || this.translate.instant("EDIT.USER.TOAST.ERROR"));
+            this.toastrService.error(
+              error.friendlyMessage ||
+                this.translate.instant("EDIT.USER.TOAST.ERROR"),
+            );
           }
         },
         error: (error) => {
           this.isLoading = false;
           console.error("Error updating user:", error);
-          this.toastrService.error(this.translate.instant("EDIT.USER.TOAST.ERROR"));
+          this.toastrService.error(
+            this.translate.instant("EDIT.USER.TOAST.ERROR"),
+          );
         },
       });
   }
@@ -251,6 +281,8 @@ export class UserAddComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
+    this.userForm.reset();
+    this.isSubmitted = false;
     this.router.navigate(["/user/list"]);
   }
 
@@ -388,6 +420,9 @@ export class UserAddComponent implements OnInit, OnDestroy {
     if (control?.errors?.["minlength"]) {
       return "ADD.USER.VALIDATION.PASSWORD_MIN_LENGTH";
     }
+    if (control?.errors?.["pattern"]) {
+      return "ADD.USER.VALIDATION.PASSWORD_PATTERN";
+    }
     return "";
   }
 
@@ -400,5 +435,25 @@ export class UserAddComponent implements OnInit, OnDestroy {
       return "ADD.USER.ERRORS.PASSWORDS_DO_NOT_MATCH";
     }
     return "";
+  }
+
+  hasUpperCase(value: string): boolean {
+    return /[A-Z]/.test(value);
+  }
+
+  hasSpecialChar(value: string): boolean {
+    return /[!@#$%^&*(),.?":{}|<>~\-_=+\[\];'\\\/]/.test(value);
+  }
+
+  hasNumber(value: string): boolean {
+    return /[0-9]/.test(value);
+  }
+
+  hasMinLength(value: string): boolean {
+    return value.length >= 8;
+  }
+
+  onShowPasswordClick(): void {
+    this.showPassword = !this.showPassword;
   }
 }

@@ -11,7 +11,7 @@ const routes: Routes = [
       ),
     data: {
       title: "NAV.DOCUMENT_ASSIGNED",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -35,7 +35,7 @@ const routes: Routes = [
       ),
     data: {
       title: "DOCUMENTS.LIST.BUTTONS.ADD",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },
@@ -59,7 +59,7 @@ const routes: Routes = [
       ),
     data: {
       title: "NAV.DOCUMENT_ASSIGNED",
-      hidePageHeader: false,
+      hidePageHeader: true,
     },
     canLoad: [AuthGuard],
   },

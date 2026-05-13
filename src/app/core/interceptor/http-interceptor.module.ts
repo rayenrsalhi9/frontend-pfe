@@ -1,4 +1,4 @@
-import { Injectable, NgModule } from "@angular/core";
+import { Injectable, NgModule, Injector } from "@angular/core";
 import { Observable } from "rxjs";
 import {
   HttpEvent,
@@ -11,10 +11,11 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { environment } from "src/environments/environment";
+import { SecurityService } from "../security/security.service";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private injector: Injector) {}
 
   private handleApiError(err: HttpErrorResponse): void {
     if (err.status === 401) {
@@ -22,10 +23,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       if (currentUrl.startsWith('/login')) {
         return;
       }
-      const returnUrl = new URL(currentUrl, window.location.origin).searchParams.get('returnUrl');
+      const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
       if (returnUrl && returnUrl === currentUrl) {
         return;
       }
+      const securityService = this.injector.get(SecurityService);
+      securityService.clearAuthData();
       this.router.navigate(["/login"], { queryParams: { returnUrl: currentUrl } });
     }
   }

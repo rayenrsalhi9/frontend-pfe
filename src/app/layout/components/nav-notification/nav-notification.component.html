@@ -11,7 +11,9 @@
     (click)="navNotification.toggle($event)"
   >
     <div class="icon-badge-container">
-      <i class="feather icon-bell"></i>
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-bell" aria-hidden="true"></i>
+      </span>
       <div *ngIf="newNotificationCount > 0" class="notification-badge"></div>
     </div>
   </button>
@@ -44,8 +46,8 @@
               <span *ngIf="notification.type === NotificationType.Reminder" class="notification-type-badge reminder">
                 {{ "NOTIFICATION.LABELS.REMINDER" | translate }}
               </span>
-              <span *ngIf="notification.type === NotificationType.Message" class="notification-type-badge message">
-                {{ "NOTIFICATION.LABELS.CHAT" | translate }}
+              <span *ngIf="notification.type === NotificationType.Document" class="notification-type-badge document">
+                {{ "NOTIFICATION.LABELS.DOCUMENT" | translate }}
               </span>
               <span *ngIf="isNewNotification(notification)" class="nav-notification-status-badge">
                 {{ "NOTIFICATION.LABELS.NEW" | translate }}
@@ -61,15 +63,24 @@
 
           <!-- Bottom section: Message/Text -->
           <div class="nav-notification-text">
-            <ng-container *ngIf="!notification.message">
-              <span class="document-name">{{ notification.documentName }}</span>:
-              <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GARANTED" | translate }}</span>
+            <ng-container *ngIf="notification.message || notification.documentId">
+              <a
+                *ngIf="notification.documentId"
+                [routerLink]="['/apps/documents']"
+                class="nav-notification-link"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="document-name">{{ notification.documentName }}</span>:
+                <span class="notification-desc">{{ "NOTIFICATION.LABELS.DOC_PERMISSION_GRANTED" | translate }}</span>
+              </a>
+              <span *ngIf="!notification.documentId && !notification.message" class="document-name">{{ notification.documentName }}</span>
             </ng-container>
 
             <a
               *ngIf="notification.message"
-              [routerLink]="notification.type === NotificationType.Reminder ? ['/apps/calendar'] : ['/apps/chat']"
+              [routerLink]="notification.type === NotificationType.Reminder ? ['/apps/calendar'] : ['/apps/documents']"
               class="nav-notification-link"
+              (click)="$event.stopPropagation()"
             >
               <ng-container *ngIf="notification.type === NotificationType.Reminder">
                 {{ notification.message }}
@@ -78,8 +89,9 @@
                 <ng-container *ngIf="notification.documentId">
                   <b>{{ "NOTIFICATION.LABELS.DOCUMENT_NAME" | translate }}</b>: {{ notification.documentName }} {{ "NOTIFICATION.LABELS.SEPARATOR" | translate }}
                 </ng-container>
-                {{ "NOTIFICATION.LABELS.MESSAGE_FROM_USER" | translate:{name: notification.user?.firstName + ' ' + notification.user?.lastName} }}
-                <div class="message-preview">{{ notification.message }}</div>
+                <ng-container *ngIf="!notification.documentId">
+                  {{ notification.message }}
+                </ng-container>
               </ng-container>
             </a>
           </div>

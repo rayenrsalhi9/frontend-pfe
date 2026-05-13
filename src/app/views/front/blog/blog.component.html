@@ -1,102 +1,100 @@
-<div class="content-page">
-  <!-- Page Header -->
-  <header class="page-header">
-    <div class="header-inner">
-      <div class="header-content">
-        <h1 class="page-title">
-          <i class="feather icon-book-open"></i>
-          {{ "PREVIEW.BLOG.LIST.TITLE" | translate }}
-        </h1>
-        <p class="page-description">
-          {{ "PREVIEW.BLOG.LIST.DESCRIPTION" | translate }}
-        </p>
-      </div>
-      <div class="header-badge" *ngIf="blogs !== null">
-        <i class="feather icon-layers"></i>
-        {{
-          "PREVIEW.BLOG.TABLE.POSTS_COUNT" | translate: { count: blogs.length }
-        }}
-      </div>
-    </div>
-  </header>
-
-  <!-- Blog Cards Grid -->
-  <main class="content-body">
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="blogs !== null && blogs.length === 0">
-      <i class="feather icon-book-open"></i>
-      <h3>{{ "PREVIEW.BLOG.LIST.NO_RESULTS" | translate }}</h3>
-    </div>
-
-    <!-- Cards Grid -->
-    <div class="cards-grid" *ngIf="blogs !== null && blogs.length > 0">
-      <a
-        *ngFor="let blog of blogs"
-        class="card-item"
-        [routerLink]="['/blog', blog.id]"
-      >
-        <!-- Cover -->
-        <div class="card-cover">
-          <img
-            *ngIf="blog.picture"
-            [src]="
-              blog.picture.startsWith('data:') ||
-              blog.picture.startsWith('http')
-                ? blog.picture
-                : getHost() + blog.picture
-            "
-            [alt]="blog.title"
-            class="cover-img"
-          />
-          <div class="cover-placeholder" *ngIf="!blog.picture">
-            <i class="feather icon-image"></i>
-          </div>
-          <span class="category-badge" *ngIf="blog.category?.name">
-            {{ blog.category.name }}
-          </span>
+<div class="blog-page">
+  <!-- Blog Content -->
+  <div class="mag-grid">
+    <div class="blogs-col">
+      <div class="mini-header">
+        <span class="mini-label">{{
+          "PREVIEW.BLOG.LIST.TITLE" | translate
+        }}</span>
+        <div class="header-badge" *ngIf="blogs !== null">
+          <i class="feather icon-layers"></i>
+          {{
+            "PREVIEW.BLOG.TABLE.POSTS_COUNT"
+              | translate: { count: blogs.length }
+          }}
         </div>
+      </div>
 
-        <!-- Body -->
-        <div class="card-body">
-          <h2 class="card-title">{{ blog.title }}</h2>
-          <p class="card-subtitle" *ngIf="blog.subtitle">{{ blog.subtitle }}</p>
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="blogs !== null && blogs.length === 0">
+        <i class="feather icon-book-open"></i>
+        <p>{{ "PREVIEW.BLOG.LIST.NO_RESULTS" | translate }}</p>
+      </div>
 
-          <!-- Footer -->
-          <div class="card-footer">
-            <div class="card-stats">
-              <span
-                class="stat-item"
-                [attr.aria-label]="
-                  ('PREVIEW.WIDGETS.COMMENTS' | translate) +
-                  ': ' +
-                  (blog.comments?.length ?? blog.commentsCount ?? 0)
-                "
-              >
-                <i class="feather icon-message-square" aria-hidden="true"></i>
-                {{ blog.comments?.length ?? blog.commentsCount ?? 0 }}
-              </span>
-              <span
-                class="stat-item"
-                [attr.aria-label]="
-                  ('PREVIEW.WIDGETS.LIKES' | translate) +
-                  ': ' +
-                  (blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0)
-                "
-              >
-                <i class="feather icon-thumbs-up" aria-hidden="true"></i>
-                {{ blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0 }}
+      <!-- Cards Grid -->
+      <div class="cards-grid" *ngIf="blogs !== null && blogs.length > 0">
+        <a
+          *ngFor="let blog of blogs"
+          class="featured-card"
+          [routerLink]="['/blog', blog.id]"
+        >
+          <!-- Cover -->
+          <div class="feat-image">
+            <img
+              *ngIf="blog.picture"
+              [src]="
+                blog.picture.startsWith('data:') ||
+                blog.picture.startsWith('http')
+                  ? blog.picture
+                  : getHost() + blog.picture
+              "
+              [alt]="blog.title"
+              class="cover-img"
+            />
+            <div class="cover-placeholder" *ngIf="!blog.picture">
+              <i class="feather icon-image"></i>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="feat-body">
+            <div class="feat-meta">
+              <span *ngIf="blog.category?.name" class="cat-pill amber">{{
+                blog.category?.name
+              }}</span>
+              <span *ngIf="blog.category" class="meta-dot"></span>
+              <span>{{ blog.createdAt | utcToLocalTime: "shortDate" }}</span>
+            </div>
+            <h2 class="feat-title">{{ blog.title }}</h2>
+            <p class="feat-subtitle" *ngIf="blog.subtitle">
+              {{ blog.subtitle }}
+            </p>
+            <div class="card-footer">
+              <div class="card-stats">
+                <span
+                  class="stat-item"
+                  [attr.aria-label]="
+                    ('PREVIEW.WIDGETS.COMMENTS' | translate) +
+                    ': ' +
+                    (blog.comments?.length ?? blog.commentsCount ?? 0)
+                  "
+                >
+                  <i class="feather icon-message-square" aria-hidden="true"></i>
+                  {{ blog.comments?.length ?? blog.commentsCount ?? 0 }}
+                </span>
+                <span
+                  class="stat-item"
+                  [attr.aria-label]="
+                    ('PREVIEW.WIDGETS.LIKES' | translate) +
+                    ': ' +
+                    (blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0)
+                  "
+                >
+                  <i class="feather icon-thumbs-up" aria-hidden="true"></i>
+                  {{ blog.reactionsUp?.length ?? blog.reactionsUpCount ?? 0 }}
+                </span>
+              </div>
+              <span class="read-more">
+                {{ "PREVIEW.BLOG.LIST.READ_MORE" | translate }}
+                <i
+                  class="feather"
+                  [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
+                ></i>
               </span>
             </div>
-            <span class="read-more">
-              {{ "PREVIEW.BLOG.LIST.READ_MORE" | translate }}
-              <i
-                class="feather"
-                [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"
-              ></i>
-            </span>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
     </div>
-  </main>
+  </div>
 </div>

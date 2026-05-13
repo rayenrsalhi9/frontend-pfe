@@ -3,14 +3,16 @@ export const notification = {
       "LABELS": {
         "TITLE": "الإشعارات",
         "NEW": "جديد",
-        "DOC_PERMISSION_GARANTED": "تم منح إذن المستند لك",
+        "DOC_PERMISSION_GRANTED": "تم منح إذن المستند لك",
         "REMINDER": "تذكير",
+        "DOCUMENT": "مستند",
         "DOCUMENT_NAME": "اسم المستند",
         "SEND_MESSAGE": "أرسل رسالة",
         "CHAT": "مراسلة",
         "EMPTY": "لا توجد إشعارات",
         "SEPARATOR": "::",
-        "FROM_USER": "من"
+        "FROM_USER": "من",
+        "MESSAGE_FROM_USER": "رسالة من {{name}}"
       },
       "BUTTONS": {
         "READ": "وضع علامة على الكل كمقروء"

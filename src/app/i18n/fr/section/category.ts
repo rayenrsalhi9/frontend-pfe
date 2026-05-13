@@ -26,12 +26,18 @@ export const category = {
       BUTTONS: {
         CATEGORY_SAVE: "Enregistrer",
         CATEGORY_CANCEL: "Annuler",
+        SAVE: "Enregistrer",
       },
       ERROR: {
         CATEGORY_NAME_IS_REQUIRED: "Le nom de la catégorie est requis.",
       },
       TOAST: {
         CATEGORY_SAVED_SUCCESSFULLY: "Catégorie enregistrée avec succès.",
+      },
+    },
+    EDIT: {
+      BUTTONS: {
+        SAVE: "Enregistrer",
       },
     },
     DELETE: {

@@ -1,33 +1,120 @@
-<div class="card" *ngIf="!isLoading && survey">
-  <div class="card-header">
-    <h4 class="mb-0">{{ survey?.title }}</h4>
-    <span class="badge" [ngClass]="{'bg-success': survey?.privacy === 'public', 'bg-primary': survey?.privacy === 'private'}">
-      {{ ('SURVEY.PRIVACY.' + (survey?.privacy | uppercase)) | translate }}
-    </span>
+<!-- ── Loading skeleton ───────────────────────────────────── -->
+<div class="sv-skeleton" *ngIf="isLoading">
+  <div class="sv-skeleton-header"></div>
+  <div class="sv-skeleton-body">
+    <div class="sv-skeleton-strip"></div>
+    <div class="sv-skeleton-chart"></div>
   </div>
-  <div class="card-body">
-    <div class="survey-stats-grid">
-      <div class="stat-item">
-        <span class="stat-label">{{ ('SURVEY.TABLE.TYPE' | translate) }}</span>
-        <span class="stat-value">{{ ('SURVEY.TYPE.' + (survey?.type | uppercase)) | translate }}</span>
+</div>
+
+<!-- ── Main content ───────────────────────────────────────── -->
+<div class="sv-page" *ngIf="!isLoading && survey">
+  <!-- ── Page header ────────────────────────────────────────── -->
+  <header class="sv-header">
+    <div class="sv-header-left">
+      <p class="sv-eyebrow">{{ "SURVEY.DETAIL.EYEBROW" | translate }}</p>
+      <h1 class="sv-title">{{ survey?.title }}</h1>
+      <p
+        class="sv-desc"
+        *ngIf="survey?.creator?.firstName || survey?.creator?.lastName"
+      >
+        {{ "SURVEY.DETAIL.CREATED_BY" | translate }}
+        <strong
+          >{{ survey?.creator?.firstName }}
+          {{ survey?.creator?.lastName }}</strong
+        >
+        · {{ survey?.createdAt | utcToLocalTime: "shortDate" }}
+      </p>
+    </div>
+    <span
+      class="sv-privacy-badge"
+      [class.sv-privacy-badge--public]="survey?.privacy === 'public'"
+      [class.sv-privacy-badge--private]="survey?.privacy === 'private'"
+    >
+      <i
+        class="feather"
+        [ngClass]="survey?.privacy === 'public' ? 'icon-globe' : 'icon-lock'"
+      ></i>
+      {{ "SURVEY.PRIVACY." + (survey?.privacy | uppercase) | translate }}
+    </span>
+  </header>
+
+  <!-- ── Section label ──────────────────────────────────────── -->
+  <div class="sv-section-label">
+    <span>{{ "SURVEY.DETAIL.OVERVIEW" | translate }}</span>
+  </div>
+
+  <!-- ── Stat strip ─────────────────────────────────────────── -->
+  <div class="sv-stat-strip">
+    <div class="sv-stat-card" style="--stat-color: #b45309">
+      <div class="sv-stat-icon">
+        <i class="feather icon-bar-chart-2"></i>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">{{ ('SURVEY.TABLE.CREATOR' | translate) }}</span>
-        <span class="stat-value">{{ survey?.creator?.firstName }} {{ survey?.creator?.lastName }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">{{ ('SURVEY.TABLE.CREATED' | translate) }}</span>
-        <span class="stat-value">{{ survey?.createdAt | utcToLocalTime: 'shortDate' }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">{{ ('SURVEY.DETAIL.ANSWERS' | translate) }}</span>
-        <span class="stat-value">{{ survey?.answersCount || 0 }}</span>
+      <div class="sv-stat-body">
+        <span class="sv-stat-value">{{ survey?.answersCount || 0 }}</span>
+        <span class="sv-stat-label">{{
+          "SURVEY.DETAIL.ANSWERS" | translate
+        }}</span>
       </div>
     </div>
 
-    <div class="chart-section">
-      <h5 class="section-title">{{ 'SURVEY.DETAIL.TITLE' | translate }}</h5>
-      <div *ngIf="overviewChartOptions?.series?.length" id="dash-line">
+    <div class="sv-stat-card" style="--stat-color: #0f6e56">
+      <div class="sv-stat-icon">
+        <i class="feather icon-tag"></i>
+      </div>
+      <div class="sv-stat-body">
+        <span class="sv-stat-value">{{
+          "SURVEY.TYPE." + (survey?.type | uppercase) | translate
+        }}</span>
+        <span class="sv-stat-label">{{ "SURVEY.TABLE.TYPE" | translate }}</span>
+      </div>
+    </div>
+
+    <div class="sv-stat-card" style="--stat-color: #185fa5">
+      <div class="sv-stat-icon">
+        <i class="feather icon-user"></i>
+      </div>
+      <div class="sv-stat-body">
+        <span class="sv-stat-value"
+          >{{ survey?.creator?.firstName }}
+          {{ survey?.creator?.lastName }}</span
+        >
+        <span class="sv-stat-label">{{
+          "SURVEY.TABLE.CREATOR" | translate
+        }}</span>
+      </div>
+    </div>
+
+    <div class="sv-stat-card" style="--stat-color: #4c1d95">
+      <div class="sv-stat-icon">
+        <i class="feather icon-calendar"></i>
+      </div>
+      <div class="sv-stat-body">
+        <span class="sv-stat-value">{{
+          survey?.createdAt | utcToLocalTime: "shortDate"
+        }}</span>
+        <span class="sv-stat-label">{{
+          "SURVEY.TABLE.CREATED" | translate
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section label ──────────────────────────────────────── -->
+  <div class="sv-section-label">
+    <span>{{ "SURVEY.DETAIL.TITLE" | translate }}</span>
+  </div>
+
+  <!-- ── Chart card ─────────────────────────────────────────── -->
+  <div class="sv-card">
+    <div class="sv-card-head">
+      <h2 class="sv-card-title">
+        <i class="feather icon-activity"></i>
+        {{ "SURVEY.DETAIL.RESPONSES_CHART" | translate }}
+      </h2>
+    </div>
+    <div class="sv-card-body">
+      <div *ngIf="overviewChartOptions?.series?.length; else noData">
         <apx-chart
           [series]="overviewChartOptions?.series"
           [chart]="overviewChartOptions?.chart"
@@ -41,17 +128,12 @@
           [xaxis]="overviewChartOptions?.xaxis"
         ></apx-chart>
       </div>
-      <div *ngIf="!overviewChartOptions?.series?.length" class="no-data">
-        {{ 'SURVEY.DETAIL.NO_DATA' | translate }}
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="card" *ngIf="isLoading">
-  <div class="card-body loading-state">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">{{ 'SURVEY.DETAIL.LOADING' | translate }}</span>
+      <ng-template #noData>
+        <div class="sv-empty">
+          <i class="feather icon-bar-chart-2"></i>
+          <p>{{ "SURVEY.DETAIL.NO_DATA" | translate }}</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

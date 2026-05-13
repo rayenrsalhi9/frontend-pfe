@@ -1,55 +1,63 @@
-<form
-  [formGroup]="formGroup"
-  (ngSubmit)="login()"
-  novalidate
-  class="modern-login-form"
->
-  <div class="form-group">
-    <label class="form-label" for="login-username">{{
-      "SIGN.IN.USERNAME" | translate
-    }}</label>
+<form [formGroup]="formGroup" (ngSubmit)="login()" novalidate class="lf-form">
+  <div class="lf-alert" *ngIf="errorMessage" role="alert">
+    <i class="feather icon-alert-circle"></i>
+    <span>{{ errorMessage | translate }}</span>
+  </div>
+
+  <div class="lf-field" [class.lf-field--has-error]="hasSubmissionError">
+    <label class="lf-label" for="login-email">
+      {{ "SIGN.IN.USERNAME" | translate }}
+    </label>
     <input
-      type="text"
-      class="form-control modern-input"
-      formControlName="username"
-      id="login-username"
+      type="email"
+      id="login-email"
+      class="lf-input"
+      [class.lf-input--error]="(submitted && formGroup.get('email')?.invalid) || hasSubmissionError"
+      formControlName="email"
       placeholder="m@example.com"
-      [ngClass]="{
-        'is-invalid': submitted && formGroup.get('username')?.invalid
-      }"
+      autocomplete="email"
+      (input)="onFieldChange()"
     />
     <div
-      *ngIf="submitted && formGroup.get('username')?.invalid"
-      class="modern-error"
+      class="lf-field-error"
+      *ngIf="submitted && formGroup.get('email')?.errors?.['required']"
     >
-      <div *ngIf="formGroup.get('username')?.errors?.['required']">
-        {{ "SIGN.IN.USERNAME_ERROR" | translate }}
-      </div>
+      <i class="feather icon-alert-circle"></i>
+      {{ "SIGN.IN.USERNAME_ERROR" | translate }}
+    </div>
+    <div
+      class="lf-field-error"
+      *ngIf="submitted && formGroup.get('email')?.errors?.['email']"
+    >
+      <i class="feather icon-alert-circle"></i>
+      {{ "SIGN.FORGOT.EMAIL_INVALID" | translate }}
     </div>
   </div>
 
-  <div class="form-group">
-    <div class="d-flex justify-content-between align-items-center">
-      <label class="form-label" for="login-password">{{
-        "SIGN.IN.PASSWORD" | translate
-      }}</label>
-      <a class="forgot-password-link" routerLink="/forgot">{{
-        "SIGN.IN.FORGET" | translate
-      }}</a>
+  <div class="lf-field" [class.lf-field--has-error]="hasSubmissionError">
+    <div class="lf-label-row">
+      <label class="lf-label" for="login-password">
+        {{ "SIGN.IN.PASSWORD" | translate }}
+      </label>
+      <a class="lf-forgot-link" routerLink="/forgot">
+        {{ "SIGN.IN.FORGET" | translate }}
+      </a>
     </div>
-    <div class="password-input-wrapper">
+    <div class="lf-password-wrap">
       <input
         [type]="showPassword ? 'text' : 'password'"
-        class="form-control modern-input"
-        formControlName="password"
         id="login-password"
-        [ngClass]="{
-          'is-invalid': submitted && formGroup.get('password')?.invalid
-        }"
+        class="lf-input"
+        [class.lf-input--error]="
+          (submitted && formGroup.get('password')?.invalid) || hasSubmissionError
+        "
+        formControlName="password"
+        autocomplete="current-password"
+        (input)="onFieldChange()"
       />
       <button
         type="button"
-        class="password-toggle-btn"
+        class="lf-password-toggle"
         (click)="onShowPasswordClick()"
         [attr.aria-label]="
           (showPassword ? 'SIGN.IN.HIDE_PASSWORD' : 'SIGN.IN.SHOW_PASSWORD')
@@ -62,28 +70,15 @@
         ></i>
       </button>
     </div>
-    <div
-      *ngIf="submitted && formGroup.get('password')?.invalid"
-      class="modern-error"
-    >
-      <div *ngIf="formGroup.get('password')?.errors?.['required']">
-        {{ "SIGN.IN.PASSWORD_ERROR" | translate }}
-      </div>
-    </div>
   </div>
 
-  <button class="btn modern-submit-btn" type="submit" [disabled]="isLoading">
-    <span *ngIf="!isLoading">{{ "SIGN.IN.BUTTON" | translate }}</span>
-    <span *ngIf="isLoading">
-      <i class="feather icon-loader spin"></i>
+  <button class="lf-submit-btn" type="submit" [disabled]="formGroup.invalid || isLoading || hasSubmissionError">
+    <ng-container *ngIf="!isLoading">
       {{ "SIGN.IN.BUTTON" | translate }}
-    </span>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      <i class="feather icon-loader lf-spin"></i>
+      {{ "SIGN.IN.BUTTON" | translate }}
+    </ng-container>
   </button>
 </form>
-
-<div class="signup-prompt">
-  <span>{{ "SIGN.IN.NO_ACCOUNT" | translate }}</span>
-  <a class="signup-link" routerLink="/register">{{
-    "SIGN.IN.SIGN_UP" | translate
-  }}</a>
-</div>

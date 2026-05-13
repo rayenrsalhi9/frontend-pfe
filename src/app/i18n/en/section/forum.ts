@@ -10,9 +10,8 @@ export const forum = {
       REACTIONS: "Reactions",
       ACTIVITY: "Last Activity",
       CREATED: "Created On",
-      CLOSED: "Closed",
       CREATOR: "Author",
-      STATUS: "Status",
+      PRIVACY: "Privacy",
       ACTIONS: "Actions",
       SEARCH_BY_NAME: "Search topics...",
       SEARCH_BY_CATEGORY: "Filter by category",
@@ -84,9 +83,10 @@ export const forum = {
       ADD_COMMENT: "Write a comment...",
     },
 
-    STATUS: {
-      OPEN: "Open",
-      CLOSED: "Closed",
+    PRIVACY: {
+      PUBLIC: "Public",
+      PRIVATE: "Private",
+      UNKNOWN: "Unknown",
     },
 
     MODAL: {

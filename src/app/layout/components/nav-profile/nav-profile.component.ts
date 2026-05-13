@@ -41,14 +41,14 @@ export class NavProfileComponent implements OnInit, OnDestroy {
     {
       path: "/setting/profile",
       icon: "feather icon-user",
-      claims: ["show"],
+      alwaysVisible: true,
       item: "DROPDOWN_PROFILE.PROFILE",
     },
     {
       path: null,
       icon: "feather icon-lock",
       click: () => this.changePassword(),
-      claims: ["show"],
+      alwaysVisible: true,
       item: "DROPDOWN_PROFILE.CHANGE_PWD",
     },
     {

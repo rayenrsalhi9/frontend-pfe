@@ -106,10 +106,13 @@ export class NavNotificationComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((notifications: UserNotification[]) => {
         const eventNotifications = notifications;
-        this.newNotificationCount = eventNotifications.filter(
-          (c) => !c.isRead && c.type !== NotificationType.Message,
+        const filteredNotifications = eventNotifications.filter(
+          (c) => c.type !== NotificationType.Message,
+        );
+        this.newNotificationCount = filteredNotifications.filter(
+          (c) => !c.isRead,
         ).length;
-        this.notifications = eventNotifications.sort(
+        this.notifications = filteredNotifications.sort(
           (a, b) =>
             new Date(b.createdDate).getTime() -
             new Date(a.createdDate).getTime(),

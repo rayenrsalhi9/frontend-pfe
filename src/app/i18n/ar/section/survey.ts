@@ -101,8 +101,12 @@ export const survey = {
       SATISFACTION: "رضا",
     },
     DETAIL: {
+      EYEBROW: "استبيان",
       TITLE: "تفاصيل الاستطلاع",
+      CREATED_BY: "أنشئ بواسطة",
+      OVERVIEW: "نظرة عامة",
       ANSWERS: "الإجابات",
+      RESPONSES_CHART: "الرسم البياني للردود",
       NO_DATA: "لا تتوفر بيانات",
     },
   },

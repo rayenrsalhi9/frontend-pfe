@@ -3,14 +3,16 @@ export const notification = {
       "LABELS": {
         "TITLE": "Notifications",
         "NEW": "nouveau",
-        "DOC_PERMISSION_GARANTED": "Autorisation de document accordée",
+        "DOC_PERMISSION_GRANTED": "Autorisation de document accordée",
         "REMINDER": "Rappel",
+        "DOCUMENT": "Document",
         "DOCUMENT_NAME": "Nom du document",
         "SEND_MESSAGE": "a envoyé un message",
         "CHAT": "message",
         "EMPTY": "Aucune notification",
         "SEPARATOR": "::",
-        "FROM_USER": "de"
+        "FROM_USER": "de",
+        "MESSAGE_FROM_USER": "Message de {{name}}"
       },
       "BUTTONS": {
         "READ": "Marquer tout comme lu"

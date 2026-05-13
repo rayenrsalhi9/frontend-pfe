@@ -1,189 +1,181 @@
-<!-- Conversation container with full height -->
-<div class="conversation-container" [class.has-chat]="chatId">
-  <!-- ── Conversation Header ──────────────────────────── -->
-  <div class="conversation-header" *ngIf="chatId">
-    <div class="d-flex align-items-center justify-content-between w-100">
-      <!-- Mobile back button -->
-      <button
-        class="conv-mobile-back d-block d-lg-none"
-        (click)="onMobilePanelOpen()"
-        [attr.aria-label]="'CHAT.LABELS.BACK' | translate"
-      >
-        <i class="feather icon-chevron-left"></i>
-      </button>
+<div class="conv-container" [class.conv-container--active]="chatId">
+  <!-- ══ HEADER ══════════════════════════════════════════════ -->
+  <div class="conv-header" *ngIf="chatId">
+    <!-- Mobile back -->
+    <button
+      class="conv-back-btn d-block d-lg-none"
+      (click)="onMobilePanelOpen()"
+      [attr.aria-label]="'CHAT.LABELS.BACK' | translate"
+    >
+      <i class="feather icon-chevron-left"></i>
+    </button>
 
-      <ng-container *ngIf="chatId">
-        <div class="conv-header-identity">
-          <!-- 1-on-1 conversation (no title + 2 users) -->
-          <ng-container
-            *ngIf="
-              conversation &&
-                !conversation.title &&
-                conversation?.users?.length === 2;
-              else groupAvatar
+    <!-- Identity -->
+    <div class="conv-identity" *ngIf="chatId">
+      <!-- 1-on-1 avatar -->
+      <ng-container
+        *ngIf="
+          conversation &&
+            conversation?.users?.length === 2;
+          else groupAvatar
+        "
+      >
+        <button
+          type="button"
+          class="conv-avatar-btn"
+          (click)="handleUpdateChat()"
+          [attr.aria-label]="'CHAT.LABELS.EDIT_CHAT' | translate"
+        >
+          <avatar
+            [src]="
+              avatar
+                ? getHost() + avatar
+                : '/assets/images/avatars/thumb-16.jpg'
             "
-          >
-            <button
-              type="button"
-              class="conv-avatar-btn"
-              (click)="handleUpdateChat()"
-              [attr.aria-label]="'CHAT.LABELS.EDIT_CHAT' | translate"
+            [size]="36"
+          ></avatar>
+        </button>
+      </ng-container>
+
+      <!-- Group collage -->
+      <ng-template #groupAvatar>
+        <div class="conv-collage">
+          <div class="conv-collage-grid">
+            <ng-container
+              *ngFor="let usr of conversation?.users | slice:0:4; let i = index"
             >
               <avatar
+                [tooltip]="usr.firstName + ' ' + usr.lastName"
+                class="conv-collage-img"
+                [size]="36"
                 [src]="
-                  avatar
-                    ? getHost() + avatar
+                  usr.avatar
+                    ? getHost() + usr.avatar
                     : '/assets/images/avatars/thumb-16.jpg'
                 "
-                [size]="36"
               ></avatar>
-            </button>
-          </ng-container>
-
-          <!-- Group (has title OR 3+ users) -->
-          <ng-template #groupAvatar>
-            <div class="collage">
-              <div class="avatar-collage">
-                <ng-container
-                  *ngFor="let usr of conversation?.users; let i = index"
-                >
-                  <avatar
-                    *ngIf="i <= 3"
-                    [tooltip]="usr.firstName + ' ' + usr.lastName"
-                    [ngClass]="'collage-img'"
-                    class="avatar"
-                    [size]="36"
-                    [src]="
-                      usr.avatar
-                        ? getHost() + usr.avatar
-                        : '/assets/images/avatars/thumb-16.jpg'
-                    "
-                  ></avatar>
-                </ng-container>
-              </div>
-              <div *ngIf="conversation?.users?.length > 4" class="collage-rest">
-                +{{ conversation?.users?.length - 4 }}
-              </div>
-            </div>
-          </ng-template>
-
-          <!-- Name / Title -->
-          <div class="conv-header-name">
-            <ng-container *ngIf="conversation?.title; else titledTpl">
-              <h6 class="mb-0 conv-title">{{ conversation.title }}</h6>
             </ng-container>
-            <ng-template #titledTpl>
-              <ng-container *ngIf="conversation?.users?.length === 2">
-                <ng-container *ngFor="let c_user of conversation?.users">
-                  <h6 *ngIf="user.id !== c_user.id" class="mb-0 conv-title">
-                    {{ c_user.firstName }} {{ c_user.lastName }}
-                  </h6>
-                </ng-container>
-              </ng-container>
-              <ng-container *ngIf="conversation?.users?.length > 2">
-                <h6 class="mb-0 conv-title">
-                  {{
-                    "CHAT.LABELS.GROUP_COUNT"
-                      | translate: { count: conversation?.users?.length }
-                  }}
-                </h6>
-              </ng-container>
-            </ng-template>
           </div>
+          <span
+            *ngIf="conversation?.users?.length > 4"
+            class="conv-collage-overflow"
+          >
+            +{{ conversation?.users?.length - 4 }}
+          </span>
         </div>
+      </ng-template>
 
-        <!-- Header actions -->
-        <div class="conv-header-actions" dropdown *ngIf="chatId">
+      <!-- Name / title -->
+      <div class="conv-identity-name">
+        <ng-container *ngIf="conversation?.title; else derivedTitle">
+          <h6 class="conv-title">{{ conversation.title }}</h6>
+        </ng-container>
+        <ng-template #derivedTitle>
+          <ng-container *ngIf="conversation?.users?.length === 2">
+            <ng-container *ngFor="let c_user of conversation?.users">
+              <h6 *ngIf="user.id !== c_user.id" class="conv-title">
+                {{ c_user.firstName }} {{ c_user.lastName }}
+              </h6>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="conversation?.users?.length > 2">
+            <h6 class="conv-title">
+              {{
+                "CHAT.LABELS.GROUP_COUNT"
+                  | translate: { count: conversation?.users?.length }
+              }}
+            </h6>
+          </ng-container>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Header actions dropdown -->
+    <div class="conv-header-actions" dropdown [container]="'body'" placement="bottom right" *ngIf="chatId">
+      <button
+        type="button"
+        class="conv-action-btn"
+        dropdownToggle
+        [attr.aria-label]="'CHAT.LABELS.MORE_ACTIONS' | translate"
+      >
+        <i class="feather icon-settings"></i>
+      </button>
+      <ul *dropdownMenu class="conv-dropdown" role="menu">
+        <li role="none" *ngIf="isGroupConversation">
           <button
             type="button"
-            class="conv-action-btn"
-            dropdownToggle
-            [attr.aria-label]="'CHAT.LABELS.MORE_ACTIONS' | translate"
+            class="conv-dropdown-item"
+            role="menuitem"
+            (click)="handleShowUsers()"
           >
-            <i class="feather icon-settings"></i>
+            <i class="feather icon-users"></i>
+            {{ "CHAT.LABELS.MEMBERS_LIST" | translate }}
           </button>
-          <ul
-            *dropdownMenu
-            class="dropdown-menu dropdown-menu-modern dropdown-menu-right"
-            role="menu"
+        </li>
+        <li role="none" *ngIf="isGroupConversation">
+          <button
+            type="button"
+            class="conv-dropdown-item"
+            role="menuitem"
+            (click)="handleUpdateChat()"
           >
-            <li role="menuitem" *ngIf="isGroupConversation">
-              <button
-                type="button"
-                class="dropdown-item-modern"
-                (click)="handleShowUsers()"
-              >
-                <i class="feather icon-users"></i>
-                {{ "CHAT.LABELS.MEMBERS_LIST" | translate }}
-              </button>
-            </li>
-            <li role="menuitem" *ngIf="isGroupConversation">
-              <button
-                type="button"
-                class="dropdown-item-modern"
-                (click)="handleUpdateChat()"
-              >
-                <i class="feather icon-edit-2"></i>
-                {{ "CHAT.LABELS.EDIT_CHAT" | translate }}
-              </button>
-            </li>
-            <li role="menuitem" *ngIf="isGroupConversation">
-              <button
-                type="button"
-                class="dropdown-item-modern"
-                (click)="addUser()"
-              >
-                <i class="feather icon-user-plus"></i>
-                {{ "CHAT.LABELS.ADD_USER" | translate }}
-              </button>
-            </li>
-            <li role="menuitem">
-              <button
-                type="button"
-                class="dropdown-item-modern"
-                (click)="onDeleteConversation()"
-              >
-                <i class="feather icon-trash-2"></i>
-                {{ "CHAT.LABELS.DELETE_CONVERSATION" | translate }}
-              </button>
-            </li>
-          </ul>
-        </div>
-      </ng-container>
+            <i class="feather icon-edit-2"></i>
+            {{ "CHAT.LABELS.EDIT_CHAT" | translate }}
+          </button>
+        </li>
+        <li role="none" *ngIf="isGroupConversation">
+          <button type="button" class="conv-dropdown-item" role="menuitem" (click)="addUser()">
+            <i class="feather icon-user-plus"></i>
+            {{ "CHAT.LABELS.ADD_USER" | translate }}
+          </button>
+        </li>
+        <li role="none">
+          <button
+            type="button"
+            class="conv-dropdown-item conv-dropdown-item--danger"
+            role="menuitem"
+            (click)="onDeleteConversation()"
+          >
+            <i class="feather icon-trash-2"></i>
+            {{ "CHAT.LABELS.DELETE_CONVERSATION" | translate }}
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 
-  <!-- Empty / Welcome state - full height when no chat selected -->
-  <div *ngIf="!chatId" class="conv-welcome">
-    <div class="welcome-container">
-      <div class="welcome-icon">
-        <i class="feather icon-message-square"></i>
-      </div>
-      <div class="welcome-text">
-        <h2 class="welcome-title">{{ "CHAT.LABELS.START_CHAT" | translate }}</h2>
-        <p class="welcome-subtitle">{{ "CHAT.LABELS.WELCOME" | translate }}</p>
-      </div>
+  <!-- ══ EMPTY / WELCOME STATE ══════════════════════════════ -->
+  <div class="conv-welcome" *ngIf="!chatId">
+    <div class="conv-welcome-inner">
+      <span class="conv-welcome-icon">
+        <i class="feather icon-message-circle"></i>
+      </span>
+      <h2 class="conv-welcome-title">
+        {{ "CHAT.LABELS.START_CHAT" | translate }}
+      </h2>
+      <p class="conv-welcome-subtitle">
+        {{ "CHAT.LABELS.WELCOME" | translate }}
+      </p>
     </div>
   </div>
 
-  <!-- ── Message Body ─────────────────────────────────── -->
-  <perfect-scrollbar *ngIf="chatId" class="conversation-body" #chatPS>
-    <!-- Messages list -->
-    <div class="conv-messages-wrap" *ngIf="conversation">
-      <div
-        class="msg"
-        *ngFor="let msg of conversation.messages"
-        [ngClass]="{
-          'msg-recipient': msg.sender?.id !== user.id,
-          'msg-sent': msg.sender?.id === user.id
-        }"
-      >
+  <!-- ══ MESSAGE BODY ════════════════════════════════════════ -->
+  <perfect-scrollbar *ngIf="chatId" class="conv-body" #chatPS>
+    <div class="conv-messages" *ngIf="conversation">
+      <ng-container *ngFor="let msg of conversation.messages">
+        <div
+          class="conv-msg"
+          *ngIf="msg.type !== 'reaction'"
+          [class.conv-msg--recv]="msg.sender?.id !== user.id"
+          [class.conv-msg--sent]="msg.sender?.id === user.id"
+          [class.conv-msg--removed]="isSenderRemoved(msg.sender?.id)"
+        >
         <!-- Sender avatar (received only) -->
-        <div class="msg-avatar" *ngIf="msg.sender?.id !== user.id">
+        <div class="conv-msg-avatar" *ngIf="msg.sender?.id !== user.id">
           <avatar
             [icon]="'feather icon-user'"
             [src]="
-              msg.sender?.avatar
+              !isSenderRemoved(msg.sender?.id) && msg.sender?.avatar
                 ? getHost() + msg.sender.avatar
                 : '/assets/images/avatars/thumb-16.jpg'
             "
@@ -191,35 +183,29 @@
           ></avatar>
         </div>
 
-        <!-- Bubble + Seen Label Container -->
-        <div class="bubble-container">
-          <!-- Bubble -->
-          <div
-            class="bubble"
-            [ngClass]="{ 'no-avatar': msg.sender?.id === user.id }"
-          >
-            <!-- Reaction menu toggle -->
+        <!-- Bubble + seen container -->
+        <div class="conv-bubble-wrap">
+          <div class="conv-react-wrap" dropdown [container]="'body'" [dropup]="true" *ngIf="msg.type !== 'reaction' && !isSenderRemoved(msg.sender?.id)">
             <button
               type="button"
-              class="bubble-react-btn"
-              [class.bubble-react-btn--sent]="msg.sender?.id === user.id"
-              [class.bubble-react-btn--recv]="msg.sender?.id !== user.id"
-              (click)="handlerRactionToggle(msg)"
+              class="conv-react-btn"
+              dropdownToggle
+              [class.conv-react-btn--sent]="msg.sender?.id === user.id"
+              [class.conv-react-btn--recv]="msg.sender?.id !== user.id"
               [attr.aria-label]="'CHAT.LABELS.SHOW_REACTIONS' | translate"
             >
               <i class="feather icon-more-vertical"></i>
             </button>
 
-            <!-- Reaction picker -->
             <div
-              *ngIf="reactionToggle === msg.id"
-              class="bubble-react-picker"
-              [class.bubble-react-picker--left]="msg.sender?.id === user.id"
-              [class.bubble-react-picker--right]="msg.sender?.id !== user.id"
+              *dropdownMenu
+              class="conv-react-picker"
+              [class.conv-react-picker--left]="msg.sender?.id === user.id"
+              [class.conv-react-picker--right]="msg.sender?.id !== user.id"
             >
               <button
                 type="button"
-                class="react-icon"
+                class="conv-react-icon"
                 (click)="onMessageReact('heart', msg)"
                 [attr.aria-label]="'CHAT.LABELS.REACT_HEART' | translate"
               >
@@ -227,7 +213,7 @@
               </button>
               <button
                 type="button"
-                class="react-icon"
+                class="conv-react-icon"
                 (click)="onMessageReact('like', msg)"
                 [attr.aria-label]="'CHAT.LABELS.REACT_LIKE' | translate"
               >
@@ -235,91 +221,103 @@
               </button>
               <button
                 type="button"
-                class="react-icon"
+                class="conv-react-icon"
                 (click)="onMessageReact('dislike', msg)"
                 [attr.aria-label]="'CHAT.LABELS.REACT_DISLIKE' | translate"
               >
                 <i class="feather icon-thumbs-down"></i>
               </button>
             </div>
+          </div>
 
-            <!-- Bubble wrapper -->
+          <!-- Bubble -->
+          <div
+            class="conv-bubble"
+            [class.conv-bubble--no-avatar]="msg.sender?.id === user.id"
+          >
             <div
-              class="bubble-wrapper"
-              [class.bubble-wrapper--image]="msg.type === 'image'"
+              class="conv-bubble-inner"
+              [class.conv-bubble-inner--media]="msg.type === 'image'"
             >
-              <!-- Text message -->
-              <div class="bubble-text" *ngIf="msg.type === 'msg'">
+              <!-- Text -->
+              <div class="conv-bubble-text" *ngIf="msg.type === 'msg'">
                 {{ msg.content }}
               </div>
 
               <!-- Image -->
-              <div class="d-flex flex-column" *ngIf="msg.type === 'image'">
+              <button
+                type="button"
+                *ngIf="msg.type === 'image'"
+                (click)="showLightbox(msg.content)"
+                class="conv-bubble-img-wrap"
+                aria-label="Open image preview"
+              >
                 <img
-                  (click)="showLightbox(msg.content)"
                   [src]="getHost() + msg.content"
-                  class="bubble-img"
-                  [alt]="msg.content"
+                  class="conv-bubble-img"
+                  alt=""
                 />
-              </div>
+              </button>
 
               <!-- File (text mime) -->
-              <div *ngIf="msg.type === 'text'">
-                <a
-                  [href]="getHost() + msg.content"
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="bubble-file-link"
-                >
-                  <i class="feather icon-file"></i>
-                  {{ msg.content }}
-                </a>
-              </div>
+              <a
+                *ngIf="msg.type === 'text'"
+                [href]="getHost() + msg.content"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                class="conv-bubble-file"
+              >
+                <i class="feather icon-file"></i>
+                <span>{{ msg.content }}</span>
+              </a>
 
               <!-- Application file -->
-              <div *ngIf="msg.type === 'application'">
-                <a
-                  [href]="getHost() + msg.content"
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="bubble-file-link"
-                >
-                  <i class="feather icon-file-text"></i>
-                  {{ msg.content }}
-                </a>
-              </div>
+              <a
+                *ngIf="msg.type === 'application'"
+                [href]="getHost() + msg.content"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                class="conv-bubble-file"
+              >
+                <i class="feather icon-file-text"></i>
+                <span>{{ msg.content }}</span>
+              </a>
 
               <!-- Audio -->
-              <div *ngIf="msg.type === 'audio'">
-                <audio controls class="bubble-audio">
-                  <source [src]="getHost() + msg.content" [type]="msg.mime" />
-                </audio>
-              </div>
+              <audio
+                *ngIf="msg.type === 'audio'"
+                controls
+                class="conv-bubble-audio"
+              >
+                <source [src]="getHost() + msg.content" [type]="msg.mime" />
+              </audio>
 
               <!-- Video -->
-              <div *ngIf="msg.type === 'video'">
-                <video class="bubble-video" controls>
-                  <source [src]="getHost() + msg.content" [type]="msg.mime" />
-                </video>
-              </div>
+              <video
+                *ngIf="msg.type === 'video'"
+                controls
+                class="conv-bubble-video"
+              >
+                <source [src]="getHost() + msg.content" [type]="msg.mime" />
+              </video>
             </div>
 
-            <!-- Reactions (inside bubble, at bottom corner) -->
-            <div
-              *ngIf="msg.reactions && msg.reactions.length > 0"
-              class="bubble-reactions"
-            >
-              <span class="reaction-count">{{ getReactionSummary(msg.reactions) }}</span>
+            <!-- Inline reactions -->
+            <div *ngIf="msg.reactions?.length > 0" class="conv-reactions">
+              <span class="conv-reaction-pill">{{
+                getReactionSummary(msg.reactions)
+              }}</span>
             </div>
           </div>
         </div>
       </div>
+    </ng-container>
     </div>
   </perfect-scrollbar>
 
-  <!-- Single global fullscreen image viewer -->
+  <!-- Lightbox -->
   <ng-image-fullscreen-view
     *ngIf="showFlag"
     [images]="selectedImage"
@@ -328,20 +326,21 @@
     (close)="closeEventHandler()"
   ></ng-image-fullscreen-view>
 
-  <!-- ── Footer ───────────────────────────────────────── -->
-  <div *ngIf="chatId" class="conversation-footer">
+  <!-- ══ FOOTER ══════════════════════════════════════════════ -->
+  <div *ngIf="chatId" class="conv-footer">
     <input
       id="chat-message-input"
       type="text"
-      class="form-control conv-message-input"
+      class="conv-input"
       [placeholder]="'CHAT.LABELS.PLACEHOLDER' | translate"
+      [attr.aria-label]="'CHAT.LABELS.PLACEHOLDER' | translate"
       [(ngModel)]="message"
       [disabled]="composerDisabled"
       (focus)="onInputMessageFocus()"
       (keydown.enter)="sendMessage(); $event.preventDefault()"
     />
 
-    <div class="conv-footer-actions">
+    <div class="conv-footer-tools">
       <input
         hidden
         (change)="onFileSelect($event)"
@@ -352,7 +351,7 @@
 
       <button
         type="button"
-        class="conv-icon-btn"
+        class="conv-tool-btn"
         (click)="fileInput.click()"
         [disabled]="composerDisabled"
         [attr.aria-label]="'CHAT.attachFile' | translate"
@@ -363,7 +362,7 @@
       <div class="conv-emoji-wrap">
         <button
           type="button"
-          class="conv-icon-btn"
+          class="conv-tool-btn"
           (click)="handleEmojiBar()"
           [disabled]="composerDisabled"
           [attr.aria-label]="'CHAT.emoji' | translate"
@@ -385,7 +384,7 @@
 
     <button
       type="button"
-      class="btn btn-primary conv-send-btn"
+      class="conv-send-btn"
       [disabled]="composerDisabled"
       (click)="sendMessage()"
     >

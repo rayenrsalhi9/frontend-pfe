@@ -17,6 +17,7 @@ export class UpdateConversationComponent implements OnInit, OnDestroy {
   conversation: Conversation;
   originalTitle: string;
   hasTitleChanged: boolean = false;
+  isFocused: boolean = false;
   isLoading: boolean = false;
 
   private destroy$ = new Subject<void>();

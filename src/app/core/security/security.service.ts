@@ -127,28 +127,36 @@ export class SecurityService {
   }
 
   refreshToken() {
-    const currentDate: Date = new Date();
-    currentDate.setMinutes(
-      currentDate.getMinutes() - environment.tokenExpiredTimeInMin,
-    );
+    const now: Date = new Date();
     let diffTime: number;
     if (this.clearTimeOutData) {
       clearTimeout(this.clearTimeOutData);
     }
     if (!this.tokenTime) {
       diffTime = 1000;
-      this.tokenTime = new Date();
+      this.tokenTime = now;
     } else {
-      diffTime = Math.abs(this.tokenTime.getTime() - currentDate.getTime());
+      const elapsed = now.getTime() - new Date(this.tokenTime).getTime();
+      const refreshInterval = environment.tokenExpiredTimeInMin * 60 * 1000;
+      if (elapsed >= refreshInterval) {
+        diffTime = 1000;
+      } else {
+        diffTime = refreshInterval - elapsed;
+      }
     }
 
     this.clearTimeOutData = setTimeout(() => {
       clearTimeout(this.clearTimeOutData);
       this.refresh()
         .pipe(delay(1000))
-        .subscribe((userAuth: UserAuth) => {
-          this.updateSecurityData(userAuth);
-          this.refreshToken();
+        .subscribe({
+          next: (userAuth: UserAuth) => {
+            this.updateSecurityData(userAuth);
+            this.refreshToken();
+          },
+          error: () => {
+            this.clearAuthData();
+          },
         });
     }, diffTime);
   }
@@ -157,6 +165,33 @@ export class SecurityService {
     return this.http
       .post<UserAuth>("auth/refresh", {})
       .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  async ensureFreshToken(): Promise<boolean> {
+    if (!this.tokenTime) {
+      const parsed = this.parseSecurityObj();
+      if (!parsed) return false;
+    }
+
+    const now = new Date();
+    const elapsed = now.getTime() - new Date(this.tokenTime).getTime();
+    const refreshInterval = environment.tokenExpiredTimeInMin * 60 * 1000;
+
+    if (elapsed < refreshInterval) return true;
+
+    try {
+      const result = (await this.refresh().toPromise()) as any;
+      if (!result || !result.authorisation?.token) {
+        this.clearAuthData();
+        return false;
+      }
+      this.updateSecurityData(result as UserAuth);
+      this.refreshToken();
+      return true;
+    } catch {
+      this.clearAuthData();
+      return false;
+    }
   }
 
   private parseSecurityObj(): boolean {
@@ -223,6 +258,7 @@ export class SecurityService {
       "bearerToken",
       this.securityObject.authorisation.token,
     );
+    this.pusherService.rebuildPusher();
     this.securityObject$.next(this.securityObject);
   }
   logout(): void {
@@ -258,6 +294,20 @@ export class SecurityService {
       companyProfile.bannerUrl = `${environment.apiUrl}${companyProfile.bannerUrl}`;
     }
     this._companyProfile$.next(companyProfile);
+  }
+
+  clearAuthData(): void {
+    if (this.clearTimeOutData) {
+      clearTimeout(this.clearTimeOutData);
+      this.clearTimeOutData = null;
+    }
+    this.securityObject = new UserAuth();
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("bearerToken");
+    localStorage.removeItem("guestUser");
+    localStorage.removeItem("guestToken");
+    this.pusherService.disconnect();
+    this.securityObject$.next(null);
   }
 
   resetSecurityObject(): void {

@@ -1,6 +1,6 @@
 export const nav = {
   NAV: {
-    GED_HOME: "Accueil GED",
+    GED_HOME: "Accueil DGI",
     TOGGLE_NAVIGATION: "Afficher/Masquer la navigation",
     CLOSE_NAVIGATION: "Fermer la navigation",
 
@@ -8,7 +8,7 @@ export const nav = {
     FORUM: "Forums",
     BLOG: "Blog",
     ARTICLE: "Articles",
-    CONNEXION: "Se connecter",
+    LOGIN: "Se connecter",
     INSCRIPTION: "Créer un compte",
 
     DASHBOARD: "Tableau de bord",
@@ -45,5 +45,6 @@ export const nav = {
     USERS: "Utilisateurs et rôles",
     USERS_LIST: "Liste des utilisateurs",
     USERS_ROLES_LIST: "Rôles",
+    USER_ROLES: "Rôles des utilisateurs",
   },
 };

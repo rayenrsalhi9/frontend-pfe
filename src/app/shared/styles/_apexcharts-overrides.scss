@@ -1,0 +1,59 @@
+// ── ApexCharts Overrides (global) ─────────────────────────────────────
+
+.overview-chart-container {
+  // ── Grid lines ──
+  .apexcharts-gridline {
+    stroke: var(--border-color, #e2e8f0);
+    stroke-dasharray: 4;
+  }
+
+  // ── Axis labels ──
+  .apexcharts-xaxis-label tspan,
+  .apexcharts-yaxis-label tspan {
+    fill: var(--color-amber-dark, #92400e);
+    font-family: Cairo, Inter, sans-serif;
+    font-size: 11px;
+  }
+
+  // ── Legend ──
+  .apexcharts-legend-text {
+    color: var(--text-secondary);
+    font-family: Cairo, Inter, sans-serif;
+    font-size: 12px;
+  }
+
+  .apexcharts-legend-marker {
+    border-radius: 3px;
+  }
+
+  // ── Tooltip ──
+  .apexcharts-tooltip {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    font-family: Cairo, Inter, sans-serif;
+  }
+
+  .apexcharts-tooltip-title {
+    background: var(--bg-amber-light, #fffbeb);
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    color: var(--color-amber-dark, #92400e);
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .apexcharts-tooltip-series-group {
+    padding: 4px 10px;
+  }
+
+  .apexcharts-tooltip-text-y-value {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  // ── Canvas overflow ──
+  .apexcharts-canvas {
+    overflow: visible;
+  }
+}

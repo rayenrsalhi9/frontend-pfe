@@ -1,44 +1,55 @@
-<div class="modal-form-body">
+<div class="modal-modern">
   <!-- Modal Header -->
-  <div class="modal-form-header">
-    <h2 class="modal-form-title">
-      {{ 'CHAT.LABELS.EDIT_CHAT' | translate }}
-    </h2>
-    <p class="modal-form-sub">
-      {{ 'CHAT.MODAL.EDIT_GROUP.DESCRIPTION' | translate }}
-    </p>
+  <div class="modal-modern-header">
+    <div class="header-content">
+      <h2 class="modal-modern-title">
+        {{ 'CHAT.LABELS.EDIT_CHAT' | translate }}
+      </h2>
+      <p class="modal-modern-sub">
+        {{ 'CHAT.MODAL.EDIT_GROUP.DESCRIPTION' | translate }}
+      </p>
+    </div>
+    <button type="button" class="btn-close-modal" (click)="closeConver()">
+      <i class="feather icon-x"></i>
+    </button>
   </div>
 
-  <!-- Form -->
-  <div class="form-body">
+  <!-- Form Body -->
+  <div class="modal-modern-body modal-modern-body--padded">
     <!-- Group Name -->
-    <div class="field">
-      <label class="field-label" for="groupName">
+    <div class="modern-field" [class.modern-field--focused]="isFocused">
+      <label class="modern-label" for="groupName">
         {{ 'CHAT.LABELS.TITLE' | translate }}
       </label>
-      <input
-        type="text"
-        id="groupName"
-        [(ngModel)]="conversation.title"
-        (ngModelChange)="onTitleChange()"
-        class="field-input"
-        [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
-      />
+      <div class="input-wrap">
+        <i class="feather icon-edit-3 input-icon"></i>
+        <input
+          type="text"
+          id="groupName"
+          [(ngModel)]="conversation.title"
+          (ngModelChange)="onTitleChange()"
+          (focus)="isFocused = true"
+          (blur)="isFocused = false"
+          class="modern-input"
+          [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
+        />
+      </div>
     </div>
+  </div>
 
-    <!-- Footer Actions -->
-    <div class="modal-form-footer">
-      <button type="button" class="btn btn-ghost" (click)="closeConver()">
-        {{ 'CHAT.BUTTONS.CANCEL' | translate }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="updateConversation()"
-        [disabled]="!conversation.title?.trim() || !hasTitleChanged"
-      >
-        {{ 'CHAT.BUTTONS.SAVE' | translate }}
-      </button>
-    </div>
+  <!-- Footer Actions -->
+  <div class="modal-modern-footer">
+    <button type="button" class="btn-modern btn-modern--ghost" (click)="closeConver()">
+      {{ 'CHAT.BUTTONS.CANCEL' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn-modern btn-modern--primary"
+      (click)="updateConversation()"
+      [disabled]="!conversation.title?.trim() || !hasTitleChanged"
+    >
+      <i class="feather icon-check-circle mr-1"></i>
+      {{ 'CHAT.BUTTONS.SAVE' | translate }}
+    </button>
   </div>
 </div>

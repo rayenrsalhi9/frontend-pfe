@@ -1,5 +1,5 @@
 import { HttpResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { LoginAuditResource } from "@app/shared/enums/login-audit-resource";
 import { ClonerService } from "@app/shared/services/clone.service";
 import { LoginAuditService } from "@app/shared/services/login-audit.service";
@@ -12,9 +12,9 @@ import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 @Component({
   selector: "app-login-audit",
   templateUrl: "./login-audit.component.html",
-  styleUrls: ["./login-audit.component.css"],
+  styleUrls: ["./login-audit.component.scss"],
 })
-export class LoginAuditComponent implements OnInit {
+export class LoginAuditComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   isLoadingResults = true;
   ColumnMode = ColumnMode;

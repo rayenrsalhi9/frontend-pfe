@@ -6,7 +6,34 @@ export const preview = {
       COMMENTS: "Commentaires",
       SHARE: "Partager",
       COPY_LINK: "Copier le lien",
+      AUTHOR: "Auteur",
     },
+    COMMON: {
+      REACTIONS_TITLE: "Réactions",
+      COMMENTS_TITLE: "Commentaires",
+      ADD_COMMENT: "Ajouter un commentaire",
+      WRITE_COMMENT: "Écrivez votre commentaire ici...",
+      NO_COMMENTS: "Aucun commentaire pour l'instant, soyez le premier à rejoindre la discussion !",
+      DELETE_COMMENT: "Supprimer le commentaire",
+      DELETE_CONFIRM_TITLE: "Supprimer le commentaire",
+      DELETE_CONFIRM_MESSAGE:
+        "Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible.",
+      DELETE_SUCCESS: "Commentaire supprimé avec succès",
+      DELETE_ERROR: "Échec de la suppression du commentaire",
+      CANCEL: "Annuler",
+      CONFIRM: "Confirmer",
+      CONTENT_HEADING: "Contenu",
+      STATUS: { OPEN: "Ouvert", CLOSED: "Fermé" },
+      LOGIN_TO_REACT: "Veuillez vous connecter pour réagir",
+      LOGIN_TO_COMMENT: "Veuillez vous connecter pour commenter",
+    },
+
+    TYPES: {
+      BLOG: "Blog",
+      FORUM: "Forum",
+      ARTICLE: "Article",
+    },
+
     ACTIONS: {
       MORE: "Plus d'options",
     },
@@ -21,7 +48,12 @@ export const preview = {
         REPLIES: "Réponses",
         REACTIONS: "Réactions",
       },
-      REACTIONS: { UP: "Vote positif", DOWN: "Vote négatif", HEART: "J'aime" },
+      REACTIONS: {
+        UP: "Vote positif",
+        DOWN: "Vote négatif",
+        HEART: "J'aime",
+        TITLE: "Réactions",
+      },
       COMMENT: {
         REPLIES: "Réponses",
         ADD_COMMENT: "Écrivez votre réponse ici...",
@@ -48,6 +80,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Sujet initié par",
+        CONTENT: "Sujet du forum",
         COMMENTS: "Fil de discussion",
         ADD_COMMENT: "Ajouter une réponse",
         NO_COMMENTS:
@@ -67,9 +100,14 @@ export const preview = {
         REPLIES: "Réponses",
         REACTIONS: "Réactions",
       },
-      REACTIONS: { UP: "J'aime", DOWN: "Je n'aime pas", HEART: "J'adore" },
+      REACTIONS: {
+        UP: "J'aime",
+        DOWN: "Je n'aime pas",
+        HEART: "J'adore",
+        TITLE: "Réactions",
+      },
       COMMENT: {
-        REPLIES: "Commentaires",
+        REPLIES: "Réponses",
         ADD_COMMENT: "Écrivez votre réponse ici...",
         DELETE: "Supprimer le commentaire",
         DELETE_CONFIRM: {
@@ -94,6 +132,7 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Rédigé par",
+        CONTENT: "Article de blog",
         COMMENTS: "Réponses de la communauté",
         ADD_COMMENT: "Laisser une réponse",
         NO_COMMENTS:
@@ -111,7 +150,12 @@ export const preview = {
         REPLIES: "Commentaires",
         REACTIONS: "Réactions",
       },
-      REACTIONS: { UP: "J'aime", DOWN: "Je n'aime pas", HEART: "J'adore" },
+      REACTIONS: {
+        UP: "J'aime",
+        DOWN: "Je n'aime pas",
+        HEART: "J'adore",
+        TITLE: "Réactions",
+      },
       COMMENT: {
         REPLIES: "Commentaires",
         ADD_COMMENT: "Écrivez votre commentaire ici...",
@@ -127,11 +171,17 @@ export const preview = {
       },
       PREVIEW: {
         AUTHOR: "Rédigé par",
+        CONTENT: "Article",
         COMMENTS: "Commentaires des membres",
         ADD_COMMENT: "Ajouter un commentaire",
         NO_COMMENTS: "Soyez le premier à commenter cet article.",
         CLOSED_NOTICE: "Les commentaires sont fermés pour cet article.",
       },
+    },
+
+
+    NAV: {
+      LOGIN: "Se connecter",
     },
   },
 };

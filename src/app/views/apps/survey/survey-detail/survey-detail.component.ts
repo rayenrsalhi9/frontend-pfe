@@ -109,7 +109,7 @@ export class SurveyDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           this.survey = data;
-          this.survey.answersCount = this.survey.answers_count;
+          this.survey.answersCount = data.answersCount ?? data.answers_count ?? 0;
           this.isLoading = false;
           this.getStatistics();
           this.cdr.markForCheck();

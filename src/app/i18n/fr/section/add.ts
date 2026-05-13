@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "Forum communautaire",
       TITLE: "Nouveau sujet de forum",
       DESCRIPTION:
         "Démarrez une discussion, posez une question ou partagez quelque chose avec la communauté.",
@@ -46,6 +47,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "Base de connaissances",
       TITLE: "Nouvel article de blog",
       DESCRIPTION: "Rédigez et publiez un article pour votre audience.",
       LABELS: {
@@ -76,8 +78,6 @@ export const add = {
         BANNER: "Afficher cet article comme bannière sur la page d’accueil.",
         PRIVATE: "Seuls vous et les membres invités pourront voir cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
-        USERS:
-          "Laissez vide pour autoriser tous les membres invités à lire cet article.",
       },
       BUTTONS: {
         SAVE: "Publier l’article",
@@ -112,6 +112,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "Actualités & annonces",
       TITLE: "Nouvel article",
       DESCRIPTION: "Créez une actualité ou une annonce pour votre communauté.",
       LABELS: {
@@ -133,8 +134,6 @@ export const add = {
       HINTS: {
         PRIVATE:
           "Seuls vous et les utilisateurs sélectionnés pourront voir cet article.",
-        USERS:
-          "Laissez vide pour autoriser tous les membres invités à lire cet article.",
         REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
       },
       BUTTONS: {
@@ -154,8 +153,7 @@ export const add = {
       },
       TOAST: {
         SUCCESS: "Article publié avec succès",
-        ERROR: "Échec de la publication de l’article",
-        UPDATED_SUCCESSFULLY: "Article mis à jour avec succès",
+        ERROR: "Échec de la publication de l'article",
       },
       VALIDATION: {
         TITLE_MIN_LENGTH: "Le titre doit contenir au moins 5 caractères",
@@ -228,6 +226,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "Gestion des utilisateurs",
       TITLE: "Nouvel utilisateur",
       DESCRIPTION: "Créez un nouveau compte utilisateur et attribuez des rôles.",
       LABELS: {
@@ -278,11 +277,13 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "Le mot de passe doit contenir au moins 6 caractères",
+        PASSWORD_PATTERN: "Doit inclure une majuscule, un chiffre et un caractère spécial",
       },
     },
 
     SHARED: {
       LABELS: {
+        FORM: "Formulaire",
         LOADING: "Chargement…",
         REQUIRED: "Champ obligatoire",
         OPTIONAL: "Optionnel",
@@ -294,7 +295,12 @@ export const add = {
         NO_RESULTS: "Aucun résultat trouvé",
         BASIC_INFO: "Informations de base",
         SETTINGS: "Paramètres",
+        USERS: "Utilisateurs autorisés",
       },
+      PLACEHOLDERS: {
+        USERS: "Rechercher des utilisateurs…",
+      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "Parcourir",
         UPLOAD: "Téléverser",
@@ -321,75 +327,47 @@ export const add = {
   },
 
   EDIT: {
+    SHARED: {
+      BUTTONS: {
+        SAVE: "Mettre à jour",
+      },
+      TOAST: {
+        SUCCESS: "Mis à jour avec succès",
+        ERROR: "Échec de la mise à jour",
+      },
+    },
     FORUM: {
+      EYEBROW: "Forum communautaire",
       TITLE: "Modifier le sujet",
       DESCRIPTION: "Mettez à jour votre sujet et ses paramètres.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Sujet mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du sujet",
-      },
     },
     BLOG: {
-      TITLE: "Modifier l’article",
+      EYEBROW: "Base de connaissances",
+      TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Blog mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du blog",
-      },
     },
     ARTICLE: {
-      TITLE: "Modifier l’article",
+      EYEBROW: "Actualités & annonces",
+      TITLE: "Modifier l'article",
       DESCRIPTION: "Mettez à jour votre article et ses paramètres.",
-      BUTTONS: {
-        UPDATE: "Mettre à jour",
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Article mis à jour avec succès",
-        ERROR: "Échec de la mise à jour de l’article",
-      },
     },
 
     SURVEY: {
       TITLE: "Modifier le sondage",
       DESCRIPTION:
         "Mettez à jour vos paramètres de sondage et vos participants.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Sondage mis à jour avec succès",
-        ERROR: "Échec de la mise à jour du sondage",
-      },
     },
 
     CATEGORY: {
       TITLE: "Modifier la catégorie",
       DESCRIPTION: "Mettez à jour le nom et la description de votre catégorie.",
-      BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Catégorie mise à jour avec succès",
-        ERROR: "Échec de la mise à jour de la catégorie",
-      },
     },
 
     USER: {
       TITLE: "Modifier l'utilisateur",
       DESCRIPTION: "Mettez à jour les informations et les rôles de l'utilisateur.",
       BUTTONS: {
-        SAVE: "Mettre à jour",
-      },
-      TOAST: {
-        SUCCESS: "Utilisateur mis à jour avec succès",
-        ERROR: "Échec de la mise à jour de l'utilisateur",
+        SAVE: "Mettre à jour l'utilisateur",
       },
     },
   },

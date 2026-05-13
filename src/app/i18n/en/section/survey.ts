@@ -101,8 +101,12 @@ export const survey = {
       SATISFACTION: "Satisfaction",
     },
     DETAIL: {
+      EYEBROW: "Survey",
       TITLE: "Survey Details",
+      CREATED_BY: "Created by",
+      OVERVIEW: "Overview",
       ANSWERS: "Answers",
+      RESPONSES_CHART: "Responses Chart",
       NO_DATA: "No data available",
     },
   },

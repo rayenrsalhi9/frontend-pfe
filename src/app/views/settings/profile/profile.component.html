@@ -17,166 +17,181 @@
 </ng-template>
 
 <div class="profile-page" *ngIf="!isLoading">
-  <div class="profile-container">
-    <div class="page-header">
-      <h1 class="page-title">{{ "PROFILE_SETTING.TITLE" | translate }}</h1>
-      <p class="page-sub">{{ "PROFILE_SETTING.DESCRIPTION" | translate }}</p>
+  <!-- Header Section -->
+  <div class="hero-strip">
+    <p class="hero-eyebrow">{{ "PROFILE_SETTING.TITLE" | translate }}</p>
+    <h1 class="hero-title">
+      {{ "PROFILE_SETTING.DESCRIPTION" | translate }}
+    </h1>
+  </div>
+
+  <!-- Profile Information Section -->
+  <div class="db-section-label">
+    <span>{{ "PROFILE_SETTING.LABELS.PERSONAL_INFO" | translate }}</span>
+  </div>
+
+  <div class="db-card">
+    <div class="db-card-head">
+      <div class="db-card-head-left">
+        <h2 class="db-card-title">
+          <i class="feather icon-user"></i>
+          {{ "PROFILE_SETTING.LABELS.PERSONAL_INFO" | translate }}
+        </h2>
+        <p class="db-card-subtitle">
+          {{ "PROFILE_SETTING.DESCRIPTION" | translate }}
+        </p>
+      </div>
     </div>
-
-    <div class="profile-card">
+    <div class="db-card-body">
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="profile-form">
-        <div class="profile-section">
-          <div class="section-label">
-            <span class="section-dot"></span>
-            {{ "PROFILE_SETTING.LABELS.PERSONAL_INFO" | translate }}
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+          <div class="avatar-preview">
+            <img
+              *ngIf="newPicture"
+              [src]="newPicture"
+              [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
+            />
+            <img
+              *ngIf="!newPicture && avatarPreview"
+              [src]="avatarPreview"
+              [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
+            />
+            <img
+              *ngIf="!newPicture && !avatarPreview"
+              src="/assets/images/avatars/thumb-16.jpg"
+              [alt]="'PROFILE_SETTING.ACCESSIBILITY.DEFAULT_AVATAR' | translate"
+            />
           </div>
-
-          <div class="avatar-section">
-            <div class="avatar-preview">
-              <img
-                *ngIf="newPicture"
-                [src]="newPicture"
-                [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
-              />
-              <img
-                *ngIf="!newPicture && avatarPreview"
-                [src]="avatarPreview"
-                [alt]="'PROFILE_SETTING.ACCESSIBILITY.PROFILE_PICTURE' | translate"
-              />
-              <img
-                *ngIf="!newPicture && !avatarPreview"
-                src="/assets/images/avatars/thumb-16.jpg"
-                [alt]="'PROFILE_SETTING.ACCESSIBILITY.DEFAULT_AVATAR' | translate"
-              />
-            </div>
-            <div class="avatar-actions">
-              <input
-                type="file"
-                #fileInput
-                accept="image/jpeg,image/png,image/gif,image/webp"
-                (change)="onFileSelect($event)"
-                hidden
-              />
-              <button
-                type="button"
-                class="btn btn-secondary"
-                (click)="fileInput.click()"
-              >
-                <i class="feather icon-camera"></i>
-                {{ "PROFILE_SETTING.LABELS.CHANGE_PICTURE" | translate }}
-              </button>
-            </div>
+          <div class="avatar-actions">
+            <input
+              type="file"
+              #fileInput
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              (change)="onFileSelect($event)"
+              hidden
+            />
+            <button
+              type="button"
+              class="btn-action btn-avatar"
+              (click)="fileInput.click()"
+            >
+              <i class="feather icon-camera"></i>
+              {{ "PROFILE_SETTING.LABELS.CHANGE_PICTURE" | translate }}
+            </button>
           </div>
+        </div>
 
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="firstName">
-                {{ "PROFILE_SETTING.LABELS.FIRST_NAME" | translate }}
-                <span class="required-mark">*</span>
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                formControlName="firstName"
-                class="field-input"
-                [class.has-error]="isFirstNameInvalid"
-                [placeholder]="
-                  'PROFILE_SETTING.PLACEHOLDERS.FIRST_NAME' | translate
-                "
-                [attr.aria-invalid]="isFirstNameInvalid"
-                [attr.aria-describedby]="
-                  isFirstNameInvalid ? 'firstName-error' : null
-                "
-              />
-              <div
-                class="field-error"
-                id="firstName-error"
-                *ngIf="isFirstNameInvalid"
-              >
-                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
-                {{ firstNameErrorMessage | translate }}
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="lastName">
-                {{ "PROFILE_SETTING.LABELS.LAST_NAME" | translate }}
-                <span class="required-mark">*</span>
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                formControlName="lastName"
-                class="field-input"
-                [class.has-error]="isLastNameInvalid"
-                [placeholder]="
-                  'PROFILE_SETTING.PLACEHOLDERS.LAST_NAME' | translate
-                "
-                [attr.aria-invalid]="isLastNameInvalid"
-                [attr.aria-describedby]="
-                  isLastNameInvalid ? 'lastName-error' : null
-                "
-              />
-              <div
-                class="field-error"
-                id="lastName-error"
-                *ngIf="isLastNameInvalid"
-              >
-                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
-                {{ lastNameErrorMessage | translate }}
-              </div>
+        <!-- Form Fields -->
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="firstName">
+              {{ "PROFILE_SETTING.LABELS.FIRST_NAME" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              class="input-field"
+              [class.has-error]="isFirstNameInvalid"
+              [placeholder]="
+                'PROFILE_SETTING.PLACEHOLDERS.FIRST_NAME' | translate
+              "
+              [attr.aria-invalid]="isFirstNameInvalid"
+              [attr.aria-describedby]="
+                isFirstNameInvalid ? 'firstName-error' : null
+              "
+            />
+            <div
+              class="field-error"
+              id="firstName-error"
+              *ngIf="isFirstNameInvalid"
+            >
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+              {{ firstNameErrorMessage | translate }}
             </div>
           </div>
 
-          <div class="field-row">
-            <div class="field">
-              <label class="field-label" for="phoneNumber">
-                {{ "PROFILE_SETTING.LABELS.MOBILE" | translate }}
-                <span class="required-mark">*</span>
-              </label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                formControlName="phoneNumber"
-                class="field-input"
-                [class.has-error]="isPhoneNumberInvalid"
-                [placeholder]="
-                  'PROFILE_SETTING.PLACEHOLDERS.MOBILE' | translate
-                "
-                [attr.aria-invalid]="isPhoneNumberInvalid"
-                [attr.aria-describedby]="
-                  isPhoneNumberInvalid ? 'phoneNumber-error' : null
-                "
-              />
-              <div
-                class="field-error"
-                id="phoneNumber-error"
-                *ngIf="isPhoneNumberInvalid"
-              >
-                <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
-                {{ phoneNumberErrorMessage | translate }}
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="email">
-                {{ "PROFILE_SETTING.LABELS.EMAIL" | translate }}
-              </label>
-              <input
-                type="email"
-                id="email"
-                formControlName="email"
-                class="field-input"
-                [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
-              />
+          <div class="field">
+            <label class="field-label" for="lastName">
+              {{ "PROFILE_SETTING.LABELS.LAST_NAME" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              class="input-field"
+              [class.has-error]="isLastNameInvalid"
+              [placeholder]="
+                'PROFILE_SETTING.PLACEHOLDERS.LAST_NAME' | translate
+              "
+              [attr.aria-invalid]="isLastNameInvalid"
+              [attr.aria-describedby]="
+                isLastNameInvalid ? 'lastName-error' : null
+              "
+            />
+            <div
+              class="field-error"
+              id="lastName-error"
+              *ngIf="isLastNameInvalid"
+            >
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+              {{ lastNameErrorMessage | translate }}
             </div>
           </div>
         </div>
 
-        <div class="form-footer">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="phoneNumber">
+              {{ "PROFILE_SETTING.LABELS.MOBILE" | translate }}
+              <span class="required-mark">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              class="input-field"
+              [class.has-error]="isPhoneNumberInvalid"
+              [placeholder]="
+                'PROFILE_SETTING.PLACEHOLDERS.MOBILE' | translate
+              "
+              [attr.aria-invalid]="isPhoneNumberInvalid"
+              [attr.aria-describedby]="
+                isPhoneNumberInvalid ? 'phoneNumber-error' : null
+              "
+            />
+            <div
+              class="field-error"
+              id="phoneNumber-error"
+              *ngIf="isPhoneNumberInvalid"
+            >
+              <ng-container *ngTemplateOutlet="errorIcon"></ng-container>
+              {{ phoneNumberErrorMessage | translate }}
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="email">
+              {{ "PROFILE_SETTING.LABELS.EMAIL" | translate }}
+            </label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="input-field input-disabled"
+              [placeholder]="'PROFILE_SETTING.PLACEHOLDERS.EMAIL' | translate"
+            />
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
           <button
             type="submit"
-            class="btn btn-primary"
+            class="btn-action btn-save"
             [disabled]="userForm.invalid || isLoading || isSubmitting || !hasChanges"
           >
             <i *ngIf="!isSubmitting" class="feather icon-save"></i>
@@ -185,7 +200,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-ghost"
+            class="btn-action btn-cancel"
             (click)="onCancel()"
             [disabled]="isSubmitting"
           >
@@ -197,12 +212,11 @@
   </div>
 </div>
 
-<div class="profile-skeleton" *ngIf="isLoading">
-  <div class="skeleton-title"></div>
-  <div class="skeleton-card">
-    <div class="skeleton-avatar"></div>
-    <div class="skeleton-line wide"></div>
-    <div class="skeleton-line medium"></div>
-    <div class="skeleton-line short"></div>
+<!-- Loading State -->
+<div class="profile-page" *ngIf="isLoading">
+  <div class="db-card">
+    <div class="db-loading">
+      <div class="db-spinner"></div>
+    </div>
   </div>
 </div>

@@ -20,9 +20,10 @@ export const chat = {
       SELECT_USER: "Sélectionner un utilisateur",
       NO_USERS: "Aucun utilisateur trouvé",
       GROUP_NAME: "Nom du groupe",
-      SELECT_MEMBERS: "Sélectionner des membres",
+      SELECT_MEMBERS: "Sélectionner les membres",
       USERS_LIST: "Liste des utilisateurs",
       CONVERSATIONS: "Conversations",
+      SEARCH_CONVERSATIONS: "Rechercher des conversations",
       LATEST_CONVERSATIONS: "Dernières conversations",
       GROUPS: "Groupes",
       USERS: "Utilisateurs",
@@ -36,6 +37,9 @@ export const chat = {
       REACT_HEART: "Réagir avec cœur",
       REACT_LIKE: "Réagir avec j'aime",
       REACT_DISLIKE: "Réagir avec je n'aime pas",
+      YOU: "Vous",
+      MEMBERS: "Membres",
+      BACK: "Retour",
     },
     MODAL: {
       ADD_USER: {

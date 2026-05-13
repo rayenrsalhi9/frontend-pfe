@@ -1,3 +1,9 @@
+// ─── Warm accent palette (mirrors side-nav component) ────────────────────────
+$warm-amber: #b45309;
+$warm-amber-light: #fef3c7;
+$warm-amber-mid: #fcd34d;
+$warm-amber-bg: #fffbeb;
+
 .nav-messages {
   background: transparent !important;
   padding: 0 !important;
@@ -6,26 +12,28 @@
   justify-content: center;
 
   .messages-trigger {
-    width: 38px;
-    height: 38px;
-    background: var(--card-bg);
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 0 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: #f8f9fa;
     cursor: pointer;
     transition:
-      background 0.15s,
-      border-color 0.15s;
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
     position: relative;
 
     &:hover {
-      background: var(--primary-glow);
-      border-color: var(--primary);
+      background: $warm-amber-bg;
+      border-color: $warm-amber-mid;
 
       i {
-        color: var(--primary);
+        color: $warm-amber;
       }
     }
 
@@ -36,10 +44,18 @@
       justify-content: center;
     }
 
-    i {
-      font-size: $font-size-body-lg + 0.125rem;
-      color: var(--text-secondary);
-      transition: color 0.15s;
+    .ged-nav-icon-shell {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      min-width: 1.25rem;
+
+      i {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        transition: color 0.15s ease;
+      }
     }
 
     .notification-badge {
@@ -55,8 +71,8 @@
   }
 
   .dropdown-menu {
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     box-shadow: var(--shadow-md);
     background: var(--card-bg);
     margin-top: 0.75rem;
@@ -70,11 +86,16 @@
     @include screen-mobile {
       min-width: 90vw;
       right: -0.5rem;
+
+      [dir="rtl"] & {
+        right: auto;
+        left: -0.5rem;
+      }
     }
 
     [dir="rtl"] & {
-      right: auto;
-      left: 0;
+      right: 0;
+      left: auto;
     }
   }
 
@@ -93,7 +114,7 @@
     justify-content: space-between;
     padding: 1rem 1.25rem;
     background: var(--card-bg);
-    border-bottom: 0.5px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 
     .nav-messages-title {
       font-weight: 600;
@@ -104,20 +125,20 @@
     }
 
     .nav-messages-view-all {
-      color: var(--primary);
+      color: $warm-amber;
       font-weight: 500;
       text-decoration: none;
       font-size: 0.85rem;
       padding: 0.35rem 0.75rem;
-      background: var(--primary-glow);
-      border-radius: var(--radius-sm);
+      background: $warm-amber-bg;
+      border-radius: 10px;
       transition:
         background 0.15s,
         color 0.15s;
 
       &:hover {
-        background: var(--primary);
-        color: var(--card-bg);
+        background: $warm-amber-light;
+        color: $warm-amber;
       }
     }
   }
@@ -150,7 +171,7 @@
       align-items: flex-start;
       gap: 0.75rem;
       padding: 0.75rem 1.25rem;
-      border-bottom: 0.5px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
       transition: background 0.15s;
       cursor: pointer;
       width: 100%;
@@ -166,15 +187,14 @@
       }
 
       &:hover {
-        background-color: var(--bg-app);
+        background-color: $warm-amber-bg;
       }
 
       &.unread {
-        background-color: var(--primary-glow);
+        background-color: rgba($warm-amber, 0.06);
 
         &:hover {
-          background-color: var(--primary-glow);
-          filter: brightness(0.97);
+          background-color: rgba($warm-amber, 0.1);
         }
       }
 
@@ -230,7 +250,7 @@
       .nav-messages-unread-dot {
         width: 8px;
         height: 8px;
-        background: var(--primary);
+        background: $warm-amber;
         border-radius: 50%;
         flex-shrink: 0;
       }
@@ -255,7 +275,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   background: var(--bg-app);
-  border-bottom: 0.5px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .collage-avatar {

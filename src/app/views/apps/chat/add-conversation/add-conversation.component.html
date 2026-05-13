@@ -1,30 +1,161 @@
-<div class="card">
-  <div class="card-header">
-    <h4>{{ type === 'group' ? ('CHAT.LABELS.CREATE_GROUP_CONVERSATION' | translate) : ('CHAT.LABELS.ADD_USER_TO_CONVERSATION' | translate) }}</h4>
+<div class="ac-modal-body">
+  <!-- Modal Header -->
+  <div class="ac-modal-header">
+    <h2 class="ac-modal-title">
+      {{
+        type === "group"
+          ? ("CHAT.LABELS.CREATE_GROUP_CONVERSATION" | translate)
+          : ("CHAT.LABELS.ADD_USER_TO_CONVERSATION" | translate)
+      }}
+    </h2>
+    <p class="ac-modal-sub">
+      {{
+        type === "group"
+          ? ("CHAT.MODAL.CREATE_GROUP.DESCRIPTION" | translate)
+          : ("CHAT.MODAL.ADD_USER.DESCRIPTION" | translate)
+      }}
+    </p>
   </div>
-  <div class="card-body">
-    <form action="">
-      <div class="row">
-        <div class="col-md-12">
-          <label class="form-label">{{'CHAT.LABELS.TITLE' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="title" name="title" [placeholder]="'CHAT.LABELS.TITLE' | translate">
-         <!--  <textarea [(ngModel)]="message" class="form-control" name="title" placeholder="Title..." id="" cols="30" rows="4"></textarea> -->
-        </div>
-        <div class="col-md-12">
-          <label class="form-label">{{'CHAT.LABELS.RECEIVER' | translate}}</label>
-          <ng-select [multiple]="type == 'group'" (change)="selectUser($event)">
-            <ng-container *ngFor="let user of users">
-              <ng-option *ngIf="user.id != currentUser.id" [value]="user">{{user.firstName}}
-                {{user.lastName}}</ng-option>
-            </ng-container>
 
-          </ng-select>
-        </div>
-        <div class="col-md-12 mt-3">
-          <button (click)="createConversation()" type="button" class="btn btn-success" ><i class="feather icon-plus-circle"></i> {{ type === 'group' ? ('CHAT.BUTTONS.CREATE' | translate) : ('CHAT.BUTTONS.ADD' | translate) }}</button>
-          <button (click)="closeConver()" class="btn btn-danger ms-2"><i class="feather icon-x-circle"></i> {{'CHAT.BUTTONS.CANCEL' | translate}}</button>
+  <!-- Form -->
+  <div class="ac-form-body">
+    <!-- Title Field (group only) -->
+    <div class="ac-field" *ngIf="type === 'group'">
+      <label class="ac-field-label" for="groupTitle">
+        {{ "CHAT.LABELS.TITLE" | translate }}
+      </label>
+      <input
+        type="text"
+        id="groupTitle"
+        class="ac-field-input"
+        [(ngModel)]="title"
+        [placeholder]="'CHAT.LABELS.GROUP_NAME' | translate"
+      />
+    </div>
+
+    <!-- Users Selection -->
+    <div class="ac-field">
+      <h3 class="ac-field-label">
+        {{
+          type === "group"
+            ? ("CHAT.LABELS.SELECT_MEMBERS" | translate)
+            : ("CHAT.LABELS.SELECT_USER" | translate)
+        }}
+      </h3>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="feather icon-search search-icon"></i>
+        <label for="conversation-search" class="sr-only">{{ "CHAT.LABELS.SEARCH_CONVERSATIONS" | translate }}</label>
+        <input
+          type="text"
+          id="conversation-search"
+          class="ac-field-input search-input"
+          [(ngModel)]="searchTerm"
+          (input)="filterUsers()"
+          [placeholder]="'CHAT.LABELS.SEARCH' | translate"
+        />
+      </div>
+
+      <!-- Users List (multi-select for group) -->
+      <div class="users-list" *ngIf="type === 'group'">
+        <label
+          class="user-item"
+          *ngFor="let user of filteredUsers"
+          [class.selected]="isSelected(user)"
+        >
+          <input
+            type="checkbox"
+            [checked]="isSelected(user)"
+            (change)="toggleUser(user)"
+            class="user-checkbox"
+          />
+          <avatar
+            [src]="
+              user.avatar
+                ? getHost() + user.avatar
+                : '/assets/images/avatars/thumb-16.jpg'
+            "
+            [size]="32"
+          ></avatar>
+          <div class="user-info">
+            <span class="user-name"
+              >{{ user.firstName }} {{ user.lastName }}</span
+            >
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </label>
+
+        <div class="empty-users" *ngIf="filteredUsers.length === 0">
+          <i class="feather icon-users"></i>
+          <span>{{ "CHAT.LABELS.NO_USERS" | translate }}</span>
         </div>
       </div>
-    </form>
+
+      <!-- Users List (single-select for user) -->
+      <div class="users-list" *ngIf="type !== 'group'">
+        <label
+          class="user-item"
+          *ngFor="let user of filteredUsers"
+          [class.selected]="isSelected(user)"
+        >
+          <input
+            type="radio"
+            name="selectedUser"
+            [checked]="isSelected(user)"
+            (change)="selectUser(user)"
+            class="user-radio"
+          />
+          <avatar
+            [src]="
+              user.avatar
+                ? getHost() + user.avatar
+                : '/assets/images/avatars/thumb-16.jpg'
+            "
+            [size]="32"
+          ></avatar>
+          <div class="user-info">
+            <span class="user-name"
+              >{{ user.firstName }} {{ user.lastName }}</span
+            >
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </label>
+
+        <div class="empty-users" *ngIf="filteredUsers.length === 0">
+          <i class="feather icon-user-plus"></i>
+          <span>{{ "CHAT.LABELS.NO_USERS" | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="ac-modal-footer">
+      <button type="button" class="btn btn-ghost" (click)="closeConver()">
+        {{ "CHAT.BUTTONS.CANCEL" | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="createConversation()"
+        [disabled]="
+          isLoading ||
+          (type === 'group' ? selectedUsers.length === 0 : !selectedUser)
+        "
+        [attr.aria-busy]="isLoading"
+      >
+        <span *ngIf="!isLoading">{{
+          type === "group"
+            ? ("CHAT.BUTTONS.CREATE" | translate)
+            : ("CHAT.BUTTONS.ADD" | translate)
+        }}</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+        <span class="sr-only" *ngIf="isLoading">{{
+          type === "group"
+            ? ("CHAT.BUTTONS.CREATING" | translate)
+            : ("CHAT.BUTTONS.ADDING" | translate)
+        }}</span>
+      </button>
+    </div>
   </div>
 </div>

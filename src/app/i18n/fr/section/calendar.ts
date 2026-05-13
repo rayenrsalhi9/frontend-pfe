@@ -1,6 +1,13 @@
 export const calendar = {
   CALENDAR: {
+    EYEBROW: "Calendrier",
     TITLE: "Calendrier",
+    DESCRIPTION: "Gérez vos événements et votre emploi du temps",
+    SECTION_LABEL: "Aperçu du calendrier",
+    PANEL: {
+      CALENDAR: "Calendrier",
+      EVENTS: "Événements",
+    },
     BUTTONS: {
       ADD: "Ajouter un nouvel événement",
     },
@@ -48,11 +55,14 @@ export const calendar = {
       PREVIOUS_MONTH: "Mois précédent",
       NEXT_MONTH: "Mois suivant",
       GRID_LABEL: "Jours du calendrier",
+      EDIT_EVENT: "Modifier {{title}}",
+      DELETE_EVENT: "Supprimer {{title}}",
     },
     TOAST: {
       EVENT_CREATED: "Événement créé",
       EVENT_UPDATED: "Événement mis à jour",
       EVENT_DELETED: "Événement supprimé",
+      ERROR_LOADING: "Échec du chargement des événements",
       ERROR_CREATED: "Échec de la création de l'événement",
       ERROR_UPDATED: "Échec de la mise à jour de l'événement",
       ERROR_DELETED: "Échec de la suppression de l'événement",

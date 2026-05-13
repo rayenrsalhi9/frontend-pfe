@@ -1,30 +1,69 @@
+:host {
+  display: block;
+}
+
 .overview-chart-container {
-  min-height: 240px;
+  width: 100%;
+  overflow: hidden;
+}
 
-  .apexcharts-canvas {
-    width: 100% !important;
+
+.overview-chart-container {
+  width: 100%;
+  overflow: hidden;
+
+  ::ng-deep .apexcharts-canvas {
+    overflow: visible;
   }
 
-  .apexcharts-xaxis-label,
-  .apexcharts-yaxis-label {
-    font-family: "Inter", sans-serif !important;
+  // ── Grid lines ─────────────────────────────────────────────
+  ::ng-deep .apexcharts-gridline {
+    stroke: var(--border-color, #e2e8f0) !important;
+    stroke-dasharray: 4 !important;
   }
 
-  .apexcharts-legend-text {
-    font-family: "Inter", sans-serif !important;
+  // ── Axis labels ────────────────────────────────────────────
+  ::ng-deep .apexcharts-xaxis-label tspan,
+  ::ng-deep .apexcharts-yaxis-label tspan {
+    fill: #92400e !important;
+    font-family: Cairo, Inter, sans-serif !important;
+    font-size: 11px !important;
+  }
+
+  // ── Legend ─────────────────────────────────────────────────
+  ::ng-deep .apexcharts-legend-text {
     color: var(--text-secondary) !important;
+    font-family: Cairo, Inter, sans-serif !important;
+    font-size: 12px !important;
   }
 
-  .apexcharts-tooltip {
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    border-radius: var(--radius-md) !important;
-    box-shadow: var(--shadow-md) !important;
+  ::ng-deep .apexcharts-legend-marker {
+    border-radius: 3px !important;
   }
 
-  .apexcharts-tooltip-title {
-    background: var(--bg-app) !important;
-    border-bottom: 1px solid var(--border-color) !important;
+  // ── Tooltip ────────────────────────────────────────────────
+  ::ng-deep .apexcharts-tooltip {
+    background: var(--card-bg, #fff) !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    font-family: Cairo, Inter, sans-serif !important;
+  }
+
+  ::ng-deep .apexcharts-tooltip-title {
+    background: #fffbeb !important;
+    border-bottom: 1px solid var(--border-color, #e2e8f0) !important;
+    color: #92400e !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+  }
+
+  ::ng-deep .apexcharts-tooltip-series-group {
+    padding: 4px 10px !important;
+  }
+
+  ::ng-deep .apexcharts-tooltip-text-y-value {
+    color: var(--text-primary) !important;
     font-weight: 600 !important;
   }
 }

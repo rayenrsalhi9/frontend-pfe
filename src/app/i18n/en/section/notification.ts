@@ -3,14 +3,16 @@ export const notification = {
       "LABELS":{
         "TITLE":"Notifications",
         "NEW":"new",
-        "DOC_PERMISSION_GARANTED":"Document permission granted to you",
+        "DOC_PERMISSION_GRANTED":"Document permission granted to you",
         "REMINDER":"Reminder",
+        "DOCUMENT":"Document",
         "DOCUMENT_NAME":"Document Name",
         "SEND_MESSAGE": "send a message",
         "CHAT": "chat",
         "EMPTY": "No notifications",
         "SEPARATOR": "::",
-        "FROM_USER": "from"
+        "FROM_USER": "from",
+        "MESSAGE_FROM_USER": "Message from {{name}}"
       },
       "BUTTONS":{
         "READ":"Mark All as Read",

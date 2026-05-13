@@ -75,6 +75,10 @@ export const documents = {
     },
 
     ADD: {
+      EYEBROW: "Documents",
+      TITLE: "Ajouter un document",
+      DESCRIPTION:
+        "Remplissez les détails pour ajouter un nouveau document au système.",
       LABEL: {
         DOCUMENT_UPLOAD: "Téléverser un document",
         DOCUMENT_NAME: "Nom du document",
@@ -89,6 +93,29 @@ export const documents = {
         DOCUMENT_DOWNLOAD: "Autoriser le téléchargement",
         DOCUMENT_SAVE: "Enregistrer",
         DOCUMENT_CANCEL: "Annuler",
+      },
+      LABELS: {
+        DOCUMENT_INFO: "Informations sur le document",
+        DOCUMENT_TAGS: "Tags du document",
+        PERMISSIONS: "Autorisations",
+      },
+      PLACEHOLDERS: {
+        DOCUMENT_NAME: "Entrez le nom du document…",
+        TAG: "Ajouter un tag…",
+        SELECT_ROLES: "Sélectionner des rôles…",
+        SELECT_USERS: "Rechercher des utilisateurs…",
+      },
+      OPTIONS: {
+        ALL_USERS: "Tout le monde",
+      },
+      ACTIONS: {
+        ADD_TAG: "Ajouter un tag",
+        REMOVE_TAG: "Supprimer le tag",
+      },
+      HINTS: {
+        TIME_BOUND: "Restreindre l'accès à une période spécifique",
+        ALLOW_DOWNLOAD: "Autoriser les utilisateurs à télécharger ce document",
+        REQUIRED_FIELDS: "Les champs marqués * sont obligatoires",
       },
       ERROR: {
         DOCUMENT_IS_REQUIRED: "Le document est requis.",

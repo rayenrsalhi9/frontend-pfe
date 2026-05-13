@@ -1,168 +1,244 @@
-<div class="bento-main-container">
-  <!-- Header Section -->
-  <div class="header-section">
-    <div class="header-actions">
-      <div class="header-content">
-        <h1 class="page-title">{{ "AUDIT.LIST.TITLE" | translate }}</h1>
-        <p class="page-description">
-          {{ "AUDIT.LIST.DESCRIPTION" | translate }}
-        </p>
-      </div>
+<div class="list-page-container">
+  <header class="list-page-header">
+    <div class="list-header-left">
+      <h1 class="list-page-title">{{ "AUDIT.LIST.TITLE" | translate }}</h1>
+      <p class="list-page-desc">{{ "AUDIT.LIST.DESCRIPTION" | translate }}</p>
     </div>
-  </div>
+  </header>
 
-  <!-- Filters Section -->
-  <div class="bento-item filters-section">
-    <div class="filters-grid">
-      <div class="filter-group">
-        <div class="input-modern">
-          <i class="prefix-icon feather icon-search"></i>
-          <input
-            type="text"
-            class="form-control"
-            (input)="onNameChange($event)"
-            [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate"
-            [attr.aria-label]="'AUDIT.LIST.LABELS.SEARCH' | translate"
-          />
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <ng-select
-          class="modern-select"
-          [multiple]="false"
-          [placeholder]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
-          [attr.aria-label]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
-          (change)="onCategoryChange($event)"
-        >
-          <ng-option *ngFor="let category of categories" [value]="category.id">
-            {{ category.name }}
-          </ng-option>
-        </ng-select>
-      </div>
-
-      <div class="filter-group">
-        <ng-select
-          class="modern-select"
-          [multiple]="false"
-          [placeholder]="'AUDIT.LIST.LABELS.USER' | translate"
-          [attr.aria-label]="'AUDIT.LIST.LABELS.USER' | translate"
-          (change)="onUserChange($event)"
-        >
-          <ng-option *ngFor="let user of users" [value]="user.id">
-            {{ user.firstName }} {{ user.lastName }}
-          </ng-option>
-        </ng-select>
-      </div>
+  <div class="list-filters">
+    <div class="list-search-wrapper">
+      <i class="feather icon-search list-search-icon"></i>
+      <input
+        type="text"
+        class="list-search-input"
+        (input)="onNameChange($event)"
+        [placeholder]="'AUDIT.LIST.LABELS.SEARCH' | translate"
+        [attr.aria-label]="'AUDIT.LIST.LABELS.SEARCH' | translate"
+      />
     </div>
-  </div>
-
-  <!-- Table Section -->
-  <div class="bento-item table-section">
-    <div class="modern-table-wrapper">
-      <ngx-datatable
-        class="modern-table"
-        [messages]="{
-          emptyMessage: ('TABLE_MESSAGE.EMPTY' | translate),
-          selectedMessage: ('TABLE_MESSAGE.SELECTED' | translate),
-          totalMessage: ('TABLE_MESSAGE.TOTAL' | translate)
-        }"
-        [rows]="rows"
-        [columnMode]="ColumnMode.force"
-        [headerHeight]="60"
-        [footerHeight]="60"
-        rowHeight="auto"
-        [limit]="10"
-        [externalPaging]="true"
-        [count]="totalCount"
-        (page)="onPage($event)"
+    <div class="list-category-wrapper">
+      <ng-select
+        class="list-select"
+        [multiple]="false"
+        [placeholder]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
+        [attr.aria-label]="'AUDIT.LIST.LABELS.CATEGORY' | translate"
+        (change)="onCategoryChange($event)"
       >
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.DATE' | translate"
-          prop="createdDate"
-          [width]="180"
-        >
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="text-muted font-weight-medium">
-              {{ value | utcToLocalTime: "shortDate" }}
-            </span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.DOCUMENT_NAME' | translate"
-          prop="documentName"
-          [width]="250"
-          cellClass="overflow-visible"
-        >
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span class="font-weight-bold text-dark">{{ value || "-" }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.CATEGORY' | translate"
-          prop="categoryName"
-        >
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span>{{ value || "-" }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.OPERATION' | translate"
-          prop="operationName"
-          [width]="150"
-          cellClass="overflow-visible"
-        >
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span
-              class="badge"
-              [ngClass]="getBadgeClass(value)"
-            >
-              {{ "AUDIT.LIST.OPERATION." + getOperationKey(value) | translate }}
-            </span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.BY' | translate"
-          prop="createdBy"
-          [width]="200"
-          cellClass="overflow-visible"
-        >
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <div *ngIf="value">
-              <div class="font-weight-bold text-dark">{{ value }}</div>
-              <small class="text-muted">{{ row.createdByEmail }}</small>
-            </div>
-            <span *ngIf="!value">-</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.TO' | translate"
-          prop="permissionUser"
-          cellClass="overflow-visible"
-        >
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <div *ngIf="value">
-              <div class="font-weight-bold text-dark">{{ value }}</div>
-              <small class="text-muted">{{ row.permissionUserEmail || row.recipientEmail }}</small>
-            </div>
-            <span *ngIf="!value">-</span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column
-          [name]="'AUDIT.LIST.TABLE.ROLE' | translate"
-          prop="permissionRole"
-        >
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <span>{{ value || "-" }}</span>
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
+        <ng-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </ng-option>
+      </ng-select>
     </div>
+    <div class="list-category-wrapper">
+      <ng-select
+        class="list-select"
+        [multiple]="false"
+        [placeholder]="'AUDIT.LIST.LABELS.USER' | translate"
+        [attr.aria-label]="'AUDIT.LIST.LABELS.USER' | translate"
+        (change)="onUserChange($event)"
+      >
+        <ng-option *ngFor="let user of users" [value]="user.id">
+          {{ user.firstName }} {{ user.lastName }}
+        </ng-option>
+      </ng-select>
+    </div>
+  </div>
+
+  <div class="list-table-wrapper">
+    <ngx-datatable
+      class="list-table"
+      [messages]="{
+        emptyMessage: ('TABLE_MESSAGE.EMPTY' | translate),
+        selectedMessage: ('TABLE_MESSAGE.SELECTED' | translate),
+        totalMessage: ('TABLE_MESSAGE.TOTAL' | translate)
+      }"
+      [rows]="rows"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="55"
+      [footerHeight]="55"
+      rowHeight="auto"
+      [limit]="10"
+      [externalPaging]="true"
+      [count]="totalCount"
+      (page)="onPage($event)"
+    >
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.DATE' | translate"
+        prop="createdDate"
+        [width]="140"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="list-cell-date">{{ value | utcToLocalTime: "shortDate" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.DOCUMENT_NAME' | translate"
+        prop="documentName"
+        [flexGrow]="2"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="list-cell-title">{{ value || "-" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.CATEGORY' | translate"
+        prop="categoryName"
+        [width]="140"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="list-cell-date">{{ value || "-" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.OPERATION' | translate"
+        prop="operationName"
+        [width]="140"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="list-cell-badge" [ngClass]="getBadgeClass(value)">
+            {{ "AUDIT.LIST.OPERATION." + getOperationKey(value) | translate }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.BY' | translate"
+        prop="createdBy"
+        [width]="180"
+      >
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="list-cell-title-stack" *ngIf="value">
+            <span class="list-cell-creator">{{ value }}</span>
+            <span class="list-cell-title-stack__sub">{{ row.createdByEmail }}</span>
+          </div>
+          <span class="list-cell-empty" *ngIf="!value">-</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [name]="'AUDIT.LIST.TABLE.SHARED_WITH' | translate"
+        [width]="140"
+        [sortable]="false"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="list-actions">
+            <button
+              *ngIf="hasSharedUsers(row)"
+              class="list-btn-action"
+              (click)="openSharedUsersModal(sharedUsersModal, row)"
+              title="View shared users"
+              attr.aria-label="View shared users"
+            >
+              <i class="feather icon-users"></i>
+            </button>
+            <button
+              *ngIf="hasSharedRoles(row)"
+              class="list-btn-action"
+              (click)="openSharedRolesModal(sharedRolesModal, row)"
+              title="View shared roles"
+              attr.aria-label="View shared roles"
+            >
+              <i class="feather icon-shield"></i>
+            </button>
+            <span *ngIf="!hasSharedUsers(row) && !hasSharedRoles(row)">-</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>
+
+<ng-template #sharedUsersModal>
+  <div class="elegant-modal" [style.--modal-accent-color]="'var(--primary)'">
+    <div class="modal-header-modern">
+      <div class="header-info">
+        <h5 class="modal-title-modern">{{ "AUDIT.LIST.SHARED_USERS_TITLE" | translate }}</h5>
+        <p class="modal-subtitle">{{ sharedUsersList.length }} {{ "AUDIT.LIST.USERS_COUNT" | translate }}</p>
+      </div>
+      <button type="button" class="btn-close-ghost" (click)="bsModalRef.hide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body-modern scroll-content">
+      <div *ngIf="sharedUsersList.length === 0" class="empty-state-modern">
+        <i class="feather icon-users"></i>
+        <p>{{ "TABLE_MESSAGE.EMPTY" | translate }}</p>
+      </div>
+      <div class="comments-list" *ngIf="sharedUsersList.length > 0">
+        <div *ngFor="let user of sharedUsersList" class="comment-card-modern">
+          <div class="comment-header">
+            <div class="user-meta">
+              <div class="user-avatar">
+                {{ user.name.charAt(0) }}
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="comment-date">{{ user.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer-modern">
+      <button type="button" class="btn-dismiss" (click)="bsModalRef.hide()">
+        {{ "AUDIT.LIST.CLOSE" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sharedRolesModal>
+  <div class="elegant-modal" [style.--modal-accent-color]="'var(--primary)'">
+    <div class="modal-header-modern">
+      <div class="header-info">
+        <h5 class="modal-title-modern">{{ "AUDIT.LIST.SHARED_ROLES_TITLE" | translate }}</h5>
+        <p class="modal-subtitle">{{ sharedRolesList.length }} {{ "AUDIT.LIST.ROLES_COUNT" | translate }}</p>
+      </div>
+      <button type="button" class="btn-close-ghost" (click)="bsModalRef.hide()">
+        <i class="feather icon-x"></i>
+      </button>
+    </div>
+    <div class="modal-body-modern scroll-content">
+      <div *ngIf="modalLoading" class="loading-state">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">{{ "loading" | translate }}</span>
+        </div>
+        <p>{{ "AUDIT.LIST.LOADING_ROLES" | translate }}</p>
+      </div>
+      <div *ngIf="!modalLoading && sharedRolesList.length === 0" class="empty-state-modern">
+        <i class="feather icon-shield"></i>
+        <p>{{ "TABLE_MESSAGE.EMPTY" | translate }}</p>
+      </div>
+      <div class="comments-list" *ngIf="!modalLoading && sharedRolesList.length > 0">
+        <div *ngFor="let role of sharedRolesList" class="comment-card-modern">
+          <div class="modal-stats-header" style="margin-bottom: 0.5rem; padding: 0.5rem 0;">
+            <div class="stat-group">
+              <i class="feather icon-shield" style="margin-right: 0.5rem;"></i>
+              <span class="stat-value" style="font-size: 0.95rem;">{{ role.roleName }}</span>
+            </div>
+            <span class="stat-label">{{ role.users.length }} {{ "AUDIT.LIST.USERS_COUNT" | translate }}</span>
+          </div>
+          <div *ngFor="let user of role.users" style="padding: 0.35rem 0 0.35rem 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="user-avatar" style="width: 28px; height: 28px; font-size: 0.65rem;">
+              {{ user.name.charAt(0) }}
+            </div>
+            <div class="user-details">
+              <span class="user-name" style="font-size: 0.85rem;">{{ user.name }}</span>
+              <span class="comment-date" style="font-size: 0.75rem;">{{ user.email }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer-modern">
+      <button type="button" class="btn-dismiss" (click)="bsModalRef.hide()">
+        {{ "AUDIT.LIST.CLOSE" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

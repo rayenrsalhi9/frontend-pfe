@@ -11,7 +11,9 @@
     (click)="navMessages.toggle($event)"
   >
     <div class="icon-badge-container">
-      <i class="feather icon-message-square"></i>
+      <span class="ged-nav-icon-shell">
+        <i class="feather icon-message-square" aria-hidden="true"></i>
+      </span>
       <div *ngIf="hasUnreadConversations" class="notification-badge"></div>
     </div>
   </button>
@@ -42,10 +44,29 @@
         (click)="openChat(conversation)"
       >
         <div class="nav-messages-item-avatar">
-          <avatar
-            [size]="40"
-            [src]="getAvatarUrl(getOtherUser(conversation))"
-          ></avatar>
+          <ng-container *ngIf="isGroupConversation(conversation); else singleAvatar">
+            <div class="chat-collage">
+              <div class="chat-collage-grid">
+                <ng-container *ngFor="let av of getConversationAvatars(conversation); let i = index">
+                  <avatar
+                    [tooltip]="av.tooltip"
+                    class="chat-collage-img"
+                    [size]="40"
+                    [src]="av.url"
+                  ></avatar>
+                </ng-container>
+              </div>
+              <span *ngIf="conversation.users.length > 4" class="chat-collage-overflow">
+                +{{ conversation.users.length - 4 }}
+              </span>
+            </div>
+          </ng-container>
+          <ng-template #singleAvatar>
+            <avatar
+              [size]="40"
+              [src]="getAvatarUrl(getOtherUser(conversation))"
+            ></avatar>
+          </ng-template>
         </div>
         <div class="nav-messages-item-content">
           <div class="nav-messages-item-header">

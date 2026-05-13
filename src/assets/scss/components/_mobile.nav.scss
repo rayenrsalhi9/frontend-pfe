@@ -52,12 +52,15 @@
 
   .ged-brand-card--mobile {
     flex: 1 1 auto;
-    min-height: 8rem;
+    min-height: 6rem;
     padding: 1rem;
 
-    .ged-brand-icon,
-    .ged-brand-text {
-      font-size: 2rem;
+    .ged-brand-logo {
+      height: 4rem;
+    }
+
+    .ged-brand-text-line {
+      font-size: 0.9rem;
     }
   }
 

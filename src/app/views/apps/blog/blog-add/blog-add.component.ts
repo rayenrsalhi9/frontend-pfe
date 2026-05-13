@@ -9,9 +9,6 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ValidatorFn,
-  AbstractControl,
-  ValidationErrors,
 } from "@angular/forms";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subject } from "rxjs";
@@ -24,44 +21,22 @@ import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 import { CommonService } from "src/app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
+import { AppFormBase } from "../../shared/app-form-base";
 
-// Custom date range validator
-export const dateRangeValidator: ValidatorFn = (
-  control: AbstractControl,
-): ValidationErrors | null => {
-  const expiration = control.get("expiration")?.value;
-  if (!expiration) {
-    return null; // No validation needed if expiration is disabled
-  }
-
-  const startDate = control.get("startDate")?.value;
-  const endDate = control.get("endDate")?.value;
-
-  if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
-    return { dateInvalid: true };
-  }
-
-  return null;
-};
 
 @Component({
   selector: "app-blog-add",
   templateUrl: "./blog-add.component.html",
   styleUrls: ["./blog-add.component.scss"],
 })
-export class BlogAddComponent implements OnInit, OnDestroy {
+export class BlogAddComponent extends AppFormBase implements OnInit {
+
   blogForm: FormGroup;
   picture: SafeUrl;
   newPicture: SafeUrl;
   minDate = new Date();
-  categories: any[] = [];
-  users: any[] = [];
-  currentUser: any;
-  isLoading = false;
-  isEdit = false;
   blogId: any;
 
-  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -75,20 +50,20 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     private securityService: SecurityService,
     private sanitizer: DomSanitizer,
     private activeRoute: ActivatedRoute,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
     this.initializeForm();
+    this.setupPrivateFieldWatcher();
     this.loadCategories();
     this.loadUsers();
     this.checkEditMode();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 
   private initializeForm(): void {
     this.blogForm = this.fb.group(
@@ -114,35 +89,28 @@ export class BlogAddComponent implements OnInit, OnDestroy {
         private: [false],
         tags: [[]],
         users: [[]],
-        expiration: [false],
-        banner: [false],
-        startDate: [""],
-        endDate: [""],
         picture: ["", [Validators.required]],
-      },
-      { validators: dateRangeValidator },
+      }
     );
 
-    // Add date validation when expiration is enabled
-    this.blogForm
-      .get("expiration")
-      ?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((enabled) => {
-        const startDateControl = this.blogForm.get("startDate");
-        const endDateControl = this.blogForm.get("endDate");
+    // Removed expiration listeners
+  }
 
-        if (enabled) {
-          startDateControl?.setValidators([Validators.required]);
-          endDateControl?.setValidators([Validators.required]);
+  private setupPrivateFieldWatcher(): void {
+    this.blogForm.get('private')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isPrivate: boolean) => {
+        const usersControl = this.blogForm.get('users');
+        if (isPrivate) {
+          const currentUsers = usersControl?.value || [];
+          const currentUserId = this.currentUser?.id;
+          // Only add if we have a valid user ID and it's not already in the list
+          if (currentUserId && !currentUsers.includes(currentUserId)) {
+            usersControl?.setValue([...currentUsers, currentUserId]);
+          }
         } else {
-          startDateControl?.clearValidators();
-          endDateControl?.clearValidators();
-          startDateControl?.setValue("");
-          endDateControl?.setValue("");
+          usersControl?.setValue([]);
         }
-
-        startDateControl?.updateValueAndValidity();
-        endDateControl?.updateValueAndValidity();
       });
   }
 
@@ -173,7 +141,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          this.users = data.filter((user: any) => user.id !== this.currentUser.id);
+          this.users = data;
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -226,6 +194,8 @@ export class BlogAddComponent implements OnInit, OnDestroy {
       if (result) {
         this.newPicture = this.sanitizer.bypassSecurityTrustUrl(result);
         this.blogForm.patchValue({ picture: result });
+        this.blogForm.get("picture")?.markAsDirty();
+        this.blogForm.get("picture")?.updateValueAndValidity();
         this.cdr.detectChanges();
       }
     };
@@ -294,7 +264,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.isLoading = false;
           this.translate
-            .get("EDIT.BLOG.TOAST.SUCCESS")
+            .get("EDIT.SHARED.TOAST.SUCCESS")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.success(message);
@@ -305,7 +275,7 @@ export class BlogAddComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           console.error("Error updating blog:", error);
           this.translate
-            .get("EDIT.BLOG.TOAST.ERROR")
+            .get("EDIT.SHARED.TOAST.ERROR")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.error(message);
@@ -335,18 +305,16 @@ export class BlogAddComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Process users
-    if (formValue.users && formValue.users.length > 0) {
-      formValue.users = formValue.users.filter((user) => {
-        if (typeof user === "string") {
-          return user.length > 0;
-        }
-        if (typeof user === "number") {
-          return true; // Numeric IDs are valid
-        }
-        // Keep valid objects (assuming they represent valid user objects)
-        return user && typeof user === "object";
-      });
+    // Process users - include current user if private
+    if (formValue.private) {
+      let userIds = formValue.users || [];
+      if (this.currentUser?.id && !userIds.includes(this.currentUser.id)) {
+        userIds = [...userIds, this.currentUser.id];
+      }
+      formValue.users = userIds;
+    } else {
+      // Clear users if not private
+      formValue.users = [];
     }
 
     return formValue;
@@ -371,27 +339,32 @@ export class BlogAddComponent implements OnInit, OnDestroy {
 
   private loadBlog(id: string): void {
     this.isLoading = true;
+
+    // Remove required validator for picture in edit mode since we already have an image
+    this.blogForm.get("picture")?.clearValidators();
+    this.blogForm.get("picture")?.updateValueAndValidity();
+
     this.blogService
       .getBlog(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
           this.isLoading = false;
+          // Map allowedUsers to user IDs - keep raw backend IDs for form payload
+          const allowedUserIds = data.allowedUsers
+            ? data.allowedUsers
+                .map((u: any) => u.user?.id || u.user_id)
+                .filter((id: any) => id != null)
+            : [];
+
           this.blogForm.patchValue({
             title: data.title,
             subtitle: data.subtitle,
-            category: data.category.id,
-            banner: data.banner,
-            expiration: data.expiration,
-            startDate: data.startDate
-              ? new Date(data.startDate).toISOString().slice(0, 10)
-              : null,
-            endDate: data.endDate
-              ? new Date(data.endDate).toISOString().slice(0, 10)
-              : null,
+            category: data.category?.id,
             body: data.body,
-            tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
+            tags: (data.tags || []).map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
+            users: allowedUserIds,
             picture: null,
           });
 
@@ -401,12 +374,6 @@ export class BlogAddComponent implements OnInit, OnDestroy {
               : this.getHost() + data.picture
             : null;
           this.newPicture = this.picture; // Set newPicture for template preview
-
-          // Remove required validator for picture in edit mode since we already have an image
-          if (this.picture) {
-            this.blogForm.get("picture")?.clearValidators();
-            this.blogForm.get("picture")?.updateValueAndValidity();
-          }
 
           this.cdr.markForCheck();
         },
@@ -448,53 +415,14 @@ export class BlogAddComponent implements OnInit, OnDestroy {
     return this.blogForm.get("picture");
   }
 
-  get startDateControl() {
-    return this.blogForm.get("startDate");
+  // Getters removed
+
+  isBlogFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.blogForm, fieldName);
   }
 
-  get endDateControl() {
-    return this.blogForm.get("endDate");
-  }
 
-  // Validation getters
-  get isTitleInvalid(): boolean {
-    const control = this.titleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isSubtitleInvalid(): boolean {
-    const control = this.subtitleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isBodyInvalid(): boolean {
-    const control = this.bodyControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isCategoryInvalid(): boolean {
-    const control = this.categoryControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isPictureInvalid(): boolean {
-    const control = this.pictureControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isDateInvalid(): boolean {
-    return !!this.blogForm.errors?.["dateInvalid"];
-  }
-
-  get isStartDateInvalid(): boolean {
-    const control = this.startDateControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isEndDateInvalid(): boolean {
-    const control = this.endDateControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
+  // Validation getters removed
 
   // Error message getters
   get titleErrorMessage(): string {

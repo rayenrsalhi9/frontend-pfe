@@ -6,7 +6,6 @@ import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/
 import { ArticleService } from "@app/shared/services/article.service";
 import { UserService } from "@app/shared/services/user.service";
 import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/articles-views.component";
-
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { SurveyService } from "@app/views/apps/survey/survey.service";
@@ -21,16 +20,17 @@ import { environment } from "src/environments/environment";
   styleUrls: ["./welcome.component.css"],
 })
 export class WelcomeComponent implements OnInit {
-  latestBlogs = [];
-  latestForums = [];
+  latestBlogs: any[] = [];
+  latestForums: any[] = [];
   articles: any[] = [];
-  survey = null;
+  survey: any = null;
   errorMessage: string = "";
   bsModalRef: BsModalRef;
   selectedRating: number = 0;
   isAuthenticated$: Observable<boolean | null>;
   userName$: Observable<string | null>;
   hostBase: string;
+
 
   constructor(
     private blogService: BlogService,
@@ -71,29 +71,33 @@ export class WelcomeComponent implements OnInit {
     this.loadPublicArticles();
   }
 
-  loadPublicArticles(): void {
-    this.userService.getArticles().subscribe(
-      (data: any) => {
-        this.articles = data;
-      },
-      (error) => {
-        this.errorMessage = this.translate.instant(
-          "WELCOME.ARTICLE_LOAD_ERROR",
-        );
-        console.error(error);
-      },
-    );
+  /** First blog — shown as the large featured card */
+  get featuredBlog(): any | null {
+    return this.latestBlogs?.length > 0 ? this.latestBlogs[0] : null;
   }
 
-  viewArticle(data: any) {
-    const initialState = {
-      data: Object.assign({}, data),
-    };
-    this.modalService.show(ArticlesViewsComponent, {
-      initialState: initialState,
+  /** Remaining blogs — shown in the numbered list below the featured card */
+  get remainingBlogs(): any[] {
+    return this.latestBlogs?.length > 1 ? this.latestBlogs.slice(1) : [];
+  }
+
+  loadPublicArticles(): void {
+    this.articleService.allArticles({ limit: 5 }).subscribe({
+      next: (data: any) => {
+        this.articles = (data || []).slice(0, 5);
+        this.cdr.markForCheck();
+      },
+      error: (error) => this.handleLoadError(error, "WELCOME.ARTICLE_LOAD_ERROR")
     });
   }
-  getHost() {
+
+
+  viewArticle(data: any): void {
+    const initialState = { data: Object.assign({}, data) };
+    this.modalService.show(ArticlesViewsComponent, { initialState });
+  }
+
+  getHost(): string {
     return environment.apiUrl;
   }
 
@@ -105,21 +109,33 @@ export class WelcomeComponent implements OnInit {
     return name || creator?.userName || "";
   }
 
-  getLatestBlogs() {
-    this.blogService
-      .allBlogs({ banner: 0, limit: 5 })
-      .subscribe((data: any) => {
-        this.latestBlogs = data;
+  getLatestBlogs(): void {
+    this.blogService.allBlogs({ limit: 5 }).subscribe({
+      next: (data: any) => {
+        this.latestBlogs = (data || []).slice(0, 5);
         this.cdr.markForCheck();
-      });
-  }
-
-  getLastForums() {
-    this.forumService.allForums({ limit: 5 }).subscribe((data: any) => {
-      this.latestForums = (data || []).map((forum: any) => this.normalizeForum(forum));
-      this.cdr.markForCheck();
+      },
+      error: (error) => this.handleLoadError(error, "WELCOME.BLOG_LOAD_ERROR")
     });
   }
+
+
+  getLatestForums(): void {
+    this.forumService.allForums({ limit: 5 }).subscribe({
+      next: (data: any) => {
+        this.latestForums = (data || []).map((forum: any) =>
+          this.normalizeForum(forum),
+        );
+        this.cdr.markForCheck();
+      },
+      error: (error) => this.handleLoadError(error, "WELCOME.FORUM_LOAD_ERROR")
+    });
+  }
+
+  getLastForums(): void {
+    this.getLatestForums();
+  }
+
 
   normalizeForum(
     forum: Partial<Record<string, any>> & {
@@ -132,7 +148,7 @@ export class WelcomeComponent implements OnInit {
       commentsCount?: number;
       comments_count?: number;
       comments?: any[];
-    }
+    },
   ) {
     const reactionsCount =
       forum?.reactionsCount ??
@@ -140,21 +156,19 @@ export class WelcomeComponent implements OnInit {
       (Array.isArray(forum?.reactions) ? forum.reactions.length : 0) +
         (Array.isArray(forum?.reactionsUp) ? forum.reactionsUp.length : 0) +
         (Array.isArray(forum?.reactionsDown) ? forum.reactionsDown.length : 0) +
-        (Array.isArray(forum?.reactionsHeart) ? forum.reactionsHeart.length : 0);
+        (Array.isArray(forum?.reactionsHeart)
+          ? forum.reactionsHeart.length
+          : 0);
 
     const commentsCount =
       forum?.commentsCount ??
       forum?.comments_count ??
       (Array.isArray(forum?.comments) ? forum.comments.length : 0);
 
-    return {
-      ...forum,
-      reactionsCount,
-      commentsCount,
-    };
+    return { ...forum, reactionsCount, commentsCount };
   }
 
-  getLatestSurvey() {
+  getLatestSurvey(): void {
     this.surveyService.getLatestSurvey().subscribe({
       next: (data: any) => {
         const isValidSurvey =
@@ -171,7 +185,7 @@ export class WelcomeComponent implements OnInit {
     });
   }
 
-  surveyAnswer(value: any) {
+  surveyAnswer(value: any): void {
     if (
       this.securityService.isGuestUser() ||
       this.securityService.isUserAuthenticate()
@@ -182,11 +196,11 @@ export class WelcomeComponent implements OnInit {
           this.surveyService
             .responseSurvey(this.survey.id, { answer: value })
             .subscribe(
-              (data: any) => {
+              () => {
                 this.toastr.success(translatedMessage["SUCCESS"]);
                 this.getLatestSurvey();
               },
-              (error: any) => {
+              () => {
                 this.toastr.error(translatedMessage["ERROR"]);
               },
             );
@@ -195,4 +209,11 @@ export class WelcomeComponent implements OnInit {
       this.modalService.show(SusbcribeModalComponent);
     }
   }
+
+  private handleLoadError(error: any, translationKey: string): void {
+    console.error(`Error loading data:`, error);
+    this.errorMessage = this.translate.instant(translationKey);
+    this.cdr.markForCheck();
+  }
 }
+

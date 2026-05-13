@@ -14,29 +14,21 @@ import { CommonService } from "@app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
-import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { environment } from "src/environments/environment";
+
+import { AppFormBase } from "../../shared/app-form-base";
 
 @Component({
   selector: "app-articles-add",
   templateUrl: "./articles-add.component.html",
   styleUrls: ["./articles-add.component.scss"],
 })
-export class ArticlesAddComponent implements OnInit, OnDestroy {
+export class ArticlesAddComponent extends AppFormBase implements OnInit {
   articleForm: FormGroup;
-  users: any[] = [];
-  categories: any[] = [];
-  isEdit = false;
-  articleId: any;
-  isLoading = false;
-
-  currentUser: any;
   picture: SafeUrl;
   newPicture: string = null;
   fileList: any[] = [];
-
-  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -50,19 +42,35 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private toastrService: ToastrService,
     private sanitizer: DomSanitizer,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.currentUser = this.securityService.getUserDetail().user;
     this.initializeForm();
+    this.setupPrivateFieldWatcher();
     this.loadCategories();
     this.loadUsers();
     this.checkEditMode();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private setupPrivateFieldWatcher(): void {
+    this.articleForm
+      .get("private")
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((isPrivate: boolean) => {
+        const usersControl = this.articleForm.get("users");
+        if (isPrivate) {
+          const currentUsers = usersControl?.value || [];
+          const currentUserId = this.currentUser?.id;
+          if (currentUserId && !currentUsers.includes(currentUserId)) {
+            usersControl?.setValue([...currentUsers, currentUserId]);
+          }
+        } else {
+          usersControl?.setValue([]);
+        }
+      });
   }
 
   private initializeForm(): void {
@@ -104,6 +112,13 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
       });
   }
 
+  private extractUserIds(rows: any[]): number[] {
+    if (!rows) return [];
+    return rows
+      .map((r: any) => r?.user?.id ?? r?.user_id ?? null)
+      .filter((id: any) => id != null);
+  }
+
   private loadArticle(id: string): void {
     this.isLoading = true;
     this.articleService
@@ -118,9 +133,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
             description: data.shortText,
             body: data.longText,
             private: data.privacy === "private",
-            users: data.users
-              .filter((usr: any) => usr.user.id !== this.currentUser.id)
-              .map((usr: any) => usr.user.id),
+            users: data.allowedUsers != null ? this.extractUserIds(data.allowedUsers) : (data.users != null ? this.extractUserIds(data.users) : []),
           });
 
           this.picture = data.picture
@@ -156,9 +169,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data: any) => {
-          this.users = data.filter(
-            (user: any) => user.id !== this.currentUser.id,
-          );
+          this.users = data;
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -237,6 +248,8 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
         this.newPicture = result;
         this.picture = this.sanitizer.bypassSecurityTrustUrl(result);
         this.articleForm.patchValue({ picture: result });
+        this.articleForm.get("picture")?.markAsDirty();
+        this.articleForm.get("picture")?.updateValueAndValidity();
         this.cdr.detectChanges();
       }
     };
@@ -305,7 +318,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.isLoading = false;
           this.translate
-            .get("ADD.ARTICLE.TOAST.UPDATED_SUCCESSFULLY")
+            .get("EDIT.SHARED.TOAST.SUCCESS")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.success(message);
@@ -316,7 +329,7 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           console.error("Error updating article:", error);
           this.translate
-            .get("ADD.ARTICLE.TOAST.ERROR")
+            .get("EDIT.SHARED.TOAST.ERROR")
             .pipe(takeUntil(this.destroy$))
             .subscribe((message) => {
               this.toastrService.error(message);
@@ -337,11 +350,15 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
       formValue.description = this.sanitizeContent(formValue.description);
     }
 
-    // Process users - include current user
-    if (formValue.users && formValue.users.length > 0) {
-      formValue.users = [...formValue.users, this.currentUser.id];
+    // Process users - include current user only if private
+    if (formValue.private) {
+      let userIds = formValue.users || [];
+      if (this.currentUser?.id && !userIds.includes(this.currentUser.id)) {
+        userIds = [...userIds, this.currentUser.id];
+      }
+      formValue.users = userIds;
     } else {
-      formValue.users = [this.currentUser.id];
+      formValue.users = [];
     }
 
     return formValue;
@@ -372,85 +389,8 @@ export class ArticlesAddComponent implements OnInit, OnDestroy {
     return this.articleForm.get("picture");
   }
 
-  // Validation getters
-  get isTitleInvalid(): boolean {
-    const control = this.titleControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isCategoryInvalid(): boolean {
-    const control = this.categoryControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isDescriptionInvalid(): boolean {
-    const control = this.descriptionControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isBodyInvalid(): boolean {
-    const control = this.bodyControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  get isPictureInvalid(): boolean {
-    const control = this.pictureControl;
-    return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  // Error message getters
-  get titleErrorMessage(): string {
-    const control = this.titleControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.TITLE_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.TITLE_MIN_LENGTH";
-    }
-    if (control?.errors?.["maxlength"]) {
-      return "ADD.ARTICLE.VALIDATION.TITLE_MAX_LENGTH";
-    }
-    return "";
-  }
-
-  get categoryErrorMessage(): string {
-    const control = this.categoryControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.CATEGORY_REQUIRED";
-    }
-    return "";
-  }
-
-  get descriptionErrorMessage(): string {
-    const control = this.descriptionControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.DESCRIPTION_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.DESCRIPTION_MIN_LENGTH";
-    }
-    if (control?.errors?.["maxlength"]) {
-      return "ADD.ARTICLE.VALIDATION.DESCRIPTION_MAX_LENGTH";
-    }
-    return "";
-  }
-
-  get bodyErrorMessage(): string {
-    const control = this.bodyControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.BODY_REQUIRED";
-    }
-    if (control?.errors?.["minlength"]) {
-      return "ADD.ARTICLE.VALIDATION.BODY_MIN_LENGTH";
-    }
-    return "";
-  }
-
-  get pictureErrorMessage(): string {
-    const control = this.pictureControl;
-    if (control?.errors?.["required"]) {
-      return "ADD.ARTICLE.ERRORS.PICTURE_REQUIRED";
-    }
-    return "";
+  // Validation wrapper
+  isArticleFieldInvalid(fieldName: string): boolean {
+    return this.isFieldInvalid(this.articleForm, fieldName);
   }
 }

@@ -22,6 +22,7 @@ export const chat = {
       SELECT_MEMBERS: "اختر الأعضاء",
       USERS_LIST: "قائمة المستخدمين",
       CONVERSATIONS: "المحادثات",
+      SEARCH_CONVERSATIONS: "بحث في المحادثات",
       LATEST_CONVERSATIONS: "آخر المحادثات",
       GROUPS: "المجموعات",
       USERS: "المستخدمون",
@@ -35,6 +36,9 @@ export const chat = {
       REACT_HEART: "تفاعل مع القلب",
       REACT_LIKE: "تفاعل مع الإعجاب",
       REACT_DISLIKE: "تفاعل مع عدم الإعجاب",
+      YOU: "أنت",
+      MEMBERS: "أعضاء",
+      BACK: "رجوع",
     },
     MODAL: {
       ADD_USER: {

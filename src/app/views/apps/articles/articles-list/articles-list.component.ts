@@ -23,7 +23,7 @@ import { SecurityService } from "@app/core/security/security.service";
 @Component({
   selector: "app-articles-list",
   templateUrl: "./articles-list.component.html",
-  styleUrls: ["./articles-list.component.css"],
+  styleUrls: ["./articles-list.component.scss"],
 })
 export class ArticlesListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
@@ -63,7 +63,7 @@ export class ArticlesListComponent implements OnInit, OnDestroy {
         debounceTime(300),
         tap(() => this.cdr.detectChanges()),
         switchMap(() =>
-          this.articleService.allArticles(this.articleResource).pipe(
+          this.articleService.allArticlesForDashboard(this.articleResource).pipe(
             catchError((err) => {
               console.error(err);
               return of([]);

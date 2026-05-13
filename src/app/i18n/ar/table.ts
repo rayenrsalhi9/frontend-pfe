@@ -1,6 +1,6 @@
 export const table = {
   "TABLE_MESSAGE":{
-    "EMPTY":"لا توجد بيانات لعرض",
+    "EMPTY":"لم يتم العثور على نتائج",
     "EXTENSION":"امتداد",
     "TOTAL":"المجموع",
     "SELECTED":"المحددة"

@@ -13,7 +13,7 @@ import { debounceTime, switchMap, catchError, tap } from "rxjs/operators";
 @Component({
   selector: "app-responses-audit",
   templateUrl: "./responses-audit.component.html",
-  styleUrls: ["./responses-audit.component.css"],
+  styleUrls: ["./responses-audit.component.scss"],
 })
 export class ResponsesAuditComponent implements OnInit {
   rows: ResponseAuditTrail[] = [];

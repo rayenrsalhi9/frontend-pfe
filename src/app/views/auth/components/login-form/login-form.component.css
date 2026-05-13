@@ -1,76 +1,119 @@
-.modern-login-form {
+/* ─── Form wrapper ──────────────────────────────────────────── */
+.lf-form {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.form-group {
+/* ─── Alert ─────────────────────────────────────────────────── */
+.lf-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.875rem;
+  margin-bottom: 1.25rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: #b91c1c;
+  line-height: 1.4;
+}
+
+.lf-alert i {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ─── Field ─────────────────────────────────────────────────── */
+.lf-field {
   margin-bottom: 1.25rem;
 }
 
-.form-label {
+.lf-field:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Label ─────────────────────────────────────────────────── */
+.lf-label {
   display: block;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
   line-height: 1.4;
 }
 
-.modern-input {
+/* ─── Label row (password + forgot link) ───────────────────── */
+.lf-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.lf-label-row .lf-label {
+  margin-bottom: 0;
+}
+
+/* ─── Input ─────────────────────────────────────────────────── */
+.lf-input {
   width: 100%;
-  height: 44px;
-  padding: 0 12px;
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-app);
+  height: 46px;
+  padding: 0 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: #ffffff;
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-family: inherit;
   outline: none;
-  transition:
-    border-color 0.15s,
-    background 0.15s,
-    box-shadow 0.15s;
   display: block;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
 
-.modern-input::placeholder {
+.lf-input::placeholder {
   color: var(--text-secondary);
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
-.modern-input:hover {
-  filter: brightness(0.97);
+.lf-input:hover:not(:focus) {
+  border-color: #fcd34d;
 }
 
-.modern-input:focus {
-  border-color: var(--primary);
-  background: var(--card-bg);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+.lf-input:focus {
+  border-color: #fcd34d;
+  box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1);
 }
 
-.modern-input.is-invalid {
-  border-color: var(--bs-danger);
-  background: rgba(var(--bs-danger-rgb), 0.04);
+.lf-input--error {
+  border-color: #fca5a5 !important;
+  background: #fef2f2 !important;
 }
 
-.modern-input.is-invalid:focus {
-  border-color: var(--bs-danger);
-  box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
+.lf-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
 
-.password-input-wrapper {
+/* ─── Password wrapper ──────────────────────────────────────── */
+.lf-password-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.password-input-wrapper .modern-input {
-  padding-right: 2.5rem;
+.lf-password-wrap .lf-input {
+  padding-inline-end: 2.75rem;
 }
 
-.password-toggle-btn {
+/* ─── Password visibility toggle ───────────────────────────── */
+.lf-password-toggle {
   position: absolute;
-  right: 0.75rem;
+  inset-inline-end: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -78,76 +121,109 @@
   padding: 0.25rem;
   cursor: pointer;
   color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: color 0.15s;
-}
-
-.password-toggle-btn:hover {
-  color: var(--text-primary);
-}
-
-.password-toggle-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-glow);
-}
-
-.password-toggle-btn i {
-  font-size: 1.125rem;
-}
-
-.modern-error {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  color: var(--bs-danger);
-  margin-top: 6px;
-  line-height: 1.4;
-}
-
-.modern-submit-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.lf-password-toggle:hover {
+  color: #b45309;
+}
+
+.lf-password-toggle:focus-visible {
+  outline: 2px solid #b45309;
+  outline-offset: 2px;
+}
+
+.lf-password-toggle i {
+  font-size: 1.125rem;
+}
+
+/* ─── Field error ───────────────────────────────────────────── */
+.lf-field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #b91c1c;
   font-weight: 500;
+  margin-top: 0.375rem;
+  line-height: 1.4;
+}
+
+.lf-field-error i {
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+
+/* ─── Forgot password link ──────────────────────────────────── */
+.lf-forgot-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #b45309;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.lf-forgot-link:hover {
+  color: #92400e;
+  text-decoration: underline;
+}
+
+/* ─── Submit button  (mirrors af-btn--submit / conv-send-btn) ─ */
+.lf-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 1.25rem;
+  background: #b45309;
+  color: #ffffff;
+  border: 1px solid #b45309;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  background: var(--text-primary);
-  color: var(--card-bg);
-  border: 0.5px solid var(--text-primary);
-  transition: opacity 0.15s;
-  min-height: 44px;
   white-space: nowrap;
-  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-.modern-submit-btn:hover:not(:disabled) {
-  opacity: 0.82;
+.lf-submit-btn:hover:not(:disabled) {
+  background: #92400e;
+  border-color: #92400e;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.25);
 }
 
-.modern-submit-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--primary-glow);
+.lf-submit-btn:active:not(:disabled) {
+  background: #78350f;
+  border-color: #78350f;
+  box-shadow: none;
 }
 
-.modern-submit-btn:disabled {
-  opacity: 0.38;
+.lf-submit-btn:focus-visible {
+  outline: 2px solid #b45309;
+  outline-offset: 2px;
+}
+
+.lf-submit-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.spin {
-  animation: spin 1s linear infinite;
+/* ─── Loading spinner inside button ────────────────────────── */
+.lf-spin {
+  animation: lf-spin 0.9s linear infinite;
 }
 
-@keyframes spin {
+@keyframes lf-spin {
   from {
     transform: rotate(0deg);
   }
@@ -157,60 +233,41 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spin {
+  .lf-spin {
     animation: none;
   }
 }
 
-.forgot-password-link {
-  font-size: 0.875rem;
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.15s;
+/* ─── Form-level error state ────────────────────────────────── */
+.lf-field--has-error .lf-input {
+  border-color: #fca5a5 !important;
+  background: #fef2f2 !important;
 }
 
-.forgot-password-link:hover {
-  color: var(--text-primary);
-  text-decoration: underline;
+.lf-field--has-error .lf-input:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
 
-.alert {
-  margin-bottom: 1rem;
-}
-
-.alert-danger {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(var(--bs-danger-rgb), 0.04);
-  border: 0.5px solid var(--bs-danger);
-  color: var(--bs-danger);
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-.signup-prompt {
+/* ─── Sign-up prompt ────────────────────────────────────────── */
+.lf-signup-prompt {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0.375rem;
   margin-top: 1.5rem;
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
-.signup-link {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 500;
+.lf-signup-link {
+  color: #b45309;
+  font-weight: 600;
   font-size: 0.875rem;
-  transition: color 0.15s;
+  text-decoration: none;
+  transition: color 0.15s ease;
 }
 
-.signup-link:hover {
-  color: var(--text-primary);
+.lf-signup-link:hover {
+  color: #92400e;
   text-decoration: underline;
 }

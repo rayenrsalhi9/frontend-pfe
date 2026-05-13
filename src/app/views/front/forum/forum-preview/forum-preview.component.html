@@ -1,218 +1,305 @@
-<div class="preview-page" *ngIf="forum?.id">
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-body">
-      <div class="meta-row">
-        <span class="badge badge-forum">
-          <i class="feather icon-message-circle"></i>
-          {{ "PREVIEW.FORUM.LABEL" | translate }}
-        </span>
-        <span class="badge badge-cat">
-          <i
-            class="feather"
-            [class.icon-lock]="forum?.closed"
-            [class.icon-unlock]="!forum?.closed"
-          ></i>
-          {{
-            forum?.closed
-              ? ("PREVIEW.FORUM.STATUS.CLOSED" | translate)
-              : ("PREVIEW.FORUM.STATUS.OPEN" | translate)
-          }}
-        </span>
-      </div>
-      <h1 class="hero-title">{{ forum.title }}</h1>
-      <p class="hero-subtitle" *ngIf="forum.subtitle">{{ forum.subtitle }}</p>
-      <div class="author-row">
-        <div class="avatar-circle">
-          <i class="feather icon-user"></i>
+<ng-container *ngIf="{ auth: isAuthenticated$ | async } as vm">
+  <div class="pv-page" *ngIf="forum?.id; else loadingSkeleton">
+    <!-- ── Hero card (no image — forum) ─────────────────────── -->
+    <div class="pv-hero-card">
+      <div class="pv-hero-body">
+        <div class="pv-meta-row">
+          <span class="pv-badge pv-badge--amber">
+            <i class="feather icon-message-circle"></i>
+            {{ "PREVIEW.TYPES.FORUM" | translate }}
+          </span>
+          <span class="pv-badge pv-badge--purple" *ngIf="forum.category?.name">
+            {{ forum.category.name }}
+          </span>
         </div>
-        <div class="author-info">
-          <div class="author-name">
-            {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
+
+        <h1 class="pv-hero-title">{{ forum.title }}</h1>
+        <p class="pv-hero-subtitle" *ngIf="forum.subtitle">
+          {{ forum.subtitle }}
+        </p>
+
+        <div class="pv-author-row">
+          <span class="pv-avatar">
+            <i class="feather icon-user"></i>
+          </span>
+          <div class="pv-author-info">
+            <span class="pv-author-name">
+              {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
+            </span>
+            <span class="pv-author-date">
+              {{ forum.createdAt | utcToLocalTime: "mediumDate" }}
+            </span>
           </div>
-          <div class="author-date">
-            {{ forum.createdAt | utcToLocalTime: "mediumDate" }}
+          <div class="pv-hero-stats">
+            <span class="pv-hero-stat">
+              <i class="feather icon-thumbs-up"></i>
+              {{ forum.reactionsUp?.length || 0 }}
+            </span>
+            <span class="pv-hero-stat">
+              <i class="feather icon-message-square"></i>
+              {{ forum.comments?.length || 0 }}
+            </span>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Two-column layout -->
-  <div class="preview-layout">
-    <!-- Main column -->
-    <div class="main-col">
-      <!-- Article body -->
-      <div class="preview-card article-body">
-        <div class="rich-content" [innerHTML]="forum.content | safeHtml"></div>
+    <!-- ── Two-column layout ─────────────────────────────────── -->
+    <div class="pv-layout">
+      <!-- ── Main column ──────────────────────────────────────── -->
+      <div class="pv-main">
+        <!-- Forum body -->
+        <div class="pv-card pv-card--body">
+          <div class="pv-section-label">
+            <span>{{ "PREVIEW.COMMON.CONTENT_HEADING" | translate }}</span>
+          </div>
+          <div
+            class="pv-rich-content"
+            [innerHTML]="forum.content | safeHtml"
+          ></div>
+        </div>
 
-        <!-- Reactions -->
-        <div class="reactions">
-          <div class="rxn-group">
-            <button
-              class="rxn-btn"
-              [class.active-up]="hasReacted('up')"
-              (click)="addReaction('up')"
-              [attr.aria-label]="
-                ('PREVIEW.FORUM.REACTIONS.UP' | translate) +
-                ' ' +
-                (forum.reactionsUp?.length || 0)
-              "
-              [attr.aria-pressed]="hasReacted('up')"
-            >
-              <i class="feather icon-thumbs-up"></i>
-              {{ forum.reactionsUp?.length || 0 }}
-            </button>
-            <button
-              class="rxn-btn"
-              [class.active-down]="hasReacted('down')"
-              (click)="addReaction('down')"
-              [attr.aria-label]="
-                ('PREVIEW.FORUM.REACTIONS.DOWN' | translate) +
-                ' ' +
-                (forum.reactionsDown?.length || 0)
-              "
-              [attr.aria-pressed]="hasReacted('down')"
-            >
-              <i class="feather icon-thumbs-down"></i>
-              {{ forum.reactionsDown?.length || 0 }}
-            </button>
-            <button
-              class="rxn-btn"
-              [class.active-heart]="hasReacted('heart')"
-              (click)="addReaction('heart')"
-              [attr.aria-label]="
-                ('PREVIEW.FORUM.REACTIONS.HEART' | translate) +
-                ' ' +
-                (forum.reactionsHeart?.length || 0)
-              "
-              [attr.aria-pressed]="hasReacted('heart')"
-            >
+        <!-- Reactions — gated -->
+        <div
+          class="pv-card pv-gated-block"
+          [class.pv-gated-block--locked]="vm.auth !== true"
+        >
+          <div class="pv-card-head">
+            <h2 class="pv-card-title">
               <i class="feather icon-heart"></i>
-              {{ forum.reactionsHeart?.length || 0 }}
+              {{ "PREVIEW.COMMON.REACTIONS_TITLE" | translate }}
+            </h2>
+          </div>
+          <div class="pv-card-body pv-reactions-body">
+            <div class="pv-rxn-group">
+              <button
+                class="pv-rxn-btn"
+                [class.pv-rxn-btn--active-up]="hasReacted('up')"
+                (click)="addReaction('up')"
+                [disabled]="vm.auth !== true"
+                [attr.aria-pressed]="hasReacted('up')"
+              >
+                <i class="feather icon-thumbs-up"></i>
+                <span>{{ forum.reactionsUp?.length || 0 }}</span>
+              </button>
+              <button
+                class="pv-rxn-btn"
+                [class.pv-rxn-btn--active-down]="hasReacted('down')"
+                (click)="addReaction('down')"
+                [disabled]="vm.auth !== true"
+                [attr.aria-pressed]="hasReacted('down')"
+              >
+                <i class="feather icon-thumbs-down"></i>
+                <span>{{ forum.reactionsDown?.length || 0 }}</span>
+              </button>
+              <button
+                class="pv-rxn-btn"
+                [class.pv-rxn-btn--active-heart]="hasReacted('heart')"
+                (click)="addReaction('heart')"
+                [disabled]="vm.auth !== true"
+                [attr.aria-pressed]="hasReacted('heart')"
+              >
+                <i class="feather icon-heart"></i>
+                <span>{{ forum.reactionsHeart?.length || 0 }}</span>
+              </button>
+            </div>
+            <span class="pv-comment-count">
+              <i class="feather icon-message-square"></i>
+              {{ forum.comments?.length || 0 }}
+              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
+            </span>
+          </div>
+          <!-- Auth overlay -->
+          <div class="pv-auth-overlay" *ngIf="vm.auth !== true">
+            <div class="pv-auth-overlay-content">
+              <i class="feather icon-lock"></i>
+              <p>{{ "PREVIEW.COMMON.LOGIN_TO_REACT" | translate }}</p>
+              <a routerLink="/login" class="pv-login-btn">
+                <i class="feather icon-log-in"></i>
+                {{ "NAV.LOGIN" | translate }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments — gated -->
+        <div
+          class="pv-card pv-gated-block"
+          [class.pv-gated-block--locked]="vm.auth !== true"
+        >
+          <div class="pv-card-head">
+            <h2 class="pv-card-title">
+              <i class="feather icon-message-circle"></i>
+              {{ "PREVIEW.COMMON.COMMENTS_TITLE" | translate }}
+            </h2>
+            <span class="pv-count-pill">{{ forum.comments?.length || 0 }}</span>
+          </div>
+
+          <!-- Comment form (only when open) -->
+          <div class="pv-comment-form" *ngIf="!forum?.closed">
+            <span class="pv-avatar pv-avatar--sm">
+              <i class="feather icon-user"></i>
+            </span>
+            <textarea
+              class="pv-comment-input"
+              [(ngModel)]="comment"
+              id="forumComment"
+              rows="2"
+              [placeholder]="'PREVIEW.COMMON.WRITE_COMMENT' | translate"
+              [attr.aria-label]="
+                'PREVIEW.COMMON.WRITE_COMMENT' | translate
+              "
+              [disabled]="vm.auth !== true"
+            ></textarea>
+            <button
+              class="pv-send-btn"
+              (click)="addComment()"
+              type="button"
+              [disabled]="vm.auth !== true"
+            >
+              <i class="feather icon-send"></i>
+              <span>{{ "PREVIEW.COMMON.ADD_COMMENT" | translate }}</span>
             </button>
           </div>
-          <span class="comment-pill">
-            <i class="feather icon-message-square"></i>
-            {{ forum.comments?.length || 0 }}
-          </span>
+
+          <!-- Closed notice -->
+          <div class="pv-closed-notice" *ngIf="forum?.closed">
+            <i class="feather icon-lock"></i>
+            <span>{{ "PREVIEW.FORUM.PREVIEW.CLOSED_NOTICE" | translate }}</span>
+          </div>
+
+          <!-- Comments list -->
+          <div class="pv-comments-list" *ngIf="forum.comments?.length > 0">
+            <div class="pv-comment-item" *ngFor="let c of forum.comments">
+              <span class="pv-avatar pv-avatar--sm">
+                <i class="feather icon-user"></i>
+              </span>
+              <div class="pv-comment-body">
+                <div class="pv-comment-header">
+                  <div class="pv-comment-meta">
+                    <span class="pv-comment-name">
+                      {{ c.user?.firstName }} {{ c.user?.lastName }}
+                    </span>
+                    <span class="pv-comment-time">
+                      {{ c.createdAt | utcToLocalTime: "mediumDate" }}
+                    </span>
+                  </div>
+                  <button
+                    *ngIf="canDeleteComment(c)"
+                    class="pv-delete-btn"
+                    type="button"
+                    [title]="'PREVIEW.COMMON.DELETE_COMMENT' | translate"
+                    [attr.aria-label]="
+                      'PREVIEW.COMMON.DELETE_COMMENT' | translate
+                    "
+                    (click)="deleteComment(c.id)"
+                  >
+                    <i class="feather icon-trash-2"></i>
+                  </button>
+                </div>
+                <p class="pv-comment-text">{{ c.comment }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty comments -->
+          <div class="pv-empty-comments" *ngIf="!forum.comments?.length">
+            <i class="feather icon-message-circle"></i>
+            <p>{{ "PREVIEW.COMMON.NO_COMMENTS" | translate }}</p>
+          </div>
+
+          <!-- Auth overlay -->
+          <div class="pv-auth-overlay" *ngIf="vm.auth !== true">
+            <div class="pv-auth-overlay-content">
+              <i class="feather icon-lock"></i>
+              <p>{{ "PREVIEW.COMMON.LOGIN_TO_COMMENT" | translate }}</p>
+              <a routerLink="/login" class="pv-login-btn">
+                <i class="feather icon-log-in"></i>
+                {{ "NAV.LOGIN" | translate }}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Comments -->
-      <div class="preview-card comments-card">
-        <div class="comments-header">
-          <span class="comments-title">{{
-            "PREVIEW.FORUM.PREVIEW.COMMENTS" | translate
-          }}</span>
+      <!-- ── Sidebar ────────────────────────────────────────── -->
+      <aside class="pv-sidebar">
+        <!-- Stats widget -->
+        <div class="pv-widget">
+          <div class="pv-widget-label">
+            {{ "PREVIEW.WIDGETS.STATS" | translate }}
+          </div>
+          <div class="pv-widget-stats">
+            <div class="pv-stat-item">
+              <span class="pv-stat-icon pv-stat-icon--amber">
+                <i class="feather icon-thumbs-up"></i>
+              </span>
+              <span class="pv-stat-val">{{
+                forum.reactionsUp?.length || 0
+              }}</span>
+              <span class="pv-stat-lbl">{{
+                "PREVIEW.WIDGETS.LIKES" | translate
+              }}</span>
+            </div>
+            <div class="pv-stat-divider"></div>
+            <div class="pv-stat-item">
+              <span class="pv-stat-icon pv-stat-icon--teal">
+                <i class="feather icon-message-circle"></i>
+              </span>
+              <span class="pv-stat-val">{{ forum.comments?.length || 0 }}</span>
+              <span class="pv-stat-lbl">{{
+                "PREVIEW.WIDGETS.COMMENTS" | translate
+              }}</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Add comment form -->
-        <div class="comment-form" *ngIf="!forum?.closed">
-          <div class="avatar-circle sm">
-            <i class="feather icon-user"></i>
+        <!-- Share widget -->
+        <div class="pv-widget">
+          <div class="pv-widget-label">
+            {{ "PREVIEW.WIDGETS.SHARE" | translate }}
           </div>
-          <textarea
-            class="comment-input"
-            [(ngModel)]="comment"
-            id="forumComment"
-            rows="2"
-            [placeholder]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
-            [attr.aria-label]="'PREVIEW.FORUM.COMMENT.ADD_COMMENT' | translate"
-          ></textarea>
-          <button class="send-btn" (click)="addComment()" type="button">
-            {{ "PREVIEW.FORUM.PREVIEW.ADD_COMMENT" | translate }}
+          <button class="pv-share-btn" (click)="copyLink()" type="button">
+            <i class="feather icon-link"></i>
+            {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}
           </button>
         </div>
 
-        <div class="closed-notice" *ngIf="forum?.closed">
-          <i class="feather icon-lock"></i>
-          <span>{{ "PREVIEW.FORUM.PREVIEW.CLOSED_NOTICE" | translate }}</span>
-        </div>
-
-        <!-- Comments list -->
-        <div class="comments-list" *ngIf="forum.comments?.length > 0">
-          <div class="comment-item" *ngFor="let c of forum.comments">
-            <div class="cm-avatar">
+        <!-- Author widget -->
+        <div
+          class="pv-widget"
+          *ngIf="forum.creator?.firstName || forum.creator?.lastName"
+        >
+          <div class="pv-widget-label">
+            {{ "PREVIEW.WIDGETS.AUTHOR" | translate }}
+          </div>
+          <div class="pv-author-widget">
+            <span class="pv-avatar">
               <i class="feather icon-user"></i>
-            </div>
-            <div class="cm-body">
-              <div class="cm-header cm-header--spaced">
-                <div>
-                  <span class="cm-name"
-                    >{{ c.user?.firstName }} {{ c.user?.lastName }}</span
-                  >
-                  <span class="cm-time">{{
-                    c.createdAt | utcToLocalTime: "mediumDate"
-                  }}</span>
-                </div>
-                <!-- Delete button -->
-                <button
-                  *ngIf="canDeleteComment(c)"
-                  class="delete-btn"
-                  type="button"
-                  [title]="'PREVIEW.FORUM.COMMENT.DELETE' | translate"
-                  [attr.aria-label]="'PREVIEW.FORUM.COMMENT.DELETE' | translate"
-                  (click)="deleteComment(c.id)"
-                >
-                  <i class="feather icon-trash-2"></i>
-                </button>
+            </span>
+            <div>
+              <div class="pv-author-name">
+                {{ forum.creator?.firstName }} {{ forum.creator?.lastName }}
               </div>
-              <p class="cm-text">{{ c.comment }}</p>
+              <div class="pv-author-date">
+                {{ forum.createdAt | utcToLocalTime: "mediumDate" }}
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Empty state -->
-        <div class="empty-state" *ngIf="!forum.comments?.length">
-          {{ "PREVIEW.FORUM.PREVIEW.NO_COMMENTS" | translate }}
-        </div>
-      </div>
+      </aside>
     </div>
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <!-- Stats -->
-      <div class="preview-card widget-card">
-        <div class="widget-title">
-          {{ "PREVIEW.WIDGETS.STATS" | translate }}
-        </div>
-        <div class="stat-row">
-          <div class="stat-item">
-            <div class="stat-val">{{ forum.reactionsUp?.length || 0 }}</div>
-            <div class="stat-lbl">
-              {{ "PREVIEW.WIDGETS.LIKES" | translate }}
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-val">{{ forum.comments?.length || 0 }}</div>
-            <div class="stat-lbl">
-              {{ "PREVIEW.WIDGETS.COMMENTS" | translate }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Share -->
-      <div class="preview-card widget-card">
-        <div class="widget-title">
-          {{ "PREVIEW.WIDGETS.SHARE" | translate }}
-        </div>
-        <button class="share-btn" (click)="copyLink()" type="button">
-          <i class="feather icon-link"></i>
-          {{ "PREVIEW.WIDGETS.COPY_LINK" | translate }}
-        </button>
-      </div>
-    </aside>
   </div>
-</div>
+</ng-container>
 
-<!-- Loading skeleton -->
-<div class="preview-loading" *ngIf="!forum?.id">
-  <div class="skeleton-hero"></div>
-  <div class="skeleton-body">
-    <div class="skeleton-line wide"></div>
-    <div class="skeleton-line medium"></div>
-    <div class="skeleton-line short"></div>
+<!-- ── Loading skeleton ─────────────────────────────────────── -->
+<ng-template #loadingSkeleton>
+  <div class="pv-skeleton">
+    <div class="pv-skeleton-hero"></div>
+    <div class="pv-skeleton-lines">
+      <div class="pv-skeleton-line pv-skeleton-line--wide"></div>
+      <div class="pv-skeleton-line pv-skeleton-line--mid"></div>
+      <div class="pv-skeleton-line pv-skeleton-line--short"></div>
+    </div>
   </div>
-</div>
+</ng-template>

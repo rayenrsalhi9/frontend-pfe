@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "Community forum",
       TITLE: "New forum thread",
       DESCRIPTION:
         "Start a discussion, ask a question, or share something with the community.",
@@ -46,6 +47,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "Knowledge base",
       TITLE: "New blog post",
       DESCRIPTION: "Write and publish a post for your audience.",
       LABELS: {
@@ -75,7 +77,6 @@ export const add = {
         BANNER: "Display this post as a featured banner on the home page.",
         PRIVATE: "Only you and invited members will be able to see this post.",
         REQUIRED_FIELDS: "Fields marked * are required",
-        USERS: "Leave empty to allow all invited members to read this post.",
       },
       BUTTONS: {
         SAVE: "Publish post",
@@ -108,6 +109,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "News & updates",
       TITLE: "New article",
       DESCRIPTION: "Create a news post or announcement for your community.",
       LABELS: {
@@ -129,7 +131,6 @@ export const add = {
       HINTS: {
         PRIVATE:
           "Only you and the users you select will be able to see this article.",
-        USERS: "Leave empty to allow all invited members to read this article.",
         REQUIRED_FIELDS: "Fields marked * are required",
       },
       BUTTONS: {
@@ -150,7 +151,6 @@ export const add = {
       TOAST: {
         SUCCESS: "Article published successfully",
         ERROR: "Failed to publish article",
-        UPDATED_SUCCESSFULLY: "Article updated successfully",
       },
       VALIDATION: {
         TITLE_MIN_LENGTH: "Title must be at least 5 characters",
@@ -221,6 +221,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "User management",
       TITLE: "New user",
       DESCRIPTION: "Create a new user account and assign roles.",
       LABELS: {
@@ -271,6 +272,7 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "Password must be at least 6 characters",
+        PASSWORD_PATTERN: "Must include uppercase, number, and special character",
       },
     },
 
@@ -287,7 +289,12 @@ export const add = {
         NO_RESULTS: "No results found",
         BASIC_INFO: "Basic information",
         SETTINGS: "Settings",
+        USERS: "Allowed users",
       },
+      PLACEHOLDERS: {
+        USERS: "Search for users…",
+      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "Browse",
         UPLOAD: "Upload",
@@ -314,63 +321,39 @@ export const add = {
   },
 
   EDIT: {
+    SHARED: {
+      BUTTONS: {
+        SAVE: "Update",
+      },
+      TOAST: {
+        SUCCESS: "Updated successfully",
+        ERROR: "Failed to update",
+      },
+    },
     FORUM: {
+      EYEBROW: "Community forum",
       TITLE: "Edit forum thread",
       DESCRIPTION: "Update your forum thread and settings.",
-      BUTTONS: {
-        SAVE: "Update thread",
-      },
-      TOAST: {
-        SUCCESS: "Thread updated successfully",
-        ERROR: "Failed to update thread",
-      },
     },
     BLOG: {
+      EYEBROW: "Knowledge base",
       TITLE: "Edit blog post",
       DESCRIPTION: "Update your blog post and settings.",
-      BUTTONS: {
-        SAVE: "Update post",
-      },
-      TOAST: {
-        SUCCESS: "Blog post updated successfully",
-        ERROR: "Failed to update blog post",
-      },
     },
     ARTICLE: {
+      EYEBROW: "News & updates",
       TITLE: "Edit article",
       DESCRIPTION: "Update your article and settings.",
-      BUTTONS: {
-        UPDATE: "Update article",
-        SAVE: "Update article",
-      },
-      TOAST: {
-        SUCCESS: "Article updated successfully",
-        ERROR: "Failed to update article",
-      },
     },
 
     SURVEY: {
       TITLE: "Edit survey",
       DESCRIPTION: "Update your survey settings and participants.",
-      BUTTONS: {
-        SAVE: "Update survey",
-      },
-      TOAST: {
-        SUCCESS: "Survey updated successfully",
-        ERROR: "Failed to update survey",
-      },
     },
 
     CATEGORY: {
       TITLE: "Edit category",
       DESCRIPTION: "Update your category name and description.",
-      BUTTONS: {
-        SAVE: "Update category",
-      },
-      TOAST: {
-        SUCCESS: "Category updated successfully",
-        ERROR: "Failed to update category",
-      },
     },
 
     USER: {
@@ -378,10 +361,6 @@ export const add = {
       DESCRIPTION: "Update user information and roles.",
       BUTTONS: {
         SAVE: "Update user",
-      },
-      TOAST: {
-        SUCCESS: "User updated successfully",
-        ERROR: "Failed to update user",
       },
     },
   },

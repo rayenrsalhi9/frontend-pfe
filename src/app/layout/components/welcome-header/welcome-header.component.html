@@ -1,8 +1,8 @@
 <ng-container *ngIf="{ auth: isAuthenticated$ | async } as vm">
   <header class="welcome-header" [class.is-scrolled]="isScrolled">
     <div class="header-inner">
-      <a class="logo-link" routerLink="/">
-        <logo></logo>
+      <a class="logo-link" routerLink="/" [attr.aria-label]="'NAV.GED_HOME' | translate">
+        <app-ged-brand logoType="img"></app-ged-brand>
       </a>
 
       <nav class="main-nav">
@@ -52,7 +52,7 @@
         <ng-container *ngIf="vm.auth === false">
           <a class="btn-ghost" routerLink="/login">
             <i class="feather icon-log-in"></i>
-            {{ "NAV.CONNEXION" | translate }}
+            {{ "NAV.LOGIN" | translate }}
           </a>
         </ng-container>
 
@@ -89,8 +89,8 @@
     [inert]="!isMenuOpen"
   >
     <div class="drawer-header">
-      <a class="logo-link" routerLink="/" (click)="toggleMenu()">
-        <logo></logo>
+      <a class="logo-link" routerLink="/" (click)="toggleMenu()" [attr.aria-label]="'NAV.GED_HOME' | translate">
+        <app-ged-brand logoType="img"></app-ged-brand>
       </a>
       <button
         type="button"

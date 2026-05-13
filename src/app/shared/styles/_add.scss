@@ -1,278 +1,291 @@
-// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 //  _add.scss — shared add/edit form styles
-//  Covers both full-page forms (.add-form-page)
-//  and modal forms (.modal-form-body)
-// ─────────────────────────────────────────────
+//  Covers both full-page forms (.af-*) and modal forms (.modal-form-body)
+//  Warm amber design system — matches welcome, dashboard, list, preview, chat
+// ─────────────────────────────────────────────────────────────────────────────
 
-// ── Page-only shell ───────────────────────────
+// ─── Warm palette ─────────────────────────────────────────────────────────────
+$amber: #b45309;
+$amber-light: #fef3c7;
+$amber-mid: #fcd34d;
+$amber-bg: #fffbeb;
+$amber-dark: #92400e;
 
-.add-form-page {
+// ─── Focus ring (reused everywhere) ──────────────────────────────────────────
+%amber-focus {
+  border-color: $amber-mid;
+  box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1);
+}
+
+// ─── Error state ──────────────────────────────────────────────────────────────
+%error-state {
+  border-color: #fca5a5 !important;
+  background: #fef2f2 !important;
+}
+
+// ============================================================================
+// PAGE SHELL  (mirrors welcome + lp-container)
+// ============================================================================
+
+.af-page {
   min-height: calc(100vh - 70px);
   padding: 2rem 0 4rem;
 }
 
-.add-form-container {
-  max-width: 760px;
+.af-container {
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2.5rem;
 }
 
-// ── Modal-only shell ──────────────────────────
-// The host component wraps the content in this class.
-// It provides all the internal padding so .form-body inside
-// a modal does NOT add its own padding again.
+// ============================================================================
+// PAGE HEADER  (identical pattern to cal-page-header / lp-header)
+// ============================================================================
 
-.modal-form-body {
-  padding: 1.75rem 2rem 0;
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
+.af-header {
   display: flex;
-  flex-direction: column;
-}
-
-// ── Headers ───────────────────────────────────
-
-.page-header {
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-.modal-form-header {
-  margin-bottom: 1.5rem;
+.af-header-left {
+  flex: 1;
+  min-width: 200px;
 }
 
-.page-title,
-.modal-form-title {
-  font-size: 1.25rem;
-  font-weight: 500;
+.af-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $amber-dark;
+  margin: 0 0 0.375rem;
+}
+
+.af-title {
+  font-size: 1.875rem;
+  font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
-  margin: 0 0 0.25rem;
-  display: block;
+  line-height: 1.2;
+  margin: 0 0 0.375rem;
 }
 
-.page-sub,
-.modal-form-sub {
-  font-size: 1rem;
+.af-desc {
+  font-size: 0.9375rem;
   color: var(--text-secondary);
   margin: 0;
-  display: block;
   line-height: 1.5;
 }
 
-// ── Form card (page only) ─────────────────────
+// ============================================================================
+// FORM CARD  (matches db-card / pv-card)
+// ============================================================================
 
-.form-card {
-  background: var(--card-bg);
-  border: 0.5px solid var(--border-color);
-  border-radius: var(--radius-lg);
+.af-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
   overflow: hidden;
 }
 
-// ── Form body ─────────────────────────────────
-
-.form-body {
-  // Page context: padded inside the card
-  .add-form-page & {
-    padding: 2rem 2.5rem;
-  }
-
-  // Modal context: no extra padding — the modal shell handles it
-  .modal-form-body & {
-    padding: 0;
-  }
-
+.af-form {
   display: flex;
   flex-direction: column;
 }
 
-// ── Sections (page only) ──────────────────────
-// Modals are typically too compact for section dividers.
+// ============================================================================
+// SECTIONS  (matches db-section-label / cal-section-label)
+// ============================================================================
 
-.add-form-page {
-  .form-section {
-    padding-bottom: 1.75rem;
-    margin-bottom: 1.75rem;
-    border-bottom: 0.5px solid var(--border-color);
+.af-section {
+  padding: 2rem 2.5rem;
+  border-bottom: 1px solid var(--border-color);
 
-    &.last,
-    &:last-of-type {
-      border-bottom: none;
-      padding-bottom: 0;
-      margin-bottom: 0;
+  &--last {
+    border-bottom: none;
+    padding-bottom: 2.25rem;
+  }
+}
+
+// ─── Section label divider ────────────────────────────────────────────────────
+
+.af-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 1.375rem;
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+  }
+}
+
+// ============================================================================
+// FIELDS
+// ============================================================================
+
+.af-field {
+  margin-bottom: 1.25rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.af-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+
+.af-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.af-required {
+  color: #b91c1c;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.af-optional {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+// ─── Text inputs + textarea ───────────────────────────────────────────────────
+
+.af-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  display: block;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+
+  &:hover:not(:focus) {
+    border-color: $amber-mid;
+  }
+
+  &:focus {
+    @extend %amber-focus;
+  }
+
+  &--error {
+    @extend %error-state;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
   }
 
-  .section-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    line-height: 1;
+  &--textarea {
+    height: auto;
+    min-height: 100px;
+    padding: 0.75rem 1rem;
+    resize: vertical;
+    line-height: 1.6;
   }
+}
 
-  .section-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--border-color);
+// ─── Error + hint text ────────────────────────────────────────────────────────
+
+.af-field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #b91c1c;
+  font-weight: 500;
+  margin-top: 0.375rem;
+  line-height: 1.4;
+
+  i {
+    font-size: 0.8125rem;
     flex-shrink: 0;
   }
 }
 
-// ── Field layout ──────────────────────────────
-
-.add-form-page,
-.modal-form-body {
-  .field {
-    margin-bottom: 1.25rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
+.af-field-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.375rem;
+  line-height: 1.5;
 }
 
-// Slightly tighter field gap inside modals
-.modal-form-body {
-  .field {
-    margin-bottom: 1rem;
-  }
-}
+// ============================================================================
+// NG-SELECT — amber focus ring, consistent with all other selects in system
+// ============================================================================
 
-// ── Labels ────────────────────────────────────
-
-.add-form-page,
-.modal-form-body {
-  .field-label {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-  }
-
-  .required-mark {
-    color: var(--bs-danger);
-    font-weight: 400;
-    font-size: 0.75rem;
-    line-height: 1;
-  }
-
-  .optional-mark {
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: var(--text-secondary);
-  }
-}
-
-// ── Text inputs ───────────────────────────────
-
-.add-form-page,
-.modal-form-body {
-  .field-input {
-    width: 100%;
-    height: 44px;
-    padding: 0 12px;
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background: var(--bg-app);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    font-family: inherit;
-    outline: none;
-    transition:
-      border-color 0.15s,
-      background 0.15s,
-      box-shadow 0.15s;
-    display: block;
-
-    &::placeholder {
-      color: var(--text-secondary);
-      opacity: 0.6;
-    }
-
-    &:hover {
-      filter: brightness(0.97);
-    }
-
-    &:focus {
-      border-color: var(--primary);
-      background: var(--card-bg);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-    }
-
-    &.has-error {
-      border-color: var(--bs-danger);
-      background: rgba(var(--bs-danger-rgb), 0.04);
-
-      &:focus {
-        box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
-      }
-    }
-  }
-
-  textarea.field-input {
-    height: auto;
-    min-height: 100px;
-    padding: 12px;
-    resize: vertical;
-    line-height: 1.6;
-  }
-
-  input[type="date"].field-input {
-    cursor: pointer;
-  }
-}
-
-// ── ng-select ─────────────────────────────────
-
-.add-form-page,
+.af-page,
 .modal-form-body {
   ng-select {
     display: block;
 
     &.ng-select {
-      font-size: 0.75rem;
+      font-size: 0.9375rem;
       font-family: inherit;
     }
 
     .ng-select-container {
       min-height: 44px;
       height: 44px;
-      border: 0.5px solid var(--border-color) !important;
-      border-radius: var(--radius-md) !important;
-      background: var(--bg-app) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 10px !important;
+      background: #ffffff !important;
       color: var(--text-primary);
       box-shadow: none !important;
       cursor: pointer;
       transition:
-        border-color 0.15s,
-        background 0.15s,
-        box-shadow 0.15s;
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
 
       .ng-value-container {
-        padding: 0 8px;
+        padding: 0 0.75rem;
         align-items: center;
 
         .ng-placeholder {
           color: var(--text-secondary);
-          opacity: 0.6;
-          font-size: 1rem;
+          opacity: 0.7;
+          font-size: 0.9375rem;
           top: auto;
           padding: 0;
         }
@@ -280,9 +293,8 @@
         .ng-input {
           padding: 0;
           top: auto;
-
           input {
-            font-size: 1rem;
+            font-size: 0.9375rem;
             font-family: inherit;
             color: var(--text-primary);
           }
@@ -290,9 +302,8 @@
       }
 
       .ng-arrow-wrapper {
-        padding-right: 8px;
+        padding-right: 0.625rem;
         width: 28px;
-
         .ng-arrow {
           border-color: var(--text-secondary) transparent transparent;
           border-width: 4px 4px 0;
@@ -301,18 +312,17 @@
 
       .ng-clear-wrapper {
         color: var(--text-secondary);
-        padding-right: 4px;
-
         &:hover .ng-clear {
           color: var(--text-primary);
         }
       }
     }
 
-    &.ng-select-opened .ng-select-container {
-      border-color: var(--primary) !important;
-      background: var(--card-bg) !important;
-      box-shadow: 0 0 0 3px var(--primary-glow) !important;
+    // Open / focused
+    &.ng-select-opened .ng-select-container,
+    &.ng-select-focused .ng-select-container {
+      border-color: $amber-mid !important;
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1) !important;
 
       .ng-arrow {
         border-color: transparent transparent var(--text-secondary);
@@ -320,23 +330,18 @@
       }
     }
 
-    &.ng-select-focused .ng-select-container {
-      border-color: var(--primary) !important;
-      background: var(--card-bg) !important;
-      box-shadow: 0 0 0 3px var(--primary-glow) !important;
-    }
-
+    // Error state
     &.has-error .ng-select-container {
-      border-color: var(--bs-danger) !important;
-      background: rgba(var(--bs-danger-rgb), 0.04) !important;
+      @extend %error-state;
     }
 
+    // Multi-select tags — amber pills
     .ng-value {
       display: inline-flex !important;
       align-items: center;
       gap: 4px;
-      background: var(--color-tag-bg, #e6f1fb) !important;
-      color: var(--color-tag-text, #185fa5) !important;
+      background: $amber-light !important;
+      color: #78350f !important;
       border: none !important;
       border-radius: 20px !important;
       padding: 2px 10px !important;
@@ -347,16 +352,14 @@
     }
 
     .ng-value-icon {
-      color: var(--color-tag-text, #185fa5) !important;
+      color: $amber-dark !important;
       font-size: 0.75rem;
       padding: 0 !important;
       order: 1;
-
       &:hover {
         background: transparent !important;
-        color: var(--color-tag-hover, #0c447c) !important;
+        color: $amber !important;
       }
-
       &.left {
         display: none !important;
       }
@@ -369,51 +372,40 @@
     &.ng-select-multiple .ng-select-container {
       height: auto;
       min-height: 44px;
-
       .ng-value-container {
         flex-wrap: wrap;
-        padding: 4px 8px;
+        padding: 0.25rem 0.75rem;
         gap: 4px;
       }
     }
 
+    // Dropdown panel
     .ng-dropdown-panel {
-      border: 0.5px solid var(--border-color);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       margin-top: 4px;
       background: var(--card-bg);
       z-index: 1050;
-
-      .ng-dropdown-panel-items {
-        border-radius: var(--radius-md);
-        overflow: hidden;
-      }
+      overflow: hidden;
 
       .ng-option {
-        padding: 10px 14px;
-        font-size: 1rem;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9375rem;
         color: var(--text-primary);
         background: var(--card-bg);
         cursor: pointer;
-        transition: background 0.1s;
-
-        &.ng-option-selected {
-          background: var(--primary-glow);
-          color: var(--primary);
-          font-weight: 500;
-        }
+        transition: background 0.12s ease;
 
         &.ng-option-marked {
-          background: var(--bg-app);
-          color: var(--text-primary);
+          background: $amber-bg;
+          color: $amber;
         }
-
-        &.ng-option-selected.ng-option-marked {
-          background: var(--primary-glow);
-          color: var(--primary);
+        &.ng-option-selected {
+          background: $amber-light !important;
+          color: #78350f !important;
+          font-weight: 600;
         }
-
         &.ng-option-disabled {
           color: var(--text-secondary);
           opacity: 0.5;
@@ -421,10 +413,10 @@
       }
 
       .ng-optgroup {
-        padding: 8px 14px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.05em;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
         color: var(--text-secondary);
       }
@@ -432,35 +424,36 @@
   }
 }
 
-// ── Quill editor ──────────────────────────────
+// ============================================================================
+// QUILL RICH TEXT EDITOR
+// ============================================================================
 
-.add-form-page,
+.af-page,
 .modal-form-body {
-  .quill-wrap {
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
+  .af-quill-wrap {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     overflow: hidden;
     transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
 
     &:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
+      border-color: $amber-mid;
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1);
     }
 
-    &.has-error {
-      border-color: var(--bs-danger);
-
+    &--error {
+      border-color: #fca5a5;
       &:focus-within {
-        box-shadow: 0 0 0 3px rgba(var(--bs-danger-rgb), 0.12);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
       }
     }
 
     .ql-toolbar {
       border: none !important;
-      border-bottom: 0.5px solid var(--border-color) !important;
-      background: var(--bg-app);
+      border-bottom: 1px solid var(--border-color) !important;
+      background: $amber-bg;
       padding: 8px 12px;
 
       .ql-stroke {
@@ -476,54 +469,59 @@
       button:hover,
       button.ql-active {
         .ql-stroke {
-          stroke: var(--text-primary);
+          stroke: $amber;
         }
         .ql-fill {
-          fill: var(--text-primary);
+          fill: $amber;
         }
+      }
+
+      .ql-picker-options .ql-selected {
+        color: $amber !important;
       }
     }
 
     .ql-container {
       border: none !important;
       background: var(--card-bg);
-      font-size: 1rem;
+      font-size: 0.9375rem;
       font-family: inherit;
     }
 
     .ql-editor {
       min-height: 200px;
-      line-height: 1.7;
+      line-height: 1.75;
       color: var(--text-primary);
-      padding: 14px 16px;
+      padding: 1rem 1.25rem;
 
       &.ql-blank::before {
         color: var(--text-secondary);
         opacity: 0.6;
         font-style: normal;
-        left: 16px;
+        left: 1.25rem;
       }
 
       p,
       li {
-        font-size: 1rem;
+        font-size: 0.9375rem;
       }
 
       h1,
       h2,
       h3 {
-        font-weight: 500;
+        font-weight: 700;
         letter-spacing: -0.02em;
       }
 
       a {
-        color: var(--primary);
+        color: $amber;
       }
 
       blockquote {
-        border-left: 2px solid var(--border-color);
-        border-radius: 0;
-        padding-left: 1rem;
+        border-left: 3px solid $amber-mid;
+        background: $amber-bg;
+        padding: 0.75rem 1rem;
+        border-radius: 0 8px 8px 0;
         color: var(--text-secondary);
         margin: 1rem 0;
       }
@@ -531,40 +529,51 @@
   }
 }
 
-// ── Image upload zone ─────────────────────────
+// ============================================================================
+// IMAGE UPLOAD ZONE
+// ============================================================================
 
-.add-form-page,
+.af-page,
 .modal-form-body {
-  .image-upload-zone {
+  .af-upload-zone {
     position: relative;
     width: 100%;
-    height: 160px;
-    border: 0.5px dashed var(--border-color);
-    border-radius: var(--radius-md);
-    background: var(--bg-app);
+    height: 200px;
+    border: 1.5px dashed var(--border-color);
+    border-radius: 10px;
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    transition: border-color 0.15s;
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease;
 
     &:hover {
-      border-color: var(--primary);
+      border-color: $amber-mid;
+      background: $amber-bg;
     }
 
-    &.has-image {
+    &--has-image {
       border-style: solid;
       border-color: var(--border-color);
+      background: #f5f0e8;
+
+      &:hover {
+        border-color: $amber-mid;
+        background: #f5f0e8;
+      }
     }
 
-    &.has-error {
-      border-color: var(--bs-danger);
-      background: rgba(var(--bs-danger-rgb), 0.03);
+    &--error {
+      border-color: #fca5a5;
+      background: #fef2f2;
     }
   }
 
-  .upload-preview-img {
+  .af-upload-preview {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -573,57 +582,65 @@
     display: block;
   }
 
-  .upload-placeholder {
+  .af-upload-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 0.625rem;
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.875rem;
     pointer-events: none;
+    text-align: center;
 
-    svg {
-      opacity: 0.4;
+    i {
+      font-size: 1.75rem;
+      opacity: 0.35;
     }
   }
 
-  .upload-actions {
+  .af-upload-actions {
     position: absolute;
-    bottom: 12px;
-    right: 12px;
+    bottom: 0.875rem;
+    right: 0.875rem;
     z-index: 2;
+
+    [dir="rtl"] & {
+      right: auto;
+      left: 0.875rem;
+    }
   }
 
-  .upload-input {
+  .af-upload-input {
     display: none;
   }
 }
 
-// Taller upload zone on full pages
-.add-form-page .image-upload-zone {
-  height: 200px;
-}
+// ============================================================================
+// TOGGLE SWITCH — amber checked state
+// ============================================================================
 
-// ── Toggle ────────────────────────────────────
-
-.add-form-page,
+.af-page,
 .modal-form-body {
-  .toggle-row {
+  .af-toggle-row {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--bg-app);
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-md);
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    background: $amber-bg;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     margin-bottom: 0.75rem;
+    transition: border-color 0.15s ease;
 
     &:last-child {
       margin-bottom: 0;
     }
+    &:hover {
+      border-color: $amber-mid;
+    }
   }
 
-  .toggle-track {
+  .af-toggle-track {
     position: relative;
     display: inline-block;
     width: 44px;
@@ -633,31 +650,30 @@
     cursor: pointer;
   }
 
-  .toggle-input {
+  .af-toggle-input {
     opacity: 0;
     width: 0;
     height: 0;
     position: absolute;
 
-    &:checked + .toggle-thumb {
-      background: var(--primary);
-
+    &:checked + .af-toggle-thumb {
+      background: $amber;
       &::after {
         left: 22px;
       }
     }
 
-    &:focus + .toggle-thumb {
-      box-shadow: 0 0 0 3px var(--primary-glow);
+    &:focus + .af-toggle-thumb {
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15);
     }
   }
 
-  .toggle-thumb {
+  .af-toggle-thumb {
     position: absolute;
     inset: 0;
     border-radius: 12px;
     background: var(--border-color);
-    transition: background 0.2s;
+    transition: background 0.2s ease;
 
     &::after {
       content: "";
@@ -668,177 +684,209 @@
       height: 18px;
       border-radius: 50%;
       background: var(--card-bg);
-      transition: left 0.2s;
+      transition: left 0.2s ease;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
   }
 
-  .toggle-info {
+  .af-toggle-info {
     flex: 1;
   }
 
-  .toggle-title {
-    font-size: 1rem;
-    font-weight: 500;
+  .af-toggle-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--text-primary);
     line-height: 1.4;
   }
 
-  .toggle-desc {
+  .af-toggle-desc {
     font-size: 0.75rem;
     color: var(--text-secondary);
-    margin-top: 4px;
+    margin-top: 3px;
     line-height: 1.5;
   }
 }
 
-// ── Field helpers ─────────────────────────────
+// ============================================================================
+// FOOTER  (amber-tinted strip — matches db-card-head / conv-header)
+// ============================================================================
 
-.add-form-page,
-.modal-form-body {
-  .field-error {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: var(--bs-danger);
-    margin-top: 6px;
-    line-height: 1.4;
+.af-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.125rem 2.5rem;
+  border-top: 1px solid var(--border-color);
+  background: $amber-bg;
+  flex-wrap: wrap;
+}
 
-    svg {
-      flex-shrink: 0;
+.af-footer-note {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.af-footer-actions {
+  display: flex;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+// ============================================================================
+// BUTTONS
+// ============================================================================
+
+.af-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease;
+
+  i {
+    font-size: 0.9375rem;
+  }
+
+  &--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  // Ghost — cancel / secondary
+  &--cancel {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+
+    &:hover {
+      background: #f1f5f9;
+      border-color: var(--border-color);
+      color: var(--text-primary);
     }
   }
 
-  .field-hint {
-    font-size: 0.75rem;
+  // Ghost small — upload zone
+  &--ghost {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    margin-top: 6px;
-    line-height: 1.5;
+
+    &:hover {
+      background: $amber-bg;
+      border-color: $amber-mid;
+      color: $amber;
+    }
+  }
+
+  // Primary amber submit
+  &--submit {
+    background: $amber;
+    color: #ffffff;
+    border: 1px solid $amber;
+
+    &:hover:not(:disabled) {
+      background: $amber-dark;
+      border-color: $amber-dark;
+      box-shadow: 0 2px 8px rgba(180, 83, 9, 0.25);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $amber;
+      outline-offset: 2px;
+    }
   }
 }
 
-// ── Form footer ───────────────────────────────
+// ============================================================================
+// MODAL SHELL  (when form is embedded in a modal — unchanged from original)
+// ============================================================================
 
-// Full-page footer: sits inside the card, full-width tinted strip
-.add-form-page {
-  .form-footer {
+.modal-form-body {
+  padding: 1.75rem 2rem 0;
+  background: var(--card-bg);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+
+  .af-form,
+  .form-body {
+    padding: 0;
+  }
+
+  // Modal-specific section: no section dividers, tighter spacing
+  .af-section {
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 1.25rem;
+    &--last {
+      margin-bottom: 0;
+    }
+  }
+
+  .af-section-label {
+    display: none;
+  } // Too noisy inside a modal
+
+  .modal-form-header {
+    margin-bottom: 1.375rem;
+  }
+
+  .modal-form-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 2.5rem;
-    border-top: 0.5px solid var(--border-color);
-    background: var(--bg-app);
-    gap: 1rem;
+    gap: 0.5rem;
+    margin: 0;
+
+    i {
+      font-size: 1rem;
+      color: $amber;
+    }
   }
 
-  .footer-note {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-  }
-
-  .footer-actions {
-    display: flex;
-    gap: 8px;
-  }
-}
-
-// Modal footer: flush with modal edges, sits below the form body
-.modal-form-body {
   .modal-form-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 8px;
-
-    // Pull out to the modal shell edges and sit at the bottom
+    gap: 0.625rem;
     margin: 1.25rem -2rem 0;
     padding: 1rem 2rem;
-    border-top: 0.5px solid var(--border-color);
-    background: var(--bg-app);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    border-top: 1px solid var(--border-color);
+    background: $amber-bg;
+    border-radius: 0 0 14px 14px;
+  }
+
+  .af-field {
+    margin-bottom: 1rem;
   }
 }
 
-// ── Buttons ───────────────────────────────────
+// ============================================================================
+// SKELETON LOADING
+// ============================================================================
 
-.add-form-page,
-.modal-form-body {
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    border: 0.5px solid var(--border-color);
-    transition:
-      background 0.15s,
-      border-color 0.15s,
-      color 0.15s,
-      opacity 0.15s;
-    white-space: nowrap;
-    text-decoration: none;
-
-    &.btn-sm {
-      padding: 6px 12px;
-      font-size: 0.75rem;
-    }
-
-    &.btn-ghost {
-      background: var(--card-bg);
-      color: var(--text-secondary);
-
-      &:hover {
-        color: var(--text-primary);
-        filter: brightness(0.96);
-      }
-    }
-
-    &.btn-primary {
-      background: var(--text-primary);
-      color: var(--card-bg);
-      border-color: var(--text-primary);
-
-      &:hover:not(:disabled) {
-        opacity: 0.82;
-      }
-
-      &:disabled {
-        opacity: 0.38;
-        cursor: not-allowed;
-      }
-    }
-
-    &.btn-danger {
-      background: transparent;
-      color: var(--bs-danger);
-      border-color: rgba(var(--bs-danger-rgb), 0.3);
-
-      &:hover {
-        background: rgba(var(--bs-danger-rgb), 0.06);
-        border-color: var(--bs-danger);
-      }
-    }
-  }
-
-  label.btn {
-    cursor: pointer;
-  }
-}
-
-// ── Loading skeleton ──────────────────────────
-
-@mixin shimmer {
-  background: linear-gradient(90deg, var(--skeleton-base, #f0f0f0) 25%, var(--skeleton-highlight, #e8e8e8) 50%, var(--skeleton-base, #f0f0f0) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
+@keyframes af-shimmer {
   0% {
     background-position: -200% 0;
   }
@@ -847,80 +895,129 @@
   }
 }
 
-.add-form-skeleton {
-  max-width: 760px;
+%af-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--border-color, #e2e8f0) 25%,
+    $amber-bg 50%,
+    var(--border-color, #e2e8f0) 75%
+  );
+  background-size: 200% 100%;
+  animation: af-shimmer 1.4s infinite;
+}
+
+.af-skeleton {
+  max-width: 800px;
   margin: 2rem auto;
-  padding: 0 1.5rem;
+  padding: 0 2.5rem;
+}
 
-  .skeleton-title {
-    height: 20px;
-    width: 200px;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    @include shimmer;
+.af-skeleton-header {
+  height: 100px;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  @extend %af-shimmer;
+}
+
+.af-skeleton-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.af-skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  @extend %af-shimmer;
+
+  &--wide {
+    width: 75%;
   }
-
-  .skeleton-card {
-    background: var(--card-bg);
-    border: 0.5px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 2rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  &--mid {
+    width: 50%;
   }
-
-  .skeleton-line {
-    height: 14px;
-    border-radius: 8px;
-    @include shimmer;
-
-    &.wide {
-      width: 80%;
-    }
-    &.medium {
-      width: 55%;
-    }
-    &.short {
-      width: 35%;
-    }
+  &--short {
+    width: 30%;
   }
 }
 
-// ── Responsive ────────────────────────────────
+// ============================================================================
+// RESPONSIVE — Tablet ≤1024px
+// ============================================================================
+
+@media (max-width: 1024px) {
+  .af-container {
+    padding: 0 1.5rem;
+  }
+}
+
+// ============================================================================
+// RESPONSIVE — Mobile ≤768px
+// ============================================================================
 
 @media (max-width: 768px) {
-  .add-form-container {
+  .af-container {
     padding: 0 1rem;
   }
 
-  .add-form-page .form-body {
-    padding: 1.5rem;
+  .af-header {
+    padding: 1.375rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
   }
 
-  .add-form-page .form-footer {
-    padding: 1rem 1.5rem;
-    flex-direction: column;
-    align-items: flex-end;
+  .af-title {
+    font-size: 1.5rem;
   }
 
-  .add-form-page .field-row,
-  .modal-form-body .field-row {
+  .af-section {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .af-footer {
+    padding: 1rem 1.25rem;
+  }
+
+  .af-field-row {
     grid-template-columns: 1fr;
   }
 
-  .add-form-page .image-upload-zone {
+  .af-upload-zone {
     height: 160px;
   }
 }
 
-@media (max-width: 480px) {
-  .add-form-page .footer-actions {
-    width: 100%;
+// ============================================================================
+// RESPONSIVE — Small mobile ≤480px
+// ============================================================================
 
-    .btn {
+@media (max-width: 480px) {
+  .af-title {
+    font-size: 1.25rem;
+  }
+
+  .af-footer {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .af-footer-actions {
+    width: 100%;
+    .af-btn {
       flex: 1;
       justify-content: center;
     }
+  }
+
+  .af-section {
+    padding: 1.25rem 1rem;
+  }
+
+  .af-footer {
+    padding: 1rem;
   }
 }

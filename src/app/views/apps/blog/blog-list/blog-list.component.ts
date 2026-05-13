@@ -22,7 +22,7 @@ import { BlogCategoryService } from "../blog-category/blog-category.service";
 @Component({
   selector: "app-blog-list",
   templateUrl: "./blog-list.component.html",
-  styleUrls: ["./blog-list.component.css"],
+  styleUrls: ["./blog-list.component.scss"],
 })
 export class BlogListComponent implements OnInit, OnDestroy {
   showMobilePanel = false;
@@ -61,7 +61,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         }),
         switchMap(() =>
-          this.blogsService.allBlogs(this.blogResource).pipe(
+          this.blogsService.allBlogsForDashboard(this.blogResource).pipe(
             catchError((err) => {
               this.loadError = true;
               this.isLoadingResults = false;
@@ -93,6 +93,10 @@ export class BlogListComponent implements OnInit, OnDestroy {
   getAllBlogs(data = this.blogResource) {
     this.blogResource = data;
     this.searchSubject.next();
+  }
+
+  getBlogs() {
+    this.getAllBlogs();
   }
 
   getBlogsCategories() {
@@ -182,7 +186,7 @@ export class BlogListComponent implements OnInit, OnDestroy {
 
   openCommentsModal(row: any): void {
     this.modalService.show(BlogCommentsModalComponent, {
-      class: "modal-lg modal-dialog-centered",
+      class: "modal-md modal-dialog-centered",
       initialState: {
         blogId: row.id,
         blogTitle: row.title,

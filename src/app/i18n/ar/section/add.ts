@@ -1,6 +1,7 @@
 export const add = {
   ADD: {
     FORUM: {
+      EYEBROW: "منتدى المجتمع",
       TITLE: "موضوع جديد في المنتدى",
       DESCRIPTION: "ابدأ نقاشًا، اطرح سؤالًا، أو شارك شيئًا مع المجتمع.",
       LABELS: {
@@ -44,6 +45,7 @@ export const add = {
     },
 
     BLOG: {
+      EYEBROW: "قاعدة المعرفة",
       TITLE: "مقالة جديدة",
       DESCRIPTION: "اكتب وانشر مقالة لجمهورك.",
       LABELS: {
@@ -73,7 +75,6 @@ export const add = {
         BANNER: "عرض هذا المقال كبانر في الصفحة الرئيسية.",
         PRIVATE: "فقط أنت والأعضاء المدعوون يمكنهم رؤية هذا المقال.",
         REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
-        USERS: "اتركه فارغًا للسماح لجميع الأعضاء المدعوين بالقراءة.",
       },
       BUTTONS: {
         SAVE: "نشر المقال",
@@ -107,6 +108,7 @@ export const add = {
     },
 
     ARTICLE: {
+      EYEBROW: "الأخبار والتحديثات",
       TITLE: "مقال جديد",
       DESCRIPTION: "أنشئ خبرًا أو إعلانًا لمجتمعك.",
       LABELS: {
@@ -127,7 +129,6 @@ export const add = {
       },
       HINTS: {
         PRIVATE: "فقط أنت والمستخدمون الذين تختارهم يمكنهم رؤية هذا المقال.",
-        USERS: "اتركه فارغًا للسماح لجميع الأعضاء المدعوين بالقراءة.",
         REQUIRED_FIELDS: "الحقول المميزة بـ * مطلوبة",
       },
       BUTTONS: {
@@ -148,7 +149,6 @@ export const add = {
       TOAST: {
         SUCCESS: "تم نشر المقال بنجاح",
         ERROR: "فشل نشر المقال",
-        UPDATED_SUCCESSFULLY: "تم تحديث المقال بنجاح",
       },
       VALIDATION: {
         TITLE_MIN_LENGTH: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
@@ -218,6 +218,7 @@ export const add = {
     },
 
     USER: {
+      EYEBROW: "إدارة المستخدمين",
       TITLE: "مستخدم جديد",
       DESCRIPTION: "أنشئ حساب مستخدم جديد وعيّن الأدوار.",
       LABELS: {
@@ -268,6 +269,7 @@ export const add = {
       },
       VALIDATION: {
         PASSWORD_MIN_LENGTH: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+        PASSWORD_PATTERN: "يجب أن تتضمن حرفًا كبيرًا ورقمًا ورمزًا خاصًا",
       },
     },
 
@@ -284,7 +286,12 @@ export const add = {
         NO_RESULTS: "لا توجد نتائج",
         BASIC_INFO: "معلومات أساسية",
         SETTINGS: "الإعدادات",
+        USERS: "المستخدمون المسموح لهم",
       },
+      PLACEHOLDERS: {
+        USERS: "ابحث عن مستخدمين…",
+      },
+      HINTS: {},
       BUTTONS: {
         BROWSE: "استعراض",
         UPLOAD: "رفع",
@@ -311,63 +318,39 @@ export const add = {
   },
 
   EDIT: {
+    SHARED: {
+      BUTTONS: {
+        SAVE: "تحديث",
+      },
+      TOAST: {
+        SUCCESS: "تم التحديث بنجاح",
+        ERROR: "فشل التحديث",
+      },
+    },
     FORUM: {
+      EYEBROW: "منتدى المجتمع",
       TITLE: "تعديل الموضوع",
       DESCRIPTION: "قم بتحديث الموضوع والإعدادات.",
-      BUTTONS: {
-        SAVE: "تحديث",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث الموضوع بنجاح",
-        ERROR: "فشل تحديث الموضوع",
-      },
     },
     BLOG: {
+      EYEBROW: "قاعدة المعرفة",
       TITLE: "تعديل المقال",
       DESCRIPTION: "قم بتحديث المقال والإعدادات.",
-      BUTTONS: {
-        SAVE: "تحديث",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث المقال بنجاح",
-        ERROR: "فشل تحديث المقال",
-      },
     },
     ARTICLE: {
+      EYEBROW: "الأخبار والتحديثات",
       TITLE: "تعديل المقال",
       DESCRIPTION: "قم بتحديث المقال والإعدادات.",
-      BUTTONS: {
-        UPDATE: "تحديث",
-        SAVE: "تحديث",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث المقال بنجاح",
-        ERROR: "فشل تحديث المقال",
-      },
     },
 
     SURVEY: {
       TITLE: "تعديل الاستطلاع",
       DESCRIPTION: "قم بتحديث إعدادات الاستطلاع والمشاركين.",
-      BUTTONS: {
-        SAVE: "تحديث الاستطلاع",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث الاستطلاع بنجاح",
-        ERROR: "فشل تحديث الاستطلاع",
-      },
     },
 
     CATEGORY: {
       TITLE: "تعديل الفئة",
       DESCRIPTION: "قم بتحديث اسم الفئة ووصفها.",
-      BUTTONS: {
-        SAVE: "تحديث الفئة",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث الفئة بنجاح",
-        ERROR: "فشل تحديث الفئة",
-      },
     },
 
     USER: {
@@ -375,10 +358,6 @@ export const add = {
       DESCRIPTION: "قم بتحديث معلومات المستخدم والأدوار.",
       BUTTONS: {
         SAVE: "تحديث المستخدم",
-      },
-      TOAST: {
-        SUCCESS: "تم تحديث المستخدم بنجاح",
-        ERROR: "فشل تحديث المستخدم",
       },
     },
   },

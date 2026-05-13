@@ -1,0 +1,12 @@
+@import "../../../shared/styles/list-common";
+
+.list-cell-title--link {
+  color: #2563eb;
+}
+
+.list-cell-title--truncate {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

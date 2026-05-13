@@ -1,6 +1,10 @@
 export const dashboard = {
   DASHBOARD: {
     TOTAL: "الإجمالي",
+    SECTION_CHARTS: "الرسوم البيانية",
+    SECTION_DATA: "البيانات",
+    SECTION_USERS: "المستخدمون",
+    DEVICES_TOTAL: "إجمالي المستندات",
     STATS: {
       USERS: "المستخدمون",
       ARTICLES: "المقالات",

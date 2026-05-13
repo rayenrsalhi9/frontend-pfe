@@ -1,16 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { TranslateModule } from "@ngx-translate/core";
 
-import { ArticleComponent } from './article.component';
+import { ArticleComponent } from "./article.component";
 
-describe('ArticleComponent', () => {
+describe("ArticleComponent", () => {
   let component: ArticleComponent;
   let fixture: ComponentFixture<ArticleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ArticleComponent ]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        ModalModule.forRoot(),
+        TranslateModule.forRoot(),
+      ],
+      declarations: [ArticleComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +28,7 @@ describe('ArticleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

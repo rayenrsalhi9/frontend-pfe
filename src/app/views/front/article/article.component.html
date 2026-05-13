@@ -1,40 +1,30 @@
-<div class="content-page">
-  <!-- Page Header -->
-  <header class="page-header">
-    <div class="header-inner">
-      <div class="header-content">
-        <h1 class="page-title">
-          <i class="feather icon-file-text"></i>
-          {{ "PREVIEW.ARTICLE.LIST.TITLE" | translate }}
-        </h1>
-        <p class="page-description">
-          {{ "PREVIEW.ARTICLE.LIST.DESCRIPTION" | translate }}
-        </p>
-      </div>
+<div class="article-page">
+  <!-- Article Content -->
+  <div class="articles-col">
+    <div class="mini-header">
+      <span class="mini-label">{{
+        "PREVIEW.ARTICLE.LIST.TITLE" | translate
+      }}</span>
       <div class="header-badge" *ngIf="articles !== null">
         <i class="feather icon-layers"></i>
         {{ articles.length }} {{ "PREVIEW.ARTICLE.TABLE.POSTS" | translate }}
       </div>
     </div>
-  </header>
 
-  <!-- Articles Grid -->
-  <main class="content-body">
     <!-- Empty State -->
     <div class="empty-state" *ngIf="articles !== null && articles.length === 0">
       <i class="feather icon-file-text"></i>
-      <h3>{{ "PREVIEW.ARTICLE.LIST.NO_RESULTS" | translate }}</h3>
+      <p>{{ "PREVIEW.ARTICLE.LIST.NO_RESULTS" | translate }}</p>
     </div>
 
-    <!-- Cards Grid -->
-    <div class="cards-grid" *ngIf="articles !== null && articles.length > 0">
+    <!-- Articles List -->
+    <div class="articles-list" *ngIf="articles !== null && articles.length > 0">
       <a
         *ngFor="let article of articles"
-        class="card-item"
+        class="article-card"
         [routerLink]="'/article/' + article.id"
       >
-        <!-- Cover -->
-        <div class="card-cover">
+        <div class="article-thumb">
           <img
             *ngIf="article.picture"
             [src]="
@@ -44,32 +34,28 @@
                 : getHost() + article.picture
             "
             [alt]="article.title"
-            class="cover-img"
+            class="thumb-img"
           />
-          <div class="cover-placeholder" *ngIf="!article.picture">
+          <div class="thumb-placeholder" *ngIf="!article.picture">
             <i class="feather icon-image"></i>
           </div>
-          <span class="category-badge" *ngIf="article.category?.name">
-            {{ article.category.name }}
-          </span>
         </div>
 
         <!-- Body -->
-        <div class="card-body">
-          <h2 class="card-title">{{ article.title }}</h2>
-          <p class="card-subtitle" *ngIf="article.subtitle">
+        <div class="article-body">
+          <h2 class="article-title">{{ article.title }}</h2>
+          <p class="article-subtitle" *ngIf="article.subtitle">
             {{ article.subtitle }}
           </p>
-          
-          <!-- Footer -->
-          <div class="card-footer">
-            <span class="read-more">
-              {{ "PREVIEW.ARTICLE.LIST.READ_MORE" | translate }}
-              <i class="feather" [ngClass]="isRtl ? 'icon-arrow-left' : 'icon-arrow-right'"></i>
-            </span>
+          <div class="article-meta">
+            <span *ngIf="article.category" class="cat-pill teal">{{
+              article.category?.name
+            }}</span>
+            <span *ngIf="article.category" class="meta-dot"></span>
+            <span>{{ article.createdAt | utcToLocalTime: "shortDate" }}</span>
           </div>
         </div>
       </a>
     </div>
-  </main>
+  </div>
 </div>

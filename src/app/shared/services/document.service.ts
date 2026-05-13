@@ -39,19 +39,18 @@ export class DocumentService {
     formData.append("uploadFile", document.fileData);
     formData.append("name", document.name);
     formData.append("categoryId", document.categoryId);
-    formData.append("categoryName", document.categoryName);
+    formData.append("categoryName", document.categoryName ?? "");
     formData.append("description", document.description);
-    formData.append("extension", document.fileData.type);
+    const extension = document.extension ?? (() => {
+      const dotIndex = document.fileData?.name?.lastIndexOf('.') ?? -1;
+      return dotIndex > -1 ? document.fileData.name.substring(dotIndex + 1) : '';
+    })();
+    formData.append("extension", extension);
     // formData.append('isAllowDownload', document.isAllowDownload.toString());
     formData.append(
       "documentMetaDatas",
-      JSON.stringify(document.documentMetaDatas),
+      JSON.stringify(document.documentMetaDatas ?? []),
     );
-    formData.append(
-      "documentRolePermissions",
-      JSON.stringify(document.documentRolePermissions ?? []),
-    );
-
     formData.append(
       "documentUserPermissions",
       JSON.stringify(document.documentUserPermissions ?? []),
@@ -104,14 +103,14 @@ export class DocumentService {
   }
 
   getDocumentByExtension() {
-    const url = `documents/extension`;
+    const url = `dashboard/extension`;
     return this.httpClient
       .get<DocumentInfo[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   documentTransaction() {
-    const url = "documents/transactions";
+    const url = "dashboard/transactions";
     return this.httpClient
       .get<DocumentInfo[]>(url)
       .pipe(catchError(this.commonHttpErrorService.handleError));

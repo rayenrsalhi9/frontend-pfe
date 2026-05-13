@@ -1,7 +1,29 @@
-<div class="card mb-0" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'">
-  <div class="card-body">
-    <div class="calendar-layout">
-      <div class="calendar-left">
+<div class="cal-page" [attr.dir]="locale === 'ar' ? 'rtl' : 'ltr'">
+  <!-- ── Page header ────────────────────────────────────────── -->
+  <header class="cal-page-header">
+    <div class="cal-page-header-left">
+      <p class="cal-eyebrow">{{ "CALENDAR.EYEBROW" | translate }}</p>
+      <h1 class="cal-page-title">{{ "CALENDAR.TITLE" | translate }}</h1>
+      <p class="cal-page-desc">{{ "CALENDAR.DESCRIPTION" | translate }}</p>
+    </div>
+  </header>
+
+  <!-- ── Section label ──────────────────────────────────────── -->
+  <div class="cal-section-label">
+    <span>{{ "CALENDAR.SECTION_LABEL" | translate }}</span>
+  </div>
+
+  <!-- ── Main two-panel layout ──────────────────────────────── -->
+  <div class="cal-layout">
+    <!-- Left: calendar widget -->
+    <div class="cal-panel cal-panel--left">
+      <div class="cal-panel-head">
+        <h2 class="cal-panel-title">
+          <i class="feather icon-calendar"></i>
+          {{ "CALENDAR.PANEL.CALENDAR" | translate }}
+        </h2>
+      </div>
+      <div class="cal-panel-body">
         <app-calendar-view
           [selectedDate]="viewDate"
           [events]="events"
@@ -9,61 +31,89 @@
           (dateSelected)="onDateSelected($event)"
           (eventClicked)="onEventClicked($event)"
           (monthChanged)="onMonthChanged($event)"
+        ></app-calendar-view>
+      </div>
+    </div>
+
+    <!-- Right: events for selected day -->
+    <div class="cal-panel cal-panel--right">
+      <div class="cal-panel-head">
+        <div class="cal-panel-head-left">
+          <h2 class="cal-panel-title">
+            <i class="feather icon-list"></i>
+            {{ "CALENDAR.PANEL.EVENTS" | translate }}
+          </h2>
+          <p class="cal-panel-subtitle" *ngIf="selectedDate">
+            {{ selectedDate | date: "fullDate" : "" : locale }}
+          </p>
+        </div>
+        <button
+          *ngIf="canCreateEvent() && selectedDayEvents.length > 0"
+          class="cal-btn-ghost"
+          (click)="openAddEventModal(eventModal)"
+          type="button"
         >
-        </app-calendar-view>
+          <i class="feather icon-plus"></i>
+          <span>{{ "CALENDAR.BUTTONS.ADD" | translate }}</span>
+        </button>
       </div>
 
-      <div class="calendar-right">
-        <div class="events-header" *ngIf="selectedDayEvents.length > 0">
-          <h5 class="events-title">
-            {{ "CALENDAR.EVENTS.TITLE" | translate }}
-            <span class="events-date">{{
-              selectedDate | date:"fullDate":"":locale
-            }}</span>
-          </h5>
-          <button class="btn btn-ghost" (click)="openAddEventModal(eventModal)" *ngIf="canCreateEvent()">
-            <i class="feather icon-plus"></i>
-            <span>{{ "CALENDAR.BUTTONS.ADD" | translate }}</span>
-          </button>
-        </div>
-
-        <div class="event-list" *ngIf="selectedDayEvents.length > 0">
+      <div class="cal-panel-body">
+        <!-- Event list -->
+        <div
+          class="cal-event-list"
+          *ngIf="selectedDayEvents.length > 0; else noEvents"
+        >
           <div
+            class="cal-event-card"
             *ngFor="let event of selectedDayEvents"
-            class="event-card"
-            [class.is-confirming]="confirmingDeleteId === event.id"
+            [class.cal-event-card--confirming]="confirmingDeleteId === event.id"
           >
+            <!-- Colour accent bar -->
             <span
-              class="event-color"
+              class="cal-event-accent"
               [ngStyle]="{
                 'background-color': event.category?.primary || event.category
               }"
             ></span>
-            <div class="event-content">
-              <div class="event-info">
-                <div class="event-title-row">
-                  <h6 class="event-title">{{ event.title }}</h6>
-                  <span *ngIf="event.frequency && getFrequencyLabel(event.frequency)" class="freq-badge" [class]="getFrequencyBadgeClass(event.frequency)">
-                    <i [class]="getFrequencyIcon(event.frequency)"></i>
-                    <span>{{ getFrequencyLabel(event.frequency) }}</span>
-                  </span>
-                </div>
-                <span class="event-time">
-                  <i class="feather icon-clock"></i>
-                  {{ event.start | date:"shortTime":"":locale }} -
-                  {{ event.end | date:"shortTime":"":locale }}
+
+            <!-- Event body -->
+            <div class="cal-event-body">
+              <div class="cal-event-top">
+                <h3 class="cal-event-title">{{ event.title }}</h3>
+                <span
+                  *ngIf="event.frequency && getFrequencyLabel(event.frequency)"
+                  class="cal-freq-badge"
+                  [ngClass]="getFrequencyBadgeClass(event.frequency)"
+                >
+                  <i [class]="getFrequencyIcon(event.frequency)"></i>
+                  <span>{{ getFrequencyLabel(event.frequency) }}</span>
                 </span>
-                <p class="event-description" *ngIf="event.description">{{ event.description }}</p>
               </div>
+              <span class="cal-event-time">
+                <i class="feather icon-clock"></i>
+                {{ event.start | date: "shortTime" : "" : locale }}
+                –
+                {{ event.end | date: "shortTime" : "" : locale }}
+              </span>
+              <p class="cal-event-desc" *ngIf="event.description">
+                {{ event.description }}
+              </p>
             </div>
 
-            <!-- Normal actions (shown when not confirming) -->
-            <div class="event-actions" *ngIf="confirmingDeleteId !== event.id && (canEditEvent() || canDeleteEvent())">
+            <!-- Normal actions -->
+            <div
+              class="cal-event-actions"
+              *ngIf="
+                confirmingDeleteId !== event.id &&
+                (canEditEvent() || canDeleteEvent())
+              "
+            >
               <button
                 *ngIf="canEditEvent()"
-                class="action-btn"
+                class="cal-action-btn cal-action-btn--edit"
                 [attr.aria-label]="
-                  'CALENDAR.EDIT_EVENT' | translate: { title: event.title }
+                  'CALENDAR.ARIA.EDIT_EVENT' | translate: { title: event.title }
                 "
                 (click)="openEditEventModal(eventModal, event.id)"
               >
@@ -71,9 +121,9 @@
               </button>
               <button
                 *ngIf="canDeleteEvent()"
-                class="action-btn delete"
+                class="cal-action-btn cal-action-btn--delete"
                 [attr.aria-label]="
-                  'CALENDAR.DELETE_EVENT' | translate: { title: event.title }
+                  'CALENDAR.ARIA.DELETE_EVENT' | translate: { title: event.title }
                 "
                 (click)="deleteEvent(event.id)"
               >
@@ -81,24 +131,21 @@
               </button>
             </div>
 
-            <!-- Inline confirmation (shown when confirming) -->
-            <div
-              *ngIf="confirmingDeleteId === event.id"
-              class="inline-confirmation"
-            >
-              <div class="confirmation-message">
-                <i class="feather icon-alert-triangle text-danger"></i>
+            <!-- Inline delete confirmation -->
+            <div class="cal-confirm" *ngIf="confirmingDeleteId === event.id">
+              <div class="cal-confirm-msg">
+                <i class="feather icon-alert-triangle"></i>
                 <span>{{ "CALENDAR.DELETE_EVENT.TITLE" | translate }}</span>
               </div>
-              <div class="confirmation-actions">
+              <div class="cal-confirm-actions">
                 <button
-                  class="btn-inline-cancel"
+                  class="cal-confirm-btn cal-confirm-btn--cancel"
                   (click)="cancelDelete(); $event.stopPropagation()"
                 >
                   {{ "CALENDAR.DELETE_EVENT.BUTTON.CANCEL" | translate }}
                 </button>
                 <button
-                  class="btn-inline-confirm"
+                  class="cal-confirm-btn cal-confirm-btn--confirm"
                   (click)="confirmDelete(event.id); $event.stopPropagation()"
                 >
                   <i class="feather icon-trash-2"></i>
@@ -109,31 +156,40 @@
           </div>
         </div>
 
-        <div class="events-empty" *ngIf="selectedDayEvents.length === 0">
-          <div class="empty-icon">
-            <i class="feather icon-calendar"></i>
+        <!-- Empty state -->
+        <ng-template #noEvents>
+          <div class="cal-events-empty">
+            <span class="cal-empty-icon">
+              <i class="feather icon-calendar"></i>
+            </span>
+            <p class="cal-empty-text">
+              {{ "CALENDAR.EVENTS.NO_EVENTS" | translate }}
+            </p>
+            <button
+              *ngIf="canCreateEvent()"
+              class="cal-btn-add cal-btn-add--sm"
+              (click)="openAddEventModal(eventModal)"
+              type="button"
+            >
+              <i class="feather icon-plus"></i>
+              {{ "CALENDAR.BUTTONS.ADD" | translate }}
+            </button>
           </div>
-          <p class="empty-text">
-            {{ "CALENDAR.EVENTS.NO_EVENTS" | translate }}
-          </p>
-          <button
-            class="btn btn-primary btn-add-event"
-            (click)="openAddEventModal(eventModal)"
-            *ngIf="canCreateEvent()"
-          >
-            <i class="feather icon-plus"></i>
-            {{ "CALENDAR.BUTTONS.ADD" | translate }}
-          </button>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ── Add / Edit event modal ─────────────────────────────────── -->
 <ng-template #eventModal>
-  <div class="modal-form-body">
-    <div class="modal-form-header">
-      <h4 class="modal-form-title">
+  <div class="cal-modal">
+    <div class="cal-modal-head">
+      <h4 class="cal-modal-title">
+        <i
+          class="feather"
+          [ngClass]="modalMode === 'add' ? 'icon-plus-circle' : 'icon-edit-2'"
+        ></i>
         {{
           (modalMode === "add"
             ? "CALENDAR.MODAL.ADD.LABEL_ADD"
@@ -143,81 +199,90 @@
       </h4>
     </div>
 
-    <div class="form-body">
+    <div class="cal-modal-body">
       <form
         [formGroup]="formGroup"
         (ngSubmit)="modalMode === 'add' ? addEvent() : editEvent()"
+        class="cal-form"
       >
-        <div class="field">
-          <label class="field-label">
+        <!-- Title -->
+        <div class="cal-field">
+          <label class="cal-label">
             {{ "CALENDAR.MODAL.ADD.TITLE" | translate }}
-            <span class="required-mark">*</span>
+            <span class="cal-required">*</span>
           </label>
           <input
             type="text"
-            class="field-input"
-            [class.has-error]="isEventNameInvalid"
+            class="cal-input"
+            [class.cal-input--error]="isEventNameInvalid"
             formControlName="eventName"
           />
-          <div class="field-error" *ngIf="isEventNameInvalid">
+          <div class="cal-field-error" *ngIf="isEventNameInvalid">
             <i class="feather icon-alert-circle"></i>
             {{ "VALIDATION.FIELD_REQUIRED" | translate }}
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label">{{
+        <!-- Start date + time -->
+        <div class="cal-field">
+          <label class="cal-label">{{
             "CALENDAR.MODAL.ADD.START" | translate
           }}</label>
-          <div class="field-input-group">
-            <div class="date-input-wrapper">
+          <div class="cal-input-group">
+            <div class="cal-date-wrap">
               <input
-                class="field-input"
+                class="cal-input"
                 bsDatepicker
                 formControlName="startDate"
                 [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
                 [placeholder]="'CALENDAR.MODAL.ADD.DATE' | translate"
               />
-              <span class="input-icon">
-                <i class="feather icon-calendar"></i>
-              </span>
+              <span class="cal-input-icon"
+                ><i class="feather icon-calendar"></i
+              ></span>
             </div>
             <input
               type="time"
-              class="field-input"
+              class="cal-input cal-input--time"
               formControlName="startTime"
             />
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label">{{
+        <!-- End date + time -->
+        <div class="cal-field">
+          <label class="cal-label">{{
             "CALENDAR.MODAL.ADD.END" | translate
           }}</label>
-          <div class="field-input-group">
-            <div class="date-input-wrapper">
+          <div class="cal-input-group">
+            <div class="cal-date-wrap">
               <input
-                class="field-input"
-                [class.has-error]="isEndDateInvalid"
+                class="cal-input"
+                [class.cal-input--error]="isEndDateInvalid"
                 bsDatepicker
                 formControlName="endDate"
                 [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
                 [placeholder]="'CALENDAR.MODAL.ADD.DATE' | translate"
               />
-              <span class="input-icon">
-                <i class="feather icon-calendar"></i>
-              </span>
+              <span class="cal-input-icon"
+                ><i class="feather icon-calendar"></i
+              ></span>
             </div>
-            <input type="time" class="field-input" formControlName="endTime" />
+            <input
+              type="time"
+              class="cal-input cal-input--time"
+              formControlName="endTime"
+            />
           </div>
-          <div class="field-error" *ngIf="isEndDateInvalid">
+          <div class="cal-field-error" *ngIf="isEndDateInvalid">
             <i class="feather icon-alert-circle"></i>
             {{ "VALIDATION.END_DATE_BEFORE_START" | translate }}
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label">{{
+        <!-- Category -->
+        <div class="cal-field">
+          <label class="cal-label">{{
             "CALENDAR.MODAL.ADD.CATEGORY" | translate
           }}</label>
           <ng-select
@@ -228,14 +293,14 @@
           >
             <ng-template ng-label-tmp let-item="item">
               <span
-                class="badge-dot"
+                class="cal-dot"
                 [ngStyle]="{ 'background-color': item.category?.primary }"
               ></span>
               {{ item.name }}
             </ng-template>
             <ng-template ng-option-tmp let-item="item">
               <span
-                class="badge-dot"
+                class="cal-dot"
                 [ngStyle]="{ 'background-color': item.category?.primary }"
               ></span>
               {{ item.name }}
@@ -243,68 +308,70 @@
           </ng-select>
         </div>
 
-        <div class="field">
-          <label class="field-label">
+        <!-- Frequency -->
+        <div class="cal-field">
+          <label class="cal-label">
             {{ "CALENDAR.MODAL.ADD.FREQUENCY" | translate }}
-            <span class="required-mark">*</span>
+            <span class="cal-required">*</span>
           </label>
           <ng-select
             [items]="frequencies"
             formControlName="frequency"
             bindLabel="name"
             bindValue="id"
-          >
-          </ng-select>
+          ></ng-select>
         </div>
 
-        <div class="field" *ngIf="isWeekly">
-          <label class="field-label">
+        <!-- Day of week (weekly only) -->
+        <div class="cal-field" *ngIf="isWeekly">
+          <label class="cal-label">
             {{ "CALENDAR.MODAL.ADD.DAY_OF_WEEK" | translate }}
-            <span class="required-mark">*</span>
+            <span class="cal-required">*</span>
           </label>
           <ng-select
             [items]="weekDays"
             formControlName="dayOfWeek"
             bindLabel="name"
             bindValue="id"
-          >
-          </ng-select>
+          ></ng-select>
         </div>
 
-        <div class="field">
-          <label class="checkbox-label email-notification-label">
+        <!-- Email notification -->
+        <div class="cal-field">
+          <label class="cal-checkbox-label">
             <input type="checkbox" formControlName="isEmailNotification" />
-            <span class="checkbox-custom">
+            <span class="cal-checkbox">
               <i
                 class="feather icon-check"
                 *ngIf="formGroup.get('isEmailNotification')?.value"
               ></i>
             </span>
-            <span class="checkbox-text">{{
+            <span class="cal-checkbox-text">{{
               "CALENDAR.MODAL.ADD.EMAIL_NOTIFICATION" | translate
             }}</span>
           </label>
         </div>
 
-        <div class="field">
-          <label class="field-label">{{
+        <!-- Users -->
+        <div class="cal-field">
+          <label class="cal-label">{{
             "CALENDAR.MODAL.ADD.USERS" | translate
           }}</label>
-          <div class="users-checkbox-list">
-            <div *ngFor="let user of users" class="user-checkbox-item">
-              <label class="checkbox-label">
+          <div class="cal-users-list">
+            <div *ngFor="let user of users" class="cal-user-item">
+              <label class="cal-checkbox-label">
                 <input
                   type="checkbox"
                   [checked]="isUserSelected(user.id)"
                   (change)="toggleUser(user.id, $event)"
                 />
-                <span class="checkbox-custom">
+                <span class="cal-checkbox">
                   <i
                     class="feather icon-check"
                     *ngIf="isUserSelected(user.id)"
                   ></i>
                 </span>
-                <span class="user-name"
+                <span class="cal-checkbox-text"
                   >{{ user.firstName }} {{ user.lastName }}</span
                 >
               </label>
@@ -312,23 +379,29 @@
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label">{{
+        <!-- Description -->
+        <div class="cal-field">
+          <label class="cal-label">{{
             "CALENDAR.MODAL.ADD.DESCRIPTION" | translate
           }}</label>
           <textarea
-            class="field-input"
+            class="cal-input cal-input--textarea"
             rows="3"
             formControlName="description"
           ></textarea>
         </div>
 
-        <div class="modal-form-footer">
-          <button type="button" class="btn btn-ghost" (click)="modalRef.hide()">
+        <!-- Footer -->
+        <div class="cal-modal-footer">
+          <button
+            type="button"
+            class="cal-btn-cancel"
+            (click)="modalRef.hide()"
+          >
             {{ "COMMON.CANCEL" | translate }}
           </button>
           <button
-            class="btn btn-primary"
+            class="cal-btn-submit"
             type="submit"
             [disabled]="
               isLoading ||
@@ -337,6 +410,10 @@
               !hasFormChanged
             "
           >
+            <i
+              class="feather"
+              [ngClass]="modalMode === 'add' ? 'icon-plus' : 'icon-check'"
+            ></i>
             {{
               (modalMode === "add"
                 ? "CALENDAR.MODAL.ADD.ADD"
