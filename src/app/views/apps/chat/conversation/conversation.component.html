@@ -16,7 +16,6 @@
       <ng-container
         *ngIf="
           conversation &&
-            !conversation.title &&
             conversation?.users?.length === 2;
           else groupAvatar
         "
@@ -102,7 +101,7 @@
         <i class="feather icon-settings"></i>
       </button>
       <ul *dropdownMenu class="conv-dropdown" role="menu">
-        <li *ngIf="isGroupConversation">
+        <li role="none" *ngIf="isGroupConversation">
           <button
             type="button"
             class="conv-dropdown-item"
@@ -113,7 +112,7 @@
             {{ "CHAT.LABELS.MEMBERS_LIST" | translate }}
           </button>
         </li>
-        <li *ngIf="isGroupConversation">
+        <li role="none" *ngIf="isGroupConversation">
           <button
             type="button"
             class="conv-dropdown-item"
@@ -124,13 +123,13 @@
             {{ "CHAT.LABELS.EDIT_CHAT" | translate }}
           </button>
         </li>
-        <li *ngIf="isGroupConversation">
+        <li role="none" *ngIf="isGroupConversation">
           <button type="button" class="conv-dropdown-item" role="menuitem" (click)="addUser()">
             <i class="feather icon-user-plus"></i>
             {{ "CHAT.LABELS.ADD_USER" | translate }}
           </button>
         </li>
-        <li>
+        <li role="none">
           <button
             type="button"
             class="conv-dropdown-item conv-dropdown-item--danger"
@@ -246,13 +245,19 @@
               </div>
 
               <!-- Image -->
-              <img
+              <button
+                type="button"
                 *ngIf="msg.type === 'image'"
                 (click)="showLightbox(msg.content)"
-                [src]="getHost() + msg.content"
-                class="conv-bubble-img"
-                [alt]="msg.content"
-              />
+                class="conv-bubble-img-wrap"
+                aria-label="Open image preview"
+              >
+                <img
+                  [src]="getHost() + msg.content"
+                  class="conv-bubble-img"
+                  alt=""
+                />
+              </button>
 
               <!-- File (text mime) -->
               <a

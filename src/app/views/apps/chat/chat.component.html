@@ -41,7 +41,7 @@
             <div class="chat-list-label">
               <span>{{ "CHAT.LABELS.LATEST_CONVERSATIONS" | translate }}</span>
             </div>
-            <ng-container *ngFor="let conversation of conversations">
+            <ng-container *ngFor="let conversation of conversations; trackBy: trackByConversation">
               <button
                 *ngIf="conversation"
                 type="button"
@@ -103,7 +103,7 @@
             <div class="chat-list-label">
               <span>{{ "CHAT.LABELS.GROUPS" | translate }}</span>
             </div>
-            <ng-container *ngFor="let conversation of groupConversations">
+            <ng-container *ngFor="let conversation of groupConversations; trackBy: trackByConversation">
               <button
                 *ngIf="conversation"
                 type="button"
@@ -182,7 +182,7 @@
             <div class="chat-list-label chat-list-label--divided">
               <span>{{ "CHAT.LABELS.USERS" | translate }}</span>
             </div>
-            <ng-container *ngFor="let usr of filteredUsers">
+            <ng-container *ngFor="let usr of filteredUsers; trackBy: trackByUser">
               <button
                 type="button"
                 class="chat-row"

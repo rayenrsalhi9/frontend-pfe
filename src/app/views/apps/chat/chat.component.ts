@@ -616,6 +616,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     );
   }
 
+  trackByConversation(index: number, conversation: Conversation): any {
+    return conversation?.id ?? index;
+  }
+
+  trackByUser(index: number, user: User): any {
+    return user?.id ?? index;
+  }
+
   getLastMessageContent(conversation: Conversation): string {
     if (!conversation.lastMessage) return "";
     if (conversation.lastMessage.type === "reaction") {

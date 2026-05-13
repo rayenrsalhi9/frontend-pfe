@@ -42,7 +42,7 @@
     "bootstrap": "4.6.2",
     "ckeditor4-angular": "^4.0.1",
     "date-fns": "^2.16.1",
-    "jodit": "4.12.2",
+    "jodit": "^3.24.9",
     "jodit-angular": "1.12.5",
     "ng-apexcharts": "1.7.1",
     "ng-bootstrap-form-validation": "^9.0.1",

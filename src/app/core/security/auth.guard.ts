@@ -7,6 +7,7 @@ import {
   CanActivateChild,
   CanLoad,
   Route,
+  UrlSegment,
 } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { SecurityService } from "./security.service";
@@ -67,7 +68,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     const fresh = await this.securityService.ensureFreshToken();
 
     if (!fresh) {
-      this.router.navigate(["login"], {
+      this.router.navigate(["/login"], {
         queryParams: { returnUrl: state.url },
       });
       return false;
@@ -83,24 +84,31 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
       }
       return true;
     } else {
-      this.router.navigate(["login"], {
+      this.router.navigate(["/login"], {
         queryParams: { returnUrl: state.url },
       });
       return false;
     }
   }
 
-  async canLoad(route: Route): Promise<boolean> {
+  async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
+    if (this.securityService.isGuestUser()) {
+      this.router.navigate(["/"]);
+      return false;
+    }
+
     const fresh = await this.securityService.ensureFreshToken();
 
     if (
       fresh &&
-      this.securityService.isUserAuthenticate() &&
-      !this.securityService.isGuestUser()
+      this.securityService.isUserAuthenticate()
     ) {
       return true;
     } else {
-      this.router.navigate(["login"]);
+      const url = segments.map(s => s.path).join('/');
+      this.router.navigate(["/login"], {
+        queryParams: { returnUrl: url },
+      });
       return false;
     }
   }
