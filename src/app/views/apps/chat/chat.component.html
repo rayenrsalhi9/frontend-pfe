@@ -117,12 +117,11 @@
                     <div class="chat-collage-grid">
                       <ng-container
                         *ngFor="
-                          let avatar of getConversationAvatars(conversation);
+                          let avatar of getConversationAvatars(conversation).slice(0,4);
                           let i = index
                         "
                       >
                         <avatar
-                          *ngIf="i < 4"
                           [tooltip]="avatar.tooltip"
                           class="chat-collage-img"
                           [size]="38"

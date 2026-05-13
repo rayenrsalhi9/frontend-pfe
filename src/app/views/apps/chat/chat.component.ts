@@ -619,7 +619,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   getLastMessageContent(conversation: Conversation): string {
     if (!conversation.lastMessage) return "";
     if (conversation.lastMessage.type === "reaction") {
-      return conversation.lastMessage.content || "";
+      if (conversation.type === "group") {
+        const lastContent = (conversation as any).lastContentMessage;
+        if (lastContent?.content) return lastContent.content;
+        return "";
+      }
+      const text = (conversation.lastMessage.content || "").split('\n')[0];
+      if (conversation.lastMessage.sender?.id === this.user?.id) {
+        if (text.startsWith('Liked')) return 'You liked this message';
+        const match = text.match(/React with (.+)/);
+        if (match) return 'You reacted with ' + match[1];
+        return 'You reacted to a message';
+      }
+      return text;
     }
     if (conversation.lastMessage.type !== "msg") {
       return this.translateService.instant("CHAT.LABELS.FILE_SENT");

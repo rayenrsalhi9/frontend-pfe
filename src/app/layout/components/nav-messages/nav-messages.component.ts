@@ -90,7 +90,7 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
       for (let i = 0; i < Math.min(users.length, 4); i++) {
         result.push({
           url: users[i].avatar ? avatarUrl + users[i].avatar : defaultAvatar,
-          tooltip: `${users[i].firstName} ${users[i].lastName}`
+          tooltip: (users[i]?.firstName || 'Unknown') + ' ' + (users[i]?.lastName || '')
         });
       }
     } else if (users.length === 2) {
@@ -98,7 +98,7 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
       if (otherUser) {
         result.push({
           url: otherUser.avatar ? avatarUrl + otherUser.avatar : defaultAvatar,
-          tooltip: `${otherUser.firstName} ${otherUser.lastName}`
+          tooltip: (otherUser?.firstName || 'Unknown') + ' ' + (otherUser?.lastName || '')
         });
       }
     }
@@ -142,7 +142,19 @@ export class NavMessagesComponent implements OnInit, OnDestroy {
   getLastMessageContent(conversation: Conversation): string {
     if (!conversation.lastMessage) return "";
     if (conversation.lastMessage.type === "reaction") {
-      return conversation.lastMessage.content || "";
+      if (conversation.type === "group") {
+        const lastContent = (conversation as any).lastContentMessage;
+        if (lastContent?.content) return lastContent.content;
+        return "";
+      }
+      const text = (conversation.lastMessage.content || "").split('\n')[0];
+      if (conversation.lastMessage.sender?.id === this.currentUserId) {
+        if (text.startsWith('Liked')) return 'You liked this message';
+        const match = text.match(/React with (.+)/);
+        if (match) return 'You reacted with ' + match[1];
+        return 'You reacted to a message';
+      }
+      return text;
     }
     if (conversation.lastMessage.type !== "msg") {
       return this.translateService.instant("MESSAGES.LABELS.FILE_SENT");

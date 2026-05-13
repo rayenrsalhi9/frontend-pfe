@@ -23,7 +23,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       if (currentUrl.startsWith('/login')) {
         return;
       }
-      const returnUrl = new URL(currentUrl, window.location.origin).searchParams.get('returnUrl');
+      const returnUrl = new URLSearchParams(window.location.search).get('returnUrl');
       if (returnUrl && returnUrl === currentUrl) {
         return;
       }

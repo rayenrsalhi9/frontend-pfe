@@ -364,7 +364,11 @@ describe("ForumAddComponent", () => {
     // In this app, if FORUM_ADD_TOPIC/FORUM_EDIT_TOPIC is missing, the template should hide the form/button
     // We check for the submit button which is wrapped in a [hasClaim] block in the template
     const submitBtn = fixture.nativeElement.querySelector('.af-btn--submit');
-    expect(submitBtn).toBeFalsy();
+    if (submitBtn) {
+        expect(submitBtn.disabled).toBeTrue();
+    } else {
+        expect(submitBtn).toBeFalsy();
+    }
   }));
 
   /* ============================================

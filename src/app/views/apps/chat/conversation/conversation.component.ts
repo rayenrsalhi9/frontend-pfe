@@ -246,7 +246,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();
@@ -266,7 +266,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();
@@ -286,7 +286,7 @@ export class ConversationComponent
         if (idx > -1) {
           this.conversation.messages[idx] = {
             ...messageRead,
-            isRead: messageRead.isRead.date,
+            isRead: messageRead.isRead?.date,
           };
         }
         this.cdr.markForCheck();

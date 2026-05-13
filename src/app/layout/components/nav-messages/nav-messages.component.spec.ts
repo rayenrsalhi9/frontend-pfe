@@ -43,7 +43,7 @@ describe("NavMessagesComponent", () => {
       title: "Dev Team",
       users: [
         mockUser,
-        { id: "u2" },
+        { id: "u2", firstName: "Bob", lastName: "Ross" },
         { id: "u3", firstName: "Charlie", lastName: "Brown", avatar: null },
         { id: "u4", firstName: "Diana", lastName: "Prince", avatar: null },
         { id: "u5", firstName: "Eve", lastName: "Adams", avatar: null },
@@ -53,7 +53,7 @@ describe("NavMessagesComponent", () => {
     {
       id: "c3",
       title: null,
-      users: [mockUser, { id: "u6" }],
+      users: [mockUser, { id: "u6", firstName: "Frank", lastName: "Castle" }],
       lastMessage: null,
     },
   ];

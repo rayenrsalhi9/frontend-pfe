@@ -43,10 +43,9 @@
         <div class="conv-collage">
           <div class="conv-collage-grid">
             <ng-container
-              *ngFor="let usr of conversation?.users; let i = index"
+              *ngFor="let usr of conversation?.users | slice:0:4; let i = index"
             >
               <avatar
-                *ngIf="i <= 3"
                 [tooltip]="usr.firstName + ' ' + usr.lastName"
                 class="conv-collage-img"
                 [size]="36"
