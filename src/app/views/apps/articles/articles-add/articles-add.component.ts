@@ -18,6 +18,7 @@ import { takeUntil } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
 import { AppFormBase } from "../../shared/app-form-base";
+import { AiContentService } from "@app/shared/services/ai-content.service";
 
 @Component({
   selector: "app-articles-add",
@@ -29,6 +30,9 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
   picture: SafeUrl;
   newPicture: string = null;
   fileList: any[] = [];
+  isAiLoading = false;
+  aiGenerated = false;
+  aiError = "";
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +46,7 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
     private translate: TranslateService,
     private toastrService: ToastrService,
     private sanitizer: DomSanitizer,
+    private aiContentService: AiContentService,
   ) {
     super();
   }
@@ -366,6 +371,42 @@ export class ArticlesAddComponent extends AppFormBase implements OnInit {
 
   onCancel(): void {
     this.router.navigate(["/apps/articles"]);
+  }
+
+  get canGenerateContent(): boolean {
+    return !!(this.titleControl?.valid && this.descriptionControl?.valid && this.categoryControl?.valid);
+  }
+
+  generateContent(): void {
+    if (this.isAiLoading || this.aiGenerated) return;
+    this.aiError = "";
+    this.isAiLoading = true;
+    this.aiContentService
+      .generateAiContent("article", {
+        title: this.articleForm.value.title,
+        description: this.articleForm.value.description,
+        category: this.articleForm.value.category,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (html) => {
+          this.articleForm.patchValue({ body: html });
+          this.articleForm.get("body")?.markAsDirty();
+          this.cdr.markForCheck();
+          this.isAiLoading = false;
+          this.aiGenerated = true;
+        },
+        error: () => {
+          this.isAiLoading = false;
+          this.translate
+            .get("ADD.AI.ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.aiError = message;
+              this.cdr.markForCheck();
+            });
+        },
+      });
   }
 
   // Getters for form controls

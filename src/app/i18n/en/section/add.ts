@@ -1,5 +1,15 @@
 export const add = {
   ADD: {
+    AI: {
+      GENERATE: "Generate with AI",
+      GENERATING: "Generating content…",
+      GENERATED: "AI content added",
+      ERROR: "Failed to generate content. Please try again.",
+      FORUM_HINT: "(title and category fields are required for AI to generate the content)",
+      BLOG_HINT: "(title, subtitle and category fields are required for AI to generate the content)",
+      ARTICLE_HINT: "(title, description and category fields are required for AI to generate the content)",
+    },
+
     FORUM: {
       EYEBROW: "Community forum",
       TITLE: "New forum thread",

@@ -22,6 +22,7 @@ import { environment } from "src/environments/environment";
 import { CommonService } from "src/app/shared/services/common.service";
 import { SecurityService } from "@app/core/security/security.service";
 import { AppFormBase } from "../../shared/app-form-base";
+import { AiContentService } from "@app/shared/services/ai-content.service";
 
 
 @Component({
@@ -36,6 +37,9 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
   newPicture: SafeUrl;
   minDate = new Date();
   blogId: any;
+  isAiLoading = false;
+  aiGenerated = false;
+  aiError = "";
 
 
   constructor(
@@ -50,6 +54,7 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
     private securityService: SecurityService,
     private sanitizer: DomSanitizer,
     private activeRoute: ActivatedRoute,
+    private aiContentService: AiContentService,
   ) {
     super();
   }
@@ -87,7 +92,6 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
         body: ["", [Validators.required, Validators.minLength(50)]],
         category: ["", [Validators.required]],
         private: [false],
-        tags: [[]],
         users: [[]],
         picture: ["", [Validators.required]],
       }
@@ -292,19 +296,6 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
       formValue.body = this.sanitizeContent(formValue.body);
     }
 
-    // Process tags
-    if (formValue.tags && formValue.tags.length > 0) {
-      formValue.tags = formValue.tags
-        .map((tag) => (typeof tag === "string" ? tag.trim() : tag))
-        .filter((tag) => {
-          if (typeof tag === "string") {
-            return tag.trim().length > 0;
-          }
-          // Keep valid objects (assuming they represent valid tag objects)
-          return tag && typeof tag === "object";
-        });
-    }
-
     // Process users - include current user if private
     if (formValue.private) {
       let userIds = formValue.users || [];
@@ -322,6 +313,42 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
 
   onCancel(): void {
     this.router.navigate(["/apps/blogs"]);
+  }
+
+  get canGenerateContent(): boolean {
+    return !!(this.titleControl?.valid && this.subtitleControl?.valid && this.categoryControl?.valid);
+  }
+
+  generateContent(): void {
+    if (this.isAiLoading || this.aiGenerated) return;
+    this.aiError = "";
+    this.isAiLoading = true;
+    this.aiContentService
+      .generateAiContent("blog", {
+        title: this.blogForm.value.title,
+        subtitle: this.blogForm.value.subtitle,
+        category: this.blogForm.value.category,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (html) => {
+          this.blogForm.patchValue({ body: html });
+          this.blogForm.get("body")?.markAsDirty();
+          this.cdr.markForCheck();
+          this.isAiLoading = false;
+          this.aiGenerated = true;
+        },
+        error: () => {
+          this.isAiLoading = false;
+          this.translate
+            .get("ADD.AI.ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.aiError = message;
+              this.cdr.markForCheck();
+            });
+        },
+      });
   }
 
   private checkEditMode(): void {
@@ -362,7 +389,6 @@ export class BlogAddComponent extends AppFormBase implements OnInit {
             subtitle: data.subtitle,
             category: data.category?.id,
             body: data.body,
-            tags: (data.tags || []).map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
             users: allowedUserIds,
             picture: null,
