@@ -128,52 +128,34 @@
             </div>
           </div>
 
-          <!-- Category + Tags side by side -->
-          <div class="af-field-row">
-            <div class="af-field">
-              <label class="af-label" for="category">
-                {{ "ADD.BLOG.LABELS.CATEGORY" | translate }}
-                <span class="af-required">*</span>
-              </label>
-              <ng-select
-                id="category"
-                formControlName="category"
-                [class.has-error]="isBlogFieldInvalid('category')"
-                [placeholder]="
-                  'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
-                "
-                [searchable]="false"
+          <!-- Category -->
+          <div class="af-field">
+            <label class="af-label" for="category">
+              {{ "ADD.BLOG.LABELS.CATEGORY" | translate }}
+              <span class="af-required">*</span>
+            </label>
+            <ng-select
+              id="category"
+              formControlName="category"
+              [class.has-error]="isBlogFieldInvalid('category')"
+              [placeholder]="
+                'ADD.SHARED.LABELS.SELECT_PLACEHOLDER' | translate
+              "
+              [searchable]="false"
+            >
+              <ng-option
+                *ngFor="let category of categories"
+                [value]="category.id"
               >
-                <ng-option
-                  *ngFor="let category of categories"
-                  [value]="category.id"
-                >
-                  {{ category.name }}
-                </ng-option>
-              </ng-select>
-              <div
-                class="af-field-error"
-                *ngIf="isBlogFieldInvalid('category')"
-              >
-                <i class="feather icon-alert-circle"></i>
-                {{ categoryErrorMessage | translate }}
-              </div>
-            </div>
-
-            <div class="af-field">
-              <label class="af-label" for="tags">
-                {{ "ADD.BLOG.LABELS.TAGS" | translate }}
-                <span class="af-optional">{{
-                  "ADD.SHARED.LABELS.OPTIONAL" | translate
-                }}</span>
-              </label>
-              <ng-select
-                id="tags"
-                formControlName="tags"
-                [multiple]="true"
-                [addTag]="true"
-                [placeholder]="'ADD.BLOG.PLACEHOLDERS.TAGS' | translate"
-              ></ng-select>
+                {{ category.name }}
+              </ng-option>
+            </ng-select>
+            <div
+              class="af-field-error"
+              *ngIf="isBlogFieldInvalid('category')"
+            >
+              <i class="feather icon-alert-circle"></i>
+              {{ categoryErrorMessage | translate }}
             </div>
           </div>
         </div>
@@ -185,6 +167,38 @@
           </div>
 
           <div class="af-field">
+            <div class="af-ai-toolbar" *ngIf="!isEdit">
+              <div class="af-ai-error" *ngIf="aiError">
+                <i class="feather icon-alert-circle"></i>
+                {{ aiError }}
+              </div>
+              <span
+                class="af-ai-hint"
+                *ngIf="!canGenerateContent && !isAiLoading && !aiGenerated"
+              >
+                {{ "ADD.AI.BLOG_HINT" | translate }}
+              </span>
+              <button
+                type="button"
+                class="af-btn af-btn--ai"
+                [disabled]="!canGenerateContent || isAiLoading || aiGenerated"
+                (click)="generateContent()"
+              >
+                <i
+                  class="feather"
+                  [ngClass]="
+                    isAiLoading ? 'icon-loader' : 'icon-zap'
+                  "
+                ></i>
+                {{
+                  isAiLoading
+                    ? ("ADD.AI.GENERATING" | translate)
+                    : aiGenerated
+                      ? ("ADD.AI.GENERATED" | translate)
+                      : ("ADD.AI.GENERATE" | translate)
+                }}
+              </button>
+            </div>
             <div
               class="af-quill-wrap"
               [class.af-quill-wrap--error]="isBlogFieldInvalid('body')"

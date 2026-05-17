@@ -17,6 +17,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { SecurityService } from "@app/core/security/security.service";
 import { CommonService } from "@app/shared/services/common.service";
 import { AppFormBase } from "../../shared/app-form-base";
+import { AiContentService } from "@app/shared/services/ai-content.service";
 
 
 @Component({
@@ -30,6 +31,9 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
   forumId: any;
   isUsersLoaded = false;
   validSelectedUserIds: any[] = [];
+  isAiLoading = false;
+  aiGenerated = false;
+  aiError = "";
 
 
   constructor(
@@ -44,6 +48,7 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
     private activeRoute: ActivatedRoute,
     private securityService: SecurityService,
     private commonService: CommonService,
+    private aiContentService: AiContentService,
   ) {
     super();
   }
@@ -70,7 +75,6 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
       ],
       category: ["", [Validators.required]],
       content: ["", [Validators.required, Validators.minLength(10)]],
-      tags: [[]],
       private: [false],
       users: [[]],
     });
@@ -240,22 +244,6 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
       formValue.content = this.sanitizeContent(formValue.content);
     }
 
-    // Process tags - normalize both strings and objects, remove empty ones
-    if (formValue.tags && formValue.tags.length > 0) {
-      formValue.tags = formValue.tags
-        .map((tag) => {
-          if (typeof tag === "string") {
-            return tag.trim();
-          } else if (tag && tag.label) {
-            return tag.label.trim();
-          } else if (tag && tag.metatag) {
-            return tag.metatag.trim();
-          }
-          return null;
-        })
-        .filter((tag) => tag && tag.length > 0);
-    }
-
     // Process users - include current user if private
     if (formValue.private) {
       let userIds = formValue.users || [];
@@ -273,6 +261,41 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
 
   onCancel(): void {
     this.router.navigate(["/apps/forums"]);
+  }
+
+  get canGenerateContent(): boolean {
+    return !!(this.titleControl?.valid && this.categoryControl?.valid);
+  }
+
+  generateContent(): void {
+    if (this.isAiLoading || this.aiGenerated) return;
+    this.aiError = "";
+    this.isAiLoading = true;
+    this.aiContentService
+      .generateAiContent("forum", {
+        title: this.forumForm.value.title,
+        category: this.forumForm.value.category,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (html) => {
+          this.forumForm.patchValue({ content: html });
+          this.forumForm.get("content")?.markAsDirty();
+          this.cdr.markForCheck();
+          this.isAiLoading = false;
+          this.aiGenerated = true;
+        },
+        error: () => {
+          this.isAiLoading = false;
+          this.translate
+            .get("ADD.AI.ERROR")
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((message) => {
+              this.aiError = message;
+              this.cdr.markForCheck();
+            });
+        },
+      });
   }
 
   private checkEditMode(): void {
@@ -321,7 +344,6 @@ export class ForumAddComponent extends AppFormBase implements OnInit {
             category: data.category.id,
             content: data.content,
             closed: data.closed,
-            tags: data.tags.map((tag: any) => ({ label: tag.metatag })),
             private: data.privacy === "private",
             users: rawAllowedUserIds,
           });

@@ -76,32 +76,6 @@
           </div>
         </div>
 
-        <!-- ══ Tags ═══════════════════════════════════════════ -->
-        <div class="af-section">
-          <div class="af-section-label">
-            <span>{{ "ADD.FORUM.LABELS.TAGS" | translate }}</span>
-          </div>
-
-          <div class="af-field">
-            <label class="af-label" for="tags">
-              {{ "ADD.FORUM.LABELS.TAGS" | translate }}
-              <span class="af-optional">{{
-                "ADD.SHARED.LABELS.OPTIONAL" | translate
-              }}</span>
-            </label>
-            <ng-select
-              formControlName="tags"
-              [multiple]="true"
-              [addTag]="true"
-              [placeholder]="'ADD.FORUM.PLACEHOLDERS.TAGS' | translate"
-              [labelForId]="'tags'"
-            ></ng-select>
-            <p class="af-field-hint">
-              {{ "ADD.FORUM.HINTS.TAGS" | translate }}
-            </p>
-          </div>
-        </div>
-
         <!-- ══ Content ════════════════════════════════════════ -->
         <div class="af-section">
           <div class="af-section-label">
@@ -109,6 +83,38 @@
           </div>
 
           <div class="af-field">
+            <div class="af-ai-toolbar" *ngIf="!isEdit">
+              <div class="af-ai-error" *ngIf="aiError">
+                <i class="feather icon-alert-circle"></i>
+                {{ aiError }}
+              </div>
+              <span
+                class="af-ai-hint"
+                *ngIf="!canGenerateContent && !isAiLoading && !aiGenerated"
+              >
+                {{ "ADD.AI.FORUM_HINT" | translate }}
+              </span>
+              <button
+                type="button"
+                class="af-btn af-btn--ai"
+                [disabled]="!canGenerateContent || isAiLoading || aiGenerated"
+                (click)="generateContent()"
+              >
+                <i
+                  class="feather"
+                  [ngClass]="
+                    isAiLoading ? 'icon-loader' : 'icon-zap'
+                  "
+                ></i>
+                {{
+                  isAiLoading
+                    ? ("ADD.AI.GENERATING" | translate)
+                    : aiGenerated
+                      ? ("ADD.AI.GENERATED" | translate)
+                      : ("ADD.AI.GENERATE" | translate)
+                }}
+              </button>
+            </div>
             <div
               class="af-quill-wrap"
               [class.af-quill-wrap--error]="isForumFieldInvalid('content')"

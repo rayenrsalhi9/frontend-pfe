@@ -1,5 +1,15 @@
 export const add = {
   ADD: {
+    AI: {
+      GENERATE: "Générer avec l'IA",
+      GENERATING: "Génération du contenu…",
+      GENERATED: "Contenu IA ajouté",
+      ERROR: "Échec de la génération du contenu. Veuillez réessayer.",
+      FORUM_HINT: "(Les champs titre et catégorie sont requis pour que l'IA génère le contenu)",
+      BLOG_HINT: "(Les champs titre, sous-titre et catégorie sont requis pour que l'IA génère le contenu)",
+      ARTICLE_HINT: "(Les champs titre, description et catégorie sont requis pour que l'IA génère le contenu)",
+    },
+
     FORUM: {
       EYEBROW: "Forum communautaire",
       TITLE: "Nouveau sujet de forum",
