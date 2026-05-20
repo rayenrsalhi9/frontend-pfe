@@ -90,6 +90,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this._isRtl;
   }
 
+  private statsMocked = false;
+
   statCards: StatCard[] = [];
 
   constructor(
@@ -202,31 +204,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private initStats(): void {
     this.statCards = [
-      {
-        title: "DASHBOARD.STATS.USERS",
-        value: "0",
-        icon: "icon-users",
-        color: "#b45309", // amber  — matches primary accent
-      },
-      {
-        title: "DASHBOARD.STATS.ARTICLES",
-        value: "0",
-        icon: "icon-file-text",
-        color: "#0f6e56", // teal
-      },
-      {
-        title: "DASHBOARD.STATS.DOCUMENTS",
-        value: "0",
-        icon: "icon-folder",
-        color: "#185fa5", // blue
-      },
-      {
-        title: "DASHBOARD.STATS.CATEGORIES",
-        value: "0",
-        icon: "icon-tag",
-        color: "#4c1d95", // purple
-      },
+      { title: "DASHBOARD.STATS.USERS", value: "0", icon: "icon-users", color: "#b45309" },
+      { title: "DASHBOARD.STATS.ARTICLES", value: "0", icon: "icon-file-text", color: "#0f6e56" },
+      { title: "DASHBOARD.STATS.DOCUMENTS", value: "0", icon: "icon-folder", color: "#185fa5" },
+      { title: "DASHBOARD.STATS.CATEGORIES", value: "0", icon: "icon-tag", color: "#4c1d95" },
     ];
+
+    // Toggle which source to use:
+    // this.loadStatsFromApi();
+    this.loadMockStats();
+  }
+
+  private loadStatsFromApi(): void {
+    // Stats are populated by getUsers(), getArticles() and categoriesDonut()
+    // via updateStatCard(). This function is a placeholder for when a
+    // consolidated stats endpoint is available.
+  }
+
+  private loadMockStats(): void {
+    this.statsMocked = true;
+    this.statCards[0] = { ...this.statCards[0], value: 186 };
+    this.statCards[1] = { ...this.statCards[1], value: 43 };
+    this.statCards[2] = { ...this.statCards[2], value: 512 };
+    this.statCards[3] = { ...this.statCards[3], value: 12 };
   }
 
   getArticles(): void {
@@ -248,55 +248,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private updateStatCard(index: number, value: number): void {
+    if (this.statsMocked) { return; }
     if (this.statCards[index]) {
       this.statCards[index] = { ...this.statCards[index], value };
     }
   }
 
   documentTransaction(): void {
-    const months: Record<string, string[]> = {
-      fr_FR: [
-        "Janvier",
-        "Février",
-        "Mars",
-        "Avril",
-        "Mai",
-        "Juin",
-        "Juillet",
-        "Août",
-        "Septembre",
-        "Octobre",
-        "Novembre",
-        "Décembre",
-      ],
-      ar_AR: [
-        "يناير",
-        "فبراير",
-        "مارس",
-        "أبريل",
-        "مايو",
-        "يونيو",
-        "يوليو",
-        "أغسطس",
-        "سبتمبر",
-        "أكتوبر",
-        "نوفمبر",
-        "ديسمبر",
-      ],
-      en_US: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ],
+    // Toggle which source to use:
+    // this.loadDocumentTransactionFromApi();
+    this.loadMockDocumentTransaction();
+  }
+
+  private loadDocumentTransactionFromApi(): void {
+    const monthNames: Record<string, string[]> = {
+      fr_FR: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+      ar_AR: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
+      en_US: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     };
 
     this._subscriptions.add(
@@ -310,11 +278,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
           data.forEach((item: any) => {
             const locale = this.translate.currentLang;
-            const monthNames =
-              months[locale] ||
-              months[locale?.replace("-", "_")] ||
-              months.en_US;
-            duration.push(monthNames[item.month - 1]);
+            const names = monthNames[locale] || monthNames[locale?.replace("-", "_")] || monthNames.en_US;
+            duration.push(names[item.month - 1]);
             expense.push(parseInt(item.downloadCount));
             income.push(parseInt(item.uploadCount));
           });
@@ -332,7 +297,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  private loadMockDocumentTransaction(): void {
+    const locale = this.translate.currentLang;
+    const monthNames: Record<string, string[]> = {
+      fr_FR: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+      ar_AR: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
+      en_US: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    };
+    const names = monthNames[locale] || monthNames[locale?.replace("-", "_")] || monthNames.en_US;
+
+    const duration: string[] = [];
+    const income: number[] = [];
+    const expense: number[] = [];
+
+    for (let m = 1; m <= 12; m++) {
+      duration.push(names[m - 1]);
+      income.push(Math.round(40 + Math.sin(m * 1.2) * 25 + Math.random() * 20));
+      expense.push(Math.round(30 + Math.cos(m * 0.9) * 20 + Math.random() * 15));
+    }
+
+    this.overviewData = { duration, expense, income };
+    this.overviewLoaded = true;
+    this.cdr.detectChanges();
+  }
+
   categoriesDonut(): void {
+    // Toggle which source to use:
+    // this.loadCategoriesFromApi();
+    this.loadMockCategories();
+  }
+
+  private loadCategoriesFromApi(): void {
     this._subscriptions.add(
       this.dashboardService.getDocumentByCategory().subscribe(
         (data) => {
@@ -373,6 +368,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  private loadMockCategories(): void {
+    const categories = [
+      { name: "Contracts", count: 28 },
+      { name: "Reports", count: 22 },
+      { name: "Invoices", count: 18 },
+      { name: "Proposals", count: 14 },
+      { name: "Archives", count: 10 },
+      { name: "Miscellaneous", count: 8 },
+    ];
+
+    this.chartOptions.series = categories.map((c) => c.count);
+    this.chartOptions.labels = categories.map((c) => c.name);
+    this.updateStatCard(2, categories.reduce((a, c) => a + c.count, 0));
+    this.categoriesLoaded = true;
+    this.cdr.detectChanges();
+  }
+
   getUsers(): void {
     this._subscriptions.add(
       this.commonService.getUsers().subscribe(
@@ -391,6 +403,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   initDeviceStatisticData(): void {
+    // Toggle which source to use:
+    // this.loadDeviceStatisticFromApi();
+    this.loadMockDeviceStatistic();
+  }
+
+  private loadDeviceStatisticFromApi(): void {
     this._subscriptions.add(
       this.documentService.getDocumentByExtension().subscribe(
         (data: any) => {
@@ -409,6 +427,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
         },
       ),
     );
+  }
+
+  private loadMockDeviceStatistic(): void {
+    this.deviceStatisticData = [
+      { extension: "pdf", count: 142 },
+      { extension: "docx", count: 98 },
+      { extension: "xlsx", count: 76 },
+      { extension: "pptx", count: 45 },
+      { extension: "jpg", count: 63 },
+      { extension: "png", count: 51 },
+      { extension: "zip", count: 29 },
+    ];
+    this.devicesLoaded = true;
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy(): void {
