@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ArticleService } from "@app/shared/services/article.service";
-import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/articles-views.component";
-import { BsModalService } from "ngx-bootstrap/modal";
 import { Article } from "@app/shared/models/article.model";
 import { environment } from "src/environments/environment";
 import { RtlService } from "@app/core/rtl.service";
@@ -21,7 +19,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
   constructor(
     private articleService: ArticleService,
     private cdr: ChangeDetectorRef,
-    private modalService: BsModalService,
     private rtlService: RtlService,
   ) {}
 
@@ -55,14 +52,5 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   getHost() {
     return environment.apiUrl;
-  }
-
-  viewArticle(data: any) {
-    const initialState = {
-      data: Object.assign({}, data),
-    };
-    this.modalService.show(ArticlesViewsComponent, {
-      initialState: initialState,
-    });
   }
 }

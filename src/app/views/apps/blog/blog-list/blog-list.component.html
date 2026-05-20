@@ -175,7 +175,9 @@
           <div class="list-actions">
             <a
               class="list-btn-action list-btn-action--view"
-              [routerLink]="'/apps/blogs/view/' + row.id"
+              [routerLink]="'/blog/' + row.id"
+              target="_blank"
+              rel="noopener noreferrer"
               [title]="'BLOG.BUTTONS.VIEW' | translate"
               [attr.aria-label]="'BLOG.BUTTONS.VIEW' | translate"
             >
