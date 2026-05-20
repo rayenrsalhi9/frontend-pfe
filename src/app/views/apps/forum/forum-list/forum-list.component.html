@@ -168,7 +168,6 @@
       </ngx-datatable-column>
 
       <ngx-datatable-column
-        *hasClaim="['FORUM_EDIT_TOPIC', 'FORUM_DELETE_TOPIC']"
         [name]="'FORUM.TABLE.ACTIONS' | translate"
         [sortable]="false"
         [width]="160"
@@ -176,6 +175,16 @@
       >
         <ng-template let-row="row" ngx-datatable-cell-template>
           <div class="list-actions">
+            <a
+              class="list-btn-action list-btn-action--view"
+              [routerLink]="'/forum/' + row.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              [title]="'FORUM.BUTTONS.VIEW' | translate"
+              [attr.aria-label]="'FORUM.BUTTONS.VIEW' | translate"
+            >
+              <i class="feather icon-eye"></i>
+            </a>
             <a
               *hasClaim="'FORUM_EDIT_TOPIC'"
               class="list-btn-action list-btn-action--edit"

@@ -34,6 +34,7 @@ $warm-amber-dark: #92400e;
     background: $warm-amber-light;
     border-color: $warm-amber;
     box-shadow: 0 2px 8px rgba($warm-amber, 0.12);
+    text-decoration: none;
   }
 
   [dir="rtl"] & {
@@ -253,6 +254,7 @@ $warm-amber-dark: #92400e;
     background: $warm-amber-bg;
     color: $warm-amber;
     border-color: $warm-amber-mid;
+    text-decoration: none;
 
     .ged-nav-icon-shell i {
       color: $warm-amber;

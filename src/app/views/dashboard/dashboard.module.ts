@@ -21,8 +21,6 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { SharedModule } from "@app/shared/shared.module";
-import { ArticlesViewsComponent } from "../apps/articles/articles-views/articles-views.component";
-
 @NgModule({
   imports: [
     CommonModule,
@@ -47,7 +45,6 @@ import { ArticlesViewsComponent } from "../apps/articles/articles-views/articles
     RecentRatingComponent,
     DeviceStatisticComponent,
     CountriesComponent,
-    ArticlesViewsComponent,
   ],
   providers: [DashboardService],
 })

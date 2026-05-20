@@ -364,6 +364,9 @@ export const add = {
     CATEGORY: {
       TITLE: "Edit category",
       DESCRIPTION: "Update your category name and description.",
+      BUTTONS: {
+        SAVE: "Update category",
+      },
     },
 
     USER: {

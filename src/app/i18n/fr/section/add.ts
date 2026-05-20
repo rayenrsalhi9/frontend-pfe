@@ -371,6 +371,9 @@ export const add = {
     CATEGORY: {
       TITLE: "Modifier la catégorie",
       DESCRIPTION: "Mettez à jour le nom et la description de votre catégorie.",
+      BUTTONS: {
+        SAVE: "Mettre à jour la catégorie",
+      },
     },
 
     USER: {

@@ -1,6 +1,6 @@
 <dropdown *ngIf="user" dropdownClass="header-nav-item-select nav-profile">
   <button
-    class="toggle-wrapper"
+    class="nav-profile-toggle"
     type="button"
     aria-haspopup="true"
     [attr.aria-expanded]="navProfile.isOpen"
@@ -10,28 +10,23 @@
       [size]="32"
       [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
     ></avatar>
-    <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-    <span class="ged-nav-icon-shell">
-      <i class="feather icon-chevron-down" aria-hidden="true"></i>
-    </span>
+    <span class="nav-profile-toggle-name">{{ user.firstName }} {{ user.lastName }}</span>
+    <i class="feather icon-chevron-down nav-profile-toggle-chevron" aria-hidden="true"></i>
   </button>
+
   <dropdown-menu #navProfile alignment="right">
     <div class="nav-profile-header">
-      <div class="d-flex align-items-center gap-3">
-        <avatar
-          [size]="40"
-          [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
-        ></avatar>
-        <div class="d-flex flex-column">
-          <span class="profile-name"
-            >{{ user.firstName }} {{ user.lastName }}</span
-          >
-          <span class="profile-email">{{ user.email }}</span>
-        </div>
+      <avatar
+        [size]="44"
+        [src]="userImg ? userImg : '/assets/images/avatars/thumb-16.jpg'"
+      ></avatar>
+      <div class="nav-profile-header-text">
+        <span class="nav-profile-header-name">{{ user.firstName }} {{ user.lastName }}</span>
+        <span class="nav-profile-header-email">{{ user.email }}</span>
       </div>
     </div>
 
-    <div class="dropdown-items-container">
+    <div class="nav-profile-body">
       <ng-container *ngFor="let menuItem of profileMenuList">
         <ng-container *ngIf="!menuItem.claims || menuItem.claims.length === 0; else withClaims">
           <a
@@ -39,22 +34,20 @@
             [routerLink]="menuItem.path"
             (click)="menuItem.click ? menuItem.click() : null"
             dropdownItem
+            class="nav-profile-item"
           >
-            <span class="ged-nav-icon-shell">
-              <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
-            </span>
-            <span>{{ menuItem.item | translate }}</span>
+            <span class="nav-profile-item-icon"><i [ngClass]="menuItem.icon" aria-hidden="true"></i></span>
+            <span class="nav-profile-item-label">{{ menuItem.item | translate }}</span>
           </a>
           <button
             *ngIf="!menuItem.path && menuItem.click"
             type="button"
             (click)="menuItem.click()"
             dropdownItem
+            class="nav-profile-item"
           >
-            <span class="ged-nav-icon-shell">
-              <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
-            </span>
-            <span>{{ menuItem.item | translate }}</span>
+            <span class="nav-profile-item-icon"><i [ngClass]="menuItem.icon" aria-hidden="true"></i></span>
+            <span class="nav-profile-item-label">{{ menuItem.item | translate }}</span>
           </button>
         </ng-container>
         <ng-template #withClaims>
@@ -64,37 +57,35 @@
               [routerLink]="menuItem.path"
               (click)="menuItem.click ? menuItem.click() : null"
               dropdownItem
+              class="nav-profile-item"
             >
-              <span class="ged-nav-icon-shell">
-                <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
-              </span>
-              <span>{{ menuItem.item | translate }}</span>
+              <span class="nav-profile-item-icon"><i [ngClass]="menuItem.icon" aria-hidden="true"></i></span>
+              <span class="nav-profile-item-label">{{ menuItem.item | translate }}</span>
             </a>
             <button
               *ngIf="!menuItem.path && menuItem.click"
               type="button"
               (click)="menuItem.click()"
               dropdownItem
+              class="nav-profile-item"
             >
-              <span class="ged-nav-icon-shell">
-                <i [ngClass]="menuItem.icon" aria-hidden="true"></i>
-              </span>
-              <span>{{ menuItem.item | translate }}</span>
+              <span class="nav-profile-item-icon"><i [ngClass]="menuItem.icon" aria-hidden="true"></i></span>
+              <span class="nav-profile-item-label">{{ menuItem.item | translate }}</span>
             </button>
           </ng-container>
         </ng-template>
       </ng-container>
+    </div>
 
+    <div class="nav-profile-footer">
       <button
         type="button"
-        class="cursor-pointer"
+        class="nav-profile-logout"
         (click)="logout()"
         dropdownItem
       >
-        <span class="ged-nav-icon-shell">
-          <i class="feather icon-log-out" aria-hidden="true"></i>
-        </span>
-        <span>{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
+        <span class="nav-profile-item-icon"><i class="feather icon-log-out" aria-hidden="true"></i></span>
+        <span class="nav-profile-item-label">{{ "DROPDOWN_PROFILE.LOGOUT" | translate }}</span>
       </button>
     </div>
   </dropdown-menu>

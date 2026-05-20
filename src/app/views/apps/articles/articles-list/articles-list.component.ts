@@ -12,7 +12,6 @@ import { ArticleService } from "@app/shared/services/article.service";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
-import { ArticlesViewsComponent } from "../articles-views/articles-views.component";
 import { ArticleCommentsModalComponent } from "./article-comments-modal.component";
 import { ConfirmModalComponent } from "@app/shared/components/confirm-modal/confirm-modal.component";
 import { environment } from "src/environments/environment";
@@ -104,15 +103,6 @@ export class ArticlesListComponent implements OnInit, OnDestroy {
         console.log(`Error fetching categories:`, error);
       },
     );
-  }
-
-  viewArticle(data: any) {
-    const initialState = {
-      data: Object.assign({}, data),
-    };
-    this.modalService.show(ArticlesViewsComponent, {
-      initialState: initialState,
-    });
   }
 
   onSelect({ selected }) {

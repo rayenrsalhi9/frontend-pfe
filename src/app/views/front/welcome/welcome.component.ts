@@ -5,7 +5,6 @@ import { SecurityService } from "@app/core/security/security.service";
 import { SusbcribeModalComponent } from "@app/shared/components/susbcribe-modal/susbcribe-modal.component";
 import { ArticleService } from "@app/shared/services/article.service";
 import { UserService } from "@app/shared/services/user.service";
-import { ArticlesViewsComponent } from "@app/views/apps/articles/articles-views/articles-views.component";
 import { BlogService } from "@app/views/apps/blog/blog.service";
 import { ForumService } from "@app/views/apps/forum/forum.service";
 import { SurveyService } from "@app/views/apps/survey/survey.service";
@@ -91,11 +90,6 @@ export class WelcomeComponent implements OnInit {
     });
   }
 
-
-  viewArticle(data: any): void {
-    const initialState = { data: Object.assign({}, data) };
-    this.modalService.show(ArticlesViewsComponent, { initialState });
-  }
 
   getHost(): string {
     return environment.apiUrl;
