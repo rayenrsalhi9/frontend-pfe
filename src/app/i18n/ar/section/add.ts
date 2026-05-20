@@ -361,6 +361,9 @@ export const add = {
     CATEGORY: {
       TITLE: "تعديل الفئة",
       DESCRIPTION: "قم بتحديث اسم الفئة ووصفها.",
+      BUTTONS: {
+        SAVE: "تحديث الفئة",
+      },
     },
 
     USER: {
