@@ -79,6 +79,12 @@ export class VerifyFormComponent implements OnInit {
     const pastedData = event.clipboardData?.getData("text") || "";
     const digits = pastedData.replace(/\D/g, "").split("").slice(0, 6);
     const inputs = document.querySelectorAll(".otp-input");
+
+    this.otpDigits = ["", "", "", "", "", ""];
+    inputs.forEach((input) => {
+      (input as HTMLInputElement).value = "";
+    });
+
     digits.forEach((digit, i) => {
       this.otpDigits[i] = digit;
       if (inputs[i]) {
@@ -94,6 +100,11 @@ export class VerifyFormComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = null;
+
+    if (this.formGroup.invalid) {
+      this.formGroup.markAllAsTouched();
+      return;
+    }
 
     if (this.otpDigits.some((d) => d === "")) {
       return;

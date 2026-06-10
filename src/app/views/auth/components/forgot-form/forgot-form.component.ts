@@ -48,15 +48,17 @@ export class ForgotFormComponent implements OnInit {
 
     this.isLoading = true;
 
+    const normalizedEmail = this.formGroup.value.email.trim().toLowerCase();
+
     const userObject = {
-      email: this.formGroup.value.email.trim().toLowerCase(),
+      email: normalizedEmail,
     };
 
     this.securityService.forgot(userObject).subscribe(
       (c: any) => {
         this.isLoading = false;
         this.toastr.success(this.translate.instant('SIGN.FORGOT.SUCCESS'));
-        this.router.navigate(['/verify/' + encodeURIComponent(this.formGroup.value.email)])
+        this.router.navigate(['/verify/' + encodeURIComponent(normalizedEmail)])
       },
       (err: CommonError) => {
         this.isLoading = false;
