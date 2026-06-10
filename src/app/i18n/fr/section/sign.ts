@@ -16,7 +16,8 @@ export const sign = {
       LOGIN_COVER_ALT: "Image de couverture de connexion",
       SHOW_PASSWORD: "Afficher le mot de passe",
       HIDE_PASSWORD: "Cacher le mot de passe",
-      ERROR_INVALID_CREDENTIALS: "Email ou mot de passe invalide. Veuillez réessayer.",
+      ERROR_INVALID_CREDENTIALS:
+        "Email ou mot de passe invalide. Veuillez réessayer.",
       ERROR_GENERIC: "Une erreur s'est produite. Veuillez réessayer.",
     },
     UP: {
@@ -47,20 +48,30 @@ export const sign = {
       LOGOUT_SUCCESS: "Vous avez été déconnecté avec succès",
     },
     FORGOT: {
-      SUCCESS: "Email envoyé avec succès. Veuillez vérifier votre boîte de réception.",
-      SUBMIT: "Envoyer",
-      SUBMITTING: "Envoi en cours...",
-      EMAIL_INVALID: "Format d'email invalide",
+      TITLE: "Mot de passe oublié ?",
+      DESCRIPTION:
+        "Entrez votre adresse e-mail et nous vous enverrons un code de réinitialisation à 6 chiffres. Il expire dans 10 minutes.",
+      SUCCESS:
+        "Code envoyé ! Vérifiez votre boîte de réception — et vos spams si vous ne le trouvez pas.",
+      SUBMIT: "Envoyer le code",
+      SUBMITTING: "Envoi en cours…",
+      EMAIL_INVALID: "Veuillez saisir une adresse e-mail valide",
     },
     VERIFY: {
-      SUCCESS: "Code PIN vérifié avec succès.",
-      LABEL: "Code PIN",
-      PLACEHOLDER: "Entrez le code PIN à 6 chiffres",
-      REQUIRED: "Le code PIN est requis",
-      SUBMIT: "Vérifier",
-      SUBMITTING: "Vérification en cours...",
+      TITLE: "Consultez votre boîte mail",
+      DESCRIPTION:
+        "Nous avons envoyé un code de vérification à 6 chiffres à <strong>{{email}}</strong>. Il expire dans 10 minutes.",
+      SUCCESS:
+        "E-mail vérifié. Vous pouvez maintenant réinitialiser votre mot de passe.",
+      LABEL: "Code de vérification",
+      PLACEHOLDER: "Entrez le code à 6 chiffres",
+      REQUIRED: "Veuillez saisir le code de vérification",
+      SUBMIT: "Vérifier le code",
+      SUBMITTING: "Vérification en cours…",
     },
     RESET: {
+      TITLE: "Réinitialisez votre mot de passe",
+      DESCRIPTION: "Créez un nouveau mot de passe pour votre compte",
       SUCCESS: "Mot de passe modifié avec succès.",
       PASSWORD_LABEL: "Mot de passe",
       CONFIRM_LABEL: "Confirmer le mot de passe",

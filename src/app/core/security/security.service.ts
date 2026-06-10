@@ -101,15 +101,21 @@ export class SecurityService {
   }
 
   forgot(entity: any): Observable<any | CommonError> {
-    return this.http.post<UserAuth>("auth/forgot", entity);
+    return this.http
+      .post<UserAuth>("auth/forgot", entity)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   verify(entity: any): Observable<any | CommonError> {
-    return this.http.post<UserAuth>("auth/verify", entity);
+    return this.http
+      .post<UserAuth>("auth/verify", entity)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   reset(entity: any): Observable<any | CommonError> {
-    return this.http.post<UserAuth>("auth/reset-password", entity);
+    return this.http
+      .post<UserAuth>("auth/reset-password", entity)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
   subscribeGuest(entity: any): Observable<any | CommonError> {

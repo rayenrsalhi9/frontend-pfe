@@ -1,44 +1,61 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" novalidate class="lf-form">
-  <div class="lf-alert" *ngIf="errorMessage" role="alert">
-    <i class="feather icon-alert-circle"></i>
-    <span>{{ errorMessage | translate }}</span>
-  </div>
+<div class="ln-page">
+  <div class="ln-card">
+    <div class="ln-form-side">
+      <div class="ln-form-header">
+        <a routerLink="/" class="ln-brand-link">
+          <app-ged-brand logoType="dynamic"></app-ged-brand>
+        </a>
+        <h1 class="ln-welcome-title">{{ "SIGN.VERIFY.TITLE" | translate }}</h1>
+        <p class="ln-welcome-subtitle" [innerHTML]="'SIGN.VERIFY.DESCRIPTION' | translate : { email: formGroup.value.email }"></p>
+      </div>
 
-  <div class="lf-field">
-    <label class="lf-label" for="verify-pin">
-      {{ "SIGN.VERIFY.LABEL" | translate }}
-    </label>
-    <input
-      type="text"
-      id="verify-pin"
-      class="lf-input"
-      [class.lf-input--error]="submitted && formGroup.get('token')?.invalid"
-      formControlName="token"
-      [placeholder]="'SIGN.VERIFY.PLACEHOLDER' | translate"
-      autocomplete="one-time-code"
-      inputmode="numeric"
-      maxlength="6"
-    />
-    <div
-      class="lf-field-error"
-      *ngIf="submitted && formGroup.get('token')?.errors?.['required']"
-    >
-      <i class="feather icon-alert-circle"></i>
-      {{ "SIGN.VERIFY.REQUIRED" | translate }}
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" novalidate class="lf-form">
+        <div class="lf-alert" *ngIf="errorMessage" role="alert">
+          <i class="feather icon-alert-circle"></i>
+          <span>{{ errorMessage | translate }}</span>
+        </div>
+
+        <label class="lf-label" for="otp-0">
+          {{ "SIGN.VERIFY.LABEL" | translate }}
+        </label>
+        <div class="otp-container">
+          <input
+            *ngFor="let digit of otpDigits; let i = index"
+            type="text"
+            id="otp-{{ i }}"
+            class="otp-input"
+            [class.otp-input--filled]="otpDigits[i] !== ''"
+            inputmode="numeric"
+            maxlength="1"
+            autocomplete="one-time-code"
+            [value]="otpDigits[i]"
+            (input)="onOtpInput($event, i)"
+            (keydown)="onOtpKeydown($event, i)"
+            (paste)="onOtpPaste($event)"
+          />
+        </div>
+        <div
+          class="lf-field-error"
+          *ngIf="submitted && hasEmptyDigit"
+        >
+          <i class="feather icon-alert-circle"></i>
+          {{ "SIGN.VERIFY.REQUIRED" | translate }}
+        </div>
+
+        <button class="lf-submit-btn" type="submit" [disabled]="formGroup.invalid || isLoading || hasEmptyDigit">
+          <ng-container *ngIf="!isLoading">
+            {{ "SIGN.VERIFY.SUBMIT" | translate }}
+          </ng-container>
+          <ng-container *ngIf="isLoading">
+            <i class="feather icon-loader lf-spin"></i>
+            {{ "SIGN.VERIFY.SUBMITTING" | translate }}
+          </ng-container>
+        </button>
+
+        <div class="lf-signup-prompt">
+          <a class="lf-signup-link" [routerLink]="['/login']">{{ "SIGN.REMEMBER" | translate }}</a>
+        </div>
+      </form>
     </div>
   </div>
-
-  <button class="lf-submit-btn" type="submit" [disabled]="isLoading">
-    <ng-container *ngIf="!isLoading">
-      {{ "SIGN.VERIFY.SUBMIT" | translate }}
-    </ng-container>
-    <ng-container *ngIf="isLoading">
-      <i class="feather icon-loader lf-spin"></i>
-      {{ "SIGN.VERIFY.SUBMITTING" | translate }}
-    </ng-container>
-  </button>
-
-  <div class="lf-signup-prompt">
-    <a class="lf-signup-link" [routerLink]="['/login']">{{ "SIGN.REMEMBER" | translate }}</a>
-  </div>
-</form>
+</div>

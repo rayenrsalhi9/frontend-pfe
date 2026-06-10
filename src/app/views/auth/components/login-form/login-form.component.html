@@ -6,7 +6,7 @@
 
   <div class="lf-field" [class.lf-field--has-error]="hasSubmissionError">
     <label class="lf-label" for="login-email">
-      {{ "SIGN.IN.USERNAME" | translate }}
+        {{ "SIGN.UP.EMAIL" | translate }}
     </label>
     <input
       type="email"
@@ -23,7 +23,7 @@
       *ngIf="submitted && formGroup.get('email')?.errors?.['required']"
     >
       <i class="feather icon-alert-circle"></i>
-      {{ "SIGN.IN.USERNAME_ERROR" | translate }}
+      {{ "SIGN.UP.EMAIL_ERROR" | translate }}
     </div>
     <div
       class="lf-field-error"

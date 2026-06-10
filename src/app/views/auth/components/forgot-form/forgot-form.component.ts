@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'forgot-form',
   templateUrl: './forgot-form.component.html',
-  styleUrls: ['./forgot-form.component.css']
+  styleUrls: ['../login-form/login-form.component.css']
 })
 export class ForgotFormComponent implements OnInit {
 
