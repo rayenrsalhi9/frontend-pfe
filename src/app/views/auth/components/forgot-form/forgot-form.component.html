@@ -1,63 +1,63 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" novalidate class="lf-form">
-  <div class="lf-alert" *ngIf="errorMessage" role="alert">
-    <i class="feather icon-alert-circle"></i>
-    <span>{{ errorMessage | translate }}</span>
-  </div>
+<div class="ln-page">
+  <div class="ln-card">
+    <div class="ln-form-side">
+      <div class="ln-form-header">
+        <a routerLink="/" class="ln-brand-link">
+          <app-ged-brand logoType="dynamic"></app-ged-brand>
+        </a>
+        <h1 class="ln-welcome-title">{{ "SIGN.FORGOT.TITLE" | translate }}</h1>
+        <p class="ln-welcome-subtitle">{{ "SIGN.FORGOT.DESCRIPTION" | translate }}</p>
+      </div>
 
-  <div class="lf-field">
-    <label class="lf-label" for="forgot-email">
-      {{ "SIGN.IN.USERNAME" | translate }}
-    </label>
-    <input
-      type="email"
-      id="forgot-email"
-      class="lf-input"
-      [class.lf-input--error]="submitted && formGroup.get('email')?.invalid"
-      formControlName="email"
-      placeholder="m@example.com"
-      autocomplete="email"
-    />
-    <div
-      class="lf-field-error"
-      *ngIf="submitted && formGroup.get('email')?.errors?.['required']"
-    >
-      <i class="feather icon-alert-circle"></i>
-      {{ "SIGN.IN.USERNAME_ERROR" | translate }}
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" novalidate class="lf-form">
+        <div class="lf-alert" *ngIf="errorMessage" role="alert">
+          <i class="feather icon-alert-circle"></i>
+          <span>{{ errorMessage | translate }}</span>
+        </div>
+
+        <div class="lf-field">
+          <label class="lf-label" for="forgot-email">
+            {{ "SIGN.UP.EMAIL" | translate }}
+          </label>
+          <input
+            type="email"
+            id="forgot-email"
+            class="lf-input"
+            [class.lf-input--error]="submitted && formGroup.get('email')?.invalid"
+            formControlName="email"
+            placeholder="m@example.com"
+            autocomplete="email"
+          />
+          <div
+            class="lf-field-error"
+            *ngIf="submitted && formGroup.get('email')?.errors?.['required']"
+          >
+            <i class="feather icon-alert-circle"></i>
+            {{ "SIGN.UP.EMAIL_ERROR" | translate }}
+          </div>
+          <div
+            class="lf-field-error"
+            *ngIf="submitted && formGroup.get('email')?.errors?.['email']"
+          >
+            <i class="feather icon-alert-circle"></i>
+            {{ "SIGN.FORGOT.EMAIL_INVALID" | translate }}
+          </div>
+        </div>
+
+        <button class="lf-submit-btn" type="submit" [disabled]="formGroup.invalid || isLoading">
+          <ng-container *ngIf="!isLoading">
+            {{ "SIGN.FORGOT.SUBMIT" | translate }}
+          </ng-container>
+          <ng-container *ngIf="isLoading">
+            <i class="feather icon-loader lf-spin"></i>
+            {{ "SIGN.FORGOT.SUBMITTING" | translate }}
+          </ng-container>
+        </button>
+
+        <div class="lf-signup-prompt">
+          <a class="lf-signup-link" [routerLink]="['/login']">{{ "SIGN.REMEMBER" | translate }}</a>
+        </div>
+      </form>
     </div>
-    <div
-      class="lf-field-error"
-      *ngIf="submitted && formGroup.get('email')?.errors?.['email']"
-    >
-      <i class="feather icon-alert-circle"></i>
-      {{ "SIGN.FORGOT.EMAIL_INVALID" | translate }}
-    </div>
-
-  <button class="lf-submit-btn" type="submit" [disabled]="isLoading">
-    <ng-container *ngIf="!isLoading">
-      {{ "SIGN.FORGOT.SUBMIT" | translate }}
-    </ng-container>
-    <ng-container *ngIf="isLoading">
-      <i class="feather icon-loader lf-spin"></i>
-      {{ "SIGN.FORGOT.SUBMITTING" | translate }}
-    </ng-container>
-  </button>
-
-  <div class="lf-signup-prompt">
-    <a class="lf-signup-link" [routerLink]="['/login']">{{ "SIGN.REMEMBER" | translate }}</a>
   </div>
-  </div>
-
-  <button class="lf-submit-btn" type="submit" [disabled]="isLoading">
-    <ng-container *ngIf="!isLoading">
-      Submit
-    </ng-container>
-    <ng-container *ngIf="isLoading">
-      <i class="feather icon-loader lf-spin"></i>
-      Sending...
-    </ng-container>
-  </button>
-
-  <div class="lf-signup-prompt">
-    <a class="lf-signup-link" [routerLink]="['/login']">Remember password?</a>
-  </div>
-</form>
+</div>

@@ -9,13 +9,14 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "verify-form",
   templateUrl: "./verify-form.component.html",
-  styleUrls: ["../forgot-form/forgot-form.component.css"],
+  styleUrls: ["../login-form/login-form.component.css"],
 })
 export class VerifyFormComponent implements OnInit {
   formGroup: FormGroup;
   submitted = false;
   isLoading = false;
   errorMessage: string | null = null;
+  otpDigits: string[] = ["", "", "", "", "", ""];
 
   @Input() thirPartyLogin = false;
 
@@ -31,7 +32,6 @@ export class VerifyFormComponent implements OnInit {
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
-      token: ["", [Validators.required]],
     });
 
     this.activeRoute.paramMap.subscribe(async (params) => {
@@ -46,15 +46,67 @@ export class VerifyFormComponent implements OnInit {
     });
   }
 
+  onOtpInput(event: any, index: number): void {
+    const value = event.target.value;
+    if (value && !/^\d$/.test(value)) {
+      event.target.value = "";
+      return;
+    }
+    this.otpDigits[index] = value;
+    if (value && index < 5) {
+      const nextInput = document.querySelectorAll(".otp-input")[index + 1] as HTMLInputElement;
+      if (nextInput) {
+        nextInput.focus();
+      }
+    }
+  }
+
+  get hasEmptyDigit(): boolean {
+    return this.otpDigits.some(d => d === '');
+  }
+
+  onOtpKeydown(event: any, index: number): void {
+    if (event.key === "Backspace" && !this.otpDigits[index] && index > 0) {
+      const prevInput = document.querySelectorAll(".otp-input")[index - 1] as HTMLInputElement;
+      if (prevInput) {
+        prevInput.focus();
+      }
+    }
+  }
+
+  onOtpPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedData = event.clipboardData?.getData("text") || "";
+    const digits = pastedData.replace(/\D/g, "").split("").slice(0, 6);
+    const inputs = document.querySelectorAll(".otp-input");
+
+    this.otpDigits = ["", "", "", "", "", ""];
+    inputs.forEach((input) => {
+      (input as HTMLInputElement).value = "";
+    });
+
+    digits.forEach((digit, i) => {
+      this.otpDigits[i] = digit;
+      if (inputs[i]) {
+        (inputs[i] as HTMLInputElement).value = digit;
+      }
+    });
+    const nextIndex = digits.length < 6 ? digits.length : 5;
+    if (inputs[nextIndex]) {
+      (inputs[nextIndex] as HTMLInputElement).focus();
+    }
+  }
+
   onSubmit() {
     this.submitted = true;
     this.errorMessage = null;
 
-    Object.keys(this.formGroup.controls).forEach((key) => {
-      this.formGroup.get(key)?.markAsTouched();
-    });
-
     if (this.formGroup.invalid) {
+      this.formGroup.markAllAsTouched();
+      return;
+    }
+
+    if (this.otpDigits.some((d) => d === "")) {
       return;
     }
 
@@ -62,14 +114,13 @@ export class VerifyFormComponent implements OnInit {
 
     const userObject = {
       email: this.formGroup.value.email.trim().toLowerCase(),
-      token: this.formGroup.value.token,
+      token: this.otpDigits.join(""),
     };
 
     this.securityService.verify(userObject).subscribe(
       (data: any) => {
         this.isLoading = false;
         this.toastr.success(this.translate.instant("SIGN.VERIFY.SUCCESS"));
-
         this.router.navigate([
           `/reset/${data.token}/${encodeURIComponent(this.formGroup.value.email)}`,
         ]);
@@ -85,6 +136,7 @@ export class VerifyFormComponent implements OnInit {
   }
 
   onReset() {
+    this.otpDigits = ["", "", "", "", "", ""];
     this.formGroup.reset();
     this.submitted = false;
     this.errorMessage = null;
