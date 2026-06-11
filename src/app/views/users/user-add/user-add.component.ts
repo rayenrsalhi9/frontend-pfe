@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { Role } from "@app/shared/enums/role";
-import { CommonService } from "@app/shared/services/common.service";
 import { UserService } from "@app/shared/services/user.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
@@ -16,7 +14,6 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class UserAddComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
-  roleList: Role[] = [];
   isLoading = false;
   loadError = false;
   isEdit = false;
@@ -32,14 +29,12 @@ export class UserAddComponent implements OnInit, OnDestroy {
     private router: Router,
     private activeRoute: ActivatedRoute,
     private userService: UserService,
-    private commonService: CommonService,
     private toastrService: ToastrService,
     private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadRoles();
     this.checkEditMode();
   }
 
@@ -57,7 +52,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
         email: ["", [Validators.required, Validators.email]],
         phoneNumber: ["", [Validators.required]],
         direction: [""],
-        roles: [[]],
         password: [""],
         confirmPassword: [""],
       },
@@ -123,7 +117,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           if ("id" in data) {
             const user = data as any;
-            const roleIds = user.userRoles?.map((ur: any) => ur.roleId) || [];
             this.userForm.patchValue({
               id: user.id,
               firstName: user.firstName,
@@ -131,7 +124,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
               email: user.email,
               phoneNumber: user.phoneNumber,
               direction: user.direction,
-              roles: roleIds,
             });
             this.cdr.markForCheck();
           } else {
@@ -153,25 +145,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
           this.userForm.disable();
           this.cdr.markForCheck();
           console.error("Error loading user:", error);
-          this.toastrService.error(
-            this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
-          );
-        },
-      });
-  }
-
-  private loadRoles(): void {
-    this.commonService
-      .getRolesForDropdown()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (roles: Role[]) => {
-          this.roleList = roles || [];
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          console.error("Error loading roles:", error);
-          this.roleList = [];
           this.toastrService.error(
             this.translate.instant("ADD.SHARED.ERRORS.NETWORK_ERROR"),
           );
@@ -276,7 +249,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
       password: formValue.password ? formValue.password : null,
       userName: normalizedEmail,
       direction: (formValue.direction ?? "").trim(),
-      roleIds: formValue.roles ?? [],
     };
   }
 

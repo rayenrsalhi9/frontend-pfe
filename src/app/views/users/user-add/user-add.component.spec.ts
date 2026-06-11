@@ -8,20 +8,17 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { UserService } from "@app/shared/services/user.service";
-import { CommonService } from "@app/shared/services/common.service";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
 import { of, throwError } from "rxjs";
 import { UserAddComponent } from "./user-add.component";
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from "@angular/core";
 import { TranslatePipeMock } from "@app/testing/mock.pipe";
-import { NgSelectModule } from "@ng-select/ng-select";
 
 describe("UserAddComponent", () => {
   let component: UserAddComponent;
   let fixture: ComponentFixture<UserAddComponent>;
   let userServiceSpy: jasmine.SpyObj<UserService>;
-  let commonServiceSpy: jasmine.SpyObj<CommonService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let toastrSpy: jasmine.SpyObj<ToastrService>;
   let translateSpy: jasmine.SpyObj<TranslateService>;
@@ -36,9 +33,6 @@ describe("UserAddComponent", () => {
       "getUser",
       "updateUser",
     ]);
-    commonServiceSpy = jasmine.createSpyObj("CommonService", [
-      "getRolesForDropdown",
-    ]);
     routerSpy = jasmine.createSpyObj("Router", ["navigate"]);
     toastrSpy = jasmine.createSpyObj("ToastrService", [
       "success",
@@ -50,15 +44,13 @@ describe("UserAddComponent", () => {
     activatedRouteStub = { paramMap: of({ get: () => null }) };
 
     translateSpy.instant.and.callFake((key: string) => key);
-    commonServiceSpy.getRolesForDropdown.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       declarations: [UserAddComponent, TranslatePipeMock],
-      imports: [ReactiveFormsModule, FormsModule, NgSelectModule],
+      imports: [ReactiveFormsModule, FormsModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: UserService, useValue: userServiceSpy },
-        { provide: CommonService, useValue: commonServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: ToastrService, useValue: toastrSpy },
@@ -85,7 +77,6 @@ describe("UserAddComponent", () => {
       expect(component.userForm.get("password")).toBeTruthy();
       expect(component.userForm.get("confirmPassword")).toBeTruthy();
       expect(component.userForm.get("direction")).toBeTruthy();
-      expect(component.userForm.get("roles")).toBeTruthy();
     });
 
     it("should be invalid when required fields are empty", () => {

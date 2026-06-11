@@ -43,7 +43,7 @@
         class="af-form"
       >
         <!-- ── Basic Info ─────────────────────────── -->
-        <div class="af-section">
+        <div class="af-section" [class.af-section--last]="isEdit">
           <div class="af-section-label">
             {{ "ADD.SHARED.LABELS.BASIC_INFO" | translate }}
           </div>
@@ -161,7 +161,7 @@
         </div>
 
         <!-- ── Password (only in add mode) ────────── -->
-        <div class="af-section" *ngIf="!isEdit">
+        <div class="af-section" *ngIf="!isEdit" [class.af-section--last]="!isEdit">
           <div class="af-section-label">
             {{ "ADD.USER.LABELS.PASSWORD" | translate }}
           </div>
@@ -269,26 +269,6 @@
           </div>
         </div>
 
-        <!-- ── Roles ──────────────────────────────── -->
-        <div class="af-section af-section--last">
-          <div class="af-section-label" id="rolesLabel">
-            {{ "ADD.USER.LABELS.ROLES" | translate }}
-          </div>
-
-          <div class="af-field">
-            <ng-select
-              formControlName="roles"
-              [items]="roleList"
-              [multiple]="true"
-              bindLabel="name"
-              bindValue="id"
-              [clearable]="true"
-              [placeholder]="'ADD.USER.PLACEHOLDERS.ROLES' | translate"
-              [attr.aria-labelledby]="'rolesLabel'"
-            >
-            </ng-select>
-          </div>
-        </div>
       </form>
 
       <!-- Footer -->
