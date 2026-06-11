@@ -67,25 +67,6 @@
                     {{'USERS.ADD.ERRORS.PASSWORDS_DO_NOT_MATCH' | translate}}
                   </div>
                 </div>
-                <div class="col-md-6 mt-2">
-                  <!-- <mat-form-field appearance="fill"> -->
-                  <label class="form-label">{{'USERS.ADD.LABELS.ROLES' | translate}}</label>
-                  <ng-select [multiple]="true" formControlName="roleIds">
-                    <ng-option *ngFor="let role of roleList" [value]="role.id">{{role.name}}</ng-option>
-                  </ng-select>
-                  <!-- <mat-select class="form-select" [(value)]="selectedRoles" multiple>
-                    <mat-select-trigger>
-                      <span *ngIf="selectedRoles.length > 0">
-                        {{selectedRoles[0].name}}
-                      </span>
-                      <span *ngIf="selectedRoles.length > 1" class="example-additional-selection">
-                        (+{{selectedRoles.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
-                      </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let role of roleList" [value]="role">{{role.name}}</mat-option>
-                  </mat-select> -->
-                  <!-- </mat-form-field> -->
-                </div>
                 <div class="m-t-10 col-md-12 mt-3">
                   <ng-container *ngIf="isEditMode">
                     <button *hasClaim="'USER_EDIT_USER'" class="btn btn-success" style="margin-right: 10px;" (click)="saveUser()"
